@@ -136,7 +136,7 @@ function riskyFilePath(path) {
 }
 
 function textHasSecretRisk(text) {
-  return /(?:api[_-]?key|secret|token|password|private[_-]?key)\s*[:=]\s*["']?(?!your_|replace|example|sample|dummy|test|redacted)[a-z0-9_./+=-]{20,}/i.test(
+  return /(?:api[_-]?key|secret|token|password|private[_-]?key)\s*[:=]\s*["']?(?!your_|replace|example|sample|dummy|test|redacted|generate_)[a-z0-9_./+=-]{20,}/i.test(
     text
   );
 }
@@ -204,6 +204,18 @@ function buildReplayTraces({ repoUrl, demoUrl, submissionUrl, title }, collected
       queryOrUrl: `"${title}" "Bright Data" hackathon originality`,
       resultCount: 0,
       status: "prior-art query prepared",
+      collectedAt,
+      byteCount: 0,
+      contentHash: "00000000"
+    },
+    {
+      mode: "planned",
+      provider: "bright-data",
+      traceStatus: "planned",
+      tool: "discover",
+      queryOrUrl: `"${title}" "Bright Data" hackathon originality`,
+      resultCount: 0,
+      status: "AI-ranked prior-art discovery prepared",
       collectedAt,
       byteCount: 0,
       contentHash: "00000000"
@@ -389,6 +401,8 @@ export async function collectReviewerProject(input, options = {}) {
   let packageText = "";
   let licenseText = "";
   let commitsText = "";
+  let releasesText = "";
+  let issuesText = "";
   let priorArtText = "";
   let priorArtDiscoverText = "";
   let priorArtSearchAttempted = false;
@@ -445,6 +459,8 @@ export async function collectReviewerProject(input, options = {}) {
   const defaultBranch = cleanText(repoMetadata.default_branch) || "main";
   const treeApiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
   const commitsApiUrl = buildCommitsApiUrl(owner, repo, options.hackathonWindow || HACKATHON_WINDOW);
+  const releasesApiUrl = `https://api.github.com/repos/${owner}/${repo}/releases?per_page=5`;
+  const issuesApiUrl = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=5`;
 
   try {
     readmeText = decodePossibleGitHubReadme(
@@ -511,6 +527,38 @@ export async function collectReviewerProject(input, options = {}) {
     );
   } catch (error) {
     commitsText = JSON.stringify({
+      error: error.message
+    });
+  }
+
+  try {
+    releasesText = await fetchEvidence(
+      releasesApiUrl,
+      {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      },
+      { tool: "github_api" }
+    );
+  } catch (error) {
+    releasesText = JSON.stringify({
+      error: error.message
+    });
+  }
+
+  try {
+    issuesText = await fetchEvidence(
+      issuesApiUrl,
+      {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      },
+      { tool: "github_api" }
+    );
+  } catch (error) {
+    issuesText = JSON.stringify({
       error: error.message
     });
   }
@@ -590,6 +638,10 @@ export async function collectReviewerProject(input, options = {}) {
   const metadataLicense = repoMetadata.license?.spdx_id && repoMetadata.license.spdx_id !== "NOASSERTION" ? repoMetadata.license.spdx_id : "";
   const licensePresent = Boolean(metadataLicense || (licensePath && !licenseText.startsWith("License unavailable:")));
   const hackathonCommits = commitsDuringWindow(commitsText, options.hackathonWindow || HACKATHON_WINDOW);
+  const releases = Array.isArray(parseJson(releasesText, [])) ? parseJson(releasesText, []) : [];
+  const issues = Array.isArray(parseJson(issuesText, [])) ? parseJson(issuesText, []).filter((issue) => !issue.pull_request) : [];
+  const releaseEvidencePresent = releases.length > 0;
+  const publicIssuesReviewed = issues.length > 0 || Array.isArray(parseJson(issuesText, null));
   const riskyPaths = treePaths.filter(riskyFilePath);
   const secretRiskVisible = riskyPaths.length > 0 || textHasSecretRisk(`${readmeText}\n${packageText}`);
   const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${priorArtText} ${priorArtDiscoverText} ${treePaths.join(" ")}`;
@@ -652,6 +704,8 @@ export async function collectReviewerProject(input, options = {}) {
       packageManifestPresent: packageReachable,
       licensePresent,
       builtDuringEvent: hackathonCommits.length > 0,
+      releaseEvidencePresent,
+      publicIssuesReviewed,
       secretRiskVisible,
       nativeBuilderExplained: hasAny(haystack, [/\bnative\.builder\b/i, /\bnatively\b/i, /\bnative-builder-prompt\b/i]),
       isFunctional: demoReachable || hasAny(workflowText, [/\bworkflow\b/i, /\bdashboard\b/i, /\breview\b/i, /\bexport\b/i]),
@@ -803,6 +857,36 @@ export async function collectReviewerProject(input, options = {}) {
         confidence: hackathonCommits.length ? 0.82 : 0.42,
         supports: ["Built during event", "Repository activity"],
         limitations: "Commit history can be squashed, rebased, private, or imported from another workspace."
+      },
+      {
+        id: `${id}-releases`,
+        sourceType: "github-releases",
+        sourceUrl: `${canonicalUrl}/releases`,
+        title: releaseEvidencePresent ? "Release evidence collected" : "No public releases found",
+        excerpt: releaseEvidencePresent
+          ? `${releases.length} release${releases.length === 1 ? "" : "s"} found. Latest: ${cleanText(
+              releases[0]?.name || releases[0]?.tag_name || "release"
+            )}. Assets: ${(releases[0]?.assets || []).map((asset) => asset.name).filter(Boolean).slice(0, 4).join(", ") || "none listed"}.`
+          : "No public GitHub releases were visible through the public API.",
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: releaseEvidencePresent ? 0.74 : 0.38,
+        supports: ["Demo artifacts", "Submission packaging", "Public proof assets"],
+        limitations: releaseEvidencePresent ? "Release assets still need separate reachability checks." : "Projects may host videos or artifacts outside GitHub releases."
+      },
+      {
+        id: `${id}-issues`,
+        sourceType: "github-issues",
+        sourceUrl: `${canonicalUrl}/issues`,
+        title: publicIssuesReviewed ? "Public issues reviewed" : "No public issues found",
+        excerpt: issues.length
+          ? `${issues.length} open issue${issues.length === 1 ? "" : "s"} sampled. Latest: ${cleanText(issues[0]?.title || "issue")}.`
+          : "No open public issues were visible through the public API.",
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: publicIssuesReviewed ? 0.62 : 0.36,
+        supports: ["Public feedback", "Open readiness work", "Repository maturity"],
+        limitations: "Issues can be disabled, private, closed elsewhere, or unrelated to final judge readiness."
       },
       ...(licensePresent
         ? [

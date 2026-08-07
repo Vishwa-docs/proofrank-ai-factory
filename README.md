@@ -163,6 +163,7 @@ Built and verified:
 - Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, `discover`, and `PROOFRANK_FETCH_MODE=mcp`
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
+- GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`

@@ -17,7 +17,7 @@ Judges and sponsor teams review many AI projects under time pressure. Claims are
 
 ## Solution
 
-ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, similar-project overlap, disputes, and the recommended review action.
+ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, release/demo artifacts, public issue signals, similar-project overlap, disputes, and the recommended review action.
 
 The Submission Cockpit keeps the workflow honest by separating required final-submission gates from competitive-strength checks. It shows whether the native.builder URL exists, whether at least one executed Bright Data trace is present, whether an actual reviewer-supplied project has been audited, whether the live backend is configured, and whether the demo/source/video/export package are ready.
 

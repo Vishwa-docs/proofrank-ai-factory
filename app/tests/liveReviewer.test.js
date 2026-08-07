@@ -30,6 +30,9 @@ const fakeFetchText = async (url) => {
       Built with native.builder as an agentic evidence workbench for hackathon judges.
       It uses Bright Data Remote MCP, SERP API, and Web Scraper API to collect live
       source-backed receipts, run originality checks, and inspect public demos.
+      Example setup values:
+      PROOFRANK_REVIEW_TOKEN=generate_a_random_value
+      PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value
     `;
   }
 
@@ -77,6 +80,34 @@ const fakeFetchText = async (url) => {
     ]);
   }
 
+  if (url === "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/releases?per_page=5") {
+    return JSON.stringify([
+      {
+        tag_name: "proofrank-submission-v1",
+        name: "ProofRank submission assets",
+        html_url: "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1",
+        published_at: "2026-08-07T13:00:00Z",
+        assets: [
+          {
+            name: "proofrank-demo.mp4",
+            browser_download_url:
+              "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4"
+          }
+        ]
+      }
+    ]);
+  }
+
+  if (url === "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/issues?state=open&per_page=5") {
+    return JSON.stringify([
+      {
+        title: "Wire final Native.builder URL",
+        html_url: "https://github.com/Vishwa-docs/proofrank-ai-factory/issues/1",
+        created_at: "2026-08-07T13:30:00Z"
+      }
+    ]);
+  }
+
   return `
     <html>
       <title>ProofRank</title>
@@ -113,6 +144,8 @@ assert.equal(project.evidence.repoTreeCollected, true);
 assert.equal(project.evidence.packageManifestPresent, true);
 assert.equal(project.evidence.licensePresent, true);
 assert.equal(project.evidence.builtDuringEvent, true);
+assert.equal(project.evidence.releaseEvidencePresent, true);
+assert.equal(project.evidence.publicIssuesReviewed, true);
 assert.equal(project.evidence.secretRiskVisible, false);
 assert.equal(project.evidence.brightDataRole, "agentic");
 assert.ok(project.evidence.brightDataTools.includes("Remote MCP"));
@@ -124,9 +157,12 @@ assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-metad
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-tree"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "package-manifest"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-commits"));
+assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-releases" && item.excerpt.includes("proofrank-demo.mp4")));
+assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-issues" && item.excerpt.includes("Wire final Native.builder URL")));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "license"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "secret-risk-scan" && item.title.includes("passed")));
 assert.ok(project.brightDataTraces.some((trace) => trace.tool === "scrape_as_markdown"));
+assert.ok(project.brightDataTraces.some((trace) => trace.tool === "discover" && trace.traceStatus === "planned"));
 assert.ok(project.brightDataTraces.some((trace) => trace.traceStatus === "executed" && trace.mode === "direct-fetch"));
 assert.ok(project.brightDataTraces.every((trace) => typeof trace.byteCount === "number"));
 assert.ok(project.brightDataTraces.every((trace) => /^[a-f0-9]{8}$/.test(trace.contentHash) || trace.traceStatus === "failed"));
@@ -136,6 +172,8 @@ assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofra
 assert.ok(fetchedUrls.includes("https://raw.githubusercontent.com/Vishwa-docs/proofrank-ai-factory/main/package.json"));
 assert.ok(fetchedUrls.includes("https://raw.githubusercontent.com/Vishwa-docs/proofrank-ai-factory/main/LICENSE"));
 assert.ok(fetchedUrls.some((url) => url.startsWith("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/commits?")));
+assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/releases?per_page=5"));
+assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/issues?state=open&per_page=5"));
 assert.ok(fetchedUrls.includes("https://vishwa-docs.github.io/proofrank-ai-factory/"));
 
 const risky = await collectReviewerProject(
@@ -158,6 +196,8 @@ const risky = await collectReviewerProject(
         });
       }
       if (url.includes("/commits?")) return JSON.stringify([]);
+      if (url.includes("/releases?")) return JSON.stringify([]);
+      if (url.includes("/issues?")) return JSON.stringify([]);
       throw new Error(`Unexpected fetch ${url}`);
     },
     now: () => new Date("2026-08-07T12:00:00.000Z")

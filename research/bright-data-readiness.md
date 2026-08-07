@@ -55,9 +55,9 @@ These are the pieces I cannot ethically or technically complete without the acco
 
 2. Live project ingestion
    - Implemented event-page ingestion endpoint and command-line smoke script.
-   - Implemented GitHub repo metadata, README, package files, license, commits, deployed demo fetch, and public secret-risk scan.
+   - Implemented GitHub repo metadata, README, package files, license, commits, public releases, public issues, deployed demo fetch, and public secret-risk scan.
    - Added a bounded event-to-project follow-up: `/api/review-event` can review one top project when a real GitHub URL is available, while preserving event results if the follow-up fails.
-   - Remaining: releases and public issues.
+   - Remaining: copied README/code similarity and richer comparison scoring.
    - Added MCP `discover` prior-art collection path; it still needs valid Bright Data auth before the final sponsor run can execute it.
    - Direct event fetch against lablab can return HTTP 403, so Bright Data/Web Unlocker is required for the real event scrape.
 
@@ -111,7 +111,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 1. Real GitHub reviewer lane
    - User gives a repo URL and demo URL.
    - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, proof receipt traces, repository metadata, recursive tree, package manifest, event-window commits, license signal, and lightweight public secret-risk scan.
-   - Next: copied README/code similarity, releases, public issues, and richer comparison scoring once Bright Data auth is fixed.
+   - Next: copied README/code similarity and richer comparison scoring once Bright Data auth is fixed.
 
 2. Bright Data trace replay
    - Implemented trace provenance in receipts.
