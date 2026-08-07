@@ -31,11 +31,21 @@ if [[ ! -f "$VOICEOVER" ]]; then
 fi
 
 duration_gt() {
-  awk "BEGIN { exit !($1 > $2) }"
+  awk -v left="${1:-0}" -v right="${2:-0}" 'BEGIN {
+    if (left !~ /^[0-9]+([.][0-9]+)?$/) left = 0
+    if (right !~ /^[0-9]+([.][0-9]+)?$/) right = 0
+    exit !(left > right)
+  }'
 }
 
 media_duration() {
-  ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null || echo 0
+  local duration
+  duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null || true)"
+  if [[ "$duration" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+    echo "$duration"
+  else
+    echo 0
+  fi
 }
 
 voice_duration=0

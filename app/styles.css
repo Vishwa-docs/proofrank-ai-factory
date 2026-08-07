@@ -1,5 +1,5 @@
 /* Hallmark · genre: modern-minimal · macrostructure: Workbench · tone: technical-austere · anchor hue: ink-blue
- * design-system: design.md · nav: N9 edge-aligned app bar · footer: none · lablab-style event header · slop: pass (42-45)
+ * design-system: design.md · nav: N9 edge-aligned app bar · footer: none · lablab-style review shell · slop: pass (42-45)
  * redesigned-as-app · contrast: pass (40-41)
  * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (34,49) · mobile: pass (50-57)
  * pre-emit critique: P5 H5 E5 S5 R5 V5
@@ -49,7 +49,8 @@ select {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
-a:focus-visible {
+a:focus-visible,
+summary:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
@@ -77,8 +78,7 @@ a {
   min-height: 4.5rem;
   padding: var(--space-sm) clamp(var(--space-md), 3vw, var(--space-xl));
   border-bottom: 1px solid var(--color-rule);
-  background: color-mix(in oklch, var(--color-paper) 90%, transparent);
-  backdrop-filter: blur(14px);
+  background: var(--color-paper);
 }
 
 .brand-block,
@@ -842,8 +842,15 @@ input::placeholder {
 
 .score-block strong {
   font-family: var(--font-mono);
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(2.25rem, 5vw, 3.6rem);
   line-height: 0.95;
+}
+
+.score-block small {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
 }
 
 .tag-row {
@@ -858,6 +865,10 @@ input::placeholder {
   padding-inline: var(--space-sm);
   color: var(--color-ink-2);
   font-size: var(--text-xs);
+}
+
+.muted-tag {
+  color: var(--color-muted);
 }
 
 .source-links {
@@ -1625,7 +1636,7 @@ input::placeholder {
   }
 
   .focus-strip h2 {
-    font-size: clamp(1.75rem, 12vw, 2.7rem);
+    font-size: clamp(1.65rem, 10vw, 2.35rem);
   }
 
   .trace-table,
@@ -1841,8 +1852,102 @@ input::placeholder {
   padding: var(--space-md);
 }
 
+.review-card {
+  align-self: stretch;
+}
+
 .decision-card .live-proof-strip {
   margin-top: 0;
+}
+
+.review-card .live-proof-strip strong {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.quick-intake {
+  display: grid;
+  gap: var(--space-sm);
+  padding-block: var(--space-xs);
+  border-top: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.quick-intake .module-head {
+  margin-bottom: 0;
+}
+
+.quick-intake .field {
+  margin-top: 0;
+}
+
+.quick-intake .hint {
+  max-width: 42ch;
+}
+
+.optional-fields,
+.selection-drawer {
+  border-top: 0;
+}
+
+.selection-drawer .readiness-summary {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.optional-fields summary,
+.selection-drawer summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 2.75rem;
+  color: var(--color-ink);
+  font-weight: 800;
+  list-style: none;
+  cursor: pointer;
+}
+
+.optional-fields summary::-webkit-details-marker,
+.selection-drawer summary::-webkit-details-marker {
+  display: none;
+}
+
+.optional-fields summary::after,
+.selection-drawer summary::after {
+  content: "+";
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.optional-fields[open] summary::after,
+.selection-drawer[open] summary::after {
+  content: "-";
+}
+
+.optional-fields .split-fields {
+  margin-top: var(--space-xs);
+}
+
+.selection-drawer summary strong {
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hero-decision {
@@ -1956,8 +2061,7 @@ input::placeholder {
   padding: var(--space-xs);
   border: 1px solid var(--color-rule);
   border-radius: var(--radius-panel);
-  background: color-mix(in oklch, var(--color-paper) 92%, transparent);
-  backdrop-filter: blur(14px);
+  background: var(--color-paper);
   scrollbar-width: none;
 }
 
@@ -2023,7 +2127,7 @@ input::placeholder {
 
 .section-panel[data-section-panel="setup"] .source-rail {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
 }
 
@@ -2047,12 +2151,12 @@ input::placeholder {
 .focus-strip {
   grid-template-columns: minmax(0, 1fr) minmax(7rem, 9rem);
   gap: var(--space-lg);
-  padding-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
 }
 
 .focus-strip h2 {
   max-width: 16ch;
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(1.75rem, 3.2vw, 2.7rem);
 }
 
 .focus-strip p {
@@ -2068,6 +2172,10 @@ input::placeholder {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.score-drawer .score-grid {
+  margin-top: var(--space-sm);
+}
+
 .score-tile {
   min-height: 6.75rem;
   padding: var(--space-sm);
@@ -2076,7 +2184,7 @@ input::placeholder {
 .review-notes {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-md);
-  padding-block: var(--space-md);
+  padding-block: var(--space-sm);
 }
 
 .analysis-drawer,
@@ -2235,11 +2343,21 @@ input::placeholder {
   }
 
   .event-hero {
-    padding-top: var(--space-lg);
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
   }
 
   .event-hero h1 {
-    font-size: clamp(2.75rem, 18vw, 4.5rem);
+    font-size: clamp(2.45rem, 16vw, 3.5rem);
+  }
+
+  .hero-subtitle {
+    font-size: var(--text-base);
+    line-height: 1.45;
+  }
+
+  .decision-card {
+    padding: var(--space-sm);
   }
 
   .hero-controls,
@@ -2247,6 +2365,11 @@ input::placeholder {
   .hero-controls .primary-button,
   .hero-copy .status-line {
     width: 100%;
+  }
+
+  .hero-controls .secondary-button {
+    flex: 1 1 calc(50% - var(--space-xs));
+    padding-inline: var(--space-sm);
   }
 
   .decision-metrics,
@@ -2270,6 +2393,25 @@ input::placeholder {
   .decision-metrics div + div {
     border-left: 0;
     border-top: 1px solid var(--color-rule);
+  }
+
+  .quick-intake .module-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .selection-drawer summary strong {
+    max-width: 9rem;
+    color: transparent;
+    font-size: 0;
+  }
+
+  .selection-drawer summary strong::before {
+    content: attr(data-mobile-label);
+    display: inline;
+    color: var(--color-muted);
+    font-size: var(--text-xs);
   }
 
   .section-tab {

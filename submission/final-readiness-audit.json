@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T17:40:10.847Z",
+  "generatedAt": "2026-08-07T18:17:51.070Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 10,
@@ -37,7 +37,7 @@
       "label": "Actual review target URLs",
       "required": true,
       "status": "passed",
-      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory / https://vishwa-docs.github.io/proofrank-ai-factory/",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory / https://proofrank-ai-factory.vercel.app/",
       "action": "Provide a public GitHub repo and reachable deployed demo for the project to review."
     },
     {
@@ -85,7 +85,7 @@
       "label": "Signed executed Bright Data receipt",
       "required": true,
       "status": "passed",
-      "proof": "pr-20260807t145909828z-553fb028 / bright-data / executed / source trace / search_engine / discover / signature verified",
+      "proof": "pr-20260807t181117932z-70b9ba43 / bright-data / executed / source trace / search_engine / discover / signature verified",
       "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
     },
     {

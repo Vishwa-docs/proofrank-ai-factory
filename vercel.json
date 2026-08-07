@@ -2,6 +2,26 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/app/"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/app/styles.css"
+    },
+    {
+      "source": "/tokens.css",
+      "destination": "/app/tokens.css"
+    },
+    {
+      "source": "/src/:path*",
+      "destination": "/app/src/:path*"
+    },
+    {
+      "source": "/data/:path*",
+      "destination": "/app/data/:path*"
+    },
+    {
       "source": "/health",
       "destination": "/api/health"
     }

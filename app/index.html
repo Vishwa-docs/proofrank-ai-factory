@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
-        <button class="text-button nav-jump" data-nav-tab="overview" type="button">Overview</button>
+        <button class="text-button nav-jump" data-focus-target="reviewerRepoUrl" type="button">Review target</button>
         <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
         <details class="export-menu">
           <summary>Export</summary>
@@ -44,30 +44,67 @@
           <p class="event-date">August 3-10, 2026 / Bright Data sponsor track</p>
           <h1>ProofRank</h1>
           <p class="hero-subtitle">Evidence-backed diligence for public AI projects. Rank the field, verify claims, and export a judge-ready proof packet.</p>
-          <div class="hero-controls" aria-label="Run controls">
-            <label class="field compact" for="modeSelect">
-                <span>Mode</span>
-                <select id="modeSelect">
-                <option value="demo">Signed proof</option>
-                <option value="live">Bright Data live</option>
-              </select>
-            </label>
-            <button id="runAudit" class="primary-button" type="button">Run review</button>
-            <button id="heroExportPacket" class="secondary-button" type="button">Export packet</button>
+          <div class="hero-controls hero-links" aria-label="Review navigation">
+            <button class="primary-button" data-focus-target="reviewerRepoUrl" type="button">Review target</button>
             <button class="secondary-button" data-nav-tab="receipt" type="button">Bright proof</button>
+            <button id="heroExportPacket" class="secondary-button" type="button">Export packet</button>
           </div>
           <div id="statusLine" class="status-line" role="status">Signed Bright proof ready</div>
         </div>
 
-        <aside class="decision-card panel" aria-label="Selected project decision">
+        <aside class="decision-card review-card panel" aria-label="Review target and proof state">
           <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
             <span>Bright Data proof</span>
             <strong>No executed run yet</strong>
             <small>Live collection required</small>
           </div>
-          <div id="heroDecision" class="hero-decision"></div>
-          <div id="readinessSummary" class="readiness-summary"></div>
-          <div id="readinessMeter" class="readiness-meter meter" aria-hidden="true"><i></i></div>
+          <section class="quick-intake" aria-label="Review a GitHub project">
+            <div class="module-head compact">
+              <h2>Start with a GitHub project</h2>
+              <span class="hint">Use live mode for real receipts.</span>
+            </div>
+            <label class="field compact" for="modeSelect">
+              <span>Collection mode</span>
+              <select id="modeSelect">
+                <option value="demo">Signed sample proof</option>
+                <option value="live">Bright Data live</option>
+              </select>
+            </label>
+            <label class="field" for="reviewerRepoUrl">
+              <span>GitHub repository</span>
+              <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
+            </label>
+            <label class="field" for="reviewerDemoUrl">
+              <span>Deployed app</span>
+              <input id="reviewerDemoUrl" type="url" placeholder="https://project.example">
+            </label>
+            <details class="optional-fields">
+              <summary>
+                <span>Optional labels</span>
+              </summary>
+              <div class="split-fields">
+                <label class="field" for="reviewerTitle">
+                  <span>Project</span>
+                  <input id="reviewerTitle" type="text" placeholder="Optional">
+                </label>
+                <label class="field" for="reviewerTeam">
+                  <span>Team</span>
+                  <input id="reviewerTeam" type="text" placeholder="Optional">
+                </label>
+              </div>
+            </details>
+            <button id="addReviewerProject" class="secondary-button wide" type="button">Add target</button>
+            <p id="reviewerHint" class="hint">Switch to Bright Data live to issue a real receipt.</p>
+          </section>
+          <details class="selection-drawer">
+            <summary>
+              <span>Current selection</span>
+              <strong id="selectionSummaryMini">ProofRank</strong>
+            </summary>
+            <div id="heroDecision" class="hero-decision"></div>
+            <div id="readinessSummary" class="readiness-summary"></div>
+            <div id="readinessMeter" class="readiness-meter meter" aria-hidden="true"><i></i></div>
+          </details>
         </aside>
       </section>
 
@@ -157,32 +194,7 @@
               <span>Load event HTML</span>
               <input id="htmlUpload" type="file" accept=".html,.htm,text/html">
             </label>
-          </section>
-
-          <section class="source-module project-intake" aria-label="Review a GitHub project">
-            <div class="module-head compact">
-              <h2>Review a GitHub project</h2>
-            </div>
-            <label class="field" for="reviewerRepoUrl">
-              <span>GitHub repository</span>
-              <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
-            </label>
-            <label class="field" for="reviewerDemoUrl">
-              <span>Deployed app</span>
-              <input id="reviewerDemoUrl" type="url" placeholder="https://project.example">
-            </label>
-            <div class="split-fields">
-              <label class="field" for="reviewerTitle">
-                <span>Project</span>
-                <input id="reviewerTitle" type="text" placeholder="Optional">
-              </label>
-              <label class="field" for="reviewerTeam">
-                <span>Team</span>
-                <input id="reviewerTeam" type="text" placeholder="Optional">
-              </label>
-            </div>
-            <button id="addReviewerProject" class="secondary-button wide" type="button">Add target</button>
-            <p id="reviewerHint" class="hint">Add the real repo and deployed app. Live mode records the Bright Data traces.</p>
+            <button id="runAudit" class="secondary-button wide" type="button">Refresh event queue</button>
           </section>
 
           <section class="source-module readiness-module" aria-label="Real data requirements">

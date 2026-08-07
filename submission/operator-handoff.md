@@ -4,7 +4,8 @@ Date: 2026-08-07
 
 ## What Is Ready
 
-- Public fallback app: https://vishwa-docs.github.io/proofrank-ai-factory/
+- Public fallback/live app: https://proofrank-ai-factory.vercel.app/
+- GitHub Pages backup: https://vishwa-docs.github.io/proofrank-ai-factory/
 - Public repo: https://github.com/Vishwa-docs/proofrank-ai-factory
 - Refreshed demo video release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 - Workflow proof JSON release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
@@ -52,7 +53,7 @@ Date: 2026-08-07
    - Use the native.builder URL as the primary lablab submission URL.
 
 3. Actual project to review
-   - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://vishwa-docs.github.io/proofrank-ai-factory/`.
+   - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://proofrank-ai-factory.vercel.app/`.
    - Secondary target if you want an older public project: `https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon` plus `https://huggingface.co/spaces/TheJackBright/polypharmacy-env`.
    - See `research/candidate-review-targets.md` for the scored shortlist.
    - Provide a different real GitHub repo URL if you want another project reviewed.
@@ -83,7 +84,7 @@ bash scripts/verify.sh
 npm run visual:check
 npm run workflow:proof
 npm run final:audit
-npm run live:smoke:direct -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
+npm run live:smoke:direct -- https://github.com/Vishwa-docs/proofrank-ai-factory https://proofrank-ai-factory.vercel.app/
 ```
 
 After the Bright Data token is fixed:
@@ -91,11 +92,11 @@ After the Bright Data token is fixed:
 ```bash
 npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
-PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
+PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://proofrank-ai-factory.vercel.app/
 PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
-PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
+PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/Vishwa-docs/proofrank-ai-factory https://proofrank-ai-factory.vercel.app/
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
-npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
+npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://proofrank-ai-factory.vercel.app/
 ```
 
 ## Current Honest Status

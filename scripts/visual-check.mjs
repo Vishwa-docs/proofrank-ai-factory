@@ -44,6 +44,12 @@ for (const spec of [
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   if (spec.name === "desktop") {
+    await page.click('.topbar [data-focus-target="reviewerRepoUrl"]');
+    await page.waitForTimeout(300);
+    const focusedReviewTarget = await page.evaluate(() => document.activeElement?.id === "reviewerRepoUrl");
+    if (!focusedReviewTarget) {
+      throw new Error("Topbar Review target did not focus the GitHub repository field.");
+    }
     await page.click('[data-section-tab="setup"]');
     await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
     await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");

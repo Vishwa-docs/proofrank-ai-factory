@@ -88,6 +88,7 @@ try {
 
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
+  await page.click('[data-section-tab="setup"]');
   await page.click("#runAudit");
   await page.waitForFunction(() => (document.querySelector("#statusLine")?.textContent || "").includes("submissions ranked"));
 

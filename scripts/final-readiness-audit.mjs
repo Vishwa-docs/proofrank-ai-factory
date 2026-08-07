@@ -12,7 +12,7 @@ loadLocalEnv();
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(root, "submission", "final-readiness-audit.json");
-const fallbackUrl = "https://vishwa-docs.github.io/proofrank-ai-factory/";
+const fallbackUrl = "https://proofrank-ai-factory.vercel.app/";
 const nativeBuilderUrl = "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/";
 const releaseVideoUrl =
   "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4";

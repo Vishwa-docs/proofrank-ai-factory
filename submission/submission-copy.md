@@ -26,7 +26,7 @@ Bright Data is the evidence acquisition layer. ProofRank's verified sponsor rece
 
 ## External Tools
 
-native.builder, Bright Data Remote MCP, Bright Data SERP API, Bright Data Web Scraper API, Bright Data Web Unlocker, Bright Data CLI, GitHub, GitHub Pages, Vercel API shell.
+native.builder, Bright Data Remote MCP, Bright Data SERP API, Bright Data Web Scraper API, Bright Data Web Unlocker, Bright Data CLI, GitHub, Vercel fallback app and API, GitHub Pages backup.
 
 ## Required Links
 
@@ -34,7 +34,7 @@ Native.builder app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`
 
 GitHub URL: `https://github.com/Vishwa-docs/proofrank-ai-factory`
 
-Fallback app URL: `https://vishwa-docs.github.io/proofrank-ai-factory/`
+Fallback app URL: `https://proofrank-ai-factory.vercel.app/`
 
 Demo video URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4`
 

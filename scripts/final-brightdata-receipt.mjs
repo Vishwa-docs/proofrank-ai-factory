@@ -20,7 +20,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repoUrl =
   process.argv[2] || process.env.PROOFRANK_REVIEW_REPO_URL || "https://github.com/Vishwa-docs/proofrank-ai-factory";
 const demoUrl =
-  process.argv[3] || process.env.PROOFRANK_REVIEW_DEMO_URL || "https://vishwa-docs.github.io/proofrank-ai-factory/";
+  process.argv[3] || process.env.PROOFRANK_REVIEW_DEMO_URL || "https://proofrank-ai-factory.vercel.app/";
 const nativeBuilderUrl =
   process.env.PROOFRANK_NATIVE_BUILDER_URL || process.env.NATIVE_BUILDER_APP_URL || "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/";
 const allowDirect = process.argv.includes("--allow-direct");

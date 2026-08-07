@@ -130,10 +130,9 @@ bash scripts/verify.sh
 
 ## Public Static Fallback
 
-This repository includes a GitHub Pages workflow at `.github/workflows/pages.yml`.
-It deploys only the `app/` directory, so the public fallback contains the working
-ProofRank dashboard without submission notes, private scratch files, or saved
-hackathon HTML snapshots.
+This repository ships both a Vercel fallback/live API and a GitHub Pages static
+backup. The Vercel root is the preferred fallback because it hosts the cleaned
+app and the secured live API under the same origin.
 
 Primary Native.builder app:
 
@@ -150,6 +149,12 @@ https://github.com/Vishwa-docs/proofrank-ai-factory
 Public fallback app:
 
 ```text
+https://proofrank-ai-factory.vercel.app/
+```
+
+GitHub Pages backup:
+
+```text
 https://vishwa-docs.github.io/proofrank-ai-factory/
 ```
 
@@ -161,8 +166,8 @@ Workflow proof JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/release
 Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 ```
 
-Use the Native.builder URL as the primary hackathon app link. Use the GitHub
-Pages URL as a backup proof-of-work link and public reference.
+Use the Native.builder URL as the primary hackathon app link. Use Vercel as the
+fallback/live app link, and keep GitHub Pages as a backup proof-of-work link.
 
 ## Current Status
 

@@ -44,7 +44,7 @@ Current security gate values already configured in production:
 
 ```text
 PROOFRANK_REVIEW_TOKEN=generated_random_value
-PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
+PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,*.vercel.app,lablab.ai,*.nativelyai.app
 ```
 
 Use these values only if enabling full public Bright Data reviews:
@@ -55,7 +55,7 @@ PROOFRANK_FETCH_MODE=mcp
 BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover
 PROOFRANK_MAX_BRIGHTDATA_CALLS=12
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_different_random_value
-PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
+PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://proofrank-ai-factory.vercel.app,https://vishwa-docs.github.io
 PROOFRANK_BRIGHTDATA_CAP_USD=20
 ```
 
@@ -97,8 +97,8 @@ BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover
 PROOFRANK_MAX_BRIGHTDATA_CALLS=12
 PROOFRANK_REVIEW_TOKEN=generate_a_random_value
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_different_random_value
-PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
-PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
+PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://proofrank-ai-factory.vercel.app,https://vishwa-docs.github.io
+PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,*.vercel.app,lablab.ai,*.nativelyai.app
 PROOFRANK_BRIGHTDATA_CAP_USD=20
 ```
 
