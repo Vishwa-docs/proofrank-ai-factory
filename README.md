@@ -64,6 +64,24 @@ It deploys only the `app/` directory, so the public fallback contains the workin
 ProofRank dashboard without submission notes, private scratch files, or saved
 hackathon HTML snapshots.
 
+Public repo:
+
+```text
+https://github.com/Vishwa-docs/proofrank-ai-factory
+```
+
+Public fallback app:
+
+```text
+https://vishwa-docs.github.io/proofrank-ai-factory/
+```
+
+Public release assets:
+
+```text
+https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
+```
+
 The native.builder URL remains the required primary submission URL. Use the
 GitHub Pages URL as a backup proof-of-work link or public reference if the
 native.builder publish flow is still account-gated.

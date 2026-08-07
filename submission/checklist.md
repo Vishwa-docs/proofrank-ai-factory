@@ -29,6 +29,16 @@
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
 
+Public support links already created:
+
+```text
+GitHub repo: https://github.com/Vishwa-docs/proofrank-ai-factory
+Fallback app: https://vishwa-docs.github.io/proofrank-ai-factory/
+Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
+Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
+Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
+```
+
 ## lablab.ai Submission Fields
 
 Project name:
@@ -77,6 +87,7 @@ Required links to paste:
 
 ```text
 Native.builder app URL: PASTE_AFTER_PUBLISH
-GitHub URL: PASTE_AFTER_REPO_CREATE
-Demo video URL: PASTE_AFTER_UPLOAD
+GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
+Fallback app URL: https://vishwa-docs.github.io/proofrank-ai-factory/
+Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 ```
