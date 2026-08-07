@@ -7,6 +7,8 @@ Date: 2026-08-07
 - Public fallback app: https://vishwa-docs.github.io/proofrank-ai-factory/
 - Public repo: https://github.com/Vishwa-docs/proofrank-ai-factory
 - Refreshed demo video release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
+- Workflow proof JSON release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
+- Workflow proof screenshot release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
 - Bright Data setup: `submission/bright-data-setup.md`

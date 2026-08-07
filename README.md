@@ -147,6 +147,8 @@ Public release assets:
 
 ```text
 https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
+Workflow proof JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
+Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 ```
 
 The native.builder URL remains the required primary submission URL. Use the

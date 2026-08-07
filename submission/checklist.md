@@ -50,6 +50,8 @@ Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag
 Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
 Workflow proof artifact: submission/workflow-proof.json
+Workflow proof URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
+Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 Final Bright Data receipt: submission/final-brightdata-receipt.json after token validation
 ```
 
