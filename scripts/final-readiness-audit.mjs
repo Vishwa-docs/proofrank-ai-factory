@@ -176,7 +176,20 @@ function healthUrl(value = "") {
   if (!value) return "";
   try {
     const url = new URL(value);
-    url.pathname = "/health";
+    url.pathname = "/api/health";
+    url.search = "";
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+function reviewUrl(value = "") {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    url.pathname = "/api/review-project";
     url.search = "";
     url.hash = "";
     return url.toString();
@@ -194,6 +207,66 @@ async function liveApi() {
     ok: result.ok && /proofrank-live-review|\"ok\"\s*:\s*true/i.test(result.text),
     url,
     status: result.status
+  };
+}
+
+async function postJson(url, payload, headers = {}) {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "user-agent": "ProofRank final readiness audit",
+        ...headers
+      },
+      body: JSON.stringify(payload)
+    });
+    const text = await response.text().catch(() => "");
+    return {
+      ok: response.ok,
+      status: response.status,
+      url,
+      text
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 0,
+      url,
+      error: error.message,
+      text: ""
+    };
+  }
+}
+
+async function liveApiSecurity() {
+  const configured = envValue("PROOFRANK_LIVE_API_URL", "PROOFRANK_API_URL");
+  const url = reviewUrl(configured);
+  const reviewToken = envValue("PROOFRANK_REVIEW_TOKEN", "PROOFRANK_API_TOKEN");
+  const allowedHosts = envValue("PROOFRANK_ALLOWED_HOSTS");
+  if (!url) return { ok: false, url: configured };
+
+  const unauthenticated = await postJson(url, {});
+  let disallowedHost = { status: 0 };
+  if (reviewToken && allowedHosts) {
+    disallowedHost = await postJson(
+      url,
+      {
+        repoUrl: "https://blocked-proofrank.invalid/example",
+        demoUrl: "https://blocked-proofrank.invalid/demo"
+      },
+      {
+        "x-proofrank-token": reviewToken
+      }
+    );
+  }
+
+  return {
+    ok: unauthenticated.status === 401 && disallowedHost.status === 422,
+    url,
+    unauthenticatedStatus: unauthenticated.status,
+    disallowedHostStatus: disallowedHost.status,
+    skippedDisallowedHostProbe: !(reviewToken && allowedHosts)
   };
 }
 
@@ -251,14 +324,16 @@ async function liveReceipt() {
 
 async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
+  const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");
   const videoReachable = await fetchReachable(releaseVideoUrl);
   const targetRepoUrl = envValue("PROOFRANK_REVIEW_REPO_URL") || defaultReviewRepoUrl;
   const targetDemoUrl = envValue("PROOFRANK_REVIEW_DEMO_URL") || defaultReviewDemoUrl;
   const [targetRepo, targetDemo, authResult] = await Promise.all([fetchReachable(targetRepoUrl), fetchReachable(targetDemoUrl), brightAuth()]);
-  const [mcpResult, liveApiResult, nativeBuilderResult, liveReceiptResult, workflowProofResult] = await Promise.all([
+  const [mcpResult, liveApiResult, liveApiSecurityResult, nativeBuilderResult, liveReceiptResult, workflowProofResult] = await Promise.all([
     mcpTools(authResult),
     liveApi(),
+    liveApiSecurity(),
     nativeBuilder(),
     liveReceipt(),
     workflowProof()
@@ -268,10 +343,17 @@ async function buildAuditState() {
     generatedAt: new Date().toISOString(),
     gitHead: envValue("PROOFRANK_AUDIT_GIT_HEAD"),
     publicFallback: {
-      ok: fallback.ok && /ProofRank/.test(fallback.text) && /Bright proof/.test(fallback.text),
+      ok:
+        fallback.ok &&
+        /ProofRank/.test(fallback.text) &&
+        fallbackBundle.ok &&
+        /(Bright proof|Signed Bright proof|Package-ready)/.test(fallbackBundle.text),
       url: fallbackUrl,
       status: fallback.status,
-      evidence: fallback.ok ? "ProofRank and Bright proof strip are present in deployed HTML." : `HTTP ${fallback.status || 0}`
+      evidence:
+        fallback.ok && fallbackBundle.ok
+          ? "ProofRank shell is deployed and the runtime bundle contains the Bright proof/package-ready UI."
+          : `root HTTP ${fallback.status || 0}; bundle HTTP ${fallbackBundle.status || 0}`
     },
     releaseVideo: {
       ok: videoReachable.ok && existsSync(videoPath) && mediaDuration(videoPath) > 1 && mediaDuration(videoPath) <= 180,
@@ -292,6 +374,7 @@ async function buildAuditState() {
     brightAuth: authResult,
     mcpTools: mcpResult,
     liveApi: liveApiResult,
+    liveApiSecurity: liveApiSecurityResult,
     liveReceipt: liveReceiptResult,
     lablabSubmission: {
       ok: Boolean(envValue("PROOFRANK_LABLAB_SUBMISSION_URL", "LABLAB_SUBMISSION_URL")),

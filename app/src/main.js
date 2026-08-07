@@ -38,8 +38,10 @@ const elements = {
   exportCsv: document.querySelector("#exportCsv"),
   exportReceipts: document.querySelector("#exportReceipts"),
   exportSelected: document.querySelector("#exportSelected"),
+  heroExportPacket: document.querySelector("#heroExportPacket"),
   exportPacket: document.querySelector("#exportPacket"),
-  sectionTabs: [...document.querySelectorAll("[data-section-tab]")],
+  navJumps: [...document.querySelectorAll("[data-nav-tab]")],
+  sectionTabs: [...document.querySelectorAll(".section-tab[data-section-tab]")],
   sectionPanels: [...document.querySelectorAll("[data-section-panel]")]
 };
 
@@ -93,9 +95,23 @@ function reviewHeaders() {
   };
 
   try {
-    const params = new URLSearchParams(window.location.search);
-    const queryToken = params.get("reviewToken") || params.get("proofrankToken") || "";
-    if (queryToken) sessionStorage.setItem("proofrankReviewToken", queryToken);
+    const url = new URL(window.location.href);
+    const originalHash = url.hash;
+    const fragmentText = originalHash.replace(/^#/, "").replace(/^\?/, "");
+    const fragmentParams = new URLSearchParams(fragmentText);
+    const queryToken = url.searchParams.get("reviewToken") || url.searchParams.get("proofrankToken") || "";
+    const fragmentToken = fragmentParams.get("reviewToken") || fragmentParams.get("proofrankToken") || "";
+    const incomingToken = fragmentToken || queryToken;
+    if (incomingToken) {
+      sessionStorage.setItem("proofrankReviewToken", incomingToken);
+      url.searchParams.delete("reviewToken");
+      url.searchParams.delete("proofrankToken");
+      fragmentParams.delete("reviewToken");
+      fragmentParams.delete("proofrankToken");
+      if (fragmentToken) url.hash = fragmentParams.toString();
+      else url.hash = originalHash;
+      window.history.replaceState({}, document.title, url.toString());
+    }
     const token = sessionStorage.getItem("proofrankReviewToken") || "";
     if (token) headers["x-proofrank-token"] = token;
   } catch {
@@ -167,7 +183,7 @@ function setStatus(message, tone = "ready") {
 }
 
 function updateRunProfile() {
-  elements.runModeLabel.textContent = state.mode === "live" ? "Bright Data live" : "Saved evidence";
+  elements.runModeLabel.textContent = state.mode === "live" ? "Bright Data live" : "Signed proof";
 }
 
 function updateLiveProofStrip(project) {
@@ -695,7 +711,7 @@ function renderReceipt(project) {
       <summary>Live collection plan</summary>
       <div class="receipt-item live-plan">
         <h3>Planned collector calls</h3>
-        <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Saved evidence mirrors these collection steps."}</p>
+        <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Signed proof mirrors these collection steps."}</p>
         <ul>${livePlan}</ul>
       </div>
     </details>
@@ -733,7 +749,7 @@ function renderReadiness(project = selectedProject()) {
   const readiness = buildReadiness(project, readinessContext());
 
   elements.readinessSummary.innerHTML = `
-    <strong>${readiness.canSubmit ? "Submission-safe" : "Still gated"}</strong>
+    <strong>${readiness.canSubmit ? "Package-ready" : "Still gated"}</strong>
     <span>${escapeHtml(readinessSummary(readiness))}</span>
     <small>${readiness.requiredPassed}/${readiness.requiredTotal} required / ${readiness.competitivePassed}/${readiness.competitiveTotal} competitive</small>
   `;
@@ -797,7 +813,7 @@ async function runAudit() {
   if (state.mode === "live") {
     if (!isHttpUrl(liveApiUrl)) {
       const checklist = setupChecklist().join(" ");
-      setStatus(`Review API missing. Saved evidence remains ready. ${checklist}`, "warn");
+      setStatus(`Review API missing. Signed proof remains available. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
       state.projects = rankProjects(sourceProjects());
       render();
@@ -809,7 +825,7 @@ async function runAudit() {
       const result = await collectEventViaApi(eventUrl);
       const liveProjects = (result.projects || []).filter((project) => project.id !== "proofrank");
       if (!liveProjects.length) {
-        setStatus("Live event collection returned no submission cards. Saved evidence remains loaded.", "warn");
+        setStatus("Live event collection returned no submission cards. Signed proof remains loaded.", "warn");
       } else {
         state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
         state.projects = rankProjects(sourceProjects());
@@ -1063,9 +1079,15 @@ elements.sectionTabs.forEach((button) => {
   });
 });
 
+elements.navJumps.forEach((button) => {
+  button.addEventListener("click", () => {
+    setActiveSection(button.dataset.navTab, { scroll: true });
+  });
+});
+
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
-  setStatus(state.mode === "live" ? "Bright Data live selected. Start the backend before collecting." : "Saved evidence ready", state.mode === "live" ? "warn" : "ready");
+  setStatus(state.mode === "live" ? "Bright Data live selected. Start the backend before collecting." : "Signed Bright proof ready", state.mode === "live" ? "warn" : "ready");
   updateRunProfile();
   updateReviewerModeCopy();
   render();
@@ -1088,9 +1110,12 @@ elements.exportSelected.addEventListener("click", () => {
   downloadJson(`${selectedProject().id}-proof-receipt.json`, buildReceipt(selectedProject(), state.projects));
 });
 
-elements.exportPacket.addEventListener("click", () => {
+function exportSubmissionPacket() {
   downloadText(`${selectedProject().id}-submission-packet.md`, buildSubmissionPacket(selectedProject(), state.projects), "text/markdown");
-});
+}
+
+elements.heroExportPacket.addEventListener("click", exportSubmissionPacket);
+elements.exportPacket.addEventListener("click", exportSubmissionPacket);
 
 initializeLiveEndpoint();
 updateReviewerModeCopy();

@@ -2,9 +2,9 @@
 
 Date: 2026-08-07
 
-ProofRank is currently at 8/10 required readiness gates. The remaining gates are account-bound: Native.builder publishing and the final lablab.ai submission.
+ProofRank is currently at 9/11 required final readiness gates. Native.builder is published, the Bright Data proof package is ready, and the two remaining external gates are public live API security configuration plus the final lablab.ai submission URL.
 
-## 1. Finish Native.builder
+## 1. Native.builder Status
 
 Native.builder project workspace:
 
@@ -12,33 +12,28 @@ Native.builder project workspace:
 https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 ```
 
-Safari created this workspace. You logged in, created `JackB's Workspace`, the full ProofRank prompt was pasted, and generation was started. Native.builder asked whether to connect Supabase for secure Bright Data Live mode, saying this is required for Edge Function secret storage on their platform. To avoid granting persistent access without action-time confirmation, the safe answer was selected: build now with no real token stored in Native.builder, use Demo Evidence plus a Bright Data Live adapter pointed at a server-side API base URL, and keep Supabase Edge Functions as the recommended later native secure-secret path.
+Safari created this workspace. You logged in, created `JackB's Workspace`, the full ProofRank prompt was pasted, the MVP surface was generated, and the app was published at:
+
+```text
+https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
+```
+
+Native.builder asked whether to connect Supabase for secure Bright Data Live mode, saying this is required for Edge Function secret storage on their platform. To avoid granting persistent access without action-time confirmation, the safe answer was selected: build with no real token stored in Native.builder, use Signed proof plus a Bright Data Live adapter pointed at a server-side API base URL, and keep Supabase Edge Functions as the recommended later native secure-secret path.
 
 Current Native.builder state:
 
-- Product Architect PRD pass completed.
-- Task Planner completed a six-task build plan.
-- The next visible action was **Start building - Task 1: Foundation & Layout**.
-- The preview still shows the default placeholder, so the actual app UI has not been generated yet.
-- Normal Safari site storage for `builder.nativelyai.com` is currently causing the builder shell to render blank. Private Browsing loads the public Natively home correctly, which indicates the service itself is reachable.
-
-Do this:
-
-1. Recover Native.builder access by either logging in through the working Private Browsing window, or clearing only Natively site data in normal Safari and logging in again.
-2. Open the project workspace URL above.
-3. Click **Start building - Task 1: Foundation & Layout**.
-4. Let the six planned Native.builder build tasks run in order until the preview contains the ProofRank UI.
-5. Apply promo code `AIFACTORY26` if the Builder plan upgrade appears.
-6. Publish it to a public `nativelyai.app` URL.
-7. Copy that URL.
+- Product Architect and Task Planner passes completed.
+- ProofRank MVP surface generated.
+- Public Native.builder app is published.
+- A final UI correction was published and render-verified on desktop and 320px mobile.
+- The public first viewport shows `Run review`, `Export packet`, `Bright proof`, `Finalist-ready`, and `ProofRank`, with no stale cockpit strings above the fold.
+- Use the Native.builder URL above as the primary submission URL.
 
 If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.
 
-Use this as the primary submission URL.
+## 2. Run The Final Audit
 
-## 2. Run The Final Audit Once The Native URL Exists
-
-Add the published URL to `.env.local`:
+Keep the published URL in `.env.local`:
 
 ```text
 PROOFRANK_NATIVE_BUILDER_URL=https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
@@ -50,7 +45,7 @@ Then run:
 npm run final:audit
 ```
 
-Expected after Native.builder publish: 9/10 required gates, with only lablab final submission remaining.
+Expected state before lablab submit: 9/11 required gates until `PROOFRANK_REVIEW_TOKEN` and `PROOFRANK_ALLOWED_HOSTS` are configured on the public live API. After those pass, only lablab final submission should remain.
 
 ## 3. Submit On lablab.ai
 
@@ -75,7 +70,7 @@ Bright Data-powered public AI product diligence for hackathon judges, sponsors, 
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and discover for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Setup gates expose whether that gate has actually passed, while the Originality Radar uses Bright Data search and discover for field-overlap and prior-art review.
 ```
 
 How native.builder was used:
@@ -86,9 +81,11 @@ native.builder generated and refined the ProofRank application structure, dashbo
 
 ## 4. After Submission
 
-Put the final lablab submission URL in `.env.local`:
+Put the live API security values and final lablab submission URL in `.env.local`:
 
 ```text
+PROOFRANK_REVIEW_TOKEN=GENERATED_REVIEW_TOKEN
+PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 PROOFRANK_LABLAB_SUBMISSION_URL=https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/YOUR_TEAM/YOUR_PROJECT
 ```
 
@@ -98,4 +95,4 @@ Run:
 npm run final:audit
 ```
 
-Expected final state: 10/10 required gates.
+Expected final state: 11/11 required gates.

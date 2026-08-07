@@ -103,7 +103,7 @@ export function buildReadiness(project = {}, context = {}) {
       detail: nativeBuilderReady
         ? "Primary application URL points to a native.builder deployment."
         : "Publish the primary app from native.builder; the GitHub Pages build is only fallback evidence.",
-      proof: nativeBuilderReady ? project.demoUrl || project.nativeBuilderUrl : "No nativelyai.app URL attached.",
+      proof: nativeBuilderReady ? project.nativeBuilderUrl || project.demoUrl || project.submissionUrl : "No nativelyai.app URL attached.",
       action: "Publish the native.builder app and paste its public URL into the submission."
     }),
     gate({
@@ -205,6 +205,7 @@ export function buildReadiness(project = {}, context = {}) {
     .map((item) => item.action);
 
   return {
+    proofPackageReady: requiredPassed === required.length,
     canSubmit: requiredPassed === required.length,
     sponsorProofReady,
     nativeBuilderReady,
@@ -220,11 +221,12 @@ export function buildReadiness(project = {}, context = {}) {
 }
 
 export function readinessSummary(readiness) {
-  if (readiness.canSubmit) {
-    return `Ready for final submission: ${readiness.requiredPassed}/${readiness.requiredTotal} required gates passed.`;
+  const proofPackageReady = readiness.proofPackageReady ?? readiness.canSubmit;
+  if (proofPackageReady) {
+    return `Proof package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Final lablab submission is tracked separately.`;
   }
 
-  return `Not submission-safe yet: ${readiness.requiredPassed}/${readiness.requiredTotal} required gates passed. Next action: ${
+  return `Proof package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Next action: ${
     readiness.nextActions[0] || "Review missing proof."
   }`;
 }

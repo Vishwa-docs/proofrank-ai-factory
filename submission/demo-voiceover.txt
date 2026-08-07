@@ -2,7 +2,7 @@ ProofRank is Bright Data-powered public AI product diligence for hackathon judge
 
 The problem is simple: AI project reviewers have to validate public claims quickly. Demo links may break. Sponsor usage may be superficial. Repositories and decks may not match the pitch. Originality checks are slow when everything is public, scattered, and changing.
 
-ProofRank turns that review into a working audit queue. In Demo Evidence mode, it loads a realistic field of AI Factory submissions and ranks them by eligibility, Bright Data dependency, business value, originality, and presentation.
+ProofRank turns that review into a working audit queue. In Signed proof mode, it loads a signed AI Factory evidence set and ranks projects by eligibility, Bright Data dependency, business value, originality, and presentation.
 
 The key difference is the Bright Data dependency score. A project ranks higher only when live-web evidence is load-bearing, agentic, traceable, visible in the proof receipt, and backed by an executed Bright Data run. This makes the sponsor tool part of the product logic, not a badge in the footer.
 

@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-08-07T16:47:09.793Z",
+  "generatedAt": "2026-08-07T17:34:19.430Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 9,
-  "requiredTotal": 10,
+  "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 91,
+  "score": 83,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
       "status": "passed",
-      "proof": "ProofRank and Bright proof strip are present in deployed HTML.",
+      "proof": "ProofRank shell is deployed and the runtime bundle contains the Bright proof/package-ready UI.",
       "action": "Deploy the public fallback app and confirm the Bright proof strip is visible."
     },
     {
@@ -69,8 +69,16 @@
       "label": "Public live review API",
       "required": true,
       "status": "passed",
-      "proof": "https://proofrank-ai-factory.vercel.app/health",
-      "action": "Deploy the live review API and confirm /health returns ok."
+      "proof": "https://proofrank-ai-factory.vercel.app/api/health",
+      "action": "Deploy the live review API and confirm /api/health returns ok."
+    },
+    {
+      "id": "live-api-security",
+      "label": "Public live API security controls",
+      "required": true,
+      "status": "needs-action",
+      "proof": "unauthenticated POST HTTP 422; disallowed host not verified.",
+      "action": "Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422."
     },
     {
       "id": "live-receipt",
@@ -106,7 +114,8 @@
     }
   ],
   "nextActions": [
+    "Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/10 required gates passed. Next action: Submit from the authenticated team-owner lablab.ai account."
+  "summary": "Not final-ready: 9/11 required gates passed. Next action: Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422."
 }

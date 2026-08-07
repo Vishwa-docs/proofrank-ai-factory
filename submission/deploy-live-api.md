@@ -12,7 +12,7 @@ https://proofrank-ai-factory.vercel.app/api/review-project
 Health check:
 
 ```text
-https://proofrank-ai-factory.vercel.app/health
+https://proofrank-ai-factory.vercel.app/api/health
 ```
 
 This production deployment is configured for direct public-fetch mode only. To
@@ -21,8 +21,8 @@ Vercel dashboard or approve that credential upload explicitly.
 
 ## Vercel Path
 
-The repo now includes Vercel serverless wrappers in `api/` and a `/health`
-rewrite in `vercel.json`, so this can run without Railway credits.
+The repo now includes Vercel serverless wrappers in `api/`; the public health
+route is `/api/health`, so this can run without Railway credits.
 
 ```bash
 vercel login
@@ -53,10 +53,10 @@ PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 PROOFRANK_BRIGHTDATA_CAP_USD=20
 ```
 
-After deploy:
+After deploy on Railway standalone Node:
 
 ```bash
-curl https://YOUR-VERCEL-DOMAIN/health
+curl https://YOUR-VERCEL-DOMAIN/api/health
 ```
 
 Use this endpoint in ProofRank:
@@ -110,10 +110,11 @@ https://YOUR-RAILWAY-DOMAIN/api/review-project
 Open the static or native.builder app with a short-lived review token:
 
 ```text
-https://YOUR-APP-URL/?reviewToken=GENERATED_REVIEW_TOKEN
+https://YOUR-APP-URL/#reviewToken=GENERATED_REVIEW_TOKEN
 ```
 
-The browser sends that token as `x-proofrank-token`. The Bright Data token stays
+The browser stores the token in session storage, immediately removes it from the
+visible URL, and sends it as `x-proofrank-token`. The Bright Data token stays
 server-side.
 
 ## Success Condition

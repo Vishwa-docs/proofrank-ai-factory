@@ -8,6 +8,7 @@ const project = {
   technologies: ["Bright Data Remote MCP"],
   submissionUrl: "https://example.com/submission",
   demoUrl: "https://example.com/demo",
+  nativeBuilderUrl: "https://proofrank.nativelyai.app/",
   githubUrl: "https://github.com/example/proofrank",
   presentationUrl: "https://example.com/deck",
   scores: {
@@ -25,6 +26,7 @@ const project = {
     risks: []
   },
   evidence: {
+    hasDemo: true,
     hasPublicDemo: true,
     demoWorkflow: true,
     hasGithub: true,
@@ -106,7 +108,13 @@ assert.equal(receipt.runReceipt.runId, "pr-20260807t120000000z-1a2b3c4d");
 assert.equal(receipt.runReceipt.traceDigest, "1a2b3c4d");
 assert.equal(receipt.scores.brightDataPrize, 98);
 assert.equal(receipt.readiness.sponsorProofReady, true);
+assert.equal(receipt.readiness.nativeBuilderReady, true);
+assert.equal(receipt.readiness.proofPackageReady, true);
+assert.equal(receipt.readiness.lablabSubmissionComplete, false);
+assert.equal(receipt.readiness.canSubmit, false);
+assert.ok(receipt.readiness.nextActions.some((action) => /lablab.ai account/i.test(action)));
 assert.equal(receipt.readiness.gates.find((gate) => gate.id === "bright-data").status, "passed");
+assert.equal(receipt.urls.nativeBuilder, "https://proofrank.nativelyai.app/");
 assert.equal(receipt.originalityRadar.riskLabel, "Defensible wedge");
 assert.equal(receipt.tribunal.panel.length, 3);
 assert.equal(receipt.tribunal.finalRecommendation.label, "Push for sponsor shortlist");
@@ -120,8 +128,11 @@ assert.match(packet, /Bright Data trace state: executed/);
 assert.match(packet, /Bright Data prize score: 98/);
 assert.match(packet, /Run receipt: pr-20260807t120000000z-1a2b3c4d/);
 assert.match(packet, /Replay command: PROOFRANK_FETCH_MODE=mcp npm run live:smoke/);
-assert.match(packet, /Submission readiness: Not submission-safe yet/);
-assert.match(packet, /Primary submission status: FALLBACK ONLY/);
+assert.match(packet, /Proof package readiness: Proof package ready/);
+assert.doesNotMatch(packet, /Submission readiness:/);
+assert.doesNotMatch(packet, /submission-safe/i);
+assert.match(packet, /Primary submission status: NATIVE\.BUILDER PRIMARY/);
+assert.match(packet, /Proof: https:\/\/proofrank\.nativelyai\.app\//);
 assert.match(packet, /Push for sponsor shortlist/);
 
 const csv = toCsv([project]);

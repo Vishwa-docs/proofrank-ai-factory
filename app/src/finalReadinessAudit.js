@@ -43,6 +43,19 @@ function liveReceiptProof(liveReceipt = {}) {
   ].join(" / ");
 }
 
+function liveApiSecurityProof(liveApiSecurity = {}) {
+  if (liveApiSecurity.ok) {
+    return `unauthenticated POST HTTP ${liveApiSecurity.unauthenticatedStatus}; disallowed host HTTP ${liveApiSecurity.disallowedHostStatus}.`;
+  }
+  const unauthenticated = liveApiSecurity.unauthenticatedStatus
+    ? `unauthenticated POST HTTP ${liveApiSecurity.unauthenticatedStatus}`
+    : "unauthenticated POST not verified";
+  const disallowedHost = liveApiSecurity.disallowedHostStatus
+    ? `disallowed host HTTP ${liveApiSecurity.disallowedHostStatus}`
+    : "disallowed host not verified";
+  return `${unauthenticated}; ${disallowedHost}.`;
+}
+
 function releaseVideoProof(releaseVideo = {}) {
   const duration = Number(releaseVideo.durationSeconds || 0);
   const durationText = duration ? `${Math.round(duration)}s` : "duration unknown";
@@ -108,7 +121,14 @@ export function buildFinalReadinessReport(state = {}) {
       label: "Public live review API",
       passed: bool(state.liveApi?.ok),
       proof: state.liveApi?.url || "No public live API health check passed.",
-      action: "Deploy the live review API and confirm /health returns ok."
+      action: "Deploy the live review API and confirm /api/health returns ok."
+    }),
+    gate({
+      id: "live-api-security",
+      label: "Public live API security controls",
+      passed: bool(state.liveApiSecurity?.ok),
+      proof: liveApiSecurityProof(state.liveApiSecurity),
+      action: "Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422."
     }),
     gate({
       id: "live-receipt",

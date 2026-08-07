@@ -48,6 +48,11 @@ const baseState = {
     ok: false,
     url: ""
   },
+  liveApiSecurity: {
+    ok: false,
+    unauthenticatedStatus: 0,
+    disallowedHostStatus: 0
+  },
   liveReceipt: {
     ok: false,
     provider: "",
@@ -75,10 +80,12 @@ const baseState = {
 const incomplete = buildFinalReadinessReport(baseState);
 assert.equal(incomplete.canSubmit, false);
 assert.equal(incomplete.requiredPassed, 4);
-assert.equal(incomplete.requiredTotal, 10);
+assert.equal(incomplete.requiredTotal, 11);
 assert.equal(incomplete.gates.find((gate) => gate.id === "bright-auth").status, "needs-action");
 assert.equal(incomplete.gates.find((gate) => gate.id === "bright-auth").proof, "HTTP 401; token shape looks UUID-like.");
 assert.equal(incomplete.gates.find((gate) => gate.id === "native-builder").status, "needs-action");
+assert.match(incomplete.gates.find((gate) => gate.id === "live-api").action, /\/api\/health/);
+assert.doesNotMatch(incomplete.gates.find((gate) => gate.id === "live-api").action, /confirm \/health/);
 assert.ok(incomplete.nextActions[0].includes("Publish the native.builder app"));
 assert.match(summarizeFinalReadiness(incomplete), /Not final-ready/);
 
@@ -102,7 +109,12 @@ const complete = buildFinalReadinessReport({
   },
   liveApi: {
     ok: true,
-    url: "https://proofrank-live.example.com/health"
+    url: "https://proofrank-live.example.com/api/health"
+  },
+  liveApiSecurity: {
+    ok: true,
+    unauthenticatedStatus: 401,
+    disallowedHostStatus: 422
   },
   liveReceipt: {
     ok: true,
@@ -150,7 +162,12 @@ const unsignedReceipt = buildFinalReadinessReport({
   },
   liveApi: {
     ok: true,
-    url: "https://proofrank-live.example.com/health"
+    url: "https://proofrank-live.example.com/api/health"
+  },
+  liveApiSecurity: {
+    ok: true,
+    unauthenticatedStatus: 401,
+    disallowedHostStatus: 422
   },
   liveReceipt: {
     ok: true,

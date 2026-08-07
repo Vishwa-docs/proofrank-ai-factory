@@ -14,6 +14,7 @@ assert.equal(typeof server.listen, "function");
 assert.equal(typeof server.close, "function");
 
 const testServer = createLiveReviewServer({
+  allowAnonymousPost: true,
   collector: async (payload) => ({
     id: "review-demo",
     title: "Demo",

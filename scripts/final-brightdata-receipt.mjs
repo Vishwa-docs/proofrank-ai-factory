@@ -21,6 +21,8 @@ const repoUrl =
   process.argv[2] || process.env.PROOFRANK_REVIEW_REPO_URL || "https://github.com/Vishwa-docs/proofrank-ai-factory";
 const demoUrl =
   process.argv[3] || process.env.PROOFRANK_REVIEW_DEMO_URL || "https://vishwa-docs.github.io/proofrank-ai-factory/";
+const nativeBuilderUrl =
+  process.env.PROOFRANK_NATIVE_BUILDER_URL || process.env.NATIVE_BUILDER_APP_URL || "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/";
 const allowDirect = process.argv.includes("--allow-direct");
 const outputPath = resolveFinalReceiptOutputPath(root, process.env, allowDirect);
 
@@ -57,7 +59,14 @@ const collected = await collectReviewerProject(
   }
 );
 
-const project = scoreProject(collected);
+const project = scoreProject({
+  ...collected,
+  nativeBuilderUrl,
+  evidence: {
+    ...collected.evidence,
+    nativeBuilderPublished: Boolean(nativeBuilderUrl)
+  }
+});
 const gate = buildFinalReceiptGate(project, { signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET });
 if (!allowDirect) {
   assertFinalBrightDataReceipt(project, { signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET });

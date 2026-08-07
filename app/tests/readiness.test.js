@@ -34,7 +34,8 @@ assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "native-builder"
 assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "bright-data").status, "passed");
 assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "actual-review-target").status, "passed");
 assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "live-backend").status, "passed");
-assert.match(readinessSummary(fallbackReadiness), /ready for final submission/i);
+assert.match(readinessSummary(fallbackReadiness), /proof package ready/i);
+assert.doesNotMatch(readinessSummary(fallbackReadiness), /final submission/i);
 
 const directTraceProject = {
   ...proofrank,
@@ -102,7 +103,8 @@ assert.equal(ready.canSubmit, true);
 assert.equal(ready.requiredPassed, ready.requiredTotal);
 assert.equal(ready.sponsorProofReady, true);
 assert.equal(ready.nativeBuilderReady, true);
-assert.match(readinessSummary(ready), /ready for final submission/i);
+assert.match(readinessSummary(ready), /proof package ready/i);
+assert.doesNotMatch(readinessSummary(ready), /final submission/i);
 
 const plannedProofrank = {
   ...proofrank,

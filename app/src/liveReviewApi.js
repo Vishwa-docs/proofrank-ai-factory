@@ -69,9 +69,9 @@ function corsForRequest(request, options = {}) {
   };
 }
 
-function tokenIsAuthorized(request, authToken = "") {
+function tokenIsAuthorized(request, authToken = "", allowAnonymousPost = false) {
   const expected = String(authToken || "").trim();
-  if (!expected) return true;
+  if (!expected) return Boolean(allowAnonymousPost);
   const authorization = headerValue(request.headers, "authorization");
   const bearer = authorization.match(/^Bearer\s+(.+)$/i)?.[1]?.trim();
   const explicit = headerValue(request.headers, "x-proofrank-token").trim();
@@ -136,7 +136,10 @@ export async function handleLiveReviewRequest(request, options = {}) {
 
   if (!cors.originAllowed) return json(403, { error: "Origin is not allowed." }, responseHeaders);
   if (method === "OPTIONS") return { status: 204, headers: responseHeaders, body: "" };
-  if (method !== "GET" && !tokenIsAuthorized(request, options.authToken)) {
+  if (method !== "GET" && !String(options.authToken || "").trim() && !options.allowAnonymousPost) {
+    return json(503, { error: "ProofRank review token is not configured." }, responseHeaders);
+  }
+  if (method !== "GET" && !tokenIsAuthorized(request, options.authToken, options.allowAnonymousPost)) {
     return json(401, { error: "A valid ProofRank review token is required." }, responseHeaders);
   }
   if (method === "GET" && pathname === "/health") return json(200, { ok: true, service: "proofrank-live-review" }, responseHeaders);

@@ -176,7 +176,7 @@ Built and verified:
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
 - Evidence Route map that shows event source, repository, deployed app, Bright bundle, claim ledger, and judge packet state for the selected project
-- Submission Cockpit that separates required final-submission gates from competitive polish checks
+- Setup gates that separate required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`

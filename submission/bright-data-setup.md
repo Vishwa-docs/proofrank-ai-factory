@@ -63,8 +63,9 @@ When deploying the live backend, keep the Bright Data token server-side and
 protect the review endpoints with a short-lived judge token, restricted CORS
 origins, and an allowlist of expected public hosts. The API rejects disallowed
 origins and URL hosts before it can call Bright Data.
-The browser sends the token from `?reviewToken=...` or session storage as
-`x-proofrank-token`, so the token does not need to appear as a visible UI field.
+The browser accepts the token from `#reviewToken=...`, stores it in session
+storage, removes it from the visible URL, and sends it as `x-proofrank-token`, so
+the token does not need to appear as a visible UI field.
 
 ## CLI Commands For Evidence Collection
 

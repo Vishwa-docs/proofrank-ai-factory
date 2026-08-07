@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
-        <button class="text-button nav-jump" data-section-tab="overview" type="button">Overview</button>
-        <button class="text-button nav-jump" data-section-tab="queue" type="button">Queue</button>
+        <button class="text-button nav-jump" data-nav-tab="overview" type="button">Overview</button>
+        <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
         <details class="export-menu">
           <summary>Export</summary>
           <div class="export-menu-panel" aria-label="Export actions">
@@ -46,15 +46,17 @@
           <p class="hero-subtitle">Evidence-backed diligence for public AI projects. Rank the field, verify claims, and export a judge-ready proof packet.</p>
           <div class="hero-controls" aria-label="Run controls">
             <label class="field compact" for="modeSelect">
-              <span>Mode</span>
-              <select id="modeSelect">
-                <option value="demo">Saved evidence</option>
+                <span>Mode</span>
+                <select id="modeSelect">
+                <option value="demo">Signed proof</option>
                 <option value="live">Bright Data live</option>
               </select>
             </label>
             <button id="runAudit" class="primary-button" type="button">Run review</button>
+            <button id="heroExportPacket" class="secondary-button" type="button">Export packet</button>
+            <button class="secondary-button" data-nav-tab="receipt" type="button">Bright proof</button>
           </div>
-          <div id="statusLine" class="status-line" role="status">Saved evidence ready</div>
+          <div id="statusLine" class="status-line" role="status">Signed Bright proof ready</div>
         </div>
 
         <aside class="decision-card panel" aria-label="Selected project decision">
@@ -69,21 +71,21 @@
         </aside>
       </section>
 
-      <nav class="section-tabs reveal" style="--i: 2" aria-label="ProofRank sections">
-        <button class="section-tab is-active" data-section-tab="overview" type="button">Overview</button>
-        <button class="section-tab" data-section-tab="queue" type="button">Queue</button>
-        <button class="section-tab" data-section-tab="receipt" type="button">Proof</button>
-        <button class="section-tab" data-section-tab="setup" type="button">Setup</button>
+      <nav class="section-tabs reveal" style="--i: 2" aria-label="ProofRank sections" role="tablist">
+        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Overview</button>
+        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Queue</button>
+        <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Proof</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Setup</button>
       </nav>
 
-      <section class="section-panel is-active reveal" data-section-panel="overview" style="--i: 3" aria-label="Selected project overview">
+      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 3" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
           <section id="scorecard" class="scorecard panel" aria-label="Selected project scorecard"></section>
           <section id="proofTopology" class="proof-topology panel" aria-label="Evidence route"></section>
         </div>
       </section>
 
-      <section class="section-panel reveal" data-section-panel="queue" style="--i: 3" aria-label="Ranked queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 3" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -110,7 +112,7 @@
         </section>
       </section>
 
-      <section class="section-panel reveal" data-section-panel="receipt" style="--i: 3" aria-label="Bright Data proof receipt" hidden>
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 3" aria-label="Bright Data proof receipt" role="tabpanel" aria-labelledby="tab-receipt" hidden>
         <aside class="evidence-rail panel" aria-label="Proof receipt">
           <div class="module-head receipt-head">
             <h2>Proof receipt</h2>
@@ -120,7 +122,7 @@
         </aside>
       </section>
 
-      <section class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Setup and submission gates" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Setup and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module">
             <div class="module-head">
@@ -134,7 +136,7 @@
               </div>
               <div>
                 <span>Mode</span>
-                <strong id="runModeLabel">Saved evidence</strong>
+                <strong id="runModeLabel">Signed proof</strong>
               </div>
             </div>
 

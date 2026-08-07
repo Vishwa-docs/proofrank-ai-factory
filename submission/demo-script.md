@@ -6,13 +6,13 @@ Target duration: under 3 minutes. The generated reference video is 2 minutes 20 
 
 "Judges and sponsor teams may have dozens or hundreds of AI submissions. The claims are scattered across project pages, demos, repos, decks, videos, and the live web. ProofRank turns that mess into evidence-backed diligence."
 
-## 0:12-0:30 - Run Audit
+## 0:12-0:30 - Run Review
 
-Show ProofRank open directly on the audit workspace. Paste or keep the AI Factory event URL. Select Demo Evidence first, then click Run Audit.
+Show ProofRank open directly on the audit workspace. Keep Signed proof selected, then click Run review.
 
 Say:
 
-"This demo uses saved evidence so judges can run it without credentials. The same workflow maps to Bright Data Remote MCP markdown scraping, MCP search, Web Scraper API, and Web Unlocker in live mode."
+"This signed proof path lets judges run the workflow without credentials. The same review maps to Bright Data Remote MCP markdown scraping, MCP search, Web Scraper API, and Web Unlocker in live mode."
 
 ## 0:30-0:58 - Tribunal And Originality Radar
 

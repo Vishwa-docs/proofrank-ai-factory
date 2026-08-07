@@ -28,7 +28,7 @@ const eventCollector = async (input) => ({
   ]
 });
 
-const options = { collector, eventCollector };
+const options = { collector, eventCollector, allowAnonymousPost: true };
 
 const health = await handleLiveReviewRequest({ method: "GET", pathname: "/health" }, options);
 assert.equal(health.status, 200);
@@ -207,6 +207,23 @@ const missingToken = await handleLiveReviewRequest(
 );
 assert.equal(missingToken.status, 401);
 assert.equal(missingToken.headers["access-control-allow-origin"], "https://proofrank.nativelyai.app");
+
+const missingConfiguredToken = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-project",
+    body: JSON.stringify({
+      repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"
+    })
+  },
+  {
+    ...options,
+    allowAnonymousPost: false,
+    authToken: ""
+  }
+);
+assert.equal(missingConfiguredToken.status, 503);
+assert.match(JSON.parse(missingConfiguredToken.body).error, /token is not configured/);
 
 const authorizedReview = await handleLiveReviewRequest(
   {

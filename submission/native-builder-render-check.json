@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-08-07T17:33:22Z",
+  "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
+  "title": "ProofRank — AI Diligence Engine",
+  "publishedBundle": "/assets/index-CTbvIN48.js",
+  "screenshots": {
+    "desktop": "submission/demo-assets/native-builder-desktop.png",
+    "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
+  },
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 950,
+      "forbiddenInViewport": [],
+      "wantedInViewport": [
+        "Run review",
+        "Export packet",
+        "Bright proof",
+        "Finalist-ready",
+        "ProofRank"
+      ],
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "mobile-320",
+      "width": 320,
+      "height": 740,
+      "forbiddenInViewport": [],
+      "wantedInViewport": [
+        "Run review",
+        "Export packet",
+        "Bright proof",
+        "Finalist-ready",
+        "ProofRank"
+      ],
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "horizontalOverflow": false
+    }
+  ],
+  "forbiddenStrings": [
+    "Demo Evidence",
+    "AUDIT CONTROLS",
+    "REVIEWER INTAKE",
+    "Submission URL",
+    "Ranked Queue",
+    "Submission Cockpit",
+    "AgentArena"
+  ],
+  "ok": true
+}

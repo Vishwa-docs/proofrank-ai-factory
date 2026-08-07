@@ -2,7 +2,7 @@
 
 Date: 2026-08-07
 Event: AI Factory Native.builder Hackathon
-Target prize: Best Agentic Use of Bright Data
+Target prize: Best Agentic Use of Bright Data (AI Factory Bright Data partner challenge)
 
 ## Executive Call
 
@@ -15,15 +15,16 @@ The winning angle is not "another research assistant." It is an evidence control
 These are the pieces I cannot ethically or technically complete without the account owner:
 
 1. Native.builder access
-   - Complete the Native.builder login flow.
+   - Completed: you logged in, created the workspace, built, and published the public native.builder app.
+   - Current public app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
    - Apply `AIFACTORY26` if the builder plan screen appears.
-   - Publish the native.builder app and give me the final public Native app URL.
+   - Remaining: final lablab.ai submission must use the native.builder app as the primary URL.
 
 2. Bright Data access
    - Bright Data value received and stored only in ignored `.env.local`.
-   - Spend cap confirmed at $50.
-   - Blocker: the current value returns HTTP 401 against both Bright Data REST request API and hosted Remote MCP.
-   - Needed next: a valid Bright Data API key from account settings or welcome email, plus confirmation that `npm run brightdata:mcp-smoke` passes.
+   - Preferred working cap: keep final proof runs around $20 and reserve remaining credits for deployment or replays.
+   - Completed: account auth and MCP base-tool checks passed with the replacement key.
+   - Remaining: keep the key out of client JavaScript and only run bounded final replays when needed.
 
 3. Real reviewer target
    - Provide the GitHub URL of the actual hackathon project you want reviewed.
@@ -50,7 +51,7 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Added Bright Data Remote MCP client, hosted MCP smoke check, SSE/JSON response parsing, `tools/list`, `tools/call`, `scrape_as_markdown`, project-level `search_engine`, project-level `discover`, and `PROOFRANK_FETCH_MODE=mcp`.
    - Added `PROOFRANK_MAX_BRIGHTDATA_CALLS` to keep live sponsor-prize proof runs bounded under the user-confirmed spend cap.
    - Added review-token, CORS-origin, and URL-host allowlist controls so a deployed backend does not expose unrestricted Bright Data spend.
-   - Remaining blocker: replace the failing Bright Data credential with a valid API key.
+   - Completed: the replacement Bright Data credential passed auth and MCP tool checks.
    - Tokens are loaded from `.env.local` or native.builder server secrets, never client JavaScript.
 
 2. Live project ingestion
@@ -58,7 +59,7 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Implemented GitHub repo metadata, README, package files, license, commits, public releases, public issues, deployed demo fetch, and public secret-risk scan.
    - Added a bounded event-to-project follow-up: `/api/review-event` can review one top project when a real GitHub URL is available, while preserving event results if the follow-up fails.
    - Remaining: copied README/code similarity and richer comparison scoring.
-   - Added MCP `discover` prior-art collection path; it still needs valid Bright Data auth before the final sponsor run can execute it.
+   - Added MCP `discover` prior-art collection path; final sponsor receipt includes executed source, search, and discover traces.
    - Direct event fetch against lablab can return HTTP 403, so Bright Data/Web Unlocker is required for the real event scrape.
 
 3. Evidence normalization
@@ -75,9 +76,9 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Remaining: optional PDF export after the native.builder app is published.
 
 6. Native.builder implementation proof
-   - Rebuild or mirror the final experience in native.builder.
+   - Built and published the native.builder app.
    - Keep visible "built with native.builder" process evidence: workflow names, screenshots, generated routes, and public deployment.
-   - Remaining account-gated blocker: publish the native.builder app URL.
+   - Remaining: final submission must be sent from the team-owner lablab.ai account.
 
 ## Research Pattern From Prior Bright Data Winners
 
@@ -153,12 +154,12 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 7. No-demo-data mode
    - Partially implemented through live event review and live GitHub project review.
    - Remaining blocker: valid Bright Data credential and native.builder server-side deployment.
-   - The code path now exists for `mode: bright-data-mcp`; the final proof still needs one successful live run.
+   - The code path now exists for `mode: bright-data-mcp`; the final Bright Data receipt records one signed source/search/discovery proof bundle.
 
 8. Submission composer
    - Create final lablab fields, tool list, demo script, and "how native.builder was used" explanation from the actual proof run.
    - Partially implemented through Markdown submission packet and checklist.
-   - Added Submission Cockpit gates to the UI and exported packet so the native.builder URL, executed Bright Data trace, live backend, and actual reviewed project cannot be hidden by demo evidence.
+   - Added Setup gates to the UI and exported packet so the native.builder URL, executed Bright Data trace, live backend, and actual reviewed project cannot be hidden by saved evidence.
 
 ## Candidate Live Architecture
 

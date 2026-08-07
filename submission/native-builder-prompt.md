@@ -11,8 +11,8 @@ Create a functional deployed app, not a landing page. The first screen must be t
 ## Core Workflow
 
 1. User enters an event URL or project URL.
-2. User chooses Demo Evidence or Bright Data Live mode.
-3. User clicks Run Audit.
+2. User chooses Signed proof or Bright Data Live mode.
+3. User clicks Run review.
 4. The app discovers or loads project submissions.
 5. The app ranks projects by:
    - Eligibility
@@ -22,23 +22,27 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Presentation
 6. User selects a project.
 7. Center panel shows the scorecard, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
-8. Left panel shows a Submission Cockpit with required and competitive readiness gates.
+8. Setup tab shows required and competitive readiness gates.
 9. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
 10. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
 
 ## Required UI
 
-Use a quiet, dense operations-dashboard layout.
+Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
-- Sticky top bar with ProofRank mark, mode selector, CSV export, JSON export, and Submission Packet button.
-- Left column with event URL input, live API endpoint input, HTML upload, Run Audit button, Submission Cockpit, project reviewer intake, filters, and ranked queue.
-- Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Winner Benchmark, Originality Radar, Claim Ledger, and field map.
-- Right column with Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
+- Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
+- First viewport with event metadata, a large ProofRank headline, short value statement, mode selector, Run review button, Export packet button, Bright proof button, and one decision card.
+- Decision card shows Finalist-ready, Overall 100, Bright prize 100, Sponsor bundle executed, signed receipt ID, Package-ready, and Native app published.
+- Tabs below the first viewport: Overview, Queue, Proof, Setup.
+- Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
+- Queue shows filters, ranked projects, and field map.
+- Proof shows Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
+- Setup contains Event URL, Review API, HTML upload, GitHub/deployed-app intake, and submission gates.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not build a marketing hero. The app should open directly into the working audit interface.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Do not show the old default sample project as the selected project. Use Signed proof and Package-ready copy.
 
 ## Claim Ledger
 
@@ -108,9 +112,9 @@ Show a sponsor-prize benchmark panel for the selected project. It should compare
 
 The panel should show a numeric score, tier label, matched signals, and the top prize gaps. It should help the presenter explain why the project is prize-shaped while staying honest about missing Native.builder or executed Bright Data gates.
 
-## Submission Cockpit
+## Setup Gates
 
-Show a readiness cockpit that separates required submission gates from competitive-strength checks. It must never mark demo, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor-proof.
+Show readiness gates that separate required submission gates from competitive-strength checks. They must never mark saved, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor-proof.
 
 Required gates:
 
@@ -127,7 +131,7 @@ Competitive gates:
 - No visible secret risk
 - Exportable proof packet
 
-The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or Bright Data sponsor proof bundle is missing, the app should say the project is still gated rather than submission-safe.
+The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or Bright Data sponsor proof bundle is missing, the app should say the proof package is still gated rather than package-ready.
 
 The Actual project reviewed gate must not pass for a manually typed or pending target. It should pass only when a reviewer-supplied project has live-collected repository/demo evidence and at least one non-pending collection trace.
 
@@ -144,7 +148,7 @@ Include fixture records for:
 - NIGHTWATCH: Factory Early Warning
 - Voice-to-Ops: field reports that write themselves
 
-Use these records to make Demo Evidence mode fully functional without credentials.
+Use these records to make Signed proof mode fully functional without credentials.
 
 ## Bright Data Live Mode
 
@@ -202,7 +206,7 @@ Each server-issued project review should also include `runReceipt` with:
 
 ## Error Handling
 
-- Missing token: run Demo Evidence mode and show setup checklist.
+- Missing token: run Signed proof mode and show setup checklist.
 - Missing or invalid review token: return 401 from the live backend and show a clear live-setup status.
 - Disallowed origin or URL host: reject before calling Bright Data.
 - Bright Data call budget exhausted: stop collection and mark the trace as failed rather than continuing.
@@ -228,14 +232,14 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 
 ## Acceptance Criteria
 
-- The app runs with no credentials in Demo Evidence mode.
+- The app runs with no credentials in Signed proof mode.
 - Live mode has a secure Bright Data integration plan and token handling.
 - A user can complete the audit workflow in under three minutes.
 - The Claim Ledger is visible in the first 90 seconds of the demo.
 - The Adversarial Tribunal is visible in the first 90 seconds of the demo.
 - The Winner Benchmark is visible in the first 90 seconds of the demo.
 - The Originality Radar is visible in the first 90 seconds of the demo.
-- The Submission Cockpit makes native.builder, Bright Data, and real-project readiness visible without opening docs.
+- The Setup tab makes native.builder, Bright Data, and real-project readiness visible without opening docs.
 - Bright Data Dependency score is prominent.
 - Exports produce usable files.
 - App can be published to a public native.builder URL.

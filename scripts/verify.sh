@@ -48,8 +48,17 @@ required_files=(
   "submission/deploy-live-api.md"
   "submission/demo-script.md"
   "submission/pitch-deck.md"
+  "submission/submission-copy.md"
   "submission/checklist.md"
   "submission/operator-handoff.md"
+  "submission/final-readiness-audit.json"
+  "submission/final-brightdata-receipt.json"
+  "submission/native-builder-render-check.json"
+  "submission/workflow-proof.json"
+  "submission/proofrank-demo.mp4"
+  "submission/proofrank-pitch-deck.pptx"
+  "submission/demo-assets/native-builder-desktop.png"
+  "submission/demo-assets/native-builder-mobile-320.png"
 )
 
 for file in "${required_files[@]}"; do
@@ -57,6 +66,45 @@ for file in "${required_files[@]}"; do
 done
 
 npm run test
+
+node --input-type=module - <<'JS'
+import { readFileSync } from "node:fs";
+
+function parseJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
+
+const readiness = parseJson("submission/final-readiness-audit.json");
+if (!Array.isArray(readiness.gates) || !readiness.gates.some((gate) => gate.id === "lablab-submission")) {
+  throw new Error("final-readiness-audit.json must include the lablab-submission gate");
+}
+
+const receipt = parseJson("submission/final-brightdata-receipt.json");
+if (receipt.readiness?.proofPackageReady !== true) {
+  throw new Error("final-brightdata-receipt.json must mark proofPackageReady true");
+}
+if (receipt.readiness?.canSubmit === true && receipt.readiness?.lablabSubmissionComplete !== true) {
+  throw new Error("final-brightdata-receipt.json must not mark canSubmit true before lablab submission");
+}
+if (receipt.finalBrightDataGate?.ok !== true) {
+  throw new Error("final-brightdata-receipt.json must include a passing finalBrightDataGate");
+}
+
+const workflow = parseJson("submission/workflow-proof.json");
+if (workflow.ok !== true || !Array.isArray(workflow.exportedFiles) || workflow.exportedFiles.length < 2) {
+  throw new Error("workflow-proof.json must show a successful exported workflow");
+}
+
+const nativeRender = parseJson("submission/native-builder-render-check.json");
+if (nativeRender.ok !== true || !Array.isArray(nativeRender.viewports) || nativeRender.viewports.length < 2) {
+  throw new Error("native-builder-render-check.json must show desktop and mobile public render checks");
+}
+for (const viewport of nativeRender.viewports) {
+  if (viewport.horizontalOverflow || viewport.forbiddenInViewport?.length) {
+    throw new Error(`native.builder render check failed for ${viewport.name}`);
+  }
+}
+JS
 
 LOG_FILE="/tmp/proofrank-http.log"
 PORT_FILE="$(mktemp /tmp/proofrank-port.XXXXXX)"

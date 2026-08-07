@@ -56,7 +56,18 @@ export function buildReceipt(project, fieldProjects = []) {
   const tribunal = buildTribunal({ ...project, scores, verdict });
   const traceState = brightDataTraceState(project);
   const originalityRadar = buildOriginalityRadar(project, fieldProjects.length ? fieldProjects : [project]);
-  const readiness = buildReadiness(project, { projects: fieldProjects.length ? fieldProjects : [project] });
+  const packageReadiness = buildReadiness(project, { projects: fieldProjects.length ? fieldProjects : [project] });
+  const lablabSubmissionComplete = project.evidence?.lablabSubmissionComplete === true || project.evidence?.lablabSubmitted === true;
+  const readiness = {
+    ...packageReadiness,
+    proofPackageReady: packageReadiness.proofPackageReady ?? packageReadiness.canSubmit,
+    lablabSubmissionComplete,
+    finalSubmissionTrackedSeparately: !lablabSubmissionComplete,
+    canSubmit: Boolean((packageReadiness.proofPackageReady ?? packageReadiness.canSubmit) && lablabSubmissionComplete),
+    nextActions: lablabSubmissionComplete
+      ? packageReadiness.nextActions
+      : [...new Set([...packageReadiness.nextActions, "Submit from the authenticated team-owner lablab.ai account."])]
+  };
 
   return {
     id: project.id,
@@ -68,6 +79,7 @@ export function buildReceipt(project, fieldProjects = []) {
     urls: {
       submission: project.submissionUrl,
       demo: project.demoUrl,
+      nativeBuilder: project.nativeBuilderUrl,
       github: project.githubUrl,
       presentation: project.presentationUrl
     },
@@ -117,7 +129,7 @@ The competition app should be created and published through native.builder using
 - Bright Data trace state: ${receipt.traceState}
 - Run receipt: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
-- Submission readiness: ${readinessSummary(receipt.readiness)}
+- Proof package readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
