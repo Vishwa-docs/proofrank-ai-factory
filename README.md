@@ -57,6 +57,17 @@ The full verifier also starts a temporary static server and runs a smoke test:
 bash scripts/verify.sh
 ```
 
+## Public Static Fallback
+
+This repository includes a GitHub Pages workflow at `.github/workflows/pages.yml`.
+It deploys only the `app/` directory, so the public fallback contains the working
+ProofRank dashboard without submission notes, private scratch files, or saved
+hackathon HTML snapshots.
+
+The native.builder URL remains the required primary submission URL. Use the
+GitHub Pages URL as a backup proof-of-work link or public reference if the
+native.builder publish flow is still account-gated.
+
 ## Current Status
 
 Built and verified:
