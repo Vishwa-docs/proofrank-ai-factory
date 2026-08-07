@@ -24,7 +24,8 @@
 
 - Create a public GitHub repo.
 - Upload or link the local reference app and submission docs.
-- Record a 2:35 demo video using `submission/demo-script.md`.
+- Use the generated 1:58 demo video at `submission/proofrank-demo.mp4`.
+- If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Export CSV and selected receipt JSON during the demo.
 
 ## lablab.ai Submission Fields
@@ -76,5 +77,5 @@ Required links to paste:
 ```text
 Native.builder app URL: PASTE_AFTER_PUBLISH
 GitHub URL: PASTE_AFTER_REPO_CREATE
-Demo video URL: PASTE_AFTER_RECORDING
+Demo video URL: PASTE_AFTER_UPLOAD
 ```

@@ -7,3 +7,5 @@ dist/
 coverage/
 playwright-report/
 test-results/
+submission/demo-assets/proofrank-demo-voice.aiff
+submission/demo-assets/slides.txt

@@ -33,7 +33,7 @@ The native.builder build prompt is in `submission/native-builder-prompt.md` once
 
 ## Local Run
 
-After the app files are created:
+Start the static app:
 
 ```bash
 python3 -m http.server 4173 --directory app
@@ -47,14 +47,11 @@ http://127.0.0.1:4173
 
 ## Local Tests
 
-After the test files are created:
-
 ```bash
-node app/tests/scoring.test.js
-node app/tests/parser.test.js
+npm run test
 ```
 
-The full verifier will be:
+The full verifier also starts a temporary static server and runs a smoke test:
 
 ```bash
 bash scripts/verify.sh
@@ -62,7 +59,22 @@ bash scripts/verify.sh
 
 ## Current Status
 
-Design and implementation plan are in:
+Built and verified:
+
+- Dependency-free dashboard app in `app/`
+- Deterministic scoring, parser, claim ledger, Bright Data trace, and export tests
+- Native.builder build prompt in `submission/native-builder-prompt.md`
+- Bright Data setup and submission copy in `submission/`
+- Demo video source assets can be generated with `scripts/create_demo_video.sh`
+
+Design and implementation plan:
 
 - `docs/superpowers/specs/2026-08-07-proofrank-design.md`
 - `docs/superpowers/plans/2026-08-07-proofrank-implementation.md`
+
+Account-gated work still requiring the team owner:
+
+- Authorize the Native.builder X/Privy login flow
+- Apply the `AIFACTORY26` Builder Plan promo code
+- Add the Bright Data token server-side after claiming `aiaccess50`
+- Publish the native.builder app URL and paste it into the lablab.ai submission
