@@ -23,14 +23,15 @@ assert.ok(fallbackReadiness.nextActions.some((action) => /Bright Data/i.test(act
 
 const directTraceProject = {
   ...proofrank,
+  id: "review-pending-proofrank",
   demoUrl: "https://example.nativelyai.app",
   brightDataTraces: [
     {
-      provider: "direct",
-      traceStatus: "executed",
-      tool: "fetch",
+      provider: "bright-data",
+      traceStatus: "pending",
+      tool: "Remote MCP",
       queryOrUrl: "https://example.com",
-      countsForSponsorFit: false
+      countsForSponsorFit: true
     }
   ]
 };
@@ -43,12 +44,24 @@ const directReadiness = buildReadiness(directTraceProject, {
   projects: [directTraceProject]
 });
 
+assert.equal(directReadiness.gates.find((gate) => gate.id === "actual-review-target").status, "needs-action");
 assert.equal(directReadiness.gates.find((gate) => gate.id === "bright-data").status, "needs-action");
 assert.equal(directReadiness.canSubmit, false);
 
 const executedProject = {
   ...proofrank,
+  id: "review-proofrank",
   demoUrl: "https://proofrank.nativelyai.app",
+  evidenceItems: [
+    {
+      sourceType: "github-metadata",
+      title: "Repository metadata collected"
+    }
+  ],
+  evidence: {
+    ...proofrank.evidence,
+    repoMetadataCollected: true
+  },
   brightDataTraces: [
     {
       provider: "bright-data",

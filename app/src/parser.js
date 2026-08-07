@@ -188,8 +188,62 @@ function extractWithRegex(html) {
   return cards;
 }
 
+function isTechnologyLine(value = "") {
+  return /(bright data|api|mcp|claude|openai|chatgpt|gemini|deepseek|speechmatics|featherless|vercel|supabase|github|copilot|llama|agent|studio|datasets?|scraper|proxy)/i.test(
+    value
+  );
+}
+
+function cleanMarkdownText(value = "") {
+  return stripTags(
+    decodeHtml(value)
+      .replace(/^#+\s*/, "")
+      .replace(/^[-*]\s*/, "")
+      .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
+      .replace(/\*\*/g, "")
+      .replace(/`/g, "")
+  );
+}
+
+function extractWithMarkdown(markdown = "") {
+  const cards = [];
+  const seen = new Set();
+  const linkPattern = /\[([^\]]+)]\(([^)]*\/ai-hackathons\/nativebuilder-build-without-limits\/[^)]*)\)/g;
+  const matches = [...String(markdown || "").matchAll(linkPattern)];
+
+  for (let index = 0; index < matches.length; index += 1) {
+    const match = matches[index];
+    const rawTitle = cleanMarkdownText(match[1]);
+    const href = decodeHtml(match[2]);
+    if (!rawTitle || /^play video$/i.test(rawTitle) || /nativebuilder-build-without-limits$/i.test(href)) continue;
+
+    const nextStart = matches[index + 1]?.index ?? markdown.length;
+    const chunk = markdown.slice((match.index || 0) + match[0].length, nextStart);
+    const lines = chunk
+      .split(/\r?\n/)
+      .map(cleanMarkdownText)
+      .filter(Boolean)
+      .filter((line) => !/^play$/i.test(line) && !/^submitted concepts/i.test(line));
+    const summary = lines.find((line) => line.length > 45 && !isTechnologyLine(line)) || lines.find((line) => line.length > 45) || "";
+    if (!summary) continue;
+
+    const afterSummary = lines.slice(Math.max(0, lines.indexOf(summary) + 1));
+    const team = afterSummary.find((line) => line.length <= 60 && !isTechnologyLine(line) && !line.startsWith("+")) || "Unknown team";
+    const technologies = [
+      ...new Set(afterSummary.filter((line) => line !== team && !line.startsWith("+") && isTechnologyLine(line)).slice(0, 8))
+    ];
+    const key = `${rawTitle}|${href}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    cards.push({ title: rawTitle, summary, href, team, technologies });
+  }
+
+  return cards;
+}
+
 export function extractProjectsFromHtml(html) {
   const cards = extractFromDom(html);
   const sourceCards = cards.length ? cards : extractWithRegex(html);
-  return sourceCards.map(cardToProject);
+  const parsedCards = sourceCards.length ? sourceCards : extractWithMarkdown(html);
+  return parsedCards.map(cardToProject);
 }

@@ -19,6 +19,8 @@ Date: 2026-08-07
    - Get a new API token from Bright Data account settings or welcome email.
    - Put it in `.env.local` as `BRIGHTDATA_API_TOKEN=...`.
    - Keep or set `PROOFRANK_FETCH_MODE=mcp`.
+   - Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` for the final proof run unless you explicitly raise the bounded limit.
+   - Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend outside localhost.
    - Run `npm run brightdata:mcp-smoke`.
    - Success condition: `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`.
 

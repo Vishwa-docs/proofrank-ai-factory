@@ -23,6 +23,11 @@ function readBody(request) {
 
 export function createLiveReviewServer(options = {}) {
   const liveCollectors = createLiveCollectorsFromEnv(process.env);
+  const securityOptions = {
+    allowedOrigins: options.allowedOrigins ?? process.env.PROOFRANK_ALLOWED_ORIGINS,
+    allowedHosts: options.allowedHosts ?? process.env.PROOFRANK_ALLOWED_HOSTS,
+    authToken: options.authToken ?? process.env.PROOFRANK_REVIEW_TOKEN ?? process.env.PROOFRANK_API_TOKEN
+  };
   const collectorOptions = {
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
@@ -37,10 +42,12 @@ export function createLiveReviewServer(options = {}) {
         {
           method: request.method,
           url: request.url,
+          headers: request.headers,
           body
         },
         {
           ...options,
+          ...securityOptions,
           collectorOptions
         }
       );

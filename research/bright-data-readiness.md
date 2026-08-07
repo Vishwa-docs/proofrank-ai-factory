@@ -48,6 +48,8 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Added `/api/review-event` for event-level submission discovery.
    - Added direct-fetch fallback plus Bright Data REST request adapter.
    - Added Bright Data Remote MCP client, hosted MCP smoke check, SSE/JSON response parsing, `tools/list`, `tools/call`, `scrape_as_markdown`, project-level `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`.
+   - Added `PROOFRANK_MAX_BRIGHTDATA_CALLS` to keep live sponsor-prize proof runs bounded under the user-confirmed spend cap.
+   - Added review-token, CORS-origin, and URL-host allowlist controls so a deployed backend does not expose unrestricted Bright Data spend.
    - Remaining blocker: replace the failing Bright Data credential with a valid API key.
    - Tokens are loaded from `.env.local` or native.builder server secrets, never client JavaScript.
 

@@ -14,6 +14,8 @@
 4. Store the token server-side in native.builder, never in client JavaScript.
 5. Run `npm run brightdata:mcp-smoke` before the final demo.
 6. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
+7. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
+8. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
 
 ## Current Credential Status
 
@@ -48,6 +50,18 @@ project/demo/event evidence, and calls `search_engine` for prior-art search in
 project reviews. The same client redacts token values from HTTP or JSON-RPC
 error messages.
 
+The live collector also enforces a per-run Bright Data call budget. This is a
+hard call-count guard, not exact dollar metering; platform billing still belongs
+to the Bright Data account. With the default value, one project review has enough
+room for repo/demo evidence plus prior-art search without allowing runaway loops.
+
+When deploying the live backend, keep the Bright Data token server-side and
+protect the review endpoints with a short-lived judge token, restricted CORS
+origins, and an allowlist of expected public hosts. The API rejects disallowed
+origins and URL hosts before it can call Bright Data.
+The browser sends the token from `?reviewToken=...` or session storage as
+`x-proofrank-token`, so the token does not need to appear as a visible UI field.
+
 ## CLI Commands For Evidence Collection
 
 ```bash
@@ -63,6 +77,10 @@ npx --yes --package @brightdata/cli brightdata discover "PROJECT_TITLE" --intent
 BRIGHTDATA_API_TOKEN=your_token_here
 BRIGHTDATA_UNLOCKER_ZONE=mcp_unlocker
 PROOFRANK_FETCH_MODE=mcp
+PROOFRANK_MAX_BRIGHTDATA_CALLS=12
+PROOFRANK_REVIEW_TOKEN=generate_a_random_value
+PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
+PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 # Optional; omit to derive this from BRIGHTDATA_API_TOKEN.
 BRIGHTDATA_MCP_URL=https://mcp.brightdata.com/mcp?token=your_token_here
 PROOFRANK_MODE=live

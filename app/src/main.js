@@ -79,6 +79,24 @@ function isHttpUrl(value = "") {
   }
 }
 
+function reviewHeaders() {
+  const headers = {
+    "Content-Type": "application/json"
+  };
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const queryToken = params.get("reviewToken") || params.get("proofrankToken") || "";
+    if (queryToken) sessionStorage.setItem("proofrankReviewToken", queryToken);
+    const token = sessionStorage.getItem("proofrankReviewToken") || "";
+    if (token) headers["x-proofrank-token"] = token;
+  } catch {
+    // Token support is optional; failed storage should not break demo mode.
+  }
+
+  return headers;
+}
+
 function labelFromSlug(value = "") {
   const acronyms = new Map([
     ["ai", "AI"],
@@ -506,9 +524,7 @@ function liveEventEndpoint() {
 async function collectEventViaApi(eventUrl) {
   const response = await fetch(liveEventEndpoint(), {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: reviewHeaders(),
     body: JSON.stringify({ eventUrl, reviewFirstProject: true })
   });
 
@@ -715,9 +731,7 @@ async function collectReviewerProjectViaApi(payload) {
 
   const response = await fetch(endpoint, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: reviewHeaders(),
     body: JSON.stringify(payload)
   });
 

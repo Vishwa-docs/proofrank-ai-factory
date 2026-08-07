@@ -40,6 +40,24 @@ function inferredReviewerCount(projects = []) {
   return projects.filter((project) => String(project.id || "").startsWith("review-")).length;
 }
 
+function hasLiveReviewerEvidence(project = {}) {
+  if (!String(project.id || "").startsWith("review-")) return false;
+
+  const evidence = project.evidence || {};
+  const evidenceItems = project.evidenceItems || [];
+  const traces = project.brightDataTraces || [];
+  const collectedEvidence =
+    evidence.repoMetadataCollected === true ||
+    evidence.repoTreeCollected === true ||
+    evidence.packageManifestPresent === true ||
+    evidenceItems.some((item) =>
+      ["github-readme", "github-metadata", "github-tree", "package-manifest", "github-commits", "public-demo"].includes(item.sourceType)
+    );
+  const nonPendingTrace = traces.some((trace) => ["executed", "failed"].includes(trace.traceStatus));
+
+  return collectedEvidence && nonPendingTrace;
+}
+
 function gate({ id, label, required = true, passed, detail, proof, action }) {
   return {
     id,
@@ -69,6 +87,7 @@ export function buildReadiness(project = {}, context = {}) {
   const sponsorProofReady = hasExecutedBrightDataTrace(project);
   const nativeBuilderReady = looksLikeNativeBuilderUrl(project);
   const traceState = sponsorProofReady ? "executed" : brightDataTraceState(project);
+  const liveReviewedProjectCount = projects.filter(hasLiveReviewerEvidence).length;
 
   const gates = [
     gate({
@@ -96,13 +115,20 @@ export function buildReadiness(project = {}, context = {}) {
     gate({
       id: "actual-review-target",
       label: "Actual project reviewed",
-      passed: reviewerProjectCount > 0,
+      passed: liveReviewedProjectCount > 0,
       detail:
-        reviewerProjectCount > 0
-          ? `${reviewerProjectCount} user-supplied project${reviewerProjectCount === 1 ? "" : "s"} added to the queue.`
-          : "Add the real hackathon GitHub project and deployed app that ProofRank should review.",
-      proof: reviewerProjectCount > 0 ? "Reviewer project present in the current queue." : "Only built-in demonstration submissions are loaded.",
-      action: "Add the actual GitHub repository and deployed app URL in the reviewer intake."
+        liveReviewedProjectCount > 0
+          ? `${liveReviewedProjectCount} user-supplied project${liveReviewedProjectCount === 1 ? "" : "s"} collected with live evidence.`
+          : reviewerProjectCount > 0
+            ? "A reviewer target is present, but it only has pending/manual evidence."
+            : "Add the real hackathon GitHub project and deployed app that ProofRank should review.",
+      proof:
+        liveReviewedProjectCount > 0
+          ? "Reviewer project has fetched repository/demo evidence and a non-pending collection trace."
+          : reviewerProjectCount > 0
+            ? "Pending reviewer intake does not count as an actual live review."
+            : "Only built-in demonstration submissions are loaded.",
+      action: "Run live collection against the actual GitHub repository and deployed app URL."
     }),
     gate({
       id: "live-backend",

@@ -17,6 +17,8 @@ Bright Data is the load-bearing evidence layer in the intended live workflow:
 - CLI and `discover` commands are prepared to find submission pages, demo links, GitHub repos, presentations, and public comparison targets.
 - Web Scraper API or Web Unlocker is the planned path for dynamic or protected pages.
 - SERP checks title, team, and problem-statement similarity.
+- Server-side live runs enforce `PROOFRANK_MAX_BRIGHTDATA_CALLS` so credentialed demos stay bounded under the user-confirmed spend cap.
+- Public live backends can require `PROOFRANK_REVIEW_TOKEN`, restrict `PROOFRANK_ALLOWED_ORIGINS`, and reject URLs outside `PROOFRANK_ALLOWED_HOSTS` before Bright Data is called.
 - Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
 
 The local app also includes demo fixtures for reliable judging if credentials are not available.
@@ -142,6 +144,8 @@ Built and verified:
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
 - Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has an executed Bright Data trace
 - Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`
+- Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
+- Live API token, CORS, and URL-host allowlist controls for public deployments
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap and Bright Data prior-art queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`

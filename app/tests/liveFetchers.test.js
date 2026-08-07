@@ -71,6 +71,27 @@ const envText = createLiveFetchTextFromEnv(
 
 assert.equal(await envText("https://example.com"), "env-zone");
 
+const budgetedCollectors = createLiveCollectorsFromEnv(
+  {
+    BRIGHTDATA_API_TOKEN: "test-token",
+    BRIGHTDATA_UNLOCKER_ZONE: "env-zone",
+    PROOFRANK_MAX_BRIGHTDATA_CALLS: "1",
+    PROOFRANK_BRIGHTDATA_CAP_USD: "50"
+  },
+  {
+    fetchImpl: async (_url, options) => ({
+      ok: true,
+      status: 200,
+      text: async () => JSON.parse(options.body).url
+    })
+  }
+);
+
+assert.equal(budgetedCollectors.budget.maxCalls, 1);
+assert.equal(budgetedCollectors.budget.capUsd, 50);
+assert.equal(await budgetedCollectors.fetchText("https://example.com/one"), "https://example.com/one");
+await assert.rejects(() => budgetedCollectors.fetchText("https://example.com/two"), /live call budget exceeded/i);
+
 const mcpCalls = [];
 const mcpEnvText = createLiveFetchTextFromEnv(
   {

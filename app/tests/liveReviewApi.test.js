@@ -169,4 +169,108 @@ assert.match(JSON.parse(missingEventUrl.body).error, /eventUrl/);
 const notFound = await handleLiveReviewRequest({ method: "GET", pathname: "/api/unknown" }, options);
 assert.equal(notFound.status, 404);
 
+const blockedOrigin = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-project",
+    headers: {
+      origin: "https://evil.example"
+    },
+    body: JSON.stringify({
+      repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"
+    })
+  },
+  {
+    ...options,
+    allowedOrigins: ["https://proofrank.nativelyai.app"]
+  }
+);
+assert.equal(blockedOrigin.status, 403);
+assert.equal(blockedOrigin.headers["access-control-allow-origin"], "https://proofrank.nativelyai.app");
+
+const missingToken = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-project",
+    headers: {
+      origin: "https://proofrank.nativelyai.app"
+    },
+    body: JSON.stringify({
+      repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"
+    })
+  },
+  {
+    ...options,
+    allowedOrigins: ["https://proofrank.nativelyai.app"],
+    authToken: "judge-token"
+  }
+);
+assert.equal(missingToken.status, 401);
+assert.equal(missingToken.headers["access-control-allow-origin"], "https://proofrank.nativelyai.app");
+
+const authorizedReview = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-project",
+    headers: {
+      origin: "https://proofrank.nativelyai.app",
+      authorization: "Bearer judge-token"
+    },
+    body: JSON.stringify({
+      repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
+      demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/"
+    })
+  },
+  {
+    ...options,
+    allowedOrigins: ["https://proofrank.nativelyai.app"],
+    allowedHosts: ["github.com", "*.github.io"],
+    authToken: "judge-token"
+  }
+);
+assert.equal(authorizedReview.status, 200);
+
+let hostRejectedCollectorCalls = 0;
+const hostRejected = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-project",
+    headers: {
+      "x-proofrank-token": "judge-token"
+    },
+    body: JSON.stringify({
+      repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
+      demoUrl: "https://evil.example/proofrank"
+    })
+  },
+  {
+    ...options,
+    allowedHosts: ["github.com", "*.github.io"],
+    authToken: "judge-token",
+    collector: async (input) => {
+      hostRejectedCollectorCalls += 1;
+      return collector(input);
+    }
+  }
+);
+assert.equal(hostRejected.status, 422);
+assert.match(JSON.parse(hostRejected.body).error, /not allowed/);
+assert.equal(hostRejectedCollectorCalls, 0);
+
+const eventHostRejected = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({
+      eventUrl: "https://evil.example/event"
+    })
+  },
+  {
+    ...options,
+    allowedHosts: ["lablab.ai", "github.com", "*.github.io"]
+  }
+);
+assert.equal(eventHostRejected.status, 422);
+assert.match(JSON.parse(eventHostRejected.body).error, /not allowed/);
+
 console.log("live review API tests passed");

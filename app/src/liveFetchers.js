@@ -2,6 +2,7 @@ import { createBrightDataMcpClient, createBrightDataMcpFetchText, createBrightDa
 
 const BRIGHTDATA_REQUEST_URL = "https://api.brightdata.com/request";
 const DEFAULT_UNLOCKER_ZONE = "mcp_unlocker";
+const DEFAULT_MAX_BRIGHTDATA_CALLS = 12;
 
 function runtimeEnv() {
   return typeof process !== "undefined" && process?.env ? process.env : {};
@@ -21,6 +22,35 @@ function requireFetch(fetchImpl) {
   if (fetchImpl) return fetchImpl;
   if (typeof fetch !== "undefined") return fetch;
   throw new Error("A fetch implementation is required.");
+}
+
+function positiveInteger(value, fallback) {
+  const parsed = Number.parseInt(String(value ?? ""), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function numericValue(value, fallback) {
+  const parsed = Number.parseFloat(String(value ?? ""));
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+}
+
+function createLiveBudget(env, options = {}) {
+  return {
+    usedCalls: 0,
+    maxCalls: positiveInteger(options.maxBrightDataCalls ?? env.PROOFRANK_MAX_BRIGHTDATA_CALLS, DEFAULT_MAX_BRIGHTDATA_CALLS),
+    capUsd: numericValue(options.brightDataCapUsd ?? env.PROOFRANK_BRIGHTDATA_CAP_USD, 0)
+  };
+}
+
+function withLiveBudget(collector, budget, label) {
+  return async function budgetedCollector(...args) {
+    if (budget.usedCalls >= budget.maxCalls) {
+      const cap = budget.capUsd ? ` under $${budget.capUsd} configured cap` : "";
+      throw new Error(`${label} blocked: Bright Data live call budget exceeded (${budget.maxCalls} calls${cap}).`);
+    }
+    budget.usedCalls += 1;
+    return collector(...args);
+  };
 }
 
 export function buildBrightDataRequest(targetUrl, options = {}) {
@@ -82,6 +112,7 @@ export function createLiveCollectorsFromEnv(env = runtimeEnv(), options = {}) {
   const collectionMode = describeLiveFetchMode(env);
 
   if (collectionMode === "bright-data-mcp") {
+    const budget = createLiveBudget(env, options);
     const client = createBrightDataMcpClient({
       apiToken,
       endpoint: env.BRIGHTDATA_MCP_URL,
@@ -90,19 +121,26 @@ export function createLiveCollectorsFromEnv(env = runtimeEnv(), options = {}) {
     });
     return {
       collectionMode,
-      fetchText: createBrightDataMcpFetchText({ client }),
-      searchText: createBrightDataMcpSearch({ client })
+      budget,
+      fetchText: withLiveBudget(createBrightDataMcpFetchText({ client }), budget, "Bright Data MCP fetch"),
+      searchText: withLiveBudget(createBrightDataMcpSearch({ client }), budget, "Bright Data MCP search")
     };
   }
 
   if (collectionMode === "bright-data-request-api") {
+    const budget = createLiveBudget(env, options);
     return {
       collectionMode,
-      fetchText: createBrightDataFetchText({
-        apiToken,
-        zone,
-        fetchImpl: options.fetchImpl
-      })
+      budget,
+      fetchText: withLiveBudget(
+        createBrightDataFetchText({
+          apiToken,
+          zone,
+          fetchImpl: options.fetchImpl
+        }),
+        budget,
+        "Bright Data request fetch"
+      )
     };
   }
 
