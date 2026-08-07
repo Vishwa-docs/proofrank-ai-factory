@@ -1,0 +1,10 @@
+{
+  "name": "proofrank",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node app/tests/scoring.test.js && node app/tests/parser.test.js && node app/tests/claims.test.js",
+    "dev": "python3 -m http.server 4173 --directory app"
+  }
+}

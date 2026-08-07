@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ProofRank</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="mark" aria-hidden="true">PR</div>
+        <div>
+          <h1>ProofRank</h1>
+          <p>Public AI product diligence</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <label class="mode-toggle" for="modeSelect">
+          <span>Mode</span>
+          <select id="modeSelect">
+            <option value="demo">Demo evidence</option>
+            <option value="live">Bright Data live</option>
+          </select>
+        </label>
+        <button id="exportCsv" class="icon-button" type="button" title="Export judge queue CSV" aria-label="Export judge queue CSV">
+          <span aria-hidden="true">CSV</span>
+        </button>
+        <button id="exportReceipts" class="icon-button" type="button" title="Export all receipts JSON" aria-label="Export all receipts JSON">
+          <span aria-hidden="true">JSON</span>
+        </button>
+        <button id="exportPacket" class="primary-button" type="button">Submission Packet</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel run-panel" aria-label="Audit controls and ranking">
+        <section class="control-section">
+          <label for="eventUrl">Event or project URL</label>
+          <div class="url-row">
+            <input id="eventUrl" type="url" value="https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits">
+            <button id="runAudit" class="primary-button" type="button">Run Audit</button>
+          </div>
+          <label for="apiKey" class="key-label">Bright Data token</label>
+          <input id="apiKey" type="password" placeholder="Optional for live mode">
+          <label for="htmlUpload" class="file-drop">
+            <span>Load saved lablab HTML</span>
+            <input id="htmlUpload" type="file" accept=".html,.htm,text/html">
+          </label>
+          <div id="statusLine" class="status-line">Demo evidence ready</div>
+        </section>
+
+        <section class="filter-section" aria-label="Filters">
+          <button class="filter-chip is-active" data-filter="all" type="button">All</button>
+          <button class="filter-chip" data-filter="high-risk" type="button">High risk</button>
+          <button class="filter-chip" data-filter="bright-strong" type="button">Bright Data strong</button>
+          <button class="filter-chip" data-filter="missing-demo" type="button">Missing demo</button>
+          <button class="filter-chip" data-filter="missing-github" type="button">Missing GitHub</button>
+          <button class="filter-chip" data-filter="finalist-ready" type="button">Finalist-ready</button>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2>Ranked Queue</h2>
+            <span id="queueCount" class="count-pill">0</span>
+          </div>
+          <div id="rankedList" class="ranked-list" role="list"></div>
+        </section>
+      </aside>
+
+      <section class="panel score-panel" aria-label="Selected project scorecard">
+        <div id="scorecard"></div>
+        <div class="field-map">
+          <div class="section-head">
+            <h2>Field Map</h2>
+            <span id="fieldSummary" class="muted"></span>
+          </div>
+          <div id="fieldMap"></div>
+        </div>
+      </section>
+
+      <aside class="panel receipt-panel" aria-label="Proof receipt">
+        <div class="section-head">
+          <h2>Proof Receipt</h2>
+          <button id="exportSelected" class="icon-button small" type="button" title="Export selected receipt JSON" aria-label="Export selected receipt JSON">Save</button>
+        </div>
+        <div id="receipt"></div>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

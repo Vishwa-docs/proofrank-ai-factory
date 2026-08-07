@@ -1,0 +1,61 @@
+function statusFor(value, strongLabel = "Verified") {
+  return value ? strongLabel : "Not Found";
+}
+
+function evidenceText(value, good, bad) {
+  return value ? good : bad;
+}
+
+export function buildClaimLedger(project) {
+  const evidence = project.evidence || {};
+  const scores = project.scores || {};
+  const brightTools = evidence.brightDataTools || [];
+  const brightDependency = scores.brightDataFit ?? 0;
+
+  return [
+    {
+      claim: "Public demo is reachable and shows a workflow",
+      status: evidence.hasPublicDemo && evidence.demoWorkflow ? "Verified" : evidence.hasDemo ? "Weak Evidence" : "Not Found",
+      evidence: evidenceText(
+        evidence.hasPublicDemo && evidence.demoWorkflow,
+        "Public demo link and end-to-end workflow are visible from submitted evidence.",
+        "Public demo or end-to-end workflow needs stronger proof before final judging."
+      )
+    },
+    {
+      claim: "Project explains native.builder use",
+      status: statusFor(evidence.nativeBuilderExplained),
+      evidence: evidenceText(
+        evidence.nativeBuilderExplained,
+        "Submission evidence explains how native.builder shaped the app workflow or implementation.",
+        "Add a direct description of native.builder usage in the submission."
+      )
+    },
+    {
+      claim: "Bright Data is load-bearing",
+      status: brightDependency >= 80 ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
+      evidence:
+        brightTools.length > 0
+          ? `${brightTools.join(", ")} referenced with dependency score ${brightDependency}.`
+          : "No visible Bright Data tool usage in public evidence."
+    },
+    {
+      claim: "Originality has public support",
+      status: evidence.lowCrowdOverlap && evidence.differentiation ? "Verified" : evidence.differentiation ? "Weak Evidence" : "Needs Proof",
+      evidence: evidenceText(
+        evidence.lowCrowdOverlap && evidence.differentiation,
+        "The project has a specific wedge and lower overlap with the current field.",
+        "Run broader prior-art discovery before making a strong originality claim."
+      )
+    },
+    {
+      claim: "Review packet is defensible",
+      status: evidence.proofReceipt && evidence.brightDataTrace ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Proof",
+      evidence: evidenceText(
+        evidence.proofReceipt && evidence.brightDataTrace,
+        "Receipt includes source-backed evidence plus a visible collection trace.",
+        "Add timestamped source traces and confidence labels."
+      )
+    }
+  ];
+}

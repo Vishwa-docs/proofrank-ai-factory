@@ -8,7 +8,7 @@ Prior Bright Data hackathon winners and finalists show a repeated pattern: the s
 
 ## Product Thesis
 
-ProofRank is an agentic submission truth auditor for hackathons, accelerators, grants, sponsor programs, and procurement teams. Given a public event or project URL, it gathers public evidence about each submission and produces a ranked judge queue with proof receipts for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
+ProofRank is a public AI product diligence engine for hackathons, accelerators, grants, sponsor programs, and procurement teams. The hackathon submission audit is the wedge. Given a public event or project URL, it gathers public evidence about each submission and produces a ranked diligence queue with proof receipts for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
 The core judge-facing insight is simple: every sponsor program needs to know which projects are real, usable, original, and genuinely using sponsor technology. Manual review is slow and inconsistent. ProofRank makes the review faster by giving judges source-backed receipts instead of vague summaries.
 
@@ -78,7 +78,7 @@ First screen is the actual audit workspace, not a landing page.
 
 - Top bar: product name, mode switch, export buttons.
 - Left panel: event input, audit run controls, filter chips, ranked submissions.
-- Center panel: selected submission scorecard with score breakdown, evidence timeline, and judge verdict.
+- Center panel: selected submission scorecard with score breakdown, claim ledger, evidence gaps, and diligence verdict.
 - Right panel: proof receipt with source snippets, Bright Data trace, risks, and recommended review action.
 - Bottom band: current field map showing how projects cluster by domain and technology claims.
 
@@ -133,12 +133,19 @@ BrightDataTrace:
 - status
 - collectedAt
 
+ClaimLedgerItem:
+
+- claim
+- status: Verified, Weak Evidence, Not Found, or Needs Proof
+- evidence
+
 ## Error Handling
 
 - Missing API key: run demo mode and show the live-mode setup checklist.
 - Failed page fetch: keep the project in the queue with an accessibility warning.
 - Missing demo or GitHub link: reduce presentation and eligibility scores, but do not discard the project.
 - Ambiguous evidence: mark the receipt as unresolved rather than inventing a conclusion.
+- Similarity and originality checks: present prior-art risk signals, not plagiarism accusations.
 - External-service downtime: use saved fixtures and display the last successful collection timestamp.
 
 ## Testing Strategy
