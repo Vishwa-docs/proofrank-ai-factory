@@ -1,7 +1,8 @@
 import { EVENT_URL, fixtureProjects } from "./fixtures.js";
 import { extractProjectsFromHtml } from "./parser.js";
-import { rankProjects } from "./scoring.js";
+import { brightDataTraceState, rankProjects } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
+import { buildTribunal } from "./tribunal.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
 import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 
@@ -198,6 +199,47 @@ function renderClaimLedger(project) {
   `;
 }
 
+function renderTribunal(project) {
+  const tribunal = buildTribunal(project);
+  const openCount = tribunal.disputes.filter((dispute) => dispute.status === "open").length;
+
+  return `
+    <section class="tribunal-panel">
+      <div class="module-head compact">
+        <h2>Adversarial tribunal</h2>
+        <span class="hint">${tribunal.finalRecommendation.confidence}% confidence / ${openCount} open</span>
+      </div>
+      <div class="tribunal-verdict">
+        <strong>${escapeHtml(tribunal.finalRecommendation.label)}</strong>
+        <p>${escapeHtml(tribunal.finalRecommendation.action)}</p>
+      </div>
+      <div class="tribunal-grid">
+        ${tribunal.panel
+          .map(
+            (judge) => `
+              <article class="tribunal-card">
+                <div>
+                  <h3>${escapeHtml(judge.role)}</h3>
+                  <span>${judge.confidence}</span>
+                </div>
+                <p>${escapeHtml(judge.stance)}</p>
+                <ul>
+                  ${[...judge.reasons, ...judge.objections].slice(0, 3).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+                </ul>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+      <div class="dispute-row">
+        ${tribunal.disputes
+          .map((dispute) => `<span class="${escapeAttr(dispute.status)}">${escapeHtml(dispute.topic)}</span>`)
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderSourceLinks(project) {
   const links = [
     ["Submission", project.submissionUrl],
@@ -215,6 +257,7 @@ function renderSourceLinks(project) {
 
 function renderScorecard(project) {
   const tags = project.technologies.map((technology) => `<span class="tag">${escapeHtml(technology)}</span>`).join("");
+  const traceState = brightDataTraceState(project);
   const risks = project.verdict.risks.length
     ? project.verdict.risks.map((risk) => `<li>${escapeHtml(risk)}</li>`).join("")
     : `<li>No major audit risk visible in current evidence.</li>`;
@@ -252,13 +295,15 @@ function renderScorecard(project) {
       </div>
       <div>
         <h3>Evidence depth</h3>
-        <p>${(project.evidenceItems || []).length} receipt items, ${(project.brightDataTraces || []).length} collection traces.</p>
+        <p>${(project.evidenceItems || []).length} receipt items, ${(project.brightDataTraces || []).length} collection traces, Bright Data ${traceState}.</p>
       </div>
       <div>
         <h3>Current blocker</h3>
         <ul>${risks}</ul>
       </div>
     </section>
+
+    ${renderTribunal(project)}
 
     ${renderClaimLedger(project)}
   `;
@@ -286,9 +331,11 @@ function renderReceipt(project) {
       (trace) => `
       <tr>
         <td>${escapeHtml(trace.tool)}</td>
+        <td>${escapeHtml(trace.provider || trace.mode || "unknown")}</td>
+        <td><span class="trace-state ${escapeAttr(trace.traceStatus || "unknown")}">${escapeHtml(trace.traceStatus || "unknown")}</span></td>
         <td>${escapeHtml(trace.queryOrUrl)}</td>
         <td>${trace.resultCount}</td>
-        <td>${escapeHtml(trace.status)}</td>
+        <td>${escapeHtml(`${trace.status}${trace.byteCount ? ` / ${trace.byteCount}b / ${trace.contentHash}` : ""}`)}</td>
       </tr>
     `
     )
@@ -307,13 +354,15 @@ function renderReceipt(project) {
       <thead>
         <tr>
           <th>Tool</th>
+          <th>Provider</th>
+          <th>Run</th>
           <th>Query or URL</th>
           <th>Rows</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        ${traces || `<tr><td colspan="4">No Bright Data trace visible yet.</td></tr>`}
+        ${traces || `<tr><td colspan="6">No Bright Data trace visible yet.</td></tr>`}
       </tbody>
     </table>
 
@@ -523,7 +572,9 @@ function reviewerProjectFromInputs() {
       brightDataRole: "none",
       brightDataTools: [],
       agenticLoop: false,
-      brightDataTrace: false
+      brightDataTrace: false,
+      brightDataTraceStatus: "pending",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -543,11 +594,15 @@ function reviewerProjectFromInputs() {
     brightDataTraces: [
       {
         mode: "pending-live",
+        provider: "bright-data",
+        traceStatus: "pending",
         tool: "Remote MCP",
         queryOrUrl: repoUrl,
         resultCount: 0,
         status: "waiting for server-side collection",
-        collectedAt: new Date().toISOString()
+        collectedAt: new Date().toISOString(),
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   };

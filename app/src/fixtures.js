@@ -11,8 +11,8 @@ export const fixtureProjects = [
       "Agentic submission truth auditor that ranks hackathon projects with source-backed proof receipts for accessibility, originality, sponsor usage, and review risk.",
     eventUrl: EVENT_URL,
     submissionUrl: "",
-    demoUrl: "local-reference-app",
-    githubUrl: "local-workspace",
+    demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/",
+    githubUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
     presentationUrl: "submission/pitch-deck.md",
     createdAt: "2026-08-07",
     domain: "Governance",
@@ -26,11 +26,16 @@ export const fixtureProjects = [
     trackTags: ["Business", "Utility and Tools", "Web Scraping & Data Extraction"],
     evidence: {
       hasDemo: true,
-      hasPublicDemo: false,
+      hasPublicDemo: true,
       hasGithub: true,
       hasPresentation: true,
       nativeBuilderExplained: true,
       builtDuringEvent: true,
+      repoMetadataCollected: true,
+      repoTreeCollected: true,
+      packageManifestPresent: true,
+      licensePresent: true,
+      secretRiskVisible: false,
       isFunctional: true,
       notLandingPage: true,
       demoWorkflow: true,
@@ -48,7 +53,9 @@ export const fixtureProjects = [
       brightDataRole: "agentic",
       brightDataTools: ["Remote MCP", "SERP API", "Web Scraper API", "CLI"],
       agenticLoop: true,
-      brightDataTrace: true
+      brightDataTrace: false,
+      brightDataTraceStatus: "planned",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -80,20 +87,28 @@ export const fixtureProjects = [
     ],
     brightDataTraces: [
       {
-        mode: "planned-live",
+        mode: "planned",
+        provider: "bright-data",
+        traceStatus: "planned",
         tool: "Remote MCP",
         queryOrUrl: EVENT_URL,
-        resultCount: 31,
+        resultCount: 0,
         status: "scoped for native.builder live mode",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       },
       {
-        mode: "planned-live",
+        mode: "planned",
+        provider: "bright-data",
+        traceStatus: "planned",
         tool: "SERP API",
         queryOrUrl: "exact project title and team similarity checks",
-        resultCount: 10,
+        resultCount: 0,
         status: "scoped for originality audit",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   },
@@ -137,7 +152,9 @@ export const fixtureProjects = [
       brightDataRole: "agentic",
       brightDataTools: ["SERP API", "Datasets"],
       agenticLoop: true,
-      brightDataTrace: true
+      brightDataTrace: false,
+      brightDataTraceStatus: "claimed",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -157,12 +174,16 @@ export const fixtureProjects = [
     ],
     brightDataTraces: [
       {
-        mode: "demo",
+        mode: "claimed-public-card",
+        provider: "public-evidence",
+        traceStatus: "claimed",
         tool: "SERP API",
         queryOrUrl: "decision premise verification",
         resultCount: 5,
         status: "claimed load-bearing",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   },
@@ -205,7 +226,9 @@ export const fixtureProjects = [
       brightDataRole: "load-bearing",
       brightDataTools: ["Proxy Networks", "Web Scraper API"],
       agenticLoop: false,
-      brightDataTrace: true
+      brightDataTrace: false,
+      brightDataTraceStatus: "claimed",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -224,12 +247,16 @@ export const fixtureProjects = [
     ],
     brightDataTraces: [
       {
-        mode: "demo",
+        mode: "claimed-public-card",
+        provider: "public-evidence",
+        traceStatus: "claimed",
         tool: "Web Scraper API",
         queryOrUrl: "YouTube transcript acquisition",
         resultCount: 1,
         status: "claimed load-bearing",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   },
@@ -273,7 +300,9 @@ export const fixtureProjects = [
       brightDataRole: "load-bearing",
       brightDataTools: ["Web Scraper API"],
       agenticLoop: true,
-      brightDataTrace: true
+      brightDataTrace: false,
+      brightDataTraceStatus: "claimed",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -293,12 +322,16 @@ export const fixtureProjects = [
     ],
     brightDataTraces: [
       {
-        mode: "demo",
+        mode: "claimed-public-card",
+        provider: "public-evidence",
+        traceStatus: "claimed",
         tool: "Web Scraper API",
         queryOrUrl: "official permitting source acquisition",
         resultCount: 8,
         status: "claimed load-bearing",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   },
@@ -342,7 +375,9 @@ export const fixtureProjects = [
       brightDataRole: "supporting",
       brightDataTools: ["Web Scraper API"],
       agenticLoop: false,
-      brightDataTrace: true
+      brightDataTrace: false,
+      brightDataTraceStatus: "claimed",
+      brightDataTraceVisible: true
     },
     evidenceItems: [
       {
@@ -361,12 +396,16 @@ export const fixtureProjects = [
     ],
     brightDataTraces: [
       {
-        mode: "demo",
+        mode: "claimed-public-card",
+        provider: "public-evidence",
+        traceStatus: "claimed",
         tool: "Web Scraper API",
         queryOrUrl: "dataset enrichment",
         resultCount: 2,
         status: "claimed supporting",
-        collectedAt: COLLECTED_AT
+        collectedAt: COLLECTED_AT,
+        byteCount: 0,
+        contentHash: "00000000"
       }
     ]
   },

@@ -74,17 +74,21 @@ When the live server is running, use this endpoint in the ProofRank UI:
 http://127.0.0.1:8787/api/review-project
 ```
 
-Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes.
+Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed.
 
 ## Proof Receipt Trace Shape
 
 ```json
 {
-  "mode": "live",
+  "mode": "bright-data-request-api",
+  "provider": "bright-data",
+  "traceStatus": "executed",
   "tool": "scrape_as_markdown",
   "queryOrUrl": "https://example.com/submission",
   "resultCount": 1,
   "status": "ok",
-  "collectedAt": "2026-08-07T10:30:00+05:30"
+  "collectedAt": "2026-08-07T10:30:00+05:30",
+  "byteCount": 8421,
+  "contentHash": "1a2b3c4d"
 }
 ```

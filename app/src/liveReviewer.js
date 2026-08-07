@@ -149,6 +149,7 @@ function summarizePackageManifest(text) {
 
 function commitsDuringWindow(commitsText, window = HACKATHON_WINDOW) {
   const commits = parseJson(commitsText, []);
+  if (!Array.isArray(commits)) return [];
   const start = new Date(window.start).getTime();
   const end = new Date(window.end).getTime();
 
@@ -181,46 +182,106 @@ function inferBrightRole(text, tools) {
 function buildReplayTraces({ repoUrl, demoUrl, submissionUrl, title }, collectedAt) {
   const traces = [
     {
-      mode: "ready-live",
+      mode: "planned",
+      provider: "bright-data",
+      traceStatus: "planned",
       tool: "scrape_as_markdown",
       queryOrUrl: repoUrl,
-      resultCount: 1,
+      resultCount: 0,
       status: "server-side replay target",
-      collectedAt
+      collectedAt,
+      byteCount: 0,
+      contentHash: "00000000"
     },
     {
-      mode: "ready-live",
+      mode: "planned",
+      provider: "bright-data",
+      traceStatus: "planned",
       tool: "search_engine",
       queryOrUrl: `"${title}" "Bright Data" hackathon originality`,
       resultCount: 0,
       status: "prior-art query prepared",
-      collectedAt
+      collectedAt,
+      byteCount: 0,
+      contentHash: "00000000"
     }
   ];
 
   if (demoUrl) {
     traces.push({
-      mode: "ready-live",
+      mode: "planned",
+      provider: "bright-data",
+      traceStatus: "planned",
       tool: "scrape_as_markdown",
       queryOrUrl: demoUrl,
-      resultCount: 1,
+      resultCount: 0,
       status: "demo scrape target",
-      collectedAt
+      collectedAt,
+      byteCount: 0,
+      contentHash: "00000000"
     });
   }
 
   if (submissionUrl) {
     traces.push({
-      mode: "ready-live",
+      mode: "planned",
+      provider: "bright-data",
+      traceStatus: "planned",
       tool: "scrape_as_markdown",
       queryOrUrl: submissionUrl,
-      resultCount: 1,
+      resultCount: 0,
       status: "submission scrape target",
-      collectedAt
+      collectedAt,
+      byteCount: 0,
+      contentHash: "00000000"
     });
   }
 
   return traces;
+}
+
+function providerForCollectionMode(collectionMode) {
+  return collectionMode === "bright-data-request-api" ? "bright-data" : "direct";
+}
+
+function byteCount(value = "") {
+  const text = String(value || "");
+  if (typeof TextEncoder !== "undefined") return new TextEncoder().encode(text).length;
+  return text.length;
+}
+
+function contentHash(value = "") {
+  const text = String(value || "");
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, text = "", error = null }) {
+  const ok = !error;
+  return {
+    mode: collectionMode,
+    provider: providerForCollectionMode(collectionMode),
+    traceStatus: ok ? "executed" : "failed",
+    tool,
+    queryOrUrl,
+    resultCount: ok && cleanText(text) ? 1 : 0,
+    status: ok ? "ok" : `failed: ${error.message}`,
+    collectedAt,
+    byteCount: ok ? byteCount(text) : 0,
+    contentHash: ok ? contentHash(text) : "00000000"
+  };
+}
+
+function summarizeTraceStatus(traces) {
+  if (traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "executed")) return "executed";
+  if (traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "failed")) return "failed";
+  if (traces.some((trace) => trace.provider === "direct" && trace.traceStatus === "executed")) return "direct";
+  if (traces.some((trace) => trace.traceStatus === "planned")) return "planned";
+  return "missing";
 }
 
 export function parseGitHubRepoUrl(value = "") {
@@ -248,6 +309,8 @@ export async function collectReviewerProject(input, options = {}) {
   const fetchText = options.fetchText || defaultFetchText;
   const now = options.now || (() => new Date());
   const collectedAt = now().toISOString();
+  const collectionMode = options.collectionMode || "direct-fetch";
+  const collectionTraces = [];
   const repoApiUrl = `https://api.github.com/repos/${owner}/${repo}`;
   const demoUrl = isHttpUrl(input.demoUrl) ? input.demoUrl : "";
   const submissionUrl = isHttpUrl(input.submissionUrl) ? input.submissionUrl : "";
@@ -262,13 +325,44 @@ export async function collectReviewerProject(input, options = {}) {
   let licenseText = "";
   let commitsText = "";
 
+  async function fetchEvidence(url, requestOptions = {}, meta = {}) {
+    try {
+      const text = await fetchText(url, requestOptions);
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: meta.tool || "scrape_as_markdown",
+          queryOrUrl: url,
+          collectedAt,
+          text
+        })
+      );
+      return text;
+    } catch (error) {
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: meta.tool || "scrape_as_markdown",
+          queryOrUrl: url,
+          collectedAt,
+          error
+        })
+      );
+      throw error;
+    }
+  }
+
   try {
     repoMetadata = parseJson(
-      await fetchText(repoApiUrl, {
-        headers: {
-          Accept: "application/vnd.github+json"
-        }
-      }),
+      await fetchEvidence(
+        repoApiUrl,
+        {
+          headers: {
+            Accept: "application/vnd.github+json"
+          }
+        },
+        { tool: "github_api" }
+      ),
       {}
     );
   } catch (error) {
@@ -283,22 +377,30 @@ export async function collectReviewerProject(input, options = {}) {
 
   try {
     readmeText = decodePossibleGitHubReadme(
-      await fetchText(readmeApiUrl, {
-        headers: {
-          Accept: "application/vnd.github.raw"
-        }
-      })
+      await fetchEvidence(
+        readmeApiUrl,
+        {
+          headers: {
+            Accept: "application/vnd.github.raw"
+          }
+        },
+        { tool: "scrape_as_markdown" }
+      )
     );
   } catch (error) {
     readmeText = `README unavailable: ${error.message}`;
   }
 
   try {
-    treeText = await fetchText(treeApiUrl, {
-      headers: {
-        Accept: "application/vnd.github+json"
-      }
-    });
+    treeText = await fetchEvidence(
+      treeApiUrl,
+      {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      },
+      { tool: "github_api" }
+    );
   } catch (error) {
     treeText = JSON.stringify({
       error: error.message,
@@ -312,7 +414,7 @@ export async function collectReviewerProject(input, options = {}) {
 
   if (packagePath) {
     try {
-      packageText = await fetchText(buildRawGitHubUrl(owner, repo, defaultBranch, packagePath));
+      packageText = await fetchEvidence(buildRawGitHubUrl(owner, repo, defaultBranch, packagePath), {}, { tool: "scrape_as_markdown" });
     } catch (error) {
       packageText = `Package manifest unavailable: ${error.message}`;
     }
@@ -320,18 +422,22 @@ export async function collectReviewerProject(input, options = {}) {
 
   if (licensePath) {
     try {
-      licenseText = await fetchText(buildRawGitHubUrl(owner, repo, defaultBranch, licensePath));
+      licenseText = await fetchEvidence(buildRawGitHubUrl(owner, repo, defaultBranch, licensePath), {}, { tool: "scrape_as_markdown" });
     } catch (error) {
       licenseText = `License unavailable: ${error.message}`;
     }
   }
 
   try {
-    commitsText = await fetchText(commitsApiUrl, {
-      headers: {
-        Accept: "application/vnd.github+json"
-      }
-    });
+    commitsText = await fetchEvidence(
+      commitsApiUrl,
+      {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      },
+      { tool: "github_api" }
+    );
   } catch (error) {
     commitsText = JSON.stringify({
       error: error.message
@@ -340,7 +446,7 @@ export async function collectReviewerProject(input, options = {}) {
 
   if (demoUrl) {
     try {
-      demoText = await fetchText(demoUrl);
+      demoText = await fetchEvidence(demoUrl, {}, { tool: "scrape_as_markdown" });
     } catch (error) {
       demoText = `Demo unavailable: ${error.message}`;
     }
@@ -358,10 +464,24 @@ export async function collectReviewerProject(input, options = {}) {
   const haystack = `${title} ${team} ${workflowText}`.toLowerCase();
   const brightDataTools = [...new Set(extractBrightDataTools(haystack))];
   const brightDataRole = inferBrightRole(haystack, brightDataTools);
+  const brightDataTraceStatus = summarizeTraceStatus(collectionTraces);
+  const executedBrightDataTrace = brightDataTraceStatus === "executed";
   const hasDemo = Boolean(demoUrl);
   const demoReachable = hasDemo && !demoText.startsWith("Demo unavailable:");
   const readmeReachable = !readmeText.startsWith("README unavailable:");
   const id = `review-${owner}-${repo}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const plannedTraces =
+    collectionMode === "bright-data-request-api"
+      ? []
+      : buildReplayTraces(
+          {
+            repoUrl: canonicalUrl,
+            demoUrl,
+            submissionUrl,
+            title
+          },
+          collectedAt
+        );
 
   return {
     id,
@@ -409,7 +529,9 @@ export async function collectReviewerProject(input, options = {}) {
       brightDataRole,
       brightDataTools,
       agenticLoop: hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bloop\b/i, /\breplay\b/i, /\bcollector\b/i]),
-      brightDataTrace: brightDataTools.length > 0
+      brightDataTrace: executedBrightDataTrace,
+      brightDataTraceStatus,
+      brightDataTraceVisible: collectionTraces.length > 0 || plannedTraces.length > 0
     },
     evidenceItems: [
       {
@@ -531,14 +653,6 @@ export async function collectReviewerProject(input, options = {}) {
         limitations: "This is a lightweight public-evidence scan, not a full secret scanner."
       }
     ],
-    brightDataTraces: buildReplayTraces(
-      {
-        repoUrl: canonicalUrl,
-        demoUrl,
-        submissionUrl,
-        title
-      },
-      collectedAt
-    )
+    brightDataTraces: [...collectionTraces, ...plannedTraces]
   };
 }

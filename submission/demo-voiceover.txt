@@ -4,11 +4,11 @@ The problem is simple: AI project reviewers have to validate public claims quick
 
 ProofRank turns that review into a working audit queue. In Demo Evidence mode, it loads a realistic field of AI Factory submissions and ranks them by eligibility, Bright Data dependency, business value, originality, and presentation.
 
-The key difference is the Bright Data dependency score. A project ranks higher only when live-web evidence is load-bearing, agentic, traceable, and visible in the proof receipt. This makes the sponsor tool part of the product logic, not a badge in the footer.
+The key difference is the Bright Data dependency score. A project ranks higher only when live-web evidence is load-bearing, agentic, traceable, visible in the proof receipt, and backed by an executed Bright Data run. This makes the sponsor tool part of the product logic, not a badge in the footer.
 
 For each project, reviewers get a Claim Ledger. Instead of making absolute accusations, ProofRank marks claims as verified, weak evidence, not found, or needs proof. That creates a defensible review packet without pretending the system knows more than the evidence supports.
 
-On the right, every Proof Receipt shows source snippets, confidence, limitations, and the Bright Data trace that would produce the evidence in live mode. The live plan uses Remote MCP search, markdown scraping, SERP checks, Web Scraper API, Web Unlocker, and CLI-compatible collection steps.
+On the right, every Proof Receipt shows source snippets, confidence, limitations, and trace provenance. The trace table separates executed Bright Data, direct fallback, planned, claimed, pending, and failed evidence. The live plan uses Remote MCP search, markdown scraping, SERP checks, Web Scraper API, Web Unlocker, and CLI-compatible collection steps.
 
 When a Bright Data token is missing, ProofRank does not fail silently. It keeps the demo workflow usable and tells the reviewer exactly what credential step is needed.
 

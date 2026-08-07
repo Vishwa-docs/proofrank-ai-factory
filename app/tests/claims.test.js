@@ -7,8 +7,8 @@ const proofrank = scoreProject(fixtureProjects.find((project) => project.id === 
 const countersign = scoreProject(fixtureProjects.find((project) => project.id === "countersign"));
 
 const proofrankClaims = buildClaimLedger(proofrank);
-assert.equal(proofrankClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Verified");
-assert.equal(proofrankClaims.find((claim) => claim.claim === "Public demo is reachable and shows a workflow").status, "Weak Evidence");
+assert.equal(proofrankClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Weak Evidence");
+assert.equal(proofrankClaims.find((claim) => claim.claim === "Public demo is reachable and shows a workflow").status, "Verified");
 
 const countersignClaims = buildClaimLedger(countersign);
 assert.equal(countersignClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Not Found");
@@ -23,6 +23,7 @@ const sourceProofClaims = buildClaimLedger(
       brightDataRole: "agentic",
       brightDataTools: ["Remote MCP"],
       brightDataTrace: true,
+      brightDataTraceStatus: "executed",
       proofReceipt: true,
       differentiation: true,
       lowCrowdOverlap: true,
@@ -31,7 +32,15 @@ const sourceProofClaims = buildClaimLedger(
       licensePresent: true,
       builtDuringEvent: true,
       secretRiskVisible: false
-    }
+    },
+    brightDataTraces: [
+      {
+        mode: "bright-data-request-api",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "Remote MCP"
+      }
+    ]
   })
 );
 

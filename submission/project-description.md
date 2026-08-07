@@ -17,11 +17,11 @@ Judges and sponsor teams review many AI projects under time pressure. Claims are
 
 ## Solution
 
-ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger and Proof Receipt, showing source snippets, confidence, limitations, Bright Data traces, and the recommended review action.
+ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, disputes, and the recommended review action.
 
 ## Why Bright Data
 
-Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. In live mode it uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible commands. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
+Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. In live mode it uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible commands. Receipts distinguish executed Bright Data traces from direct fallback, planned, claimed, pending, or failed rows. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
 
 ## Why Native.builder
 
@@ -29,7 +29,7 @@ The competition app should be generated, refined, and published through native.b
 
 ## Differentiation
 
-ProofRank is not an AI judge and not a generic scraper. It is a diligence engine. It extracts public claims, checks the evidence behind them, labels confidence, surfaces evidence gaps, and exports a defensible review packet.
+ProofRank is not an AI judge and not a generic scraper. It is a diligence engine. It extracts public claims, checks the evidence behind them, labels confidence, surfaces evidence gaps, runs three adversarial perspectives, and exports a defensible review packet.
 
 ## External APIs And Tools
 
@@ -49,5 +49,5 @@ ProofRank is not an AI judge and not a generic scraper. It is a diligence engine
 3. Inspect the ranked queue.
 4. Select a project.
 5. Open the Claim Ledger.
-6. Review the Proof Receipt and Bright Data trace.
+6. Review the Adversarial Tribunal, Proof Receipt, and trace table.
 7. Export the sponsor-ready diligence packet.

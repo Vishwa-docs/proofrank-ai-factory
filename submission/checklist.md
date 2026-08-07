@@ -17,8 +17,8 @@
 - Apply promo code `aiaccess50` if prompted.
 - Copy Bright Data API token.
 - Add token to native.builder server-side environment variables.
-- Run one live audit if possible.
-- Confirm the app shows a Bright Data trace in a proof receipt.
+- Run one live Bright Data-backed audit.
+- Confirm the proof receipt shows at least one `provider: bright-data` trace with `traceStatus: executed`.
 
 ## Optional But Strong
 
@@ -75,7 +75,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible collection steps to inspect public submission pages, demos, repos, decks, prior-art signals, and sponsor usage claims. Every proof receipt includes a Bright Data trace.
+Bright Data is the evidence acquisition layer. ProofRank uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible collection steps to inspect public submission pages, demos, repos, decks, prior-art signals, and sponsor usage claims. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row.
 ```
 
 External tools:

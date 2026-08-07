@@ -21,5 +21,8 @@ assert.equal(projects[0].title, "Project Y");
 assert.equal(projects[0].team, "Team X");
 assert.ok(projects[0].technologies.includes("Bright Data Web Scraper API"));
 assert.equal(projects[0].evidence.brightDataRole, "supporting");
+assert.equal(projects[0].evidence.brightDataTrace, false);
+assert.equal(projects[0].evidence.brightDataTraceStatus, "claimed");
+assert.equal(projects[0].brightDataTraces[0].traceStatus, "claimed");
 
 console.log("parser tests passed");

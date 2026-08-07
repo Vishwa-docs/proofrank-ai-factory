@@ -15,7 +15,7 @@ Bright Data is the load-bearing evidence layer in live mode:
 - Remote MCP or CLI search discovers submission pages, demo links, GitHub repos, presentations, and public comparison targets.
 - Web Scraper API or Web Unlocker fetches dynamic or protected pages.
 - SERP checks title, team, and problem-statement similarity.
-- Every receipt stores a Bright Data trace so sponsor reviewers can see exactly where the evidence came from.
+- Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
 
 The local app also includes demo fixtures for reliable judging if credentials are not available.
 
@@ -62,13 +62,13 @@ Check the hosted Bright Data MCP token:
 npm run brightdata:mcp-smoke
 ```
 
-Run one bounded reviewer collection:
+Run one bounded reviewer collection through Bright Data once the token is valid:
 
 ```bash
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 ```
 
-Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed:
+Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data proof:
 
 ```bash
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -124,7 +124,8 @@ native.builder publish flow is still account-gated.
 Built and verified:
 
 - Dependency-free dashboard app in `app/`
-- Deterministic scoring, parser, claim ledger, Bright Data trace, and export tests
+- Deterministic scoring, parser, claim ledger, trace provenance, and export tests
+- Executed-vs-planned trace scoring so sponsor fit is not inflated by unrun collection plans
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
@@ -140,4 +141,5 @@ Account-gated work still requiring the team owner:
 - Authorize the Native.builder X/Privy login flow
 - Apply the `AIFACTORY26` Builder Plan promo code
 - Add a valid Bright Data API key server-side after claiming `aiaccess50`
+- Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
 - Publish the native.builder app URL and paste it into the lablab.ai submission

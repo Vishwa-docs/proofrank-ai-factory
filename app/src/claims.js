@@ -1,3 +1,5 @@
+import { brightDataTraceState, hasExecutedBrightDataTrace } from "./scoring.js";
+
 function statusFor(value, strongLabel = "Verified") {
   return value ? strongLabel : "Not Found";
 }
@@ -11,6 +13,8 @@ export function buildClaimLedger(project) {
   const scores = project.scores || {};
   const brightTools = evidence.brightDataTools || [];
   const brightDependency = scores.brightDataFit ?? 0;
+  const executedBrightTrace = hasExecutedBrightDataTrace(project);
+  const traceState = brightDataTraceState(project);
 
   return [
     {
@@ -33,10 +37,12 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Bright Data is load-bearing",
-      status: brightDependency >= 80 ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
+      status: brightDependency >= 80 && executedBrightTrace ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
       evidence:
-        brightTools.length > 0
-          ? `${brightTools.join(", ")} referenced with dependency score ${brightDependency}.`
+        brightTools.length > 0 && executedBrightTrace
+          ? `${brightTools.join(", ")} executed with dependency score ${brightDependency}.`
+          : brightTools.length > 0
+            ? `${brightTools.join(", ")} referenced with dependency score ${brightDependency}; trace state is ${traceState}.`
           : "No visible Bright Data tool usage in public evidence."
     },
     {
@@ -50,11 +56,11 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Review packet is defensible",
-      status: evidence.proofReceipt && evidence.brightDataTrace ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Proof",
+      status: evidence.proofReceipt && executedBrightTrace ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Proof",
       evidence: evidenceText(
-        evidence.proofReceipt && evidence.brightDataTrace,
-        "Receipt includes source-backed evidence plus a visible collection trace.",
-        "Add timestamped source traces and confidence labels."
+        evidence.proofReceipt && executedBrightTrace,
+        "Receipt includes source-backed evidence plus an executed Bright Data collection trace.",
+        "Add timestamped Bright Data execution traces and confidence labels."
       )
     },
     {

@@ -15,6 +15,7 @@ const project = await collectReviewerProject(
   },
   {
     fetchText: createLiveFetchTextFromEnv(process.env),
+    collectionMode: describeLiveFetchMode(process.env),
     now: () => new Date()
   }
 );
@@ -31,6 +32,8 @@ console.log(
         hasPublicDemo: project.evidence.hasPublicDemo,
         brightDataRole: project.evidence.brightDataRole,
         brightDataTools: project.evidence.brightDataTools,
+        brightDataTrace: project.evidence.brightDataTrace,
+        brightDataTraceStatus: project.evidence.brightDataTraceStatus,
         receiptItems: project.evidenceItems.length,
         receipts: project.evidenceItems.map((item) => ({
           sourceType: item.sourceType,
@@ -39,7 +42,15 @@ console.log(
           excerpt: item.excerpt,
           limitations: item.limitations
         })),
-        traceTools: project.brightDataTraces.map((trace) => trace.tool)
+        traces: project.brightDataTraces.map((trace) => ({
+          provider: trace.provider,
+          traceStatus: trace.traceStatus,
+          tool: trace.tool,
+          resultCount: trace.resultCount,
+          byteCount: trace.byteCount,
+          contentHash: trace.contentHash,
+          status: trace.status
+        }))
       }
     },
     null,

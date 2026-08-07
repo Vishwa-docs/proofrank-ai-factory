@@ -61,7 +61,9 @@ function evidenceFromCard(card) {
     brightDataRole: hasBright ? "supporting" : "none",
     brightDataTools: card.technologies.filter((item) => item.toLowerCase().includes("bright data")),
     agenticLoop: summary.includes("agent") || summary.includes("re-check") || summary.includes("autonomous"),
-    brightDataTrace: hasBright
+    brightDataTrace: false,
+    brightDataTraceStatus: hasBright ? "claimed" : "missing",
+    brightDataTraceVisible: hasBright
   };
 }
 
@@ -96,15 +98,19 @@ function cardToProject(card, index) {
         limitations: "Uploaded card evidence does not prove demo availability or repository depth."
       }
     ],
-    brightDataTraces: evidence.brightDataTrace
+    brightDataTraces: evidence.brightDataTraceVisible
       ? [
           {
-            mode: "demo",
+            mode: "uploaded-html",
+            provider: "public-evidence",
+            traceStatus: "claimed",
             tool: "HTML snapshot",
             queryOrUrl: absoluteLablabUrl(card.href),
             resultCount: 1,
             status: "parsed from saved page",
-            collectedAt: COLLECTED_AT
+            collectedAt: COLLECTED_AT,
+            byteCount: 0,
+            contentHash: "00000000"
           }
         ]
       : []

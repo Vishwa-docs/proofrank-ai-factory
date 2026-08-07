@@ -117,6 +117,8 @@ assert.equal(project.evidence.secretRiskVisible, false);
 assert.equal(project.evidence.brightDataRole, "agentic");
 assert.ok(project.evidence.brightDataTools.includes("Remote MCP"));
 assert.ok(project.evidence.brightDataTools.includes("Web Scraper API"));
+assert.equal(project.evidence.brightDataTrace, false);
+assert.equal(project.evidence.brightDataTraceStatus, "direct");
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-metadata"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-tree"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "package-manifest"));
@@ -124,6 +126,9 @@ assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-commi
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "license"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "secret-risk-scan" && item.title.includes("passed")));
 assert.ok(project.brightDataTraces.some((trace) => trace.tool === "scrape_as_markdown"));
+assert.ok(project.brightDataTraces.some((trace) => trace.traceStatus === "executed" && trace.mode === "direct-fetch"));
+assert.ok(project.brightDataTraces.every((trace) => typeof trace.byteCount === "number"));
+assert.ok(project.brightDataTraces.every((trace) => /^[a-f0-9]{8}$/.test(trace.contentHash) || trace.traceStatus === "failed"));
 assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory"));
 assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/readme"));
 assert.ok(fetchedUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/git/trees/main?recursive=1"));
@@ -160,6 +165,40 @@ const risky = await collectReviewerProject(
 
 assert.equal(risky.evidence.secretRiskVisible, true);
 assert.ok(risky.evidenceItems.some((item) => item.sourceType === "secret-risk-scan" && item.title.includes("risk")));
+
+const brightCollected = await collectReviewerProject(
+  {
+    repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
+    demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/"
+  },
+  {
+    fetchText: fakeFetchText,
+    collectionMode: "bright-data-request-api",
+    now: () => new Date("2026-08-07T12:00:00.000Z")
+  }
+);
+
+assert.equal(brightCollected.evidence.brightDataTrace, true);
+assert.equal(brightCollected.evidence.brightDataTraceStatus, "executed");
+assert.ok(brightCollected.brightDataTraces.some((trace) => trace.mode === "bright-data-request-api" && trace.traceStatus === "executed"));
+
+const brightFailed = await collectReviewerProject(
+  {
+    repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"
+  },
+  {
+    fetchText: async () => {
+      throw new Error("Bright Data fetch failed 401");
+    },
+    collectionMode: "bright-data-request-api",
+    now: () => new Date("2026-08-07T12:00:00.000Z")
+  }
+);
+
+assert.equal(brightFailed.evidence.brightDataTrace, false);
+assert.equal(brightFailed.evidence.brightDataTraceStatus, "failed");
+assert.ok(brightFailed.brightDataTraces.every((trace) => trace.traceStatus === "failed"));
+assert.ok(brightFailed.brightDataTraces.some((trace) => trace.status.includes("401")));
 
 await assert.rejects(
   () => collectReviewerProject({ repoUrl: "https://example.com/nope" }, { fetchText: fakeFetchText }),

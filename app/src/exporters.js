@@ -1,5 +1,6 @@
-import { buildVerdict, calculateScores } from "./scoring.js";
+import { brightDataTraceState, buildVerdict, calculateScores } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
+import { buildTribunal } from "./tribunal.js";
 
 function escapeCsv(value) {
   const text = String(value ?? "");
@@ -48,6 +49,8 @@ export function toCsv(projects) {
 export function buildReceipt(project) {
   const scores = project.scores || calculateScores(project);
   const verdict = project.verdict || buildVerdict(project, scores);
+  const tribunal = buildTribunal({ ...project, scores, verdict });
+  const traceState = brightDataTraceState(project);
 
   return {
     id: project.id,
@@ -63,7 +66,9 @@ export function buildReceipt(project) {
       presentation: project.presentationUrl
     },
     technologies: project.technologies,
+    traceState,
     claimLedger: buildClaimLedger(project),
+    tribunal,
     evidenceItems: project.evidenceItems || [],
     brightDataTraces: project.brightDataTraces || []
   };
@@ -97,9 +102,26 @@ The competition app should be created and published through native.builder using
 
 - Overall score: ${receipt.scores.overall}
 - Bright Data fit: ${receipt.scores.brightDataFit}
+- Bright Data trace state: ${receipt.traceState}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
+
+## Adversarial Tribunal
+
+- Final recommendation: ${receipt.tribunal.finalRecommendation.label}
+- Tribunal confidence: ${receipt.tribunal.finalRecommendation.confidence}
+- Sponsor judge: ${receipt.tribunal.panel.find((judge) => judge.role === "Bright Data sponsor judge")?.stance || "Not available"}
+- Skeptical judge: ${receipt.tribunal.panel.find((judge) => judge.role === "Skeptical hackathon judge")?.stance || "Not available"}
+- Business buyer: ${receipt.tribunal.panel.find((judge) => judge.role === "Business buyer")?.stance || "Not available"}
+- Open disputes: ${
+    receipt.tribunal.disputes.filter((dispute) => dispute.status === "open").length
+      ? receipt.tribunal.disputes
+          .filter((dispute) => dispute.status === "open")
+          .map((dispute) => `${dispute.topic}: ${dispute.detail}`)
+          .join("; ")
+      : "None"
+  }
 
 ## Demo Workflow
 

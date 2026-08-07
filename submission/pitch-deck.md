@@ -26,6 +26,10 @@ Extract claims.
 
 Gather public evidence.
 
+Run adversarial tribunal.
+
+Separate executed Bright Data traces from planned, claimed, direct, pending, and failed evidence.
+
 Score eligibility, Bright Data dependency, business value, originality, and presentation.
 
 Export proof receipts and review actions.
@@ -42,9 +46,9 @@ CLI: transparent reproducible commands for sponsor review.
 
 ## Slide 6 - Demo Results
 
-ProofRank ranks the current AI Factory field, shows a Claim Ledger for each project, highlights evidence gaps, and exports judge-ready receipts.
+ProofRank ranks the current AI Factory field, shows a Claim Ledger and Adversarial Tribunal for each project, highlights evidence gaps, and exports judge-ready receipts.
 
-Key moment: Bright Data Dependency score separates real sponsor-native projects from superficial mentions.
+Key moment: Bright Data Dependency score separates executed sponsor-native evidence from superficial mentions.
 
 ## Slide 7 - Business Model And Ask
 
