@@ -133,6 +133,13 @@ Built and verified:
 - Bright Data setup and submission copy in `submission/`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
 
+Refresh demo screenshots and video:
+
+```bash
+npm run demo:assets
+bash scripts/create_demo_video.sh
+```
+
 Design and implementation plan:
 
 - `docs/superpowers/specs/2026-08-07-proofrank-design.md`

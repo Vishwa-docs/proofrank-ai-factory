@@ -12,6 +12,7 @@
     "live:event-smoke": "node scripts/live-event-smoke.mjs",
     "live:event-smoke:direct": "PROOFRANK_FETCH_MODE=direct node scripts/live-event-smoke.mjs",
     "brightdata:mcp-smoke": "node scripts/brightdata-mcp-smoke.mjs",
+    "demo:assets": "node scripts/capture-demo-assets.mjs",
     "dev": "python3 -m http.server 4173 --directory app"
   }
 }

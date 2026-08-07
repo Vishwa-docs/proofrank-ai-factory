@@ -381,8 +381,10 @@ function renderReceipt(project) {
       (trace) => `
       <tr>
         <td>${escapeHtml(trace.tool)}</td>
-        <td>${escapeHtml(trace.provider || trace.mode || "unknown")}</td>
-        <td><span class="trace-state ${escapeAttr(trace.traceStatus || "unknown")}">${escapeHtml(trace.traceStatus || "unknown")}</span></td>
+        <td class="trace-run">
+          <span class="trace-state ${escapeAttr(trace.traceStatus || "unknown")}">${escapeHtml(trace.traceStatus || "unknown")}</span>
+          <small>${escapeHtml(trace.provider || trace.mode || "unknown")}</small>
+        </td>
         <td>${escapeHtml(trace.queryOrUrl)}</td>
         <td>${trace.resultCount}</td>
         <td>${escapeHtml(`${trace.status}${trace.byteCount ? ` / ${trace.byteCount}b / ${trace.contentHash}` : ""}`)}</td>
@@ -404,7 +406,6 @@ function renderReceipt(project) {
       <thead>
         <tr>
           <th>Tool</th>
-          <th>Provider</th>
           <th>Run</th>
           <th>Query or URL</th>
           <th>Rows</th>
@@ -412,7 +413,7 @@ function renderReceipt(project) {
         </tr>
       </thead>
       <tbody>
-        ${traces || `<tr><td colspan="6">No Bright Data trace visible yet.</td></tr>`}
+        ${traces || `<tr><td colspan="5">No Bright Data trace visible yet.</td></tr>`}
       </tbody>
     </table>
 

@@ -1083,6 +1083,20 @@ input::placeholder {
   white-space: nowrap;
 }
 
+.trace-run {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.trace-run small {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.2;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
 .trace-state.executed {
   border-color: var(--color-good);
   background: var(--color-good-soft);

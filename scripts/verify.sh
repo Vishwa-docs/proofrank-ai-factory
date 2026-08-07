@@ -26,6 +26,7 @@ required_files=(
   "scripts/live-review-server.mjs"
   "scripts/live-review-smoke.mjs"
   "scripts/live-event-smoke.mjs"
+  "scripts/capture-demo-assets.mjs"
   "submission/native-builder-prompt.md"
   "submission/bright-data-setup.md"
   "submission/project-description.md"
