@@ -14,6 +14,21 @@ assert.equal(
   "https://mcp.brightdata.com/mcp?token=test-token"
 );
 assert.equal(
+  buildBrightDataMcpEndpoint({
+    BRIGHTDATA_API_TOKEN: "test-token",
+    BRIGHTDATA_MCP_TOOLS: "search_engine,scrape_as_markdown,discover"
+  }),
+  "https://mcp.brightdata.com/mcp?token=test-token&tools=search_engine,scrape_as_markdown,discover"
+);
+assert.equal(
+  buildBrightDataMcpEndpoint({
+    BRIGHTDATA_API_TOKEN: "test-token",
+    BRIGHTDATA_MCP_GROUPS: "research",
+    BRIGHTDATA_MCP_PRO: "1"
+  }),
+  "https://mcp.brightdata.com/mcp?token=test-token&groups=research&pro=1"
+);
+assert.equal(
   buildBrightDataMcpEndpoint({ BRIGHTDATA_MCP_URL: "https://mcp.example/mcp?token=already-set" }),
   "https://mcp.example/mcp?token=already-set"
 );
@@ -34,15 +49,28 @@ assert.equal(
 assert.equal(extractMcpText({ markdown: "# Markdown" }), "# Markdown");
 
 const calls = [];
+function responseHeaders(values = {}) {
+  const normalized = new Map(Object.entries(values).map(([key, value]) => [key.toLowerCase(), value]));
+  return {
+    get: (key) => normalized.get(String(key).toLowerCase()) || ""
+  };
+}
+
 const fakeFetch = async (_endpoint, options) => {
   const payload = JSON.parse(options.body);
-  calls.push(payload);
+  calls.push({
+    payload,
+    headers: options.headers
+  });
 
   if (payload.method === "initialize") {
     return {
       ok: true,
       status: 200,
-      headers: { get: () => "application/json" },
+      headers: responseHeaders({
+        "content-type": "application/json",
+        "mcp-session-id": "session-test-123"
+      }),
       text: async () =>
         JSON.stringify({
           jsonrpc: "2.0",
@@ -59,7 +87,7 @@ const fakeFetch = async (_endpoint, options) => {
     return {
       ok: true,
       status: 202,
-      headers: { get: () => "application/json" },
+      headers: responseHeaders({ "content-type": "application/json" }),
       text: async () => "{}"
     };
   }
@@ -68,7 +96,7 @@ const fakeFetch = async (_endpoint, options) => {
     return {
       ok: true,
       status: 200,
-      headers: { get: () => "application/json" },
+      headers: responseHeaders({ "content-type": "application/json" }),
       text: async () =>
         JSON.stringify({
           jsonrpc: "2.0",
@@ -84,7 +112,7 @@ const fakeFetch = async (_endpoint, options) => {
     return {
       ok: true,
       status: 200,
-      headers: { get: () => "text/event-stream" },
+      headers: responseHeaders({ "content-type": "text/event-stream" }),
       text: async () =>
         `event: message\ndata: ${JSON.stringify({
           jsonrpc: "2.0",
@@ -100,7 +128,7 @@ const fakeFetch = async (_endpoint, options) => {
     return {
       ok: true,
       status: 200,
-      headers: { get: () => "application/json" },
+      headers: responseHeaders({ "content-type": "application/json" }),
       text: async () =>
         JSON.stringify({
           jsonrpc: "2.0",
@@ -116,7 +144,7 @@ const fakeFetch = async (_endpoint, options) => {
     return {
       ok: true,
       status: 200,
-      headers: { get: () => "application/json" },
+      headers: responseHeaders({ "content-type": "application/json" }),
       text: async () =>
         JSON.stringify({
           jsonrpc: "2.0",
@@ -164,19 +192,22 @@ assert.equal(
   "Discover proofrank bright data / Find public prior art / 3"
 );
 
-assert.equal(calls.filter((call) => call.method === "initialize").length, 1);
-assert.equal(calls.filter((call) => call.method === "notifications/initialized").length, 1);
-assert.ok(calls.some((call) => call.method === "tools/list"));
-assert.ok(calls.some((call) => call.method === "tools/call" && call.params.name === "scrape_as_markdown"));
-assert.ok(calls.some((call) => call.method === "tools/call" && call.params.name === "search_engine"));
+assert.equal(calls.filter((call) => call.payload.method === "initialize").length, 1);
+assert.equal(calls.find((call) => call.payload.method === "initialize").headers["Mcp-Session-Id"], undefined);
+assert.equal(calls.filter((call) => call.payload.method === "notifications/initialized").length, 1);
+assert.equal(calls.find((call) => call.payload.method === "notifications/initialized").headers["Mcp-Session-Id"], "session-test-123");
+assert.ok(calls.some((call) => call.payload.method === "tools/list"));
+assert.equal(calls.find((call) => call.payload.method === "tools/list").headers["Mcp-Session-Id"], "session-test-123");
+assert.ok(calls.some((call) => call.payload.method === "tools/call" && call.payload.params.name === "scrape_as_markdown"));
+assert.ok(calls.some((call) => call.payload.method === "tools/call" && call.payload.params.name === "search_engine"));
 assert.ok(
   calls.some(
     (call) =>
-      call.method === "tools/call" &&
-      call.params.name === "discover" &&
-      call.params.arguments.intent === "Find public prior art" &&
-      call.params.arguments.num_results === 3 &&
-      call.params.arguments.include_content === true
+      call.payload.method === "tools/call" &&
+      call.payload.params.name === "discover" &&
+      call.payload.params.arguments.intent === "Find public prior art" &&
+      call.payload.params.arguments.num_results === 3 &&
+      call.payload.params.arguments.include_content === true
   )
 );
 

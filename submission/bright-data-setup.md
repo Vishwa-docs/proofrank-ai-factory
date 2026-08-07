@@ -15,15 +15,16 @@
 5. Run `npm run brightdata:auth-check` to confirm the token passes Bright Data account authentication.
 6. Run `npm run brightdata:mcp-smoke` before the final demo.
 7. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
-8. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
-9. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
-10. Run `npm run final:receipt -- REPO_URL DEMO_URL` to create the signed sponsor proof artifact.
+8. Set `BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover` so the final run requests the exact proof-bundle tools.
+9. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
+10. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
+11. Run `npm run final:receipt -- REPO_URL DEMO_URL` to create the signed sponsor proof artifact.
 
 ## Current Credential Status
 
-- A Bright Data value has been stored locally in `.env.local`, which is ignored by Git.
-- On 2026-08-07, both `npm run brightdata:auth-check` and the hosted Remote MCP smoke returned HTTP 401 with that value.
-- The stored value is UUID-shaped; replace it with a Bright Data account API key, not a coupon code, customer ID, or proxy password.
+- A Bright Data value can be stored locally in `.env.local`, which is ignored by Git.
+- On 2026-08-07, the replacement admin key passed account auth and hosted Remote MCP when `BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover` was set.
+- Keep the key server-side; do not commit it or place it in client JavaScript.
 - Before final submission, use a key that passes `npm run brightdata:auth-check` and `npm run brightdata:mcp-smoke`.
 - The browser UI now talks to a local/native.builder API endpoint; it never asks judges to paste a Bright Data token into client JavaScript.
 
@@ -80,13 +81,14 @@ npx --yes --package @brightdata/cli brightdata discover "PROJECT_TITLE" --intent
 BRIGHTDATA_API_TOKEN=your_token_here
 BRIGHTDATA_UNLOCKER_ZONE=mcp_unlocker
 PROOFRANK_FETCH_MODE=mcp
+BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover
 PROOFRANK_MAX_BRIGHTDATA_CALLS=12
 PROOFRANK_REVIEW_TOKEN=generate_a_random_value
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_different_random_value
 PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
 PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 # Optional; omit to derive this from BRIGHTDATA_API_TOKEN.
-BRIGHTDATA_MCP_URL=https://mcp.brightdata.com/mcp?token=your_token_here
+BRIGHTDATA_MCP_URL=
 PROOFRANK_MODE=live
 ```
 

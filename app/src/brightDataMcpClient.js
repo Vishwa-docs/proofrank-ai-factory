@@ -25,6 +25,16 @@ function brightDataToken(env = runtimeEnv(), options = {}) {
   return String(options.apiToken || env.BRIGHTDATA_API_TOKEN || env.BRIGHT_DATA_API_TOKEN || env.BRIGHTDATA_TOKEN || "").trim();
 }
 
+function encodeQueryValue(value = "") {
+  return encodeURIComponent(String(value)).replace(/%2C/gi, ",");
+}
+
+function appendRawQueryParam(url, key, value) {
+  const stringValue = String(value || "").trim();
+  if (!stringValue) return;
+  url.search += `${url.search ? "&" : "?"}${encodeURIComponent(key)}=${encodeQueryValue(stringValue)}`;
+}
+
 export function buildBrightDataMcpEndpoint(env = runtimeEnv(), options = {}) {
   const configuredEndpoint = String(options.endpoint || env.BRIGHTDATA_MCP_URL || "").trim();
   if (configuredEndpoint) return requireHttpUrl(configuredEndpoint, "A valid Bright Data MCP endpoint URL is required.");
@@ -34,6 +44,12 @@ export function buildBrightDataMcpEndpoint(env = runtimeEnv(), options = {}) {
 
   const endpoint = new URL(DEFAULT_MCP_ENDPOINT);
   endpoint.searchParams.set("token", token);
+  const tools = String(options.tools || env.BRIGHTDATA_MCP_TOOLS || "").trim();
+  const groups = String(options.groups || env.BRIGHTDATA_MCP_GROUPS || "").trim();
+  const pro = String(options.pro || env.BRIGHTDATA_MCP_PRO || "").trim();
+  appendRawQueryParam(endpoint, "tools", tools);
+  appendRawQueryParam(endpoint, "groups", groups);
+  if (pro) endpoint.searchParams.set("pro", pro);
   return endpoint.toString();
 }
 
@@ -104,20 +120,27 @@ export function createBrightDataMcpClient(options = {}) {
   const protocolVersion = options.protocolVersion || BRIGHTDATA_MCP_PROTOCOL_VERSION;
   const secrets = [brightDataToken(env, options), endpoint.includes("token=") ? new URL(endpoint).searchParams.get("token") : ""];
   let nextId = 1;
+  let sessionId = "";
   let initializePromise;
 
   async function post(payload, label) {
+    const headers = {
+      Accept: "application/json, text/event-stream",
+      "Content-Type": "application/json",
+      "MCP-Protocol-Version": protocolVersion
+    };
+    if (sessionId) headers["Mcp-Session-Id"] = sessionId;
+
     const response = await fetchImpl(endpoint, {
       method: "POST",
-      headers: {
-        Accept: "application/json, text/event-stream",
-        "Content-Type": "application/json",
-        "MCP-Protocol-Version": protocolVersion
-      },
+      headers,
       body: JSON.stringify(payload)
     });
 
     const text = await response.text();
+    const responseSessionId = response.headers?.get?.("mcp-session-id") || "";
+    if (responseSessionId) sessionId = responseSessionId;
+
     if (!response.ok) {
       const preview = redact(text, secrets).slice(0, 300);
       throw new Error(`${label} failed with HTTP ${response.status}: ${preview}`);

@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-07T14:45:17.602Z",
-  "gitHead": "12e3b204b7927b87bfd9479469c33e2cd5309d96",
+  "generatedAt": "2026-08-07T15:13:38.923Z",
+  "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 4,
+  "requiredPassed": 8,
   "requiredTotal": 10,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 45,
+  "score": 82,
   "gates": [
     {
       "id": "public-fallback",
@@ -52,32 +52,32 @@
       "id": "bright-auth",
       "label": "Bright Data account auth",
       "required": true,
-      "status": "needs-action",
-      "proof": "HTTP 401; token shape looks UUID-like.",
+      "status": "passed",
+      "proof": "HTTP 200; account auth accepted.",
       "action": "Replace BRIGHTDATA_API_TOKEN with a real Bright Data account API key."
     },
     {
       "id": "mcp-tools",
       "label": "Bright Data MCP base tools",
       "required": true,
-      "status": "needs-action",
-      "proof": "MCP tools were not listed.",
+      "status": "passed",
+      "proof": "Base tools present: search_engine, scrape_as_markdown, discover.",
       "action": "Run npm run brightdata:mcp-smoke until search_engine, scrape_as_markdown, and discover are listed."
     },
     {
       "id": "live-api",
       "label": "Public live review API",
       "required": true,
-      "status": "needs-action",
-      "proof": "No public live API health check passed.",
+      "status": "passed",
+      "proof": "https://proofrank-ai-factory.vercel.app/health",
       "action": "Deploy the live review API and confirm /health returns ok."
     },
     {
       "id": "live-receipt",
       "label": "Signed executed Bright Data receipt",
       "required": true,
-      "status": "needs-action",
-      "proof": "No signed executed Bright Data project receipt attached.",
+      "status": "passed",
+      "proof": "pr-20260807t145909828z-553fb028 / bright-data / executed / source trace / search_engine / discover / signature verified",
       "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
     },
     {
@@ -107,11 +107,7 @@
   ],
   "nextActions": [
     "Publish the native.builder app and paste the public nativelyai.app URL.",
-    "Replace BRIGHTDATA_API_TOKEN with a real Bright Data account API key.",
-    "Run npm run brightdata:mcp-smoke until search_engine, scrape_as_markdown, and discover are listed.",
-    "Deploy the live review API and confirm /health returns ok.",
-    "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 4/10 required gates passed. Next action: Publish the native.builder app and paste the public nativelyai.app URL."
+  "summary": "Not final-ready: 8/10 required gates passed. Next action: Publish the native.builder app and paste the public nativelyai.app URL."
 }

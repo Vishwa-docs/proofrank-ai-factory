@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.git
+.github
+.vercel
+node_modules
+coverage
+playwright-report
+test-results
+.tmp
+submission/demo-assets/proofrank-demo-voice.aiff
+submission/deck-preview
+submission/proofrank-pitch-deck
+submission/*.inspect.ndjson
