@@ -50,15 +50,28 @@ server-side.
 
 ## Success Condition
 
-Run a project review and export a receipt that contains:
+Run a project review and export a receipt that contains the full sponsor proof
+bundle:
 
 ```json
-{
-  "provider": "bright-data",
-  "traceStatus": "executed",
-  "tool": "scrape_as_markdown"
-}
+[
+  {
+    "provider": "bright-data",
+    "traceStatus": "executed",
+    "tool": "scrape_as_markdown"
+  },
+  {
+    "provider": "bright-data",
+    "traceStatus": "executed",
+    "tool": "search_engine"
+  },
+  {
+    "provider": "bright-data",
+    "traceStatus": "executed",
+    "tool": "discover"
+  }
+]
 ```
 
-For the Bright Data prize demo, also show an executed `search_engine` trace and
-the signed `runReceipt` block.
+For the Bright Data prize demo, also show the signed `runReceipt` block with
+`finalBrightDataGate.ok: true`.
