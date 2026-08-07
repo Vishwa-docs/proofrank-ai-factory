@@ -45,37 +45,35 @@ These are the pieces I cannot ethically or technically complete without the acco
 
 1. Server-side Bright Data executor
    - Added a local Node API at `/api/review-project`.
+   - Added `/api/review-event` for event-level submission discovery.
    - Added direct-fetch fallback plus Bright Data REST request adapter.
    - Added hosted Remote MCP smoke check.
    - Remaining blocker: replace the failing Bright Data credential with a valid API key.
    - Tokens are loaded from `.env.local` or native.builder server secrets, never client JavaScript.
 
 2. Live project ingestion
-   - Fetch lablab submission page.
-   - Fetch linked GitHub repo metadata, README, package files, license, commits, releases, and public issues.
-   - Fetch deployed demo content and capture basic availability evidence.
-   - Run prior-art queries against project title, team, core claim, and suspiciously similar projects.
+   - Implemented event-page ingestion endpoint and command-line smoke script.
+   - Implemented GitHub repo metadata, README, package files, license, commits, deployed demo fetch, and public secret-risk scan.
+   - Remaining: releases, public issues, and richer prior-art search once Bright Data auth is fixed.
+   - Direct event fetch against lablab can return HTTP 403, so Bright Data/Web Unlocker is required for the real event scrape.
 
 3. Evidence normalization
-   - Convert each source into a claim ledger.
-   - Label every claim as verified, unsupported, contradicted, stale, inaccessible, or unknown.
-   - Keep raw source URL, retrieval timestamp, Bright Data tool, query, and hash for each receipt.
+   - Implemented claim ledger.
+   - Implemented trace provenance with provider, traceStatus, byte count, content hash, and sponsor-fit eligibility.
+   - Implemented rule that planned, claimed, direct, pending, failed, and event-intake-only traces do not close sponsor-fit proof.
 
 4. Adversarial judge loop
-   - Add one agent that argues for sponsor fit.
-   - Add one agent that argues against sponsor fit.
-   - Add one agent that checks whether Bright Data was truly load-bearing.
-   - Final result should include a dispute log, not just a score.
+   - Implemented three perspectives: Bright Data sponsor judge, skeptical hackathon judge, and business buyer.
+   - Implemented dispute log and final recommendation.
 
 5. Export package
-   - Generate a judge-ready PDF proof packet.
-   - Generate a JSON audit artifact.
-   - Generate a one-page sponsor summary.
-   - Generate a short demo script from the actual run.
+   - Implemented CSV, all receipts JSON, selected receipt JSON, and Markdown submission packet.
+   - Remaining: optional PDF export after the native.builder app is published.
 
 6. Native.builder implementation proof
    - Rebuild or mirror the final experience in native.builder.
    - Keep visible "built with native.builder" process evidence: workflow names, screenshots, generated routes, and public deployment.
+   - Remaining account-gated blocker: publish the native.builder app URL.
 
 ## Research Pattern From Prior Bright Data Winners
 
@@ -112,12 +110,13 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
    - Next: copied README/code similarity, releases, public issues, and richer prior-art search once Bright Data auth is fixed.
 
 2. Bright Data trace replay
-   - Every receipt gets a "replay query" field.
-   - Judges can see the exact MCP tool, URL/query, result count, and retrieval time.
+   - Implemented trace provenance in receipts.
+   - Judges can see provider, trace status, tool, URL/query, result count, retrieval time, byte count, and content hash.
 
 3. Originality radar
-   - Search title, tagline, key architecture claims, and code phrases.
-   - Separate "common idea" from "direct copy risk."
+   - Implemented deterministic field-overlap radar.
+   - Implemented Bright Data `search_engine` and `discover` prior-art queries.
+   - Separates "common idea" from "direct copy risk" without making unsupported accusations.
 
 4. Demo proof runner
    - Check the public demo URL.
@@ -127,13 +126,15 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 5. Sponsor-fit tribunal
    - Three perspectives: Bright Data judge, skeptical hackathon judge, business buyer.
    - The final receipt includes where they agree and disagree.
+   - Implemented.
 
 6. No-demo-data mode
-   - Remove sample fixture dependency once credentials are present.
-   - Show unknown states instead of silently substituting canned evidence.
+   - Partially implemented through live event review and live GitHub project review.
+   - Remaining blocker: valid Bright Data credential and native.builder server-side deployment.
 
 7. Submission composer
    - Create final lablab fields, tool list, demo script, and "how native.builder was used" explanation from the actual proof run.
+   - Partially implemented through Markdown submission packet and checklist.
 
 ## Candidate Live Architecture
 
