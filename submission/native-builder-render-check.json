@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-08-07T19:53:23.358Z",
+  "checkedAt": "2026-08-07T20:16:42.775Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786132403358",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786133802775",
   "title": "ProofRank — AI Diligence Engine",
   "publishedBundle": "/assets/index-CWnECzP1.js",
   "screenshots": {
@@ -13,8 +13,13 @@
       "name": "desktop",
       "width": 1440,
       "height": 950,
-      "missingInPage": [],
-      "missingInViewport": [],
+      "missingInPage": [
+        "Overall audit",
+        "pr-20260807t200529345z-23568b05"
+      ],
+      "missingInViewport": [
+        "Proof receipt"
+      ],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 1440,
@@ -26,8 +31,13 @@
       "name": "mobile-320",
       "width": 320,
       "height": 740,
-      "missingInPage": [],
-      "missingInViewport": [],
+      "missingInPage": [
+        "Overall audit",
+        "pr-20260807t200529345z-23568b05"
+      ],
+      "missingInViewport": [
+        "Proof receipt"
+      ],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 320,
@@ -40,15 +50,15 @@
     "ProofRank",
     "Submission-ready",
     "Bright Data proof passed",
-    "Bright proof",
-    "Overall self-audit",
-    "pr-20260807t194356580z-26e38064"
+    "Bright Data",
+    "Overall audit",
+    "pr-20260807t200529345z-23568b05"
   ],
   "wantedInViewport": [
     "ProofRank",
     "Run review",
-    "Export packet",
-    "Bright proof",
+    "Proof receipt",
+    "Bright Data",
     "Submission-ready"
   ],
   "forbiddenStrings": [
@@ -66,5 +76,5 @@
     "AgentArena"
   ],
   "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
-  "ok": true
+  "ok": false
 }

@@ -298,8 +298,8 @@ async function nativeBuilder() {
     "ProofRank",
     "Submission-ready",
     "Bright Data proof passed",
-    "Bright proof",
-    "Overall self-audit",
+    "Bright Data",
+    "Overall audit",
     expectedRunId
   ].filter(Boolean);
   const staleCopy = ["pr-20260807t145909828z-553fb028", "Sponsor bundle executed", "Finalist-ready", "Strong Pass"];
@@ -311,6 +311,13 @@ async function nativeBuilder() {
     const parsed = JSON.parse(await readFile(path.join(root, "submission", "native-builder-render-check.json"), "utf8"));
     const sameUrl = String(parsed.url || "").replace(/\/$/, "") === String(url || "").replace(/\/$/, "");
     const sameBundle = Boolean(liveBundle && parsed.publishedBundle) && liveBundle === parsed.publishedBundle;
+    const viewportRows = Array.isArray(parsed.viewports) ? parsed.viewports : [];
+    const missingFromRender = [
+      ...new Set(viewportRows.flatMap((viewport) => [...(viewport.missingInPage || []), ...(viewport.missingInViewport || [])]))
+    ];
+    const forbiddenFromRender = [
+      ...new Set(viewportRows.flatMap((viewport) => [...(viewport.forbiddenInPage || []), ...(viewport.forbiddenInViewport || [])]))
+    ];
     renderCheck = {
       ok: parsed.ok === true && sameUrl && sameBundle,
       path: "submission/native-builder-render-check.json",
@@ -318,7 +325,9 @@ async function nativeBuilder() {
       verifiedUrl: parsed.verifiedUrl,
       publishedBundle: parsed.publishedBundle,
       liveBundle,
-      sameBundle
+      sameBundle,
+      missingCopy: missingFromRender,
+      forbiddenCopy: forbiddenFromRender
     };
   } catch (error) {
     renderCheck = {
@@ -410,12 +419,12 @@ async function buildAuditState() {
         fallback.ok &&
         /ProofRank/.test(fallback.text) &&
         fallbackBundle.ok &&
-        /(Bright proof|Signed Bright proof|Package-ready)/.test(fallbackBundle.text),
+        /(Bright Data|Proof bundle|Package-ready)/.test(fallbackBundle.text),
       url: fallbackUrl,
       status: fallback.status,
       evidence:
         fallback.ok && fallbackBundle.ok
-          ? "ProofRank shell is deployed and the runtime bundle contains the Bright proof/package-ready UI."
+          ? "ProofRank shell is deployed and the runtime bundle contains the Bright Data proof/package-ready UI."
           : `root HTTP ${fallback.status || 0}; bundle HTTP ${fallbackBundle.status || 0}`
     },
     releaseVideo: {

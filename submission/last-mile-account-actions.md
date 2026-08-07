@@ -2,7 +2,7 @@
 
 Date: 2026-08-07
 
-ProofRank is currently at 10/11 required final readiness gates. Native.builder is published, the Bright Data proof package is ready, and the public live API security gate is now closed. The remaining external gate is the final lablab.ai submission URL.
+ProofRank is currently at 9/11 required final readiness gates. The polished fallback app, Bright Data proof package, and public live API security gate are ready. The remaining external gates are republishing/verifying the Native.builder app with the latest prompt and the final lablab.ai submission URL.
 
 ## 1. Native.builder Status
 
@@ -25,8 +25,8 @@ Current Native.builder state:
 - Product Architect and Task Planner passes completed.
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
-- Final UI correction is published in Native.builder and browser-render verified on desktop and 320px mobile.
-- Current native.builder first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t194356580z-26e38064`.
+- Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
+- Current local/fallback first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, and receipt ID `pr-20260807t200529345z-23568b05`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the saved render check used a cache-busting URL and passed.
 - Use the Native.builder URL above as the primary submission URL.
 
@@ -46,7 +46,7 @@ Then run:
 npm run final:audit
 ```
 
-Expected state before lablab submit: 10/11 required gates, with only lablab final submission remaining.
+Expected state after Native.builder republish and before lablab submit: 10/11 required gates, with only lablab final submission remaining.
 
 ## 3. Submit On lablab.ai
 

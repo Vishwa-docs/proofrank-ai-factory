@@ -12,6 +12,7 @@ import {
 import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
 import { scoreProject } from "../app/src/scoring.js";
+import { fixtureProjects } from "../app/src/fixtures.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 loadLocalEnv();
@@ -95,8 +96,15 @@ const receiptProject =
       }
     : project;
 
+const comparisonField = [
+  receiptProject,
+  ...fixtureProjects
+    .filter((fixture) => fixture.id !== receiptProject.id && fixture.id !== "proofrank")
+    .map((fixture) => scoreProject(fixture))
+];
+
 const receipt = {
-  ...buildReceipt(receiptProject, [receiptProject]),
+  ...buildReceipt(receiptProject, comparisonField),
   finalBrightDataGate: gate,
   finalReceiptGeneratedAt: new Date().toISOString()
 };

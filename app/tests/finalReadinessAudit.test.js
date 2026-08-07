@@ -7,7 +7,7 @@ const baseState = {
   publicFallback: {
     ok: true,
     url: "https://vishwa-docs.github.io/proofrank-ai-factory/",
-    evidence: "ProofRank with Bright proof strip is live."
+    evidence: "ProofRank with Bright Data proof strip is live."
   },
   releaseVideo: {
     ok: true,
@@ -86,7 +86,7 @@ assert.equal(incomplete.gates.find((gate) => gate.id === "bright-auth").proof, "
 assert.equal(incomplete.gates.find((gate) => gate.id === "native-builder").status, "needs-action");
 assert.match(incomplete.gates.find((gate) => gate.id === "live-api").action, /\/api\/health/);
 assert.doesNotMatch(incomplete.gates.find((gate) => gate.id === "live-api").action, /confirm \/health/);
-assert.ok(incomplete.nextActions[0].includes("Publish the native.builder app"));
+assert.ok(incomplete.nextActions[0].includes("Republish and verify the Native.builder app"));
 assert.match(summarizeFinalReadiness(incomplete), /Not final-ready/);
 
 const complete = buildFinalReadinessReport({

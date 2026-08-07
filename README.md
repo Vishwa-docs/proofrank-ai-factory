@@ -181,11 +181,11 @@ Built and verified:
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
 - Evidence Route map that shows event source, repository, deployed app, Bright bundle, claim ledger, and judge packet state for the selected project
-- Setup gates that separate required final-submission gates from competitive polish checks
+- Collect gates that separate required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`
-- Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`
+- Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`; republish it with `submission/native-builder-prompt.md` to sync the latest polished UI and receipt ID before final submission.
 - Bright Data setup and submission copy in `submission/`
 - Live API deployment handoff in `submission/deploy-live-api.md`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`

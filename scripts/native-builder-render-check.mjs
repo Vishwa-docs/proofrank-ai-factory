@@ -34,11 +34,11 @@ const wantedInPage = [
   "ProofRank",
   "Submission-ready",
   "Bright Data proof passed",
-  "Bright proof",
-  "Overall self-audit",
+  "Bright Data",
+  "Overall audit",
   expectedRunId
 ].filter(Boolean);
-const wantedInViewport = ["ProofRank", "Run review", "Export packet", "Bright proof", "Submission-ready"];
+const wantedInViewport = ["ProofRank", "Run review", "Proof receipt", "Bright Data", "Submission-ready"];
 const forbiddenStrings = [
   "WIN",
   "Strong Pass",

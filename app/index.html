@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
-        <button class="text-button nav-jump" data-focus-target="reviewerRepoUrl" type="button">Review target</button>
+        <button class="text-button nav-jump" data-focus-target="reviewerRepoUrl" type="button">Review project</button>
         <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
         <details class="export-menu">
           <summary>Export</summary>
@@ -45,58 +45,19 @@
           <h1>ProofRank</h1>
           <p class="hero-subtitle">Evidence-backed diligence for public AI projects. Rank the field, verify claims, and export a judge-ready proof packet.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
-            <button class="primary-button" data-focus-target="reviewerRepoUrl" type="button">Review target</button>
-            <button class="secondary-button" data-nav-tab="receipt" type="button">Bright proof</button>
-            <button id="heroExportPacket" class="secondary-button" type="button">Export packet</button>
+            <button class="primary-button" data-focus-target="reviewerRepoUrl" type="button">Review project</button>
+            <button class="secondary-button" data-nav-tab="receipt" type="button">Proof receipt</button>
           </div>
-          <div id="statusLine" class="status-line" role="status">Signed Bright proof ready</div>
+          <div id="statusLine" class="status-line" role="status">Signed proof receipt ready</div>
         </div>
 
-        <aside class="decision-card review-card panel" aria-label="Review target and proof state">
+        <aside class="decision-card review-card panel" aria-label="Review project and proof state">
           <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
-            <span>Bright Data proof</span>
+            <span>Signed proof receipt</span>
             <strong>No executed run yet</strong>
             <small>Live collection required</small>
           </div>
-          <section class="quick-intake" aria-label="Review a GitHub project">
-            <div class="module-head compact">
-              <h2>Start with a GitHub project</h2>
-              <span class="hint">Live mode uses a secure backend.</span>
-            </div>
-            <label class="field compact" for="modeSelect">
-              <span>Collection mode</span>
-              <select id="modeSelect">
-                <option value="demo">Signed sample proof</option>
-                <option value="live">Bright Data live (secure API)</option>
-              </select>
-            </label>
-            <label class="field" for="reviewerRepoUrl">
-              <span>GitHub repository</span>
-              <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
-            </label>
-            <label class="field" for="reviewerDemoUrl">
-              <span>Deployed app</span>
-              <input id="reviewerDemoUrl" type="url" placeholder="https://project.example">
-            </label>
-            <details class="optional-fields">
-              <summary>
-                <span>Optional labels</span>
-              </summary>
-              <div class="split-fields">
-                <label class="field" for="reviewerTitle">
-                  <span>Project</span>
-                  <input id="reviewerTitle" type="text" placeholder="Optional">
-                </label>
-                <label class="field" for="reviewerTeam">
-                  <span>Team</span>
-                  <input id="reviewerTeam" type="text" placeholder="Optional">
-                </label>
-              </div>
-            </details>
-            <button id="addReviewerProject" class="secondary-button wide" type="button">Add target</button>
-            <p id="reviewerHint" class="hint">Switch to secure live mode to issue a new receipt.</p>
-          </section>
-          <details class="selection-drawer">
+          <details class="selection-drawer" open>
             <summary>
               <span>Current selection</span>
               <strong id="selectionSummaryMini">ProofRank</strong>
@@ -112,7 +73,7 @@
         <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Overview</button>
         <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Queue</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Proof</button>
-        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Setup</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Collect</button>
       </nav>
 
       <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 3" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
@@ -159,8 +120,47 @@
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Setup and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Collection and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
+          <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
+            <div class="module-head compact">
+              <h2>Review a GitHub project</h2>
+              <span class="hint">Live mode uses a secure backend.</span>
+            </div>
+            <label class="field compact" for="modeSelect">
+              <span>Collection mode</span>
+              <select id="modeSelect">
+                <option value="demo">Signed proof receipt</option>
+                <option value="live">Bright Data live (secure API)</option>
+              </select>
+            </label>
+            <label class="field" for="reviewerRepoUrl">
+              <span>GitHub repository</span>
+              <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
+            </label>
+            <label class="field" for="reviewerDemoUrl">
+              <span>Deployed app</span>
+              <input id="reviewerDemoUrl" type="url" placeholder="https://project.example">
+            </label>
+            <details class="optional-fields">
+              <summary>
+                <span>Optional labels</span>
+              </summary>
+              <div class="split-fields">
+                <label class="field" for="reviewerTitle">
+                  <span>Project</span>
+                  <input id="reviewerTitle" type="text" placeholder="Optional">
+                </label>
+                <label class="field" for="reviewerTeam">
+                  <span>Team</span>
+                  <input id="reviewerTeam" type="text" placeholder="Optional">
+                </label>
+              </div>
+            </details>
+            <button id="addReviewerProject" class="secondary-button wide" type="button">Add target</button>
+            <p id="reviewerHint" class="hint">Switch to secure live mode to issue a Bright Data receipt.</p>
+          </section>
+
           <section class="source-module">
             <div class="module-head">
               <h2>Evidence run</h2>
@@ -173,7 +173,7 @@
               </div>
               <div>
                 <span>Mode</span>
-                <strong id="runModeLabel">Signed proof</strong>
+                <strong id="runModeLabel">Signed proof receipt</strong>
               </div>
             </div>
 

@@ -184,7 +184,7 @@ function setStatus(message, tone = "ready") {
 }
 
 function updateRunProfile() {
-  elements.runModeLabel.textContent = state.mode === "live" ? "Secure live" : "Signed proof";
+  elements.runModeLabel.textContent = state.mode === "live" ? "Secure live" : "Signed proof receipt";
 }
 
 function hasPendingFinalSubmission(project = {}) {
@@ -277,8 +277,9 @@ function renderHeroDecision(project) {
   const primaryBlocker = displayPrimaryBlocker(project, project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the judge packet.");
   const nativeUrl = project.nativeBuilderUrl || (String(project.demoUrl || "").includes("nativelyai.app") ? project.demoUrl : "");
   const verdictLabel = displayVerdictLabel(project);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright proof" : "Overall";
-  const scoreValue = hasPendingFinalSubmission(project) ? project.scores.brightDataPrize : project.scores.overall;
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright Data" : "Overall";
+  const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
+  const bundleStatus = hasBrightDataSponsorProofBundle(project) ? "executed" : traceState;
 
   elements.selectionSummaryMini.textContent = hasPendingFinalSubmission(project)
     ? `${displayText(project.title)} / proof passed`
@@ -293,15 +294,15 @@ function renderHeroDecision(project) {
     <p>${escapeHtml(compactSentence(project.summary))}</p>
     <div class="decision-metrics" aria-label="Selected project proof metrics">
       <div>
-        <span>Bright proof</span>
-        <strong>${project.scores.brightDataPrize}</strong>
+        <span>Bundle</span>
+        <strong>${escapeHtml(bundleStatus)}</strong>
       </div>
       <div>
-        <span>Trace state</span>
+        <span>Trace</span>
         <strong>${escapeHtml(traceState)}</strong>
       </div>
       <div>
-        <span>Submission</span>
+        <span>Submit</span>
         <strong>${hasPendingFinalSubmission(project) ? "pending" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
@@ -442,10 +443,7 @@ function renderClaimLedger(project) {
   const claims = buildClaimLedger(project);
   return `
     <section class="claim-ledger">
-      <div class="module-head compact">
-        <h2>Claim ledger</h2>
-        <span class="hint">Source-backed, not absolute</span>
-      </div>
+      <p class="ledger-note">Source-backed, not absolute.</p>
       <div class="claim-grid">
         ${claims
           .map(
@@ -617,10 +615,10 @@ function renderScorecard(project) {
   const sourceCount = [project.submissionUrl, project.demoUrl, project.githubUrl, project.presentationUrl].filter((url) => url && isHttpUrl(url)).length;
   const verdictLabel = displayVerdictLabel(project);
   const actionLabel = displayAction(project, project.verdict.action);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright proof" : "Proof score";
-  const scoreValue = hasPendingFinalSubmission(project) ? project.scores.brightDataPrize : project.scores.overall;
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright Data" : "Proof score";
+  const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
   const scoreDetail = hasPendingFinalSubmission(project)
-    ? `Overall self-audit ${project.scores.overall}`
+    ? `Overall audit ${project.scores.overall}`
     : `Bright ${project.scores.brightDataPrize}`;
 
   elements.scorecard.innerHTML = `
@@ -631,7 +629,7 @@ function renderScorecard(project) {
         <p>${escapeHtml(compactSentence(project.summary))}</p>
         <div class="tag-row">${tags}</div>
       </div>
-      <div class="score-block" aria-label="${escapeAttr(scoreLabel)} ${scoreValue}">
+      <div class="score-block ${hasPendingFinalSubmission(project) ? "is-proof-status" : ""}" aria-label="${escapeAttr(scoreLabel)} ${scoreValue}">
         <span>${escapeHtml(scoreLabel)}</span>
         <strong>${scoreValue}</strong>
         <small>${escapeHtml(scoreDetail)}</small>
@@ -713,14 +711,14 @@ function renderReceipt(project) {
     .map(
       (trace) => `
       <tr>
-        <td>${escapeHtml(trace.tool)}</td>
-        <td class="trace-run">
+        <td data-label="Tool">${escapeHtml(trace.tool)}</td>
+        <td class="trace-run" data-label="Run">
           <span class="trace-state ${escapeAttr(trace.traceStatus || "unknown")}">${escapeHtml(trace.traceStatus || "unknown")}</span>
           <small>${escapeHtml(trace.provider || trace.mode || "unknown")}</small>
         </td>
-        <td>${escapeHtml(trace.queryOrUrl)}</td>
-        <td>${trace.resultCount}</td>
-        <td>${escapeHtml(`${trace.status}${trace.byteCount ? ` / ${trace.byteCount}b / ${trace.contentHash}` : ""}`)}</td>
+        <td data-label="Query or URL">${escapeHtml(trace.queryOrUrl)}</td>
+        <td data-label="Rows">${trace.resultCount}</td>
+        <td data-label="Status">${escapeHtml(`${trace.status}${trace.byteCount ? ` / ${trace.byteCount}b / ${trace.contentHash}` : ""}`)}</td>
       </tr>
     `
     )
@@ -754,7 +752,7 @@ function renderReceipt(project) {
           </tr>
         </thead>
         <tbody>
-          ${traces || `<tr><td colspan="5">No Bright Data trace visible yet.</td></tr>`}
+          ${traces || `<tr><td colspan="5" data-label="Trace">No Bright Data trace visible yet.</td></tr>`}
         </tbody>
       </table>
     </details>
@@ -763,7 +761,7 @@ function renderReceipt(project) {
       <summary>Live collection plan</summary>
       <div class="receipt-item live-plan">
         <h3>Planned collector calls</h3>
-        <p>${state.mode === "live" ? "Secure backend required; tokens never belong in the browser." : "Signed proof mirrors these collection steps."}</p>
+        <p>${state.mode === "live" ? "Secure backend required; tokens never belong in the browser." : "Signed proof receipt mirrors these collection steps."}</p>
         <ul>${livePlan}</ul>
       </div>
     </details>
@@ -865,7 +863,7 @@ async function runAudit() {
   if (state.mode === "live") {
     if (!isHttpUrl(liveApiUrl)) {
       const checklist = setupChecklist().join(" ");
-      setStatus(`Review API missing. Signed proof remains available. ${checklist}`, "warn");
+      setStatus(`Review API missing. Signed proof receipt remains available. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
       state.projects = rankProjects(sourceProjects());
       render();
@@ -877,7 +875,7 @@ async function runAudit() {
       const result = await collectEventViaApi(eventUrl);
       const liveProjects = (result.projects || []).filter((project) => project.id !== "proofrank");
       if (!liveProjects.length) {
-        setStatus("Live event collection returned no submission cards. Signed proof remains loaded.", "warn");
+        setStatus("Live event collection returned no submission cards. Signed proof receipt remains loaded.", "warn");
       } else {
         state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
         state.projects = rankProjects(sourceProjects());
@@ -1026,7 +1024,7 @@ function reviewerProjectFromInputs() {
         collectedAt: new Date().toISOString(),
         collector: "ProofRank reviewer intake",
         confidence: 0.72,
-        supports: ["Review target"],
+        supports: ["Review project"],
         limitations: "No remote repository content has been fetched inside the static browser demo."
       }
     ],
@@ -1134,7 +1132,7 @@ elements.sectionTabs.forEach((button) => {
 elements.navJumps.forEach((button) => {
   button.addEventListener("click", () => {
     if (button.dataset.focusTarget) {
-      document.querySelector(".event-hero")?.scrollIntoView({ block: "start", behavior: "smooth" });
+      setActiveSection("setup", { scroll: true });
       window.setTimeout(() => document.querySelector(`#${button.dataset.focusTarget}`)?.focus(), 220);
       return;
     }
@@ -1145,7 +1143,7 @@ elements.navJumps.forEach((button) => {
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
   setStatus(
-    state.mode === "live" ? "Secure live mode selected. Add a backend URL and review token before collecting." : "Signed Bright receipt ready.",
+    state.mode === "live" ? "Secure live mode selected. Add a backend URL and review token before collecting." : "Signed proof receipt ready.",
     state.mode === "live" ? "warn" : "ready"
   );
   updateRunProfile();
@@ -1174,7 +1172,7 @@ function exportSubmissionPacket() {
   downloadText(`${selectedProject().id}-submission-packet.md`, buildSubmissionPacket(selectedProject(), state.projects), "text/markdown");
 }
 
-elements.heroExportPacket.addEventListener("click", exportSubmissionPacket);
+elements.heroExportPacket?.addEventListener("click", exportSubmissionPacket);
 elements.exportPacket.addEventListener("click", exportSubmissionPacket);
 
 initializeLiveEndpoint();

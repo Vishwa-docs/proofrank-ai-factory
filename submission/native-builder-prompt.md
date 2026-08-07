@@ -11,7 +11,7 @@ Create a functional deployed app, not a landing page. The first screen must be t
 ## Core Workflow
 
 1. User enters an event URL or project URL.
-2. User chooses Signed proof or Bright Data Live (secure API) mode.
+2. User chooses Signed receipt or Bright Data Live (secure API) mode.
 3. User clicks Run review.
 4. The app discovers or loads project submissions.
 5. The app ranks projects by:
@@ -22,7 +22,7 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Presentation
 6. User selects a project.
 7. Center panel shows the scorecard, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
-8. Setup tab shows required and competitive readiness gates.
+8. Collect tab shows project intake, event collection, and required readiness gates.
 9. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
 10. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
 
@@ -31,18 +31,18 @@ Create a functional deployed app, not a landing page. The first screen must be t
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
 - Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, short value statement, mode selector, Review target button, Export packet button, Bright proof button, and one decision card.
-- Decision card shows Submission-ready, Bright proof 100, Overall self-audit 97, Bright Data proof passed, signed receipt ID `pr-20260807t194356580z-26e38064`, proof package ready, final lablab submission pending, and Native app published.
-- Tabs below the first viewport: Overview, Queue, Proof, Setup.
+- First viewport with event metadata, a large ProofRank headline, short value statement, Review project button, Proof receipt button, and one decision card.
+- Decision card shows Submission-ready, Bright Data proof passed, signed receipt ID `pr-20260807t200529345z-23568b05`, proof package ready, final lablab submission pending, and Native app published. Use status language such as Passed and executed in the first viewport; keep detailed numeric scoring inside the score breakdown.
+- Tabs below the first viewport: Overview, Queue, Proof, Collect.
 - Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 - Queue shows filters, ranked projects, and field map.
 - Proof shows Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
-- Setup contains Event URL, Review API, HTML upload, GitHub/deployed-app intake, and submission gates.
+- Collect contains Event URL, Review API, keyboard-accessible HTML upload, GitHub/deployed-app intake, and submission gates.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Use ProofRank as the selected signed live Bright Data receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Collect. Use ProofRank as the selected signed live Bright Data receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
 
 ## Claim Ledger
 
@@ -112,7 +112,7 @@ Show a sponsor-prize benchmark panel for the selected project. It should compare
 
 The panel should show a numeric score, tier label, matched signals, and the top prize gaps. It should help the presenter explain why the project is prize-shaped while staying honest about missing Native.builder or executed Bright Data gates.
 
-## Setup Gates
+## Collect Gates
 
 Show readiness gates that separate required submission gates from competitive-strength checks. They must never mark saved, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor-proof.
 
@@ -148,7 +148,7 @@ Include fixture records for:
 - NIGHTWATCH: Factory Early Warning
 - Voice-to-Ops: field reports that write themselves
 
-Use these records to make Signed proof mode fully functional without credentials.
+Use these records to make Signed receipt mode fully functional without credentials.
 
 ## Bright Data Live Mode
 
@@ -206,7 +206,7 @@ Each server-issued project review should also include `runReceipt` with:
 
 ## Error Handling
 
-- Missing token: run Signed proof mode and show setup checklist.
+- Missing token: run Signed receipt mode and show setup checklist.
 - Missing or invalid review token: return 401 from the live backend and show a clear live-setup status.
 - Disallowed origin or URL host: reject before calling Bright Data.
 - Bright Data call budget exhausted: stop collection and mark the trace as failed rather than continuing.
@@ -232,14 +232,14 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 
 ## Acceptance Criteria
 
-- The app runs with no credentials in Signed proof mode.
+- The app runs with no credentials in Signed receipt mode.
 - Live mode has a secure Bright Data integration plan and token handling.
 - A user can complete the audit workflow in under three minutes.
 - The Claim Ledger is visible in the first 90 seconds of the demo.
 - The Adversarial Tribunal is visible in the first 90 seconds of the demo.
 - The Winner Benchmark is visible in the first 90 seconds of the demo.
 - The Originality Radar is visible in the first 90 seconds of the demo.
-- The Setup tab makes native.builder, Bright Data, and real-project readiness visible without opening docs.
+- The Collect tab makes native.builder, Bright Data, and real-project readiness visible without opening docs.
 - Bright Data Dependency score is prominent.
 - Exports produce usable files.
 - App can be published to a public native.builder URL.

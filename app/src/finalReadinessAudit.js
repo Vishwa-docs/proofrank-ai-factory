@@ -18,6 +18,24 @@ function nativeBuilderProof(nativeBuilder = {}) {
     const bundle = nativeBuilder.renderCheck.publishedBundle ? ` / bundle ${nativeBuilder.renderCheck.publishedBundle}` : "";
     return `${nativeBuilder.url} / browser render verified in ${nativeBuilder.renderCheck.path}${bundle}.`;
   }
+  if (nativeBuilder.renderCheck?.path) {
+    const missing = nativeBuilder.renderCheck.missingCopy?.length
+      ? `missing in browser render: ${nativeBuilder.renderCheck.missingCopy.join(", ")}`
+      : "";
+    const forbidden = nativeBuilder.renderCheck.forbiddenCopy?.length
+      ? `forbidden copy visible: ${nativeBuilder.renderCheck.forbiddenCopy.join(", ")}`
+      : "";
+    const bundle = nativeBuilder.renderCheck.sameBundle === false ? "published bundle changed or not yet rechecked" : "";
+    return [
+      nativeBuilder.url || "No nativelyai.app URL configured.",
+      `render check needs attention in ${nativeBuilder.renderCheck.path}`,
+      missing,
+      forbidden,
+      bundle
+    ]
+      .filter(Boolean)
+      .join(" / ");
+  }
   if (nativeBuilder.ok && nativeBuilder.verifiedUrl) return `${nativeBuilder.url} / corrected public copy verified.`;
   if (nativeBuilder.missingCopy?.length || nativeBuilder.staleCopyFound?.length) {
     const missing = nativeBuilder.missingCopy?.length ? `missing: ${nativeBuilder.missingCopy.join(", ")}` : "";
@@ -79,7 +97,7 @@ export function buildFinalReadinessReport(state = {}) {
       label: "Public fallback app",
       passed: bool(state.publicFallback?.ok),
       proof: state.publicFallback?.evidence || state.publicFallback?.url || "Fallback app was not verified.",
-      action: "Deploy the public fallback app and confirm the Bright proof strip is visible."
+      action: "Deploy the public fallback app and confirm the Bright Data proof strip is visible."
     }),
     gate({
       id: "release-video",
@@ -110,7 +128,7 @@ export function buildFinalReadinessReport(state = {}) {
       label: "Native.builder primary URL",
       passed: bool(state.nativeBuilder?.ok) && /nativelyai\.app/i.test(String(state.nativeBuilder?.url || "")),
       proof: nativeBuilderProof(state.nativeBuilder),
-      action: "Publish the native.builder app and paste the public nativelyai.app URL."
+      action: "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
     }),
     gate({
       id: "bright-auth",
