@@ -64,7 +64,7 @@ export function createLiveReviewServer(options = {}) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   loadLocalEnv();
   const port = Number(process.env.PORT || DEFAULT_PORT);
-  const host = process.env.HOST || "127.0.0.1";
+  const host = process.env.HOST || (process.env.PORT ? "0.0.0.0" : "127.0.0.1");
   const server = createLiveReviewServer();
 
   server.listen(port, host, () => {

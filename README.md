@@ -150,6 +150,7 @@ Built and verified:
 - Originality Radar with similar-project overlap and Bright Data prior-art queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
+- Live API deployment handoff in `submission/deploy-live-api.md`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
 - Operator handoff for account-gated final steps in `submission/operator-handoff.md`
 
@@ -171,5 +172,6 @@ Account-gated work still requiring the team owner:
 - Authorize the Native.builder X/Privy login flow
 - Apply the `AIFACTORY26` Builder Plan promo code
 - Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401
+- Deploy the live review API with the settings in `submission/deploy-live-api.md`
 - Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
 - Publish the native.builder app URL and paste it into the lablab.ai submission

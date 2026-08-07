@@ -10,6 +10,7 @@ Date: 2026-08-07
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
 - Bright Data setup: `submission/bright-data-setup.md`
+- Live API deployment: `submission/deploy-live-api.md`
 - Submission Cockpit in the app showing required gates, competitive gates, and the next account-owner actions.
 
 ## What I Need From You
@@ -45,6 +46,11 @@ Date: 2026-08-07
    - Paste the release demo video URL.
    - Use the Bright Data usage text from `submission/checklist.md`.
    - Submit from the authenticated team owner account.
+
+5. Public live backend
+   - Railway CLI is not currently authenticated in this workspace.
+   - Use `submission/deploy-live-api.md` after `railway login`.
+   - Set the Bright Data and ProofRank security variables before exposing the endpoint.
 
 ## Final Verification Commands
 
