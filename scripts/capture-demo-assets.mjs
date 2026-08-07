@@ -77,16 +77,22 @@ try {
   });
 
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
-  await page.waitForSelector("#rankedList .project-row", { timeout: 5000 });
+  await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
+  await page.locator(".analysis-drawer summary", { hasText: "Claim ledger" }).click();
   await capture(page, "02-claim-ledger.png", ".claim-ledger");
+  await page.click('[data-section-tab="receipt"]');
   await capture(page, "03-proof-receipt.png", ".evidence-rail");
+  await page.click('[data-section-tab="setup"]');
   await page.locator("#modeSelect").selectOption("live");
   await page.waitForTimeout(180);
   await capture(page, "04-bright-data-live.png", ".source-rail");
+  await page.click('[data-section-tab="queue"]');
   await capture(page, "05-field-map.png", ".field-map");
+  await page.locator(".export-menu summary").click();
   await capture(page, "06-exports-ready.png", ".topbar");
+  await page.click('[data-section-tab="overview"]');
   await capture(page, "proofrank-demo-thumb.png", ".scorecard");
 
   await page.close();

@@ -29,7 +29,7 @@ Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live
 
 ## Why Native.builder
 
-The competition app should be generated, refined, and published through native.builder. Native.builder is used for the app structure, dashboard UI, stateful audit workflow, export actions, responsive layout, and deployment. This local workspace provides the specification, reference implementation, fixtures, and submission assets to drive the native.builder build.
+The competition app was generated, refined, and published through native.builder at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`. Native.builder was used for the app structure, dashboard UI, stateful audit workflow, export actions, responsive layout, and deployment. This local workspace provides the specification, reference implementation, fixtures, and submission assets that drove the native.builder build.
 
 ## Differentiation
 

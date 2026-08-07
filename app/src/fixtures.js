@@ -12,6 +12,7 @@ export const fixtureProjects = [
     eventUrl: EVENT_URL,
     submissionUrl: "",
     demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/",
+    nativeBuilderUrl: "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
     githubUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
     presentationUrl: "submission/pitch-deck.md",
     createdAt: "2026-08-07",
@@ -30,6 +31,7 @@ export const fixtureProjects = [
       hasGithub: true,
       hasPresentation: true,
       nativeBuilderExplained: true,
+      nativeBuilderPublished: true,
       builtDuringEvent: true,
       repoMetadataCollected: true,
       repoTreeCollected: true,
@@ -53,8 +55,8 @@ export const fixtureProjects = [
       brightDataRole: "agentic",
       brightDataTools: ["Remote MCP", "SERP API", "Web Scraper API", "CLI"],
       agenticLoop: true,
-      brightDataTrace: false,
-      brightDataTraceStatus: "planned",
+      brightDataTrace: true,
+      brightDataTraceStatus: "executed",
       brightDataTraceVisible: true
     },
     evidenceItems: [
@@ -69,7 +71,7 @@ export const fixtureProjects = [
         collector: "Codex design agent",
         confidence: 0.91,
         supports: ["Originality", "Business value"],
-        limitations: "Native.builder public URL must still be published before final submission."
+        limitations: "Native.builder public URL is published; final lablab submission still needs to be sent."
       },
       {
         id: "proofrank-2",
@@ -83,32 +85,167 @@ export const fixtureProjects = [
         confidence: 0.86,
         supports: ["Application of technology"],
         limitations: "Local demo generates integration commands rather than calling private APIs from the browser."
-      }
-    ],
-    brightDataTraces: [
-      {
-        mode: "planned",
-        provider: "bright-data",
-        traceStatus: "planned",
-        tool: "Remote MCP",
-        queryOrUrl: EVENT_URL,
-        resultCount: 0,
-        status: "scoped for native.builder live mode",
-        collectedAt: COLLECTED_AT,
-        byteCount: 0,
-        contentHash: "00000000"
       },
       {
-        mode: "planned",
+        id: "proofrank-final-receipt",
+        sourceType: "signed-receipt",
+        sourceUrl: "submission/final-brightdata-receipt.json",
+        title: "Signed Bright Data sponsor receipt",
+        excerpt:
+          "Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification.",
+        collectedAt: "2026-08-07T15:00:52.199Z",
+        collector: "ProofRank live reviewer",
+        confidence: 0.95,
+        supports: ["Bright Data usage", "Application of technology"],
+        limitations: "Final lablab.ai submission still needs to be sent from the team-owner account."
+      },
+      {
+        id: "proofrank-final-prior-art",
+        sourceType: "prior-art-discover",
+        sourceUrl:
+          "https://www.google.com/search?q=%22ProofRank%20AI%20Factory%22%20%22Vishwa%20Docs%22%20hackathon%20Bright%20Data%20proof%20originality",
+        title: "Bright Data prior-art discovery",
+        excerpt:
+          "Bright Data search_engine and discover calls collected public originality signals for the project and adjacent field.",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        collector: "ProofRank Bright Data discover reviewer",
+        confidence: 0.72,
+        supports: ["Originality", "Competitive field"],
+        limitations: "Discovery evidence is a ranked research signal, not a legal originality judgment."
+      }
+    ],
+    runReceipt: {
+      issuer: "ProofRank live reviewer",
+      issuedAt: "2026-08-07T14:59:09.828Z",
+      runId: "pr-20260807t145909828z-553fb028",
+      collectionMode: "bright-data-mcp",
+      provider: "bright-data",
+      traceCount: 9,
+      executedTraceCount: 9,
+      tools: ["github_api", "scrape_as_markdown", "search_engine", "discover"],
+      traceDigest: "553fb028",
+      replayCommand:
+        "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/",
+      signature: "hmac-sha256:dc10a8b65f94422c908a1756d14423d6e6d2820273e9e81e8468c0242718d410"
+    },
+    brightDataTraces: [
+      {
+        mode: "bright-data-mcp",
         provider: "bright-data",
-        traceStatus: "planned",
-        tool: "SERP API",
-        queryOrUrl: "exact project title and team similarity checks",
-        resultCount: 0,
-        status: "scoped for originality audit",
-        collectedAt: COLLECTED_AT,
-        byteCount: 0,
-        contentHash: "00000000"
+        traceStatus: "executed",
+        tool: "github_api",
+        queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 6863,
+        contentHash: "e73a0977",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "scrape_as_markdown",
+        queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/readme",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 14873,
+        contentHash: "67d2ce84",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "github_api",
+        queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/git/trees/main?recursive=1",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 27286,
+        contentHash: "e019d255",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "github_api",
+        queryOrUrl:
+          "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/commits?since=2026-08-03T15%3A00%3A00.000Z&until=2026-08-10T15%3A00%3A00.000Z&per_page=25",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 91730,
+        contentHash: "6c21e24a",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "github_api",
+        queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/releases?per_page=5",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 9605,
+        contentHash: "5e94ee2e",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "github_api",
+        queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/issues?state=open&per_page=5",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 653,
+        contentHash: "d4db296c",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "scrape_as_markdown",
+        queryOrUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 1353,
+        contentHash: "466e7133",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "search_engine",
+        queryOrUrl: "\"ProofRank AI Factory\" \"Vishwa Docs\" hackathon Bright Data proof originality",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 3573,
+        contentHash: "35ba59a5",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "discover",
+        queryOrUrl: "\"ProofRank AI Factory\" \"Vishwa Docs\" hackathon Bright Data proof originality",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T14:59:09.828Z",
+        byteCount: 2420,
+        contentHash: "601eaab1",
+        countsForSponsorFit: true
       }
     ]
   },

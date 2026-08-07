@@ -11,6 +11,7 @@ Date: 2026-08-07
 - Workflow proof screenshot release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/health
+- Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
@@ -38,13 +39,10 @@ Date: 2026-08-07
 
 2. Native.builder publish
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
-   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed the Product Architect PRD pass, answered follow-up questions with the safe no-secret live adapter path, and completed the Task Planner pass.
-   - Next visible Native.builder action: **Start building - Task 1: Foundation & Layout**.
-   - Current browser blocker: normal Safari site storage for `builder.nativelyai.com` now renders the builder shell blank. Private Browsing loads Natively correctly, so the service is reachable; recover by logging in through Private Browsing or clearing Natively site data in normal Safari and logging in again.
+   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the app.
+   - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
-   - Apply promo code `AIFACTORY26` if prompted.
-   - Build until the app matches the public fallback.
-   - Publish the public `nativelyai.app` URL.
+   - Apply promo code `AIFACTORY26` if prompted later.
    - Use the native.builder URL as the primary lablab submission URL.
 
 3. Actual project to review
@@ -58,7 +56,7 @@ Date: 2026-08-07
    - Success condition: the Submission Cockpit shows the actual project, live backend, public app, source, demo video, and executed Bright Data gates as passed.
 
 4. Final lablab submission
-   - Paste the native.builder app URL.
+   - Paste the native.builder app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
    - Paste the GitHub fallback URL.
    - Paste the release demo video URL.
    - Use the Bright Data usage text from `submission/checklist.md`.
@@ -95,4 +93,4 @@ npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https:
 
 ## Current Honest Status
 
-ProofRank is submission-ready as a fallback app and collateral package, has a local signed Bright Data sponsor receipt with executed MCP traces, and has a public Vercel live API shell. The final readiness audit is at 8/10 required gates. It is not yet fully eligible as the primary hackathon submission until the native.builder app URL exists and the final lablab submission is sent.
+ProofRank has a published Native.builder app, public fallback app, collateral package, local signed Bright Data sponsor receipt with executed MCP traces, and public Vercel live API shell. The final readiness audit should now be 9/10 required gates, with only the final lablab.ai submission remaining.

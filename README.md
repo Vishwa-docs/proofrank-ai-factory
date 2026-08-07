@@ -135,6 +135,12 @@ It deploys only the `app/` directory, so the public fallback contains the workin
 ProofRank dashboard without submission notes, private scratch files, or saved
 hackathon HTML snapshots.
 
+Primary Native.builder app:
+
+```text
+https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
+```
+
 Public repo:
 
 ```text
@@ -155,9 +161,8 @@ Workflow proof JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/release
 Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 ```
 
-The native.builder URL remains the required primary submission URL. Use the
-GitHub Pages URL as a backup proof-of-work link or public reference if the
-native.builder publish flow is still account-gated.
+Use the Native.builder URL as the primary hackathon app link. Use the GitHub
+Pages URL as a backup proof-of-work link and public reference.
 
 ## Current Status
 
@@ -175,6 +180,7 @@ Built and verified:
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`
+- Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`
 - Bright Data setup and submission copy in `submission/`
 - Live API deployment handoff in `submission/deploy-live-api.md`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
@@ -203,8 +209,7 @@ Design and implementation plan:
 
 Account-gated work still requiring the team owner:
 
-- Recover Native.builder access for `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd` after the normal Safari profile started rendering the builder shell blank. Private Browsing loads the public Natively site, so use Private Browsing login or clear Natively site data in normal Safari.
-- Click **Start building - Task 1: Foundation & Layout**. Product Architect and Task Planner passes are complete, but the preview still shows the default placeholder.
-- Apply the `AIFACTORY26` Builder Plan promo code
-- Keep the signed Bright Data receipt in the final submission packet
-- Publish the native.builder app URL and paste it into the lablab.ai submission
+- Submit the final project from the authenticated lablab.ai team-owner account.
+- Apply the `AIFACTORY26` Builder Plan promo code if Native.builder prompts for plan access later.
+- Keep the signed Bright Data receipt in the final submission packet.
+- Paste the Native.builder URL into the lablab.ai submission as the primary app URL.

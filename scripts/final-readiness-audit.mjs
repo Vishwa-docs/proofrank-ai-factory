@@ -13,6 +13,7 @@ loadLocalEnv();
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(root, "submission", "final-readiness-audit.json");
 const fallbackUrl = "https://vishwa-docs.github.io/proofrank-ai-factory/";
+const nativeBuilderUrl = "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/";
 const releaseVideoUrl =
   "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4";
 const pitchDeckUrl =
@@ -197,7 +198,7 @@ async function liveApi() {
 }
 
 async function nativeBuilder() {
-  const url = envValue("PROOFRANK_NATIVE_BUILDER_URL", "NATIVE_BUILDER_APP_URL");
+  const url = envValue("PROOFRANK_NATIVE_BUILDER_URL", "NATIVE_BUILDER_APP_URL") || nativeBuilderUrl;
   if (!url) return { ok: false, url: "" };
   const reachable = await fetchReachable(url);
   return {

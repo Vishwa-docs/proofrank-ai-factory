@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-07T15:48:40.842Z",
+  "generatedAt": "2026-08-07T16:47:09.793Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 8,
+  "requiredPassed": 9,
   "requiredTotal": 10,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 82,
+  "score": 91,
   "gates": [
     {
       "id": "public-fallback",
@@ -44,8 +44,8 @@
       "id": "native-builder",
       "label": "Native.builder primary URL",
       "required": true,
-      "status": "needs-action",
-      "proof": "No nativelyai.app URL configured.",
+      "status": "passed",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
       "action": "Publish the native.builder app and paste the public nativelyai.app URL."
     },
     {
@@ -106,8 +106,7 @@
     }
   ],
   "nextActions": [
-    "Publish the native.builder app and paste the public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 8/10 required gates passed. Next action: Publish the native.builder app and paste the public nativelyai.app URL."
+  "summary": "Not final-ready: 9/10 required gates passed. Next action: Submit from the authenticated team-owner lablab.ai account."
 }

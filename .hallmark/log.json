@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-08-07",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
+    "enrichment": "lablab-style event header",
+    "brief": "ProofRank reviewer UI reset with tabbed Bright Data proof sections"
+  },
+  {
+    "date": "2026-08-07",
     "macrostructure": "Map / Diagram",
     "theme": "modern-minimal",
     "enrichment": "evidence route map",

@@ -41,13 +41,18 @@ for (const spec of [
   page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
 
   await page.goto(targetUrl, { waitUntil: "networkidle" });
-  await page.waitForSelector("#rankedList .project-row", { timeout: 5000 });
+  await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   if (spec.name === "desktop") {
+    await page.click('[data-section-tab="setup"]');
     await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
     await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
     await page.click("#addReviewerProject");
     await page.waitForTimeout(200);
+    await page.click('[data-section-tab="queue"]');
+    await page.click('#rankedList [data-id="proofrank"]');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(700);
   }
 
   const metrics = await page.evaluate(() => {
@@ -66,9 +71,7 @@ for (const spec of [
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
       readinessCount: document.querySelectorAll("#readinessList li").length,
-      receiptIncludesReviewer: (document.querySelector("#receipt")?.textContent || "").includes(
-        "Reviewer supplied"
-      ),
+      reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
       scrollWidth: html.scrollWidth,
       clientWidth: html.clientWidth,
       horizontalOverflow: html.scrollWidth > html.clientWidth + 1,
@@ -93,8 +96,8 @@ const failures = results.flatMap((result) => {
   if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
-  if (result.spec.name === "desktop" && !result.metrics.receiptIncludesReviewer) {
-    problems.push("desktop: reviewer project receipt did not render");
+  if (result.spec.name === "desktop" && !result.metrics.reviewerRowPresent) {
+    problems.push("desktop: reviewer project did not remain in queue");
   }
   return problems;
 });

@@ -7,13 +7,12 @@
 - The full ProofRank prompt was pasted and generation was started.
 - Product Architect PRD pass completed.
 - Task Planner completed a six-task build plan.
-- Next Native.builder action: click **Start building - Task 1: Foundation & Layout** once builder access is recovered.
-- Normal Safari site storage currently makes `builder.nativelyai.com` render blank; Private Browsing loads the public site, so recover by logging in there or clearing Natively site data in normal Safari.
+- Native.builder build passes completed through the full MVP surface.
+- Published Native.builder app: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
+- Public app verification passed in Safari.
 - For truly native-builder-hosted Bright Data Live mode, confirm and connect Supabase for secure Edge Function secrets. Otherwise continue with the no-secret external live adapter already selected.
 - Apply Builder Plan promo code `AIFACTORY26`.
-- Iterate until the app matches the local reference.
-- Publish to a public `nativelyai.app` URL.
-- Copy the public app URL.
+- Use the public `nativelyai.app` URL as the primary app link.
 
 ## Must Do In Bright Data
 
@@ -110,7 +109,7 @@ native.builder, Bright Data Remote MCP, Bright Data SERP API, Bright Data Web Sc
 Required links to paste:
 
 ```text
-Native.builder app URL: PASTE_AFTER_PUBLISH
+Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://vishwa-docs.github.io/proofrank-ai-factory/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4

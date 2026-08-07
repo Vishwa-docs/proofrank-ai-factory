@@ -19,12 +19,14 @@ function executedTrace(tool, overrides = {}) {
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 const current = buildWinnerBenchmark(proofrank);
 
-assert.equal(current.tier, "Prize-shaped but gated");
-assert.ok(current.score >= 60);
-assert.ok(current.gaps.some((gap) => /source, search, and discovery/i.test(gap.action)));
-assert.ok(current.gaps.some((gap) => /native\.builder/i.test(gap.action)));
+assert.equal(current.tier, "Sponsor-prize ready");
+assert.ok(current.score >= 90);
+assert.equal(current.gaps.length, 0);
+assert.ok(!current.gaps.some((gap) => /native\.builder/i.test(gap.action)));
 assert.ok(current.matches.some((match) => match.id === "judge-visible-proof"));
 assert.ok(current.matches.some((match) => match.id === "decision-work-product"));
+assert.ok(current.matches.some((match) => match.id === "native-builder-primary"));
+assert.ok(current.matches.some((match) => match.id === "executed-live-web"));
 
 const finalist = buildWinnerBenchmark({
   ...proofrank,

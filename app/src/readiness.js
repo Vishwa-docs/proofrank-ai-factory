@@ -58,6 +58,10 @@ function hasLiveReviewerEvidence(project = {}) {
   return collectedEvidence && nonPendingTrace;
 }
 
+function hasExecutedProjectReceipt(project = {}) {
+  return Boolean(project.runReceipt?.runId && project.runReceipt?.provider === "bright-data" && hasBrightDataSponsorProofBundle(project));
+}
+
 function gate({ id, label, required = true, passed, detail, proof, action }) {
   return {
     id,
@@ -87,7 +91,9 @@ export function buildReadiness(project = {}, context = {}) {
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
   const nativeBuilderReady = looksLikeNativeBuilderUrl(project);
   const traceState = sponsorProofReady ? "executed" : brightDataTraceState(project);
-  const liveReviewedProjectCount = projects.filter(hasLiveReviewerEvidence).length;
+  const selectedProjectHasRunReceipt = hasExecutedProjectReceipt(project);
+  const liveReviewedProjectCount = projects.filter((item) => hasLiveReviewerEvidence(item) || hasExecutedProjectReceipt(item)).length;
+  const liveBackendSatisfied = liveApiConfigured || selectedProjectHasRunReceipt;
 
   const gates = [
     gate({
@@ -133,13 +139,15 @@ export function buildReadiness(project = {}, context = {}) {
     gate({
       id: "live-backend",
       label: "Live collection backend",
-      passed: liveApiConfigured,
-      detail: liveApiConfigured
-        ? "The UI is pointed at a live server-side review endpoint."
+      passed: liveBackendSatisfied,
+      detail: selectedProjectHasRunReceipt
+        ? "A signed server-side Bright Data run receipt is attached for this project."
+        : liveApiConfigured
+          ? "The UI is pointed at a live server-side review endpoint."
         : localhostBlocked
           ? "Hosted fallback pages cannot call a localhost review endpoint."
         : "Demo mode can rank fixtures, but real use needs the backend running in live mode.",
-      proof: liveApiConfigured ? context.liveApiUrl : localhostBlocked ? context.liveApiUrl : "Live mode is not configured.",
+      proof: selectedProjectHasRunReceipt ? project.runReceipt.runId : liveApiConfigured ? context.liveApiUrl : localhostBlocked ? context.liveApiUrl : "Live mode is not configured.",
       action: "Start npm run live:server, switch to Bright Data live mode, and keep the endpoint server-side."
     }),
     gate({

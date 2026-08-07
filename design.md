@@ -8,7 +8,7 @@ plain about what is still gated.
 modern-minimal
 
 ## Macrostructure family
-- App pages: Map / Diagram for evidence routing, with Workbench panels for task execution.
+- App pages: Workbench with a lablab-style event header, one decision card, section tabs, and Map / Diagram evidence routing inside the overview.
 - Marketing/submission pages: Workbench, using real product captures rather than fake UI chrome.
 - Content pages: Long Document, typography only.
 

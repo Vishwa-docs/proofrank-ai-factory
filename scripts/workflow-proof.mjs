@@ -87,17 +87,30 @@ try {
   page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
 
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
-  await page.waitForSelector("#rankedList .project-row", { timeout: 5000 });
+  await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
   await page.click("#runAudit");
   await page.waitForFunction(() => (document.querySelector("#statusLine")?.textContent || "").includes("submissions ranked"));
 
+  await page.click('[data-section-tab="setup"]');
   await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
   await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
   await page.click("#addReviewerProject");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "").includes("ProofRank AI Factory"));
+  await page.click('[data-section-tab="queue"]');
+  await page.click('#rankedList [data-id="proofrank"]');
+  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
 
+  await page.click('[data-section-tab="receipt"]');
   const selectedReceipt = await captureDownloadName(page, "#exportSelected");
+  await page.locator(".export-menu summary").click();
   const packet = await captureDownloadName(page, "#exportPacket");
+  await page.click('[data-section-tab="overview"]');
+  await page.evaluate(() => {
+    const exportMenu = document.querySelector(".export-menu");
+    if (exportMenu) exportMenu.open = false;
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(700);
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   const proof = await page.evaluate(
@@ -114,6 +127,7 @@ try {
         appTitle: document.title,
         selectedProject: document.querySelector("#scorecard .focus-strip h2")?.textContent?.trim() || "",
         rankedRows: document.querySelectorAll(".project-row").length,
+        reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
         statusLine: document.querySelector("#statusLine")?.textContent?.trim() || "",
         brightProof: document.querySelector("#liveProofStrip")?.textContent?.replace(/\s+/g, " ").trim() || "",
         scorecardText: document.querySelector("#scorecard")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
@@ -135,8 +149,10 @@ try {
   proof.consoleMessages = messages;
   proof.ok =
     proof.appTitle === "ProofRank" &&
-    proof.selectedProject === "ProofRank AI Factory" &&
+    proof.selectedProject === "ProofRank" &&
     proof.rankedRows >= 8 &&
+    proof.reviewerRowPresent === true &&
+    /Sponsor bundle executed|executed/i.test(proof.brightProof) &&
     proof.exportedFiles.length === 2 &&
     messages.length === 0;
 

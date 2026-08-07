@@ -25,6 +25,7 @@ const elements = {
   receipt: document.querySelector("#receipt"),
   fieldMap: document.querySelector("#fieldMap"),
   fieldSummary: document.querySelector("#fieldSummary"),
+  heroDecision: document.querySelector("#heroDecision"),
   readinessSummary: document.querySelector("#readinessSummary"),
   readinessMeter: document.querySelector("#readinessMeter"),
   readinessList: document.querySelector("#readinessList"),
@@ -37,12 +38,15 @@ const elements = {
   exportCsv: document.querySelector("#exportCsv"),
   exportReceipts: document.querySelector("#exportReceipts"),
   exportSelected: document.querySelector("#exportSelected"),
-  exportPacket: document.querySelector("#exportPacket")
+  exportPacket: document.querySelector("#exportPacket"),
+  sectionTabs: [...document.querySelectorAll("[data-section-tab]")],
+  sectionPanels: [...document.querySelectorAll("[data-section-panel]")]
 };
 
 const state = {
   mode: "demo",
   filter: "all",
+  activeSection: "overview",
   selectedId: "proofrank",
   projects: rankProjects(fixtureProjects),
   uploadedProjects: [],
@@ -129,6 +133,22 @@ function selectedProject() {
   return state.projects.find((project) => project.id === state.selectedId) || state.projects[0];
 }
 
+function readinessContext() {
+  return {
+    mode: state.mode,
+    liveApiUrl: elements.liveApiUrl.value.trim(),
+    pageOrigin: window.location.origin,
+    reviewerProjectCount: state.reviewerProjects.length,
+    projects: state.projects
+  };
+}
+
+function compactSentence(value = "") {
+  const text = displayText(value);
+  const first = text.split(". ")[0] || text;
+  return first.endsWith(".") ? first : `${first}.`;
+}
+
 function filteredProjects() {
   return state.projects.filter((project) => {
     const evidence = project.evidence || {};
@@ -191,6 +211,58 @@ function statusClass(project) {
   return "review";
 }
 
+function setActiveSection(sectionName, options = {}) {
+  state.activeSection = sectionName;
+  elements.sectionTabs.forEach((tab) => {
+    const selected = tab.dataset.sectionTab === sectionName;
+    tab.classList.toggle("is-active", selected);
+    tab.setAttribute("aria-selected", selected ? "true" : "false");
+  });
+  elements.sectionPanels.forEach((panel) => {
+    const selected = panel.dataset.sectionPanel === sectionName;
+    panel.hidden = !selected;
+    panel.classList.toggle("is-active", selected);
+  });
+
+  if (options.scroll) {
+    document.querySelector(".section-tabs")?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+}
+
+function renderHeroDecision(project) {
+  const readiness = buildReadiness(project, readinessContext());
+  const traceState = hasBrightDataSponsorProofBundle(project) ? "executed" : brightDataTraceState(project);
+  const primaryBlocker = project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the judge packet.";
+  const nativeUrl = project.nativeBuilderUrl || (String(project.demoUrl || "").includes("nativelyai.app") ? project.demoUrl : "");
+
+  elements.heroDecision.innerHTML = `
+    <div class="decision-head">
+      <span class="verdict-pill ${statusClass(project)}">${escapeHtml(project.verdict.label)}</span>
+      <span class="decision-score"><span>Overall</span><strong>${project.scores.overall}</strong></span>
+    </div>
+    <h2>${escapeHtml(project.title)}</h2>
+    <p>${escapeHtml(compactSentence(project.summary))}</p>
+    <div class="decision-metrics" aria-label="Selected project proof metrics">
+      <div>
+        <span>Bright prize</span>
+        <strong>${project.scores.brightDataPrize}</strong>
+      </div>
+      <div>
+        <span>Trace state</span>
+        <strong>${escapeHtml(traceState)}</strong>
+      </div>
+      <div>
+        <span>Native app</span>
+        <strong>${nativeUrl ? "published" : "missing"}</strong>
+      </div>
+    </div>
+    <div class="decision-blocker">
+      <span>Next proof</span>
+      <strong>${escapeHtml(primaryBlocker)}</strong>
+    </div>
+  `;
+}
+
 function renderRankedList() {
   const projects = filteredProjects();
   elements.queueCount.textContent = String(projects.length);
@@ -221,7 +293,9 @@ function renderRankedList() {
   elements.rankedList.querySelectorAll(".project-row").forEach((row) => {
     row.addEventListener("click", () => {
       state.selectedId = row.dataset.id;
+      setStatus(`${selectedProject().title} selected.`, "ready");
       render();
+      setActiveSection("overview", { scroll: true });
     });
   });
 }
@@ -481,9 +555,8 @@ function renderSourceLinks(project) {
 function renderScorecard(project) {
   const tags = project.technologies.map((technology) => `<span class="tag">${escapeHtml(technology)}</span>`).join("");
   const traceState = brightDataTraceState(project);
-  const risks = project.verdict.risks.length
-    ? project.verdict.risks.map((risk) => `<li>${escapeHtml(risk)}</li>`).join("")
-    : `<li>No major audit risk visible in current evidence.</li>`;
+  const primaryRisk = project.verdict.risks[0] || "No major audit risk visible in current evidence.";
+  const secondaryRisk = project.verdict.risks[1] || `Bright Data trace state: ${traceState}.`;
 
   elements.scorecard.innerHTML = `
     <section class="focus-strip">
@@ -523,17 +596,30 @@ function renderScorecard(project) {
       </div>
       <div>
         <h3>Current blocker</h3>
-        <ul>${risks}</ul>
+        <p>${escapeHtml(primaryRisk)}</p>
+        <p>${escapeHtml(secondaryRisk)}</p>
       </div>
     </section>
 
-    ${renderTribunal(project)}
+    <details class="analysis-drawer">
+      <summary><span>Winner benchmark</span><strong>${project.scores.brightDataPrize}</strong></summary>
+      ${renderWinnerBenchmark(project)}
+    </details>
 
-    ${renderWinnerBenchmark(project)}
+    <details class="analysis-drawer">
+      <summary><span>Adversarial tribunal</span><strong>${escapeHtml(project.verdict.label)}</strong></summary>
+      ${renderTribunal(project)}
+    </details>
 
-    ${renderOriginalityRadar(project)}
+    <details class="analysis-drawer">
+      <summary><span>Originality radar</span><strong>${project.scores.originality}</strong></summary>
+      ${renderOriginalityRadar(project)}
+    </details>
 
-    ${renderClaimLedger(project)}
+    <details class="analysis-drawer">
+      <summary><span>Claim ledger</span><strong>${(project.evidenceItems || []).length} items</strong></summary>
+      ${renderClaimLedger(project)}
+    </details>
   `;
 }
 
@@ -587,26 +673,32 @@ function renderReceipt(project) {
       ${receiptItems || `<div class="empty-state">No evidence items available.</div>`}
     </div>
 
-    <table class="trace-table" aria-label="Bright Data traces">
-      <thead>
-        <tr>
-          <th>Tool</th>
-          <th>Run</th>
-          <th>Query or URL</th>
-          <th>Rows</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${traces || `<tr><td colspan="5">No Bright Data trace visible yet.</td></tr>`}
-      </tbody>
-    </table>
+    <details class="receipt-drawer">
+      <summary>Bright Data trace table</summary>
+      <table class="trace-table" aria-label="Bright Data traces">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Run</th>
+            <th>Query or URL</th>
+            <th>Rows</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${traces || `<tr><td colspan="5">No Bright Data trace visible yet.</td></tr>`}
+        </tbody>
+      </table>
+    </details>
 
-    <div class="receipt-item live-plan">
-      <h3>Live collection plan</h3>
-      <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Saved evidence mirrors these collection steps."}</p>
-      <ul>${livePlan}</ul>
-    </div>
+    <details class="receipt-drawer">
+      <summary>Live collection plan</summary>
+      <div class="receipt-item live-plan">
+        <h3>Planned collector calls</h3>
+        <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Saved evidence mirrors these collection steps."}</p>
+        <ul>${livePlan}</ul>
+      </div>
+    </details>
   `;
 }
 
@@ -638,13 +730,7 @@ function renderFieldMap() {
 }
 
 function renderReadiness(project = selectedProject()) {
-  const readiness = buildReadiness(project, {
-    mode: state.mode,
-    liveApiUrl: elements.liveApiUrl.value.trim(),
-    pageOrigin: window.location.origin,
-    reviewerProjectCount: state.reviewerProjects.length,
-    projects: state.projects
-  });
+  const readiness = buildReadiness(project, readinessContext());
 
   elements.readinessSummary.innerHTML = `
     <strong>${readiness.canSubmit ? "Submission-safe" : "Still gated"}</strong>
@@ -671,6 +757,7 @@ function render() {
   const project = selectedProject();
   updateRunProfile();
   updateLiveProofStrip(project);
+  renderHeroDecision(project);
   renderProofTopology(project);
   renderRankedList();
   renderScorecard(project);
@@ -941,6 +1028,7 @@ async function addReviewerProject() {
       : "Project added. Live Bright Data collection is still needed for a real evidence receipt.";
   setStatus(`${project.title} added to the review queue.`, "ready");
   render();
+  setActiveSection("overview", { scroll: true });
 }
 
 function updateReviewerModeCopy() {
@@ -966,6 +1054,12 @@ document.querySelectorAll(".filter-chip").forEach((button) => {
     button.classList.add("is-active");
     state.filter = button.dataset.filter;
     renderRankedList();
+  });
+});
+
+elements.sectionTabs.forEach((button) => {
+  button.addEventListener("click", () => {
+    setActiveSection(button.dataset.sectionTab, { scroll: true });
   });
 });
 
@@ -1000,4 +1094,5 @@ elements.exportPacket.addEventListener("click", () => {
 
 initializeLiveEndpoint();
 updateReviewerModeCopy();
+setActiveSection(state.activeSection);
 render();

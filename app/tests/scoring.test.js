@@ -21,20 +21,19 @@ const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 const countersign = fixtureProjects.find((project) => project.id === "countersign");
 
 const proofrankScores = calculateScores(proofrank);
-assert.equal(proofrankScores.brightDataFit, 72);
-assert.ok(proofrankScores.brightDataFit < 75);
-assert.ok(proofrankScores.brightDataPrize <= 64);
+assert.equal(proofrankScores.brightDataFit, 100);
+assert.equal(proofrankScores.brightDataPrize, 100);
 assert.equal(proofrankScores.businessValue, 100);
-assert.ok(proofrankScores.overall >= 85);
+assert.equal(proofrankScores.overall, 100);
 
 const countersignScores = calculateScores(countersign);
 assert.equal(countersignScores.brightDataFit, 12);
 assert.ok(countersignScores.overall < proofrankScores.overall);
 
 const proofrankVerdict = buildVerdict(proofrank, proofrankScores);
-assert.equal(proofrankVerdict.label, "Strong but gated");
+assert.equal(proofrankVerdict.label, "Finalist-ready");
 assert.ok(!proofrankVerdict.risks.includes("Publish public demo before submission"));
-assert.ok(proofrankVerdict.risks.includes("Run the Bright Data sponsor proof bundle"));
+assert.ok(!proofrankVerdict.risks.includes("Run the Bright Data sponsor proof bundle"));
 
 const ranked = rankProjects(fixtureProjects);
 assert.equal(ranked[0].id, "proofrank");

@@ -41,7 +41,7 @@ Use this as the primary submission URL.
 Add the published URL to `.env.local`:
 
 ```text
-PROOFRANK_NATIVE_BUILDER_URL=https://YOUR-PUBLISHED-APP.nativelyai.app
+PROOFRANK_NATIVE_BUILDER_URL=https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 ```
 
 Then run:
@@ -58,7 +58,7 @@ Use these values:
 
 ```text
 Project name: ProofRank
-Native.builder app URL: paste the nativelyai.app URL
+Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://vishwa-docs.github.io/proofrank-ai-factory/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4

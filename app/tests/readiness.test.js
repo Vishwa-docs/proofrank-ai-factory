@@ -26,14 +26,15 @@ const fallbackReadiness = buildReadiness(proofrank, {
   projects: fixtureProjects
 });
 
-assert.equal(fallbackReadiness.canSubmit, false);
-assert.equal(fallbackReadiness.sponsorProofReady, false);
-assert.equal(fallbackReadiness.nativeBuilderReady, false);
+assert.equal(fallbackReadiness.canSubmit, true);
+assert.equal(fallbackReadiness.sponsorProofReady, true);
+assert.equal(fallbackReadiness.nativeBuilderReady, true);
 assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "public-app").status, "passed");
-assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "native-builder").status, "needs-action");
-assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "bright-data").status, "needs-action");
-assert.ok(fallbackReadiness.nextActions.some((action) => /native\.builder/i.test(action)));
-assert.ok(fallbackReadiness.nextActions.some((action) => /Bright Data/i.test(action)));
+assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "native-builder").status, "passed");
+assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "bright-data").status, "passed");
+assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "actual-review-target").status, "passed");
+assert.equal(fallbackReadiness.gates.find((gate) => gate.id === "live-backend").status, "passed");
+assert.match(readinessSummary(fallbackReadiness), /ready for final submission/i);
 
 const directTraceProject = {
   ...proofrank,
@@ -103,23 +104,47 @@ assert.equal(ready.sponsorProofReady, true);
 assert.equal(ready.nativeBuilderReady, true);
 assert.match(readinessSummary(ready), /ready for final submission/i);
 
-const unrelatedExecutedTrace = buildReadiness(proofrank, {
+const plannedProofrank = {
+  ...proofrank,
+  runReceipt: undefined,
+  evidence: {
+    ...proofrank.evidence,
+    brightDataTrace: false,
+    brightDataTraceStatus: "planned"
+  },
+  brightDataTraces: [
+    {
+      provider: "bright-data",
+      traceStatus: "planned",
+      tool: "Remote MCP",
+      queryOrUrl: "https://example.com",
+      countsForSponsorFit: true
+    }
+  ]
+};
+
+const unrelatedExecutedTrace = buildReadiness(plannedProofrank, {
   mode: "live",
   liveApiUrl: "http://127.0.0.1:8787/api/review-project",
   pageOrigin: "http://127.0.0.1:4173",
   reviewerProjectCount: 1,
-  projects: [proofrank, executedProject]
+  projects: [plannedProofrank, executedProject]
 });
 
 assert.equal(unrelatedExecutedTrace.gates.find((gate) => gate.id === "bright-data").status, "needs-action");
 assert.equal(unrelatedExecutedTrace.sponsorProofReady, false);
 
-const hostedWithLocalhostEndpoint = buildReadiness(executedProject, {
+const hostedWithoutReceiptProject = {
+  ...executedProject,
+  runReceipt: undefined
+};
+
+const hostedWithLocalhostEndpoint = buildReadiness(hostedWithoutReceiptProject, {
   mode: "live",
   liveApiUrl: "http://127.0.0.1:8787/api/review-project",
   pageOrigin: "https://vishwa-docs.github.io",
   reviewerProjectCount: 1,
-  projects: [executedProject]
+  projects: [hostedWithoutReceiptProject]
 });
 
 assert.equal(hostedWithLocalhostEndpoint.gates.find((gate) => gate.id === "live-backend").status, "needs-action");
