@@ -12,7 +12,7 @@ Show ProofRank open directly on the audit workspace. Paste or keep the AI Factor
 
 Say:
 
-"This demo uses saved evidence so judges can run it without credentials. The same workflow maps to Bright Data Remote MCP, SERP API, Web Scraper API, and Web Unlocker in live mode."
+"This demo uses saved evidence so judges can run it without credentials. The same workflow maps to Bright Data Remote MCP markdown scraping, MCP search, Web Scraper API, and Web Unlocker in live mode."
 
 ## 0:30-0:58 - Tribunal And Originality Radar
 
@@ -28,7 +28,7 @@ Move to the receipt panel.
 
 Say:
 
-"Every claim expands into source-backed evidence, confidence, limitations, and trace provenance. The table distinguishes executed Bright Data, direct fallback, planned collection, claimed public-card evidence, and failed fetches. Missing proof does not disappear. It becomes a review risk."
+"Every claim expands into source-backed evidence, confidence, limitations, and trace provenance. The table distinguishes executed Bright Data, direct fallback, planned collection, claimed public-card evidence, pending manual targets, and failed fetches. Missing proof does not disappear. It becomes a review risk."
 
 ## 1:23-1:44 - Ranking And Field Map
 

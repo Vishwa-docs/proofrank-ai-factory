@@ -43,6 +43,10 @@ if [[ -f "$VOICE" ]]; then
   voice_duration="$(media_duration "$VOICE")"
 fi
 
+if [[ -f "$VOICE" && "$VOICEOVER" -nt "$VOICE" ]]; then
+  voice_duration=0
+fi
+
 if ! duration_gt "$voice_duration" 1; then
   say -r 174 -o "$VOICE" -f "$VOICEOVER"
   voice_duration="$(media_duration "$VOICE")"

@@ -115,6 +115,8 @@ Competitive gates:
 
 The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or executed Bright Data trace is missing, the app should say the project is still gated rather than submission-safe.
 
+The Actual project reviewed gate must not pass for a manually typed or pending target. It should pass only when a reviewer-supplied project has live-collected repository/demo evidence and at least one non-pending collection trace.
+
 ## Demo Fixtures
 
 Include fixture records for:
@@ -136,13 +138,23 @@ Bright Data must be the evidence acquisition layer.
 
 Do not expose private tokens in the browser. Store the Bright Data API token server-side or in native.builder secure environment variables if available.
 
+For any public live backend, require:
+
+- A short-lived review/session token such as `PROOFRANK_REVIEW_TOKEN`.
+- Restricted CORS origins through `PROOFRANK_ALLOWED_ORIGINS`.
+- URL host allowlisting through `PROOFRANK_ALLOWED_HOSTS`.
+- A per-run Bright Data call budget such as `PROOFRANK_MAX_BRIGHTDATA_CALLS=12`.
+
+The browser may pass the short-lived review token with an `x-proofrank-token` header from a judge-session URL parameter, but it must never expose the Bright Data API token.
+
 Use these live collection steps:
 
 - Server endpoint `/api/review-event` fetches the event page, parses submission cards, and marks that event-intake trace as `countsForSponsorFit: false`.
+- Event parsing must support both HTML cards and Bright Data MCP markdown output.
 - `/api/review-event` may request exactly one bounded `/api/review-project` follow-up when the top parsed project has a real GitHub URL. If that follow-up fails, return event results with a `reviewError` instead of discarding event intake.
 - Server endpoint `/api/review-project` fetches a selected GitHub repo, demo URL, package manifest, license, commit window, and secret-risk signals.
-- Remote MCP `search_engine` for public mentions, prior-art risk, and sponsor usage claims.
 - Remote MCP `scrape_as_markdown` for submission pages, demo pages, GitHub README pages, and presentations.
+- Remote MCP `search_engine` for public mentions, prior-art risk, and sponsor usage claims. In MCP live smoke tests, require at least one executed `search_engine` trace.
 - SERP API for title and team similarity search.
 - Web Scraper API or Web Unlocker for dynamic pages and pages with bot protection.
 - CLI-compatible command generation for transparent sponsor review.
@@ -163,6 +175,9 @@ Every live result should normalize into:
 ## Error Handling
 
 - Missing token: run Demo Evidence mode and show setup checklist.
+- Missing or invalid review token: return 401 from the live backend and show a clear live-setup status.
+- Disallowed origin or URL host: reject before calling Bright Data.
+- Bright Data call budget exhausted: stop collection and mark the trace as failed rather than continuing.
 - Failed fetch: keep project in queue and mark accessibility risk.
 - Missing demo: reduce eligibility and presentation score.
 - Missing native.builder explanation: add evidence gap.

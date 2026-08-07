@@ -8,10 +8,10 @@ The key difference is the Bright Data dependency score. A project ranks higher o
 
 For each project, reviewers get a Claim Ledger. Instead of making absolute accusations, ProofRank marks claims as verified, weak evidence, not found, or needs proof. That creates a defensible review packet without pretending the system knows more than the evidence supports.
 
-The Originality Radar compares each project against the current field, names the closest overlaps, and prepares Bright Data search and discover queries for prior-art review. It does not accuse. It tells reviewers where to verify.
+The Originality Radar compares each project against the current field, names the closest overlaps, executes Bright Data MCP search in live mode, and prepares expanded discover queries for prior-art review. It does not accuse. It tells reviewers where to verify.
 
-On the right, every Proof Receipt shows source snippets, confidence, limitations, and trace provenance. The trace table separates executed Bright Data, direct fallback, planned, claimed, pending, and failed evidence. The live plan uses Remote MCP search, markdown scraping, SERP checks, Web Scraper API, Web Unlocker, and CLI-compatible collection steps.
+On the right, every Proof Receipt shows source snippets, confidence, limitations, and trace provenance. The trace table separates executed Bright Data, direct fallback, planned, claimed, pending, and failed evidence. The live plan uses Remote MCP search, markdown scraping, bounded call budgets, Web Scraper API, Web Unlocker, and CLI-compatible collection steps.
 
-When a Bright Data token is missing, ProofRank does not fail silently. It keeps the demo workflow usable and tells the reviewer exactly what credential step is needed.
+When a Bright Data token is missing, ProofRank does not fail silently. It keeps the demo workflow usable and tells the reviewer exactly what credential step is needed. When a public backend is enabled, review tokens, origin checks, and host allowlists protect live collection before Bright Data is called.
 
 The final output is practical: a ranked judge queue CSV, all receipts JSON, selected receipt JSON, and a submission packet. Hackathons are the wedge, but the broader product is public AI diligence for anyone funding, judging, or approving AI software.
