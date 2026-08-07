@@ -16,11 +16,11 @@ Say:
 
 ## 0:30-0:58 - Tribunal And Originality Radar
 
-Open ProofRank or a strong Bright Data-native project in the ranked queue. Point to the six score tiles, Adversarial Tribunal, Originality Radar, and Claim Ledger.
+Open ProofRank or a strong Bright Data-native project in the ranked queue. Point to the six score tiles, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 
 Say:
 
-"Instead of asking one model to judge a project, ProofRank runs three lenses: Bright Data sponsor, skeptical hackathon judge, and business buyer. Then the Originality Radar compares against the field and prepares Bright Data prior-art queries. Demo reachable? Native.builder explained? Bright Data load-bearing? Originality supported? Review packet defensible?"
+"Instead of asking one model to judge a project, ProofRank runs three lenses: Bright Data sponsor, skeptical hackathon judge, and business buyer. The Winner Benchmark shows whether the project has the same shape as strong Bright Data prize projects: decision output, executed live-web evidence, multiple Bright Data tools, inspectable proof, originality, and public end-to-end delivery. Then the Originality Radar compares against the field and prepares Bright Data prior-art queries."
 
 ## 0:58-1:23 - Proof Receipt
 
@@ -51,6 +51,7 @@ Say:
 - Run audit.
 - Select a project.
 - Show Adversarial Tribunal.
+- Show Winner Benchmark.
 - Show Originality Radar.
 - Show Claim Ledger.
 - Show the trace table and point out the executed/planned/claimed state.

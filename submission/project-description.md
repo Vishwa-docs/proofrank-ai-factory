@@ -17,9 +17,11 @@ Judges and sponsor teams review many AI projects under time pressure. Claims are
 
 ## Solution
 
-ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, release/demo artifacts, public issue signals, similar-project overlap, disputes, and the recommended review action.
+ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, release/demo artifacts, public issue signals, similar-project overlap, disputes, and the recommended review action.
 
 The Submission Cockpit keeps the workflow honest by separating required final-submission gates from competitive-strength checks. It shows whether the native.builder URL exists, whether the full Bright Data sponsor proof bundle is present, whether an actual reviewer-supplied project has been audited, whether the live backend is configured, and whether the demo/source/video/export package are ready.
+
+The Winner Benchmark compares each project against patterns seen in strong Bright Data sponsor-prize projects: decision-shaped output, executed live-web evidence, multi-tool Bright Data dependency, judge-visible proof trails, defensible originality, public end-to-end workflow, and a native.builder primary deployment. This makes the sponsor-prize strategy visible to judges instead of hiding it in the implementation.
 
 ## Why Bright Data
 
@@ -51,6 +53,6 @@ ProofRank is not an AI judge and not a generic scraper. It is a diligence engine
 3. Inspect the ranked queue.
 4. Select a project.
 5. Open the Claim Ledger.
-6. Review the Adversarial Tribunal, Originality Radar, Proof Receipt, and trace table.
+6. Review the Adversarial Tribunal, Winner Benchmark, Originality Radar, Proof Receipt, and trace table.
 7. Check the Submission Cockpit for remaining native.builder, Bright Data, and real-project gates.
 8. Export the sponsor-ready diligence packet.

@@ -96,6 +96,18 @@ The common pattern:
 4. Proof is visible: citations, trace, timestamps, and source-backed claims.
 5. The demo proves one complete run on real public data.
 
+## Follow-Up Winner Research Notes
+
+Additional public research on Bright Data-related hackathon outcomes reinforced the same pattern:
+
+- Web Data UNLOCKED, a Bright Data/lablab event, shipped 293 final projects across finance and market intelligence, GTM intelligence, and security/compliance tracks. The top public standings were dominated by real-time intelligence and risk/diligence products rather than generic assistants.
+- Bright Data MCP winner Datanomad stood out because the core agent used Bright Data MCP/Scraping Browser for live travel data such as destinations, flights, Airbnbs, events, weather, visa, safety, and lifestyle signals instead of static datasets.
+- LangBridge AI won a Bright Data MCP sponsor award by using live regional web context to produce localized marketing output.
+- Auto_Sec won a Bright Data MCP sponsor award by tying web scraping into a security remediation workflow with GitHub/source inspection.
+- Runpod Flash Hack Day included separate Bright Data awards for projects where Bright Data was central enough to be recognized independently from the host platform prize.
+
+Implication for ProofRank: the app must keep showing Bright Data as a decision engine, not a badge. The new Winner Benchmark panel encodes this into the UI with seven judge-visible signals: decision-shaped output, executed source/search/discovery bundle, multi-tool Bright Data dependency, judge-visible proof trail, originality wedge, public end-to-end workflow, and native.builder primary deployment.
+
 ## Current AI Factory Competitive Field
 
 Strong current competitors already target source-backed decisions:
@@ -133,12 +145,17 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
    - The final receipt includes where they agree and disagree.
    - Implemented.
 
-6. No-demo-data mode
+6. Winner Benchmark
+   - Added a judge-visible benchmark based on patterns from strong Bright Data sponsor-prize projects.
+   - It separates matched signals from prize gaps so the demo can say exactly why ProofRank is prize-shaped and exactly what remains gated.
+   - Implemented in `app/src/winnerBenchmark.js` with tests.
+
+7. No-demo-data mode
    - Partially implemented through live event review and live GitHub project review.
    - Remaining blocker: valid Bright Data credential and native.builder server-side deployment.
    - The code path now exists for `mode: bright-data-mcp`; the final proof still needs one successful live run.
 
-7. Submission composer
+8. Submission composer
    - Create final lablab fields, tool list, demo script, and "how native.builder was used" explanation from the actual proof run.
    - Partially implemented through Markdown submission packet and checklist.
    - Added Submission Cockpit gates to the UI and exported packet so the native.builder URL, executed Bright Data trace, live backend, and actual reviewed project cannot be hidden by demo evidence.
@@ -172,6 +189,8 @@ flowchart LR
 - ShotSpot Devpost: https://devpost.com/software/shotspot-kfvp1n
 - ShotSpot repo: https://github.com/aedutta/shot-spot-treehacks-26
 - LangBridge AI Devpost: https://devpost.com/software/langbridge-ai
+- Auto_Sec Devpost: https://devpost.com/software/auto_sec-bright-data-llama-index-redis
+- Runpod Flash Hack Day Bright Data winners: https://hackersquad.io/events/runpod-flash-hack-day
 - Bright Data MCP repo: https://github.com/brightdata/brightdata-mcp
 - Bright Data MCP tools reference: https://docs.brightdata.com/ai/mcp-server/tools
 - Bright Data skills repo: https://github.com/brightdata/skills

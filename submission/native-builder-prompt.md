@@ -21,7 +21,7 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Originality
    - Presentation
 6. User selects a project.
-7. Center panel shows the scorecard, Adversarial Tribunal, Originality Radar, and Claim Ledger.
+7. Center panel shows the scorecard, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 8. Left panel shows a Submission Cockpit with required and competitive readiness gates.
 9. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
 10. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
@@ -32,7 +32,7 @@ Use a quiet, dense operations-dashboard layout.
 
 - Sticky top bar with ProofRank mark, mode selector, CSV export, JSON export, and Submission Packet button.
 - Left column with event URL input, live API endpoint input, HTML upload, Run Audit button, Submission Cockpit, project reviewer intake, filters, and ranked queue.
-- Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Originality Radar, Claim Ledger, and field map.
+- Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Winner Benchmark, Originality Radar, Claim Ledger, and field map.
 - Right column with Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
@@ -93,6 +93,20 @@ For each selected project, compare against the current event field. Show:
 - Bright Data `search_engine` and `discover` prior-art queries.
 
 The radar should not accuse projects of copying. It should show overlap, uncertainty, and the next source-backed checks.
+
+## Winner Benchmark
+
+Show a sponsor-prize benchmark panel for the selected project. It should compare the project against seven Bright Data winner-shaped signals:
+
+- Decision-shaped output
+- Executed live-web source/search/discovery bundle
+- Multi-tool Bright Data dependency
+- Judge-visible proof trail
+- Defensible originality wedge
+- Public end-to-end workflow
+- Native.builder primary deployment
+
+The panel should show a numeric score, tier label, matched signals, and the top prize gaps. It should help the presenter explain why the project is prize-shaped while staying honest about missing Native.builder or executed Bright Data gates.
 
 ## Submission Cockpit
 
@@ -219,6 +233,7 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 - A user can complete the audit workflow in under three minutes.
 - The Claim Ledger is visible in the first 90 seconds of the demo.
 - The Adversarial Tribunal is visible in the first 90 seconds of the demo.
+- The Winner Benchmark is visible in the first 90 seconds of the demo.
 - The Originality Radar is visible in the first 90 seconds of the demo.
 - The Submission Cockpit makes native.builder, Bright Data, and real-project readiness visible without opening docs.
 - Bright Data Dependency score is prominent.

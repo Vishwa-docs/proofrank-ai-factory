@@ -5,6 +5,7 @@ import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
 import { buildOriginalityRadar } from "./originality.js";
 import { buildReadiness, readinessSummary } from "./readiness.js";
+import { buildWinnerBenchmark } from "./winnerBenchmark.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
 import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 
@@ -429,6 +430,39 @@ function renderOriginalityRadar(project) {
   `;
 }
 
+function renderWinnerBenchmark(project) {
+  const benchmark = buildWinnerBenchmark(project);
+  const gapItems = benchmark.gaps.slice(0, 3);
+
+  return `
+    <section class="winner-benchmark">
+      <div class="module-head compact">
+        <h2>Winner benchmark</h2>
+        <span class="hint">${escapeHtml(benchmark.tier)} / ${benchmark.score}</span>
+      </div>
+      <div class="benchmark-meter meter" style="--bar-width: ${benchmark.score}%"><i></i></div>
+      <div class="benchmark-grid">
+        <div>
+          <h3>Signals matched</h3>
+          <ul>
+            ${benchmark.matches
+              .map((item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.proof)}</span></li>`)
+              .join("")}
+          </ul>
+        </div>
+        <div>
+          <h3>Prize gaps</h3>
+          <ul>
+            ${gapItems
+              .map((item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.action)}</span></li>`)
+              .join("") || `<li><strong>No open gaps</strong><span>Ready to defend the Bright Data prize story.</span></li>`}
+          </ul>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 function renderSourceLinks(project) {
   const links = [
     ["Submission", project.submissionUrl],
@@ -494,6 +528,8 @@ function renderScorecard(project) {
     </section>
 
     ${renderTribunal(project)}
+
+    ${renderWinnerBenchmark(project)}
 
     ${renderOriginalityRadar(project)}
 

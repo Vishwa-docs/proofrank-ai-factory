@@ -64,6 +64,7 @@ for (const spec of [
       rows: document.querySelectorAll(".project-row").length,
       selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
+      winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
       readinessCount: document.querySelectorAll("#readinessList li").length,
       receiptIncludesReviewer: (document.querySelector("#receipt")?.textContent || "").includes(
         "Reviewer supplied"
@@ -89,6 +90,7 @@ const failures = results.flatMap((result) => {
   if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
   if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: proof route did not render`);
+  if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
   if (result.spec.name === "desktop" && !result.metrics.receiptIncludesReviewer) {

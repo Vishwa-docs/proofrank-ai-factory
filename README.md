@@ -4,6 +4,8 @@ ProofRank is an agentic submission truth auditor for hackathons, accelerators, g
 
 Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with proof receipts for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
+The dashboard now includes a Winner Benchmark panel that makes the Bright Data sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible proof, defensible originality, public workflow, and native.builder primary deployment.
+
 ## Why This Exists
 
 Hackathon judges and sponsor teams need to know which projects are real, accessible, original, and genuinely using partner technology. Manual review is slow and inconsistent. ProofRank turns public web evidence into a source-backed review packet.
@@ -21,6 +23,7 @@ Bright Data is the load-bearing evidence layer in the intended live workflow:
 - Public live backends can require `PROOFRANK_REVIEW_TOKEN`, restrict `PROOFRANK_ALLOWED_ORIGINS`, and reject URLs outside `PROOFRANK_ALLOWED_HOSTS` before Bright Data is called.
 - Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
 - Live project reviews issue a run receipt with replay command, trace digest, and optional HMAC signature via `PROOFRANK_RECEIPT_SIGNING_SECRET`.
+- Winner Benchmark gaps tell the team exactly which Bright Data prize signals still need work before submission.
 
 The local app also includes demo fixtures for reliable judging if credentials are not available.
 
