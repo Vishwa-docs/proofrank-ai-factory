@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-07T20:21:52.301Z",
+  "generatedAt": "2026-08-07T20:44:45.183Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 9,
+  "requiredPassed": 10,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 83,
+  "score": 92,
   "gates": [
     {
       "id": "public-fallback",
@@ -44,8 +44,8 @@
       "id": "native-builder",
       "label": "Native.builder primary URL",
       "required": true,
-      "status": "needs-action",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / render check needs attention in submission/native-builder-render-check.json / missing in browser render: Overall audit, pr-20260807t200529345z-23568b05, Proof receipt",
+      "status": "passed",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json / bundle /assets/index-DxpYdOcJ.js.",
       "action": "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
     },
     {
@@ -114,8 +114,7 @@
     }
   ],
   "nextActions": [
-    "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/11 required gates passed. Next action: Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
+  "summary": "Not final-ready: 10/11 required gates passed. Next action: Submit from the authenticated team-owner lablab.ai account."
 }

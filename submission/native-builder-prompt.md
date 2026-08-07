@@ -33,11 +33,12 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
 - First viewport with event metadata, a large ProofRank headline, short value statement, Review project button, Proof receipt button, and one decision card.
 - Decision card shows Submission-ready, Bright Data proof passed, signed receipt ID `pr-20260807t200529345z-23568b05`, proof package ready, final lablab submission pending, and Native app published. Use status language such as Passed and executed in the first viewport; keep detailed numeric scoring inside the score breakdown.
+- Overview includes a compact Bright Data proof strip above the collapsible analysis drawers. It must show the exact sponsor proof bundle (`scrape_as_markdown`, `search_engine`, `discover`), the signed receipt ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
 - Tabs below the first viewport: Overview, Queue, Proof, Collect.
 - Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 - Queue shows filters, ranked projects, and field map.
 - Proof shows Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
-- Collect contains Event URL, Review API, keyboard-accessible HTML upload, GitHub/deployed-app intake, and submission gates.
+- Collect contains Event URL, Review API, keyboard-accessible HTML upload, GitHub/deployed-app intake, and submission gates. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
@@ -165,6 +166,7 @@ For any public live backend, require:
 - A receipt signing secret such as `PROOFRANK_RECEIPT_SIGNING_SECRET` so live project receipts include an HMAC signature.
 
 The browser may pass the short-lived review token with an `x-proofrank-token` header from a judge-session URL parameter, but it must never expose the Bright Data API token.
+The app must read `#reviewToken=...` or `?reviewToken=...` on load, store it only in browser session storage, remove it from the visible URL, and send it only as `x-proofrank-token` to `/api/review-project` or `/api/review-event`.
 
 Use these live collection steps:
 

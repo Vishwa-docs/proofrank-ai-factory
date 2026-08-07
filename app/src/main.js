@@ -46,6 +46,8 @@ const elements = {
   sectionPanels: [...document.querySelectorAll("[data-section-panel]")]
 };
 
+const PUBLIC_REVIEW_API_URL = "https://proofrank-ai-factory.vercel.app/api/review-project";
+
 const state = {
   mode: "demo",
   filter: "all",
@@ -90,11 +92,7 @@ function isHttpUrl(value = "") {
   }
 }
 
-function reviewHeaders() {
-  const headers = {
-    "Content-Type": "application/json"
-  };
-
+function syncReviewTokenFromUrl() {
   try {
     const url = new URL(window.location.href);
     const originalHash = url.hash;
@@ -113,11 +111,24 @@ function reviewHeaders() {
       else url.hash = originalHash;
       window.history.replaceState({}, document.title, url.toString());
     }
-    const token = sessionStorage.getItem("proofrankReviewToken") || "";
-    if (token) headers["x-proofrank-token"] = token;
+    return sessionStorage.getItem("proofrankReviewToken") || "";
   } catch {
     // Token support is optional; failed storage should not break demo mode.
+    return "";
   }
+}
+
+function hasReviewToken() {
+  return Boolean(syncReviewTokenFromUrl());
+}
+
+function reviewHeaders() {
+  const headers = {
+    "Content-Type": "application/json"
+  };
+
+  const token = syncReviewTokenFromUrl();
+  if (token) headers["x-proofrank-token"] = token;
 
   return headers;
 }
@@ -356,7 +367,6 @@ function scoreTile(label, value, detail = "") {
       <span>${escapeHtml(label)}</span>
       <strong>${value}</strong>
       <p>${escapeHtml(detail)}</p>
-      <div class="meter" style="--bar-width: ${value}%"><i></i></div>
     </div>
   `;
 }
@@ -420,7 +430,7 @@ function renderProofTopology(project) {
         <p class="hint">The Bright Data gate is the load-bearing sponsor proof.</p>
       </div>
       <span class="route-verdict ${sponsorBundle ? "passed" : "pending"}">${escapeHtml(
-        sponsorBundle ? "Sponsor proof bundle executed" : "Sponsor proof bundle incomplete"
+        sponsorBundle ? "Bright Data proof passed" : "Sponsor proof bundle incomplete"
       )}</span>
     </div>
     <ol class="route-map">
@@ -620,6 +630,12 @@ function renderScorecard(project) {
   const scoreDetail = hasPendingFinalSubmission(project)
     ? `Overall audit ${project.scores.overall}`
     : `Bright ${project.scores.brightDataPrize}`;
+  const runReceipt = project.runReceipt || {};
+  const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
+  const sponsorTools = sponsorProofReady
+    ? ["scrape_as_markdown", "search_engine", "discover"]
+    : ["source scrape", "search_engine", "discover"];
+  const replayState = state.mode === "live" ? (hasReviewToken() ? "token loaded" : "token needed") : "token-only replay";
 
   elements.scorecard.innerHTML = `
     <section class="focus-strip">
@@ -653,6 +669,24 @@ function renderScorecard(project) {
         <h3>Current blocker</h3>
         <p>${escapeHtml(primaryRisk)}</p>
       </div>
+    </section>
+
+    <section class="proof-highlights" aria-label="Bright Data proof highlights">
+      <article>
+        <span>Bright Data gate</span>
+        <strong>${escapeHtml(sponsorTools.join(" + "))}</strong>
+        <p>${sponsorProofReady ? "Executed traces count; planned or claimed traces do not." : "Needs the complete source, search, and discover bundle."}</p>
+      </article>
+      <article>
+        <span>Signed receipt</span>
+        <strong>${escapeHtml(runReceipt.runId || "Not issued")}</strong>
+        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.traceDigest} trace digest / ${runReceipt.signature ? "signed" : "unsigned"}` : "Live collection has not produced a receipt yet.")}</p>
+      </article>
+      <article>
+        <span>Fresh replay</span>
+        <strong>${escapeHtml(replayState)}</strong>
+        <p>Judge replay runs server-side so Bright Data secrets stay off the page.</p>
+      </article>
     </section>
 
     <details class="analysis-drawer score-drawer">
@@ -1100,7 +1134,9 @@ async function addReviewerProject() {
 function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = "Collect live proof";
-    elements.reviewerHint.textContent = "Repo and demo are collected server-side; API tokens stay off the page.";
+    elements.reviewerHint.textContent = hasReviewToken()
+      ? "Review token loaded for this session; Bright Data tokens stay server-side."
+      : "Use a tokenized judge replay URL or private session token before collecting.";
   } else {
     elements.addReviewerProject.textContent = "Add target";
     elements.reviewerHint.textContent = "Switch to secure live mode to issue a Bright Data receipt.";
@@ -1108,9 +1144,13 @@ function updateReviewerModeCopy() {
 }
 
 function initializeLiveEndpoint() {
+  if (elements.liveApiUrl.value) return;
   const localHosts = new Set(["localhost", "127.0.0.1", ""]);
-  if (!elements.liveApiUrl.value && localHosts.has(window.location.hostname)) {
+  const hostname = window.location.hostname.toLowerCase();
+  if (localHosts.has(hostname)) {
     elements.liveApiUrl.value = "http://127.0.0.1:8787/api/review-project";
+  } else if (hostname === "proofrank-ai-factory.vercel.app") {
+    elements.liveApiUrl.value = PUBLIC_REVIEW_API_URL;
   }
 }
 
@@ -1143,7 +1183,11 @@ elements.navJumps.forEach((button) => {
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
   setStatus(
-    state.mode === "live" ? "Secure live mode selected. Add a backend URL and review token before collecting." : "Signed proof receipt ready.",
+    state.mode === "live"
+      ? hasReviewToken()
+        ? "Secure live mode selected. Review token loaded for this browser session."
+        : "Secure live mode selected. Use a tokenized judge replay URL before collecting."
+      : "Signed proof receipt ready.",
     state.mode === "live" ? "warn" : "ready"
   );
   updateRunProfile();
@@ -1175,6 +1219,7 @@ function exportSubmissionPacket() {
 elements.heroExportPacket?.addEventListener("click", exportSubmissionPacket);
 elements.exportPacket.addEventListener("click", exportSubmissionPacket);
 
+syncReviewTokenFromUrl();
 initializeLiveEndpoint();
 updateReviewerModeCopy();
 setActiveSection(state.activeSection);

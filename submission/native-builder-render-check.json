@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-08-07T20:16:42.775Z",
+  "checkedAt": "2026-08-07T20:44:09.614Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786133802775",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786135449614",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-CWnECzP1.js",
+  "publishedBundle": "/assets/index-DxpYdOcJ.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -13,13 +13,8 @@
       "name": "desktop",
       "width": 1440,
       "height": 950,
-      "missingInPage": [
-        "Overall audit",
-        "pr-20260807t200529345z-23568b05"
-      ],
-      "missingInViewport": [
-        "Proof receipt"
-      ],
+      "missingInPage": [],
+      "missingInViewport": [],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 1440,
@@ -31,13 +26,8 @@
       "name": "mobile-320",
       "width": 320,
       "height": 740,
-      "missingInPage": [
-        "Overall audit",
-        "pr-20260807t200529345z-23568b05"
-      ],
-      "missingInViewport": [
-        "Proof receipt"
-      ],
+      "missingInPage": [],
+      "missingInViewport": [],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 320,
@@ -76,5 +66,5 @@
     "AgentArena"
   ],
   "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
-  "ok": false
+  "ok": true
 }

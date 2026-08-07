@@ -973,12 +973,48 @@ input::placeholder {
   border-bottom: 1px solid var(--color-rule);
 }
 
+.proof-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.proof-highlights article {
+  min-width: 0;
+  padding-inline: var(--space-md);
+  border-left: 1px solid var(--color-rule);
+}
+
+.proof-highlights article:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
 .review-notes h3 {
   font-size: var(--text-sm);
 }
 
+.proof-highlights span {
+  display: block;
+  margin-bottom: var(--space-2xs);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+.proof-highlights strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+}
+
 .review-notes p,
-.review-notes li {
+.review-notes li,
+.proof-highlights p {
   margin-top: var(--space-xs);
   color: var(--color-ink-2);
   font-size: var(--text-sm);
@@ -1576,7 +1612,8 @@ input::placeholder {
   }
 
   .focus-strip,
-  .review-notes {
+  .review-notes,
+  .proof-highlights {
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
@@ -1590,6 +1627,18 @@ input::placeholder {
   .benchmark-grid,
   .similarity-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .proof-highlights article {
+    padding-inline: 0;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-rule);
+    border-left: 0;
+  }
+
+  .proof-highlights article:first-child {
+    padding-top: 0;
+    border-top: 0;
   }
 
   .score-tile {
@@ -2406,6 +2455,7 @@ input::placeholder {
   .focus-strip,
   .proof-head,
   .review-notes,
+  .proof-highlights,
   .score-grid {
     grid-template-columns: 1fr;
   }
