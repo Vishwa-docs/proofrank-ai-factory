@@ -14,6 +14,15 @@ function bool(value) {
 }
 
 function nativeBuilderProof(nativeBuilder = {}) {
+  if (nativeBuilder.ok && nativeBuilder.renderCheck?.ok) {
+    return `${nativeBuilder.url} / browser render verified in ${nativeBuilder.renderCheck.path}.`;
+  }
+  if (nativeBuilder.ok && nativeBuilder.verifiedUrl) return `${nativeBuilder.url} / corrected public copy verified.`;
+  if (nativeBuilder.missingCopy?.length || nativeBuilder.staleCopyFound?.length) {
+    const missing = nativeBuilder.missingCopy?.length ? `missing: ${nativeBuilder.missingCopy.join(", ")}` : "";
+    const stale = nativeBuilder.staleCopyFound?.length ? `stale: ${nativeBuilder.staleCopyFound.join(", ")}` : "";
+    return [nativeBuilder.url || "No nativelyai.app URL configured.", missing, stale].filter(Boolean).join(" / ");
+  }
   return nativeBuilder.url || "No nativelyai.app URL configured.";
 }
 

@@ -57,6 +57,7 @@ Final Bright Data receipt: https://github.com/Vishwa-docs/proofrank-ai-factory/r
 Native.builder render check: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-render-check.json
 Native.builder desktop screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-desktop.png
 Native.builder 320px screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-mobile-320.png
+Judge replay handoff: https://github.com/Vishwa-docs/proofrank-ai-factory/blob/main/submission/judge-replay.md
 Public live API health: https://proofrank-ai-factory.vercel.app/api/health
 Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 ```

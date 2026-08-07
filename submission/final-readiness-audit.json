@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T18:35:41.383Z",
+  "generatedAt": "2026-08-07T19:12:50.199Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 10,
@@ -45,7 +45,7 @@
       "label": "Native.builder primary URL",
       "required": true,
       "status": "passed",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json.",
       "action": "Publish the native.builder app and paste the public nativelyai.app URL."
     },
     {

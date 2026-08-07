@@ -124,6 +124,10 @@ The browser stores the token in session storage, immediately removes it from the
 visible URL, and sends it as `x-proofrank-token`. The Bright Data token stays
 server-side.
 
+Do not publish the tokenized URL in the public lablab submission. Publish the
+normal Native.builder URL, then share the tokenized replay URL privately only if
+a judge or Bright Data sponsor asks for a fresh live run.
+
 ## Success Condition
 
 Run a project review and export a receipt that contains the full sponsor proof

@@ -273,11 +273,52 @@ async function liveApiSecurity() {
 async function nativeBuilder() {
   const url = envValue("PROOFRANK_NATIVE_BUILDER_URL", "NATIVE_BUILDER_APP_URL") || nativeBuilderUrl;
   if (!url) return { ok: false, url: "" };
-  const reachable = await fetchReachable(url);
+  const checkedUrl = new URL(url);
+  checkedUrl.searchParams.set("verify", String(Date.now()));
+  const reachable = await fetchText(checkedUrl.toString());
+  const text = reachable.text || "";
+  const requiredCopy = [
+    "ProofRank",
+    "Submission-ready",
+    "Bright Data proof passed",
+    "Bright proof",
+    "Overall self-audit",
+    "pr-20260807t183213304z-3f290db0"
+  ];
+  const staleCopy = ["pr-20260807t145909828z-553fb028", "Sponsor bundle executed", "Finalist-ready", "Strong Pass"];
+  const missingCopy = requiredCopy.filter((item) => !text.includes(item));
+  const staleCopyFound = staleCopy.filter((item) => text.includes(item));
+  let renderCheck = { ok: false };
+  try {
+    const parsed = JSON.parse(await readFile(path.join(root, "submission", "native-builder-render-check.json"), "utf8"));
+    const sameUrl = String(parsed.url || "").replace(/\/$/, "") === String(url || "").replace(/\/$/, "");
+    renderCheck = {
+      ok: parsed.ok === true && sameUrl,
+      path: "submission/native-builder-render-check.json",
+      checkedAt: parsed.checkedAt,
+      verifiedUrl: parsed.verifiedUrl,
+      publishedBundle: parsed.publishedBundle
+    };
+  } catch (error) {
+    renderCheck = {
+      ok: false,
+      path: "submission/native-builder-render-check.json",
+      error: error.message
+    };
+  }
+
   return {
-    ok: reachable.ok && /nativelyai\.app/i.test(url),
+    ok:
+      reachable.ok &&
+      /nativelyai\.app/i.test(url) &&
+      staleCopyFound.length === 0 &&
+      (missingCopy.length === 0 || renderCheck.ok),
     url,
-    status: reachable.status
+    verifiedUrl: checkedUrl.toString(),
+    status: reachable.status,
+    missingCopy,
+    staleCopyFound,
+    renderCheck
   };
 }
 

@@ -14,6 +14,7 @@
     "brightdata:auth-check": "node scripts/brightdata-auth-check.mjs",
     "brightdata:mcp-smoke": "node scripts/brightdata-mcp-smoke.mjs",
     "demo:assets": "node scripts/capture-demo-assets.mjs",
+    "native:render-check": "node scripts/native-builder-render-check.mjs",
     "workflow:proof": "node scripts/workflow-proof.mjs",
     "final:audit": "node scripts/final-readiness-audit.mjs",
     "final:receipt": "node scripts/final-brightdata-receipt.mjs",

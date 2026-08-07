@@ -25,9 +25,9 @@ Current Native.builder state:
 - Product Architect and Task Planner passes completed.
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
-- A final UI correction is present in the GitHub/Vercel build, but the currently published native.builder URL is stale.
-- Current native.builder first viewport still shows `WIN`, `Finalist-ready`, `Overall 100`, and older receipt ID `pr-20260807t145909828z-553fb028`.
-- Before submitting, open the workspace and ask native.builder to update the published app using `submission/native-builder-prompt.md`. The desired first viewport should show `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and final lablab submission pending.
+- Final UI correction is published in Native.builder and browser-render verified on desktop and 320px mobile.
+- Current native.builder first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
+- If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the saved render check used a cache-busting URL and passed.
 - Use the Native.builder URL above as the primary submission URL.
 
 If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.

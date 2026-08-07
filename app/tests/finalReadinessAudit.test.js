@@ -93,7 +93,10 @@ const complete = buildFinalReadinessReport({
   ...baseState,
   nativeBuilder: {
     ok: true,
-    url: "https://proofrank.nativelyai.app"
+    url: "https://proofrank.nativelyai.app",
+    verifiedUrl: "https://proofrank.nativelyai.app/?verify=1",
+    missingCopy: [],
+    staleCopyFound: []
   },
   brightAuth: {
     ok: true,
@@ -146,7 +149,10 @@ const unsignedReceipt = buildFinalReadinessReport({
   ...baseState,
   nativeBuilder: {
     ok: true,
-    url: "https://proofrank.nativelyai.app"
+    url: "https://proofrank.nativelyai.app",
+    verifiedUrl: "https://proofrank.nativelyai.app/?verify=1",
+    missingCopy: [],
+    staleCopyFound: []
   },
   brightAuth: {
     ok: true,

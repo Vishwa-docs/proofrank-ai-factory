@@ -1,8 +1,9 @@
 {
-  "checkedAt": "2026-08-07T17:33:22Z",
+  "checkedAt": "2026-08-07T19:10:50.310Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786129850310",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-CTbvIN48.js",
+  "publishedBundle": "/assets/index-DaO7J7pk.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -12,36 +13,50 @@
       "name": "desktop",
       "width": 1440,
       "height": 950,
+      "missingInPage": [],
+      "missingInViewport": [],
+      "forbiddenInPage": [],
       "forbiddenInViewport": [],
-      "wantedInViewport": [
-        "Run review",
-        "Export packet",
-        "Bright proof",
-        "Finalist-ready",
-        "ProofRank"
-      ],
       "scrollWidth": 1440,
       "clientWidth": 1440,
-      "horizontalOverflow": false
+      "horizontalOverflow": false,
+      "consoleMessages": []
     },
     {
       "name": "mobile-320",
       "width": 320,
       "height": 740,
+      "missingInPage": [],
+      "missingInViewport": [],
+      "forbiddenInPage": [],
       "forbiddenInViewport": [],
-      "wantedInViewport": [
-        "Run review",
-        "Export packet",
-        "Bright proof",
-        "Finalist-ready",
-        "ProofRank"
-      ],
       "scrollWidth": 320,
       "clientWidth": 320,
-      "horizontalOverflow": false
+      "horizontalOverflow": false,
+      "consoleMessages": []
     }
   ],
+  "wantedInPage": [
+    "ProofRank",
+    "Submission-ready",
+    "Bright Data proof passed",
+    "Bright proof",
+    "Overall self-audit",
+    "pr-20260807t183213304z-3f290db0"
+  ],
+  "wantedInViewport": [
+    "ProofRank",
+    "Run review",
+    "Export packet",
+    "Bright proof",
+    "Submission-ready"
+  ],
   "forbiddenStrings": [
+    "WIN",
+    "Strong Pass",
+    "Finalist-ready",
+    "Sponsor bundle executed",
+    "pr-20260807t145909828z-553fb028",
     "Demo Evidence",
     "AUDIT CONTROLS",
     "REVIEWER INTAKE",
@@ -50,5 +65,6 @@
     "Submission Cockpit",
     "AgentArena"
   ],
+  "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
   "ok": true
 }

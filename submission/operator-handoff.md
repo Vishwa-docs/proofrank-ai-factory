@@ -16,11 +16,12 @@ Date: 2026-08-07
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder status: published and eligible as the primary native.builder URL, but the currently hosted copy is stale relative to the hardened Vercel/GitHub build. It still says `WIN`, `Finalist-ready`, `Overall 100`, and `Sponsor bundle executed`. Republish with the current `submission/native-builder-prompt.md` before final submission if you want the primary URL to match the strongest presentation.
+- Native.builder status: published, browser-render-verified, and eligible as the primary native.builder URL. The verified public first viewport now shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`. Existing Safari tabs may need a hard refresh or cache-busting query to clear the pre-publish bundle.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
 - Last-mile account actions: `submission/last-mile-account-actions.md`
+- Judge replay handoff: `submission/judge-replay.md`
 - Bright Data setup: `submission/bright-data-setup.md`
 - Live API deployment: `submission/deploy-live-api.md`
 - Setup gates in the app showing required gates, competitive gates, and the next account-owner actions.
@@ -45,13 +46,13 @@ Date: 2026-08-07
 
 2. Native.builder publish
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
-   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the app.
+   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, published the app, and republished the corrected final copy.
    - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-   - Current public native.builder probe: reachable, but stale. It shows `WIN`, `Finalist-ready`, `Overall 100`, and the older receipt ID `pr-20260807t145909828z-553fb028`.
-   - Desired republished first viewport: `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
+   - Current public native.builder probe: browser-render verified on desktop and 320px mobile. It shows `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
+   - Cache note: a Safari tab that loaded before republish may still show the older bundle until hard refreshed; the render check uses a cache-busting URL and records the current published bundle.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted later.
-   - Use the native.builder URL as the primary lablab submission URL after refreshing if possible; otherwise attach the polished Vercel fallback URL prominently in the project links and description.
+   - Use the native.builder URL as the primary lablab submission URL. Attach the polished Vercel fallback URL prominently in the project links and description as a backup.
 
 3. Actual project to review
    - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://proofrank-ai-factory.vercel.app/`.
@@ -75,6 +76,7 @@ Date: 2026-08-07
    - The secured production API shell is live at `https://proofrank-ai-factory.vercel.app/api/review-project`.
    - Public API security probe passed after deployment: `/api/health` returned `200`, unauthenticated `POST /api/review-project` returned `401`, and authenticated disallowed-host POST returned `422`.
    - For full Bright Data mode, set the Bright Data and ProofRank security variables in the Vercel dashboard or explicitly approve credential upload to Vercel.
+   - Judge-safe replay path is documented in `submission/judge-replay.md`. Use the normal Native.builder URL publicly, and share a tokenized `#reviewToken=` URL only if a judge requests fresh live replay.
    - If Vercel free function timeouts interrupt full Bright Data reviews, keep Vercel for `/api/health` and short live checks, then use the local signed receipt for the final sponsor proof.
 
 ## Final Verification Commands

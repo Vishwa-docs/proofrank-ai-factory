@@ -79,8 +79,20 @@ if (!allowDirect) {
   assertFinalBrightDataReceipt(project, { signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET });
 }
 
+const receiptProject =
+  gate.ok && project.evidence?.lablabSubmissionPending
+    ? {
+        ...project,
+        verdict: {
+          ...project.verdict,
+          label: "Submission-ready",
+          action: "Submit packet from lablab team account"
+        }
+      }
+    : project;
+
 const receipt = {
-  ...buildReceipt(project, [project]),
+  ...buildReceipt(receiptProject, [receiptProject]),
   finalBrightDataGate: gate,
   finalReceiptGeneratedAt: new Date().toISOString()
 };
