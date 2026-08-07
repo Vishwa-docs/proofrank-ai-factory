@@ -47,7 +47,7 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Added a local Node API at `/api/review-project`.
    - Added `/api/review-event` for event-level submission discovery.
    - Added direct-fetch fallback plus Bright Data REST request adapter.
-   - Added Bright Data Remote MCP client, hosted MCP smoke check, SSE/JSON response parsing, `tools/list`, `tools/call`, `scrape_as_markdown`, project-level `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`.
+   - Added Bright Data Remote MCP client, hosted MCP smoke check, SSE/JSON response parsing, `tools/list`, `tools/call`, `scrape_as_markdown`, project-level `search_engine`, project-level `discover`, and `PROOFRANK_FETCH_MODE=mcp`.
    - Added `PROOFRANK_MAX_BRIGHTDATA_CALLS` to keep live sponsor-prize proof runs bounded under the user-confirmed spend cap.
    - Added review-token, CORS-origin, and URL-host allowlist controls so a deployed backend does not expose unrestricted Bright Data spend.
    - Remaining blocker: replace the failing Bright Data credential with a valid API key.
@@ -57,7 +57,8 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Implemented event-page ingestion endpoint and command-line smoke script.
    - Implemented GitHub repo metadata, README, package files, license, commits, deployed demo fetch, and public secret-risk scan.
    - Added a bounded event-to-project follow-up: `/api/review-event` can review one top project when a real GitHub URL is available, while preserving event results if the follow-up fails.
-   - Remaining: releases, public issues, and richer prior-art search once Bright Data auth is fixed.
+   - Remaining: releases and public issues.
+   - Added MCP `discover` prior-art collection path; it still needs valid Bright Data auth before the final sponsor run can execute it.
    - Direct event fetch against lablab can return HTTP 403, so Bright Data/Web Unlocker is required for the real event scrape.
 
 3. Evidence normalization
@@ -110,7 +111,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 1. Real GitHub reviewer lane
    - User gives a repo URL and demo URL.
    - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, proof receipt traces, repository metadata, recursive tree, package manifest, event-window commits, license signal, and lightweight public secret-risk scan.
-   - Next: copied README/code similarity, releases, public issues, and richer `discover`-based prior-art search once Bright Data auth is fixed.
+   - Next: copied README/code similarity, releases, public issues, and richer comparison scoring once Bright Data auth is fixed.
 
 2. Bright Data trace replay
    - Implemented trace provenance in receipts.
@@ -119,7 +120,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 
 3. Originality radar
    - Implemented deterministic field-overlap radar.
-   - Implemented Bright Data `search_engine` trace execution in MCP mode and prepared `discover` prior-art queries.
+   - Implemented Bright Data `search_engine` and `discover` trace execution in MCP mode.
    - Separates "common idea" from "direct copy risk" without making unsupported accusations.
 
 4. Demo proof runner
@@ -172,4 +173,5 @@ flowchart LR
 - ShotSpot repo: https://github.com/aedutta/shot-spot-treehacks-26
 - LangBridge AI Devpost: https://devpost.com/software/langbridge-ai
 - Bright Data MCP repo: https://github.com/brightdata/brightdata-mcp
+- Bright Data MCP tools reference: https://docs.brightdata.com/ai/mcp-server/tools
 - Bright Data skills repo: https://github.com/brightdata/skills

@@ -21,7 +21,7 @@
 - Confirm `npm run brightdata:mcp-smoke` lists `search_engine`, `scrape_as_markdown`, and `discover`.
 - Run one live Bright Data-backed audit.
 - Run `PROOFRANK_RECEIPT_SIGNING_SECRET=... npm run final:receipt -- REPO_URL DEMO_URL`.
-- Confirm the proof receipt shows at least one executed Bright Data source trace and one executed Bright Data `search_engine` trace.
+- Confirm the proof receipt shows at least one executed Bright Data source trace, one executed Bright Data `search_engine` trace, and one executed Bright Data `discover` trace.
 - Confirm `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
 - Confirm the Submission Cockpit marks the Bright Data gate as passed.
 
@@ -93,7 +93,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. The current fallback app implements server-side review through Bright Data's Request API plus Remote MCP `scrape_as_markdown` and `search_engine`, with planned Web Scraper API, Web Unlocker, `discover`, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar prepares expanded Bright Data `discover` queries for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. The current fallback app implements server-side review through Bright Data's Request API plus Remote MCP `scrape_as_markdown`, `search_engine`, and `discover`, with planned Web Scraper API, Web Unlocker, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:

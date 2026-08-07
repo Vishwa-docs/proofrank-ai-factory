@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   buildBrightDataMcpEndpoint,
   createBrightDataMcpClient,
+  createBrightDataMcpDiscover,
   createBrightDataMcpFetchText,
   createBrightDataMcpSearch,
   extractMcpText,
@@ -111,6 +112,27 @@ const fakeFetch = async (_endpoint, options) => {
     };
   }
 
+  if (payload.method === "tools/call" && payload.params.name === "discover") {
+    return {
+      ok: true,
+      status: 200,
+      headers: { get: () => "application/json" },
+      text: async () =>
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: payload.id,
+          result: {
+            content: [
+              {
+                type: "text",
+                text: `Discover ${payload.params.arguments.query} / ${payload.params.arguments.intent} / ${payload.params.arguments.num_results}`
+              }
+            ]
+          }
+        })
+    };
+  }
+
   throw new Error(`Unexpected MCP payload ${JSON.stringify(payload)}`);
 };
 
@@ -132,11 +154,31 @@ assert.equal(await fetchText("https://example.com/demo"), "Collected https://exa
 const searchText = createBrightDataMcpSearch({ client });
 assert.equal(await searchText("proofrank bright data"), "Search proofrank bright data");
 
+const discoverText = createBrightDataMcpDiscover({ client });
+assert.equal(
+  await discoverText("proofrank bright data", {
+    intent: "Find public prior art",
+    numResults: 3,
+    includeContent: true
+  }),
+  "Discover proofrank bright data / Find public prior art / 3"
+);
+
 assert.equal(calls.filter((call) => call.method === "initialize").length, 1);
 assert.equal(calls.filter((call) => call.method === "notifications/initialized").length, 1);
 assert.ok(calls.some((call) => call.method === "tools/list"));
 assert.ok(calls.some((call) => call.method === "tools/call" && call.params.name === "scrape_as_markdown"));
 assert.ok(calls.some((call) => call.method === "tools/call" && call.params.name === "search_engine"));
+assert.ok(
+  calls.some(
+    (call) =>
+      call.method === "tools/call" &&
+      call.params.name === "discover" &&
+      call.params.arguments.intent === "Find public prior art" &&
+      call.params.arguments.num_results === 3 &&
+      call.params.arguments.include_content === true
+  )
+);
 
 const failingClient = createBrightDataMcpClient({
   env: { BRIGHTDATA_API_TOKEN: "super-secret-token" },

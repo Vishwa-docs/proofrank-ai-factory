@@ -191,6 +191,8 @@ const mcpCollected = await collectReviewerProject(
   {
     fetchText: fakeFetchText,
     searchText: async (query) => `Search result for ${query}: ProofRank is distinct from generic judging dashboards and uses source-backed evidence.`,
+    discoverText: async (query, options = {}) =>
+      `Discover result for ${query}: intent=${options.intent}; ProofRank prior-art fit is sponsor-side evidence control.`,
     collectionMode: "bright-data-mcp",
     signingSecret: "test-signing-secret",
     now: () => new Date("2026-08-07T12:00:00.000Z")
@@ -208,12 +210,15 @@ assert.match(mcpCollected.runReceipt.signature, /^hmac-sha256:[a-f0-9]{64}$/);
 assert.ok(!JSON.stringify(mcpCollected.runReceipt).includes("test-signing-secret"));
 assert.equal(mcpCollected.runReceipt.replayCommand, "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/");
 assert.ok(mcpCollected.runReceipt.tools.includes("search_engine"));
+assert.ok(mcpCollected.runReceipt.tools.includes("discover"));
 assert.ok(mcpCollected.runReceipt.tools.includes("scrape_as_markdown"));
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.mode === "bright-data-mcp" && trace.provider === "bright-data"));
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed"));
+assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "discover" && trace.traceStatus === "executed"));
 assert.ok(mcpCollected.brightDataTraces.every((trace) => trace.traceStatus === "executed"));
 assert.ok(mcpCollected.evidence.brightDataTools.includes("SERP API"));
 assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-search"));
+assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-discover"));
 
 const brightFailed = await collectReviewerProject(
   {

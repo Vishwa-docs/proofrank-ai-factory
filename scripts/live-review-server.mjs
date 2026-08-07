@@ -31,6 +31,7 @@ export function createLiveReviewServer(options = {}) {
   const collectorOptions = {
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
+    discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,
     signingSecret: options.signingSecret ?? process.env.PROOFRANK_RECEIPT_SIGNING_SECRET,
     ...(options.collectorOptions || {})

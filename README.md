@@ -13,8 +13,8 @@ Hackathon judges and sponsor teams need to know which projects are real, accessi
 Bright Data is the load-bearing evidence layer in the intended live workflow:
 
 - The fallback app implements server-side collection through Bright Data's Request API.
-- The fallback app also implements Bright Data Remote MCP collection through `scrape_as_markdown` and prior-art search through `search_engine`, with a reusable MCP client and smoke test.
-- CLI and `discover` commands are prepared to find submission pages, demo links, GitHub repos, presentations, and public comparison targets.
+- The fallback app also implements Bright Data Remote MCP collection through `scrape_as_markdown`, prior-art search through `search_engine`, and AI-ranked prior-art discovery through `discover`, with a reusable MCP client and smoke test.
+- CLI commands are prepared to find submission pages, demo links, GitHub repos, presentations, and public comparison targets.
 - Web Scraper API or Web Unlocker is the planned path for dynamic or protected pages.
 - SERP checks title, team, and problem-statement similarity.
 - Server-side live runs enforce `PROOFRANK_MAX_BRIGHTDATA_CALLS` so credentialed demos stay bounded under the user-confirmed spend cap.
@@ -91,8 +91,9 @@ PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt 
 
 `final:receipt` forces MCP collection by default and fails unless the selected
 project has an executed Bright Data source scrape trace, an executed
-`search_engine` trace, a trace digest that matches the receipt contents, and a
-signature verified with `PROOFRANK_RECEIPT_SIGNING_SECRET`.
+`search_engine` trace, an executed `discover` trace, a trace digest that matches
+the receipt contents, and a signature verified with
+`PROOFRANK_RECEIPT_SIGNING_SECRET`.
 
 Direct debugging is available with `--allow-direct`; it writes to a `/tmp`
 debug path by default and does not count as Bright Data sponsor proof.
@@ -159,11 +160,11 @@ Built and verified:
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
 - Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has an executed Bright Data trace
-- Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`
+- Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, `discover`, and `PROOFRANK_FETCH_MODE=mcp`
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
-- Originality Radar with similar-project overlap and Bright Data prior-art queries
+- Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
 - Live API deployment handoff in `submission/deploy-live-api.md`

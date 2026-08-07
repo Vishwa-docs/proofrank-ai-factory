@@ -54,6 +54,7 @@ const baseState = {
     traceStatus: "",
     hasSourceTrace: false,
     hasSearchEngine: false,
+    hasDiscover: false,
     signed: false,
     signatureVerified: false
   },
@@ -109,6 +110,7 @@ const complete = buildFinalReadinessReport({
     traceStatus: "executed",
     hasSourceTrace: true,
     hasSearchEngine: true,
+    hasDiscover: true,
     signed: true,
     signatureVerified: true,
     runId: "pr-20260807t140000000z-11111111"
@@ -124,7 +126,7 @@ assert.equal(complete.requiredPassed, complete.requiredTotal);
 assert.equal(complete.nextActions.length, 0);
 assert.equal(
   complete.gates.find((gate) => gate.id === "live-receipt").proof,
-  "pr-20260807t140000000z-11111111 / bright-data / executed / source trace / search_engine / signature verified"
+  "pr-20260807t140000000z-11111111 / bright-data / executed / source trace / search_engine / discover / signature verified"
 );
 assert.match(summarizeFinalReadiness(complete), /Final-ready/);
 
@@ -156,6 +158,7 @@ const unsignedReceipt = buildFinalReadinessReport({
     traceStatus: "executed",
     hasSourceTrace: true,
     hasSearchEngine: true,
+    hasDiscover: true,
     signed: true,
     signatureVerified: false,
     runId: "pr-forged"

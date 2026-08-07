@@ -27,7 +27,7 @@ Date: 2026-08-07
    - Run `npm run brightdata:auth-check`.
    - Run `npm run brightdata:mcp-smoke`.
    - Run `PROOFRANK_RECEIPT_SIGNING_SECRET=... npm run final:receipt -- REPO_URL DEMO_URL`.
-   - Success condition: auth check returns `ok: true`, `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`, and `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true` with an executed source trace, an executed `search_engine` trace, and `signatureVerified: true`.
+   - Success condition: auth check returns `ok: true`, `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`, and `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true` with an executed source trace, an executed `search_engine` trace, an executed `discover` trace, and `signatureVerified: true`.
 
 2. Native.builder publish
    - Open native.builder.

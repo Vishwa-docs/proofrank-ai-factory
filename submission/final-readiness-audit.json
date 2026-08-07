@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T14:05:04.053Z",
+  "generatedAt": "2026-08-07T14:13:22.993Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 4,
@@ -78,7 +78,7 @@
       "required": true,
       "status": "needs-action",
       "proof": "No signed executed Bright Data project receipt attached.",
-      "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source and search traces."
+      "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
     },
     {
       "id": "lablab-submission",
@@ -110,7 +110,7 @@
     "Replace BRIGHTDATA_API_TOKEN with a real Bright Data account API key.",
     "Run npm run brightdata:mcp-smoke until search_engine, scrape_as_markdown, and discover are listed.",
     "Deploy the live review API and confirm /health returns ok.",
-    "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source and search traces.",
+    "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
   "summary": "Not final-ready: 4/10 required gates passed. Next action: Publish the native.builder app and paste the public nativelyai.app URL."

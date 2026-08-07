@@ -5,6 +5,7 @@ const TOOL_PATTERNS = [
   ["SERP API", /\bserp\s+api\b|\bsearch_engine\b/i],
   ["Web Scraper API", /\bweb\s+scraper\s+api\b|\bscrape_as_markdown\b|\bscrape_batch\b/i],
   ["Web Unlocker", /\bweb\s+unlocker\b|\bunlocker\b/i],
+  ["Discover", /\bdiscover\b/i],
   ["Scraping Browser", /\bscraping\s+browser\b|\bbrowser\s+automation\b/i],
   ["Datasets", /\bdatasets?\b|\bweb_data_/i],
   ["Proxy Networks", /\bproxy\s+networks?\b/i],
@@ -370,6 +371,7 @@ export async function collectReviewerProject(input, options = {}) {
   const { owner, repo, canonicalUrl, readmeApiUrl } = parseGitHubRepoUrl(input.repoUrl);
   const fetchText = options.fetchText || defaultFetchText;
   const searchText = options.searchText;
+  const discoverText = options.discoverText;
   const now = options.now || (() => new Date());
   const collectedAt = now().toISOString();
   const collectionMode = options.collectionMode || "direct-fetch";
@@ -388,8 +390,11 @@ export async function collectReviewerProject(input, options = {}) {
   let licenseText = "";
   let commitsText = "";
   let priorArtText = "";
+  let priorArtDiscoverText = "";
   let priorArtSearchAttempted = false;
   let priorArtSearchSucceeded = false;
+  let priorArtDiscoverAttempted = false;
+  let priorArtDiscoverSucceeded = false;
 
   async function fetchEvidence(url, requestOptions = {}, meta = {}) {
     try {
@@ -547,6 +552,38 @@ export async function collectReviewerProject(input, options = {}) {
     }
   }
 
+  if (discoverText) {
+    priorArtDiscoverAttempted = true;
+    try {
+      priorArtDiscoverText = await discoverText(priorArtQuery, {
+        intent: "Find public prior art, similar hackathon submissions, and originality evidence for this AI product.",
+        numResults: 5,
+        includeContent: true
+      });
+      priorArtDiscoverSucceeded = true;
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: "discover",
+          queryOrUrl: priorArtQuery,
+          collectedAt,
+          text: priorArtDiscoverText
+        })
+      );
+    } catch (error) {
+      priorArtDiscoverText = `Prior-art discovery unavailable: ${error.message}`;
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: "discover",
+          queryOrUrl: priorArtQuery,
+          collectedAt,
+          error
+        })
+      );
+    }
+  }
+
   const repoMetadataReachable = !repoMetadata.error;
   const treeReachable = treePaths.length > 0;
   const packageReachable = Boolean(packagePath && !packageText.startsWith("Package manifest unavailable:"));
@@ -555,7 +592,7 @@ export async function collectReviewerProject(input, options = {}) {
   const hackathonCommits = commitsDuringWindow(commitsText, options.hackathonWindow || HACKATHON_WINDOW);
   const riskyPaths = treePaths.filter(riskyFilePath);
   const secretRiskVisible = riskyPaths.length > 0 || textHasSecretRisk(`${readmeText}\n${packageText}`);
-  const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${priorArtText} ${treePaths.join(" ")}`;
+  const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${priorArtText} ${priorArtDiscoverText} ${treePaths.join(" ")}`;
   const haystack = `${title} ${team} ${workflowText}`.toLowerCase();
   const executedSearchTrace = collectionTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed");
   const brightDataTools = [...new Set([...extractBrightDataTools(haystack), ...(executedSearchTrace ? ["SERP API"] : [])])];
@@ -683,6 +720,27 @@ export async function collectReviewerProject(input, options = {}) {
               limitations: priorArtSearchSucceeded
                 ? "Search evidence is a ranking signal, not a legal originality judgment."
                 : "Prior-art search failed or was unavailable for this run."
+            }
+          ]
+        : []),
+      ...(priorArtDiscoverAttempted
+        ? [
+            {
+              id: `${id}-prior-art-discover`,
+              sourceType: "prior-art-discover",
+              sourceUrl: `https://www.google.com/search?q=${encodeURIComponent(priorArtQuery)}`,
+              title: priorArtDiscoverSucceeded ? "AI-ranked prior-art discovery collected" : "AI-ranked prior-art discovery unavailable",
+              excerpt: excerpt(priorArtDiscoverText, "Prior-art discovery did not return usable text."),
+              collectedAt,
+              collector:
+                providerForCollectionMode(collectionMode) === "bright-data"
+                  ? "ProofRank Bright Data discover reviewer"
+                  : "ProofRank discover reviewer",
+              confidence: priorArtDiscoverSucceeded ? 0.72 : 0.24,
+              supports: ["Originality", "Competitive field", "Prior-art ranking"],
+              limitations: priorArtDiscoverSucceeded
+                ? "Discover evidence is a ranked research signal, not a legal originality judgment."
+                : "Discover failed or was unavailable for this run."
             }
           ]
         : []),

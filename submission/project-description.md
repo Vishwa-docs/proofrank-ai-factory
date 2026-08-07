@@ -23,7 +23,7 @@ The Submission Cockpit keeps the workflow honest by separating required final-su
 
 ## Why Bright Data
 
-Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. The current fallback app implements Bright Data Request API collection plus Remote MCP `scrape_as_markdown` and `search_engine`, and prepares Web Scraper API, Web Unlocker, `discover`, and CLI-compatible steps for the native.builder live workflow. Receipts distinguish executed Bright Data traces from direct fallback, planned, claimed, pending, or failed rows. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
+Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. The current fallback app implements Bright Data Request API collection plus Remote MCP `scrape_as_markdown`, `search_engine`, and `discover`, and prepares Web Scraper API, Web Unlocker, and CLI-compatible steps for the native.builder live workflow. Receipts distinguish executed Bright Data traces from direct fallback, planned, claimed, pending, or failed rows. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
 
 ## Why Native.builder
 

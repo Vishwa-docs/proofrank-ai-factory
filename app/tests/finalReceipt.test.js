@@ -80,6 +80,15 @@ const validTraces = [
     resultCount: 1,
     byteCount: 1024,
     contentHash: "ef567890"
+  },
+  {
+    provider: "bright-data",
+    traceStatus: "executed",
+    tool: "discover",
+    queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon originality",
+    resultCount: 1,
+    byteCount: 1536,
+    contentHash: "1234abcd"
   }
 ];
 
@@ -96,6 +105,7 @@ assert.equal(validGate.provider, "bright-data");
 assert.equal(validGate.traceStatus, "executed");
 assert.equal(validGate.hasSourceTrace, true);
 assert.equal(validGate.hasSearchEngine, true);
+assert.equal(validGate.hasDiscover, true);
 assert.equal(validGate.signed, true);
 assert.equal(validGate.signatureVerified, true);
 assert.equal(validGate.traceDigestVerified, true);
@@ -121,6 +131,13 @@ const missingSearch = {
   brightDataTraces: [validProject.brightDataTraces[0]]
 };
 assert.ok(buildFinalReceiptGate(missingSearch, { signingSecret }).failures.includes("no executed Bright Data search_engine trace"));
+
+const missingDiscover = {
+  ...validProject,
+  brightDataTraces: [validProject.brightDataTraces[0], validProject.brightDataTraces[1]]
+};
+missingDiscover.runReceipt = buildRunReceipt(missingDiscover.brightDataTraces);
+assert.ok(buildFinalReceiptGate(missingDiscover, { signingSecret }).failures.includes("no executed Bright Data discover trace"));
 
 const searchOnly = {
   ...validProject,

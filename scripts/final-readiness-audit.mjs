@@ -232,6 +232,7 @@ async function liveReceipt() {
       traceStatus: gate.traceStatus,
       hasSourceTrace: gate.hasSourceTrace,
       hasSearchEngine: gate.hasSearchEngine,
+      hasDiscover: gate.hasDiscover,
       signed: gate.signed,
       signatureVerified: gate.signatureVerified,
       traceDigestVerified: gate.traceDigestVerified,

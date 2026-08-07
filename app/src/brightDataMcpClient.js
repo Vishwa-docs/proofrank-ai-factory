@@ -221,3 +221,25 @@ export function createBrightDataMcpSearch(options = {}) {
     return extractMcpText(result);
   };
 }
+
+export function createBrightDataMcpDiscover(options = {}) {
+  const client = options.client || createBrightDataMcpClient(options);
+  const toolName = options.toolName || "discover";
+
+  return async function brightDataMcpDiscover(query, discoverOptions = {}) {
+    const args = {
+      query: String(query || "").trim()
+    };
+
+    if (discoverOptions.intent) args.intent = String(discoverOptions.intent);
+    if (discoverOptions.country) args.country = String(discoverOptions.country);
+    if (discoverOptions.city) args.city = String(discoverOptions.city);
+    if (discoverOptions.language) args.language = String(discoverOptions.language);
+    if (discoverOptions.numResults) args.num_results = Number(discoverOptions.numResults);
+    if (discoverOptions.filterKeywords) args.filter_keywords = String(discoverOptions.filterKeywords);
+    if (discoverOptions.includeContent !== undefined) args.include_content = Boolean(discoverOptions.includeContent);
+
+    const result = await client.callTool(toolName, args);
+    return extractMcpText(result);
+  };
+}

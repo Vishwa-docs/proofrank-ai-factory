@@ -1,4 +1,9 @@
-import { createBrightDataMcpClient, createBrightDataMcpFetchText, createBrightDataMcpSearch } from "./brightDataMcpClient.js";
+import {
+  createBrightDataMcpClient,
+  createBrightDataMcpDiscover,
+  createBrightDataMcpFetchText,
+  createBrightDataMcpSearch
+} from "./brightDataMcpClient.js";
 
 const BRIGHTDATA_REQUEST_URL = "https://api.brightdata.com/request";
 const DEFAULT_UNLOCKER_ZONE = "mcp_unlocker";
@@ -123,7 +128,8 @@ export function createLiveCollectorsFromEnv(env = runtimeEnv(), options = {}) {
       collectionMode,
       budget,
       fetchText: withLiveBudget(createBrightDataMcpFetchText({ client }), budget, "Bright Data MCP fetch"),
-      searchText: withLiveBudget(createBrightDataMcpSearch({ client }), budget, "Bright Data MCP search")
+      searchText: withLiveBudget(createBrightDataMcpSearch({ client }), budget, "Bright Data MCP search"),
+      discoverText: withLiveBudget(createBrightDataMcpDiscover({ client }), budget, "Bright Data MCP discover")
     };
   }
 

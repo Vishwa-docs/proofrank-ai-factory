@@ -50,6 +50,7 @@ const collected = await collectReviewerProject(
   {
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
+    discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,
     signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET,
     now: () => new Date()

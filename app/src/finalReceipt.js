@@ -94,6 +94,7 @@ export function buildFinalReceiptGate(project = {}, options = {}) {
   const traces = executedBrightDataTraces(project);
   const sourceTrace = traces.find(isSourceTrace);
   const searchTrace = traces.find((trace) => trace.tool === "search_engine");
+  const discoverTrace = traces.find((trace) => trace.tool === "discover");
   const runReceipt = project.runReceipt || {};
   const signed = /^hmac-sha256:[a-f0-9]{64}$/i.test(String(runReceipt.signature || ""));
   const signingSecret = String(options.signingSecret || "").trim();
@@ -105,6 +106,7 @@ export function buildFinalReceiptGate(project = {}, options = {}) {
 
   if (!sourceTrace) failures.push("no executed Bright Data source scrape trace");
   if (!searchTrace || !isUsefulTrace(searchTrace)) failures.push("no executed Bright Data search_engine trace");
+  if (!discoverTrace || !isUsefulTrace(discoverTrace)) failures.push("no executed Bright Data discover trace");
   if (!runReceipt.runId) failures.push("run receipt is missing");
   if (runReceipt.provider !== "bright-data") failures.push("run receipt provider is not Bright Data");
   if (runReceipt.collectionMode !== "bright-data-mcp") failures.push("run receipt is not Bright Data MCP mode");
@@ -123,6 +125,7 @@ export function buildFinalReceiptGate(project = {}, options = {}) {
     hasSourceTrace: Boolean(sourceTrace),
     sourceTool: sourceTrace?.tool || "",
     hasSearchEngine: Boolean(searchTrace && isUsefulTrace(searchTrace)),
+    hasDiscover: Boolean(discoverTrace && isUsefulTrace(discoverTrace)),
     signed,
     signatureVerified,
     traceDigestVerified,

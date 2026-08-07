@@ -17,6 +17,7 @@ const project = await collectReviewerProject(
   {
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
+    discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,
     signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET,
     now: () => new Date()
@@ -39,6 +40,9 @@ if (collectionMode !== "direct-fetch" && !executedBrightDataTraces.length) {
 }
 if (collectionMode === "bright-data-mcp" && !executedBrightDataTraces.some((trace) => trace.tool === "search_engine")) {
   failures.push("Bright Data MCP mode did not record an executed search_engine trace");
+}
+if (collectionMode === "bright-data-mcp" && !executedBrightDataTraces.some((trace) => trace.tool === "discover")) {
+  failures.push("Bright Data MCP mode did not record an executed discover trace");
 }
 
 console.log(

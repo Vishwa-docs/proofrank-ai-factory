@@ -49,9 +49,9 @@ groups=browser,ecommerce,social
 
 ProofRank now includes a server-side Remote MCP client. It initializes the MCP
 session, lists tools for the smoke check, calls `scrape_as_markdown` for
-project/demo/event evidence, and calls `search_engine` for prior-art search in
-project reviews. The same client redacts token values from HTTP or JSON-RPC
-error messages.
+project/demo/event evidence, calls `search_engine` for prior-art search, and
+calls `discover` for AI-ranked prior-art discovery in project reviews. The same
+client redacts token values from HTTP or JSON-RPC error messages.
 
 The live collector also enforces a per-run Bright Data call budget. This is a
 hard call-count guard, not exact dollar metering; platform billing still belongs
@@ -122,8 +122,8 @@ PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt 
 
 The command writes `submission/final-brightdata-receipt.json`. It refuses to pass
 unless the run includes an executed Bright Data `scrape_as_markdown` or equivalent
-source trace with content, an executed Bright Data `search_engine` trace, matching
-trace counts and digest, and an HMAC signature verified with
+source trace with content, an executed Bright Data `search_engine` trace, an
+executed Bright Data `discover` trace, matching trace counts and digest, and an HMAC signature verified with
 `PROOFRANK_RECEIPT_SIGNING_SECRET`. Direct mode can be tested with `--allow-direct`;
 it writes to `/tmp/proofrank-final-brightdata-receipt-debug.json` by default and
 should not be used for the Bright Data prize.
