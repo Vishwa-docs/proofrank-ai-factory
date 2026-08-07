@@ -10,6 +10,7 @@ Date: 2026-08-07
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
 - Bright Data setup: `submission/bright-data-setup.md`
+- Submission Cockpit in the app showing required gates, competitive gates, and the next account-owner actions.
 
 ## What I Need From You
 
@@ -33,6 +34,7 @@ Date: 2026-08-07
    - Provide the deployed demo/app URL.
    - Confirm the repo is public for judges, or provide temporary read-only access.
    - Run ProofRank live mode, add that repo/demo pair, and export the selected proof receipt.
+   - Success condition: the Submission Cockpit shows the actual project, live backend, public app, source, demo video, and executed Bright Data gates as passed.
 
 4. Final lablab submission
    - Paste the native.builder app URL.

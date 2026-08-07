@@ -10,10 +10,11 @@ Hackathon judges and sponsor teams need to know which projects are real, accessi
 
 ## Bright Data Fit
 
-Bright Data is the load-bearing evidence layer in live mode:
+Bright Data is the load-bearing evidence layer in the intended live workflow:
 
-- Remote MCP or CLI search discovers submission pages, demo links, GitHub repos, presentations, and public comparison targets.
-- Web Scraper API or Web Unlocker fetches dynamic or protected pages.
+- The fallback app implements server-side collection through Bright Data's Request API.
+- Remote MCP or CLI search is prepared to discover submission pages, demo links, GitHub repos, presentations, and public comparison targets.
+- Web Scraper API or Web Unlocker is the planned path for dynamic or protected pages.
 - SERP checks title, team, and problem-statement similarity.
 - Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
 
@@ -127,7 +128,8 @@ Built and verified:
 
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
-- Executed-vs-planned trace scoring so sponsor fit is not inflated by unrun collection plans
+- Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has an executed Bright Data trace
+- Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap and Bright Data prior-art queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`

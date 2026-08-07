@@ -22,15 +22,16 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Presentation
 6. User selects a project.
 7. Center panel shows the scorecard, Adversarial Tribunal, Originality Radar, and Claim Ledger.
-8. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
-9. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
+8. Left panel shows a Submission Cockpit with required and competitive readiness gates.
+9. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
+10. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
 
 ## Required UI
 
 Use a quiet, dense operations-dashboard layout.
 
 - Sticky top bar with ProofRank mark, mode selector, CSV export, JSON export, and Submission Packet button.
-- Left column with event URL input, live API endpoint input, HTML upload, Run Audit button, filters, and ranked queue.
+- Left column with event URL input, live API endpoint input, HTML upload, Run Audit button, Submission Cockpit, project reviewer intake, filters, and ranked queue.
 - Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Originality Radar, Claim Ledger, and field map.
 - Right column with Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
 - Responsive mobile layout that stacks panels without overlapping text.
@@ -92,6 +93,27 @@ For each selected project, compare against the current event field. Show:
 - Bright Data `search_engine` and `discover` prior-art queries.
 
 The radar should not accuse projects of copying. It should show overlap, uncertainty, and the next source-backed checks.
+
+## Submission Cockpit
+
+Show a readiness cockpit that separates required submission gates from competitive-strength checks. It must never mark demo, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor-proof.
+
+Required gates:
+
+- Native.builder primary URL
+- Executed Bright Data trace
+- Actual project reviewed
+- Live collection backend
+- Public app URL
+- Public source evidence
+- Under-three-minute demo video
+
+Competitive gates:
+
+- No visible secret risk
+- Exportable proof packet
+
+The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or executed Bright Data trace is missing, the app should say the project is still gated rather than submission-safe.
 
 ## Demo Fixtures
 
@@ -168,6 +190,7 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 - The Claim Ledger is visible in the first 90 seconds of the demo.
 - The Adversarial Tribunal is visible in the first 90 seconds of the demo.
 - The Originality Radar is visible in the first 90 seconds of the demo.
+- The Submission Cockpit makes native.builder, Bright Data, and real-project readiness visible without opening docs.
 - Bright Data Dependency score is prominent.
 - Exports produce usable files.
 - App can be published to a public native.builder URL.

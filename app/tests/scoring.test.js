@@ -6,7 +6,8 @@ const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 const countersign = fixtureProjects.find((project) => project.id === "countersign");
 
 const proofrankScores = calculateScores(proofrank);
-assert.equal(proofrankScores.brightDataFit, 94);
+assert.equal(proofrankScores.brightDataFit, 72);
+assert.ok(proofrankScores.brightDataFit < 75);
 assert.equal(proofrankScores.businessValue, 100);
 assert.ok(proofrankScores.overall >= 85);
 

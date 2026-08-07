@@ -4,6 +4,7 @@ import { brightDataTraceState, rankProjects } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
 import { buildOriginalityRadar } from "./originality.js";
+import { buildReadiness, readinessSummary } from "./readiness.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
 import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 
@@ -20,6 +21,8 @@ const elements = {
   receipt: document.querySelector("#receipt"),
   fieldMap: document.querySelector("#fieldMap"),
   fieldSummary: document.querySelector("#fieldSummary"),
+  readinessSummary: document.querySelector("#readinessSummary"),
+  readinessMeter: document.querySelector("#readinessMeter"),
   readinessList: document.querySelector("#readinessList"),
   reviewerRepoUrl: document.querySelector("#reviewerRepoUrl"),
   reviewerDemoUrl: document.querySelector("#reviewerDemoUrl"),
@@ -453,41 +456,29 @@ function renderFieldMap() {
 }
 
 function renderReadiness(project = selectedProject()) {
-  const checklist = [
-    {
-      label: "Live API server",
-      ready: state.mode === "demo" || isHttpUrl(elements.liveApiUrl.value.trim()),
-      detail: "Run the backend with the Bright Data token stored server-side."
-    },
-    {
-      label: "Public app URL",
-      ready: Boolean(project?.demoUrl && isHttpUrl(project.demoUrl)),
-      detail: "Judges need a reachable end-to-end workflow."
-    },
-    {
-      label: "GitHub source",
-      ready: Boolean(project?.githubUrl && isHttpUrl(project.githubUrl)),
-      detail: "Reviewer mode can inspect public repositories directly."
-    },
-    {
-      label: "Native.builder URL",
-      ready: Boolean(project?.evidence?.nativeBuilderExplained && project?.demoUrl?.includes("nativelyai.app")),
-      detail: "Eligibility depends on showing meaningful native.builder use."
-    },
-    {
-      label: "Demo video",
-      ready: Boolean(project?.evidence?.hasDemo),
-      detail: "Submission requires one complete workflow in under three minutes."
-    }
-  ];
+  const readiness = buildReadiness(project, {
+    mode: state.mode,
+    liveApiUrl: elements.liveApiUrl.value.trim(),
+    pageOrigin: window.location.origin,
+    reviewerProjectCount: state.reviewerProjects.length,
+    projects: state.projects
+  });
 
-  elements.readinessList.innerHTML = checklist
+  elements.readinessSummary.innerHTML = `
+    <strong>${readiness.canSubmit ? "Submission-safe" : "Still gated"}</strong>
+    <span>${escapeHtml(readinessSummary(readiness))}</span>
+    <small>${readiness.requiredPassed}/${readiness.requiredTotal} required / ${readiness.competitivePassed}/${readiness.competitiveTotal} competitive</small>
+  `;
+  elements.readinessMeter.style.setProperty("--bar-width", `${readiness.score}%`);
+
+  elements.readinessList.innerHTML = readiness.gates
     .map(
       (item) => `
-        <li class="${item.ready ? "ready" : "needed"}">
-          <span>${item.ready ? "Ready" : "Needed"}</span>
+        <li class="${escapeAttr(item.status)}${item.required ? "" : " optional"}">
+          <span>${item.status === "passed" ? "Passed" : item.required ? "Action" : "Improve"}</span>
           <strong>${escapeHtml(item.label)}</strong>
           <p>${escapeHtml(item.detail)}</p>
+          <small>${escapeHtml(item.proof)}</small>
         </li>
       `
     )
@@ -554,8 +545,8 @@ async function runAudit() {
         state.projects = rankProjects(sourceProjects());
         state.selectedId = state.projects[0]?.id || "proofrank";
         setStatus(
-          `${liveProjects.length} live submissions collected. Event trace ${result.eventTrace?.provider || "unknown"} / ${result.eventTrace?.traceStatus || "unknown"}.`,
-          "ready"
+          `${liveProjects.length} live submissions collected. Event intake is not sponsor proof; review a GitHub project next for executed Bright Data traces.`,
+          "warn"
         );
       }
     } catch (error) {
@@ -760,6 +751,23 @@ async function addReviewerProject() {
   render();
 }
 
+function updateReviewerModeCopy() {
+  if (state.mode === "live") {
+    elements.addReviewerProject.textContent = "Collect project";
+    elements.reviewerHint.textContent = "Live mode fetches the repo and demo through the backend, then records collection traces.";
+  } else {
+    elements.addReviewerProject.textContent = "Add pending target";
+    elements.reviewerHint.textContent = "Demo mode only adds a pending target. Switch to Bright Data live for real evidence collection.";
+  }
+}
+
+function initializeLiveEndpoint() {
+  const localHosts = new Set(["localhost", "127.0.0.1", ""]);
+  if (!elements.liveApiUrl.value && localHosts.has(window.location.hostname)) {
+    elements.liveApiUrl.value = "http://127.0.0.1:8787/api/review-project";
+  }
+}
+
 document.querySelectorAll(".filter-chip").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".filter-chip").forEach((chip) => chip.classList.remove("is-active"));
@@ -772,7 +780,8 @@ document.querySelectorAll(".filter-chip").forEach((button) => {
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
   setStatus(state.mode === "live" ? "Live mode selected. Start the backend server before collecting." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
-  renderReadiness(selectedProject());
+  updateReviewerModeCopy();
+  render();
 });
 
 elements.liveApiUrl.addEventListener("input", () => renderReadiness(selectedProject()));
@@ -793,7 +802,9 @@ elements.exportSelected.addEventListener("click", () => {
 });
 
 elements.exportPacket.addEventListener("click", () => {
-  downloadText("proofrank-submission-packet.md", buildSubmissionPacket(fixtureProjects[0], state.projects), "text/markdown");
+  downloadText(`${selectedProject().id}-submission-packet.md`, buildSubmissionPacket(selectedProject(), state.projects), "text/markdown");
 });
 
+initializeLiveEndpoint();
+updateReviewerModeCopy();
 render();

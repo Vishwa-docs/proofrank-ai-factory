@@ -49,7 +49,7 @@
 
           <label class="field" for="liveApiUrl">
             <span>Live API endpoint</span>
-            <input id="liveApiUrl" type="url" value="http://127.0.0.1:8787/api/review-project">
+            <input id="liveApiUrl" type="url" placeholder="/api/review-project or http://127.0.0.1:8787/api/review-project">
           </label>
 
           <div class="action-row">
@@ -62,6 +62,15 @@
           </label>
 
           <div id="statusLine" class="status-line" role="status">Demo evidence ready</div>
+        </section>
+
+        <section class="source-module readiness-module" aria-label="Real data requirements">
+          <div class="module-head compact">
+            <h2>Submission cockpit</h2>
+          </div>
+          <div id="readinessSummary" class="readiness-summary"></div>
+          <div id="readinessMeter" class="readiness-meter meter" aria-hidden="true"><i></i></div>
+          <ul id="readinessList" class="readiness-list"></ul>
         </section>
 
         <section class="source-module project-intake" aria-label="Review a GitHub project">
@@ -86,13 +95,8 @@
               <input id="reviewerTeam" type="text" placeholder="Optional">
             </label>
           </div>
-          <button id="addReviewerProject" class="secondary-button wide" type="button">Add project</button>
+          <button id="addReviewerProject" class="secondary-button wide" type="button">Add pending target</button>
           <p id="reviewerHint" class="hint">Add your actual repo here. ProofRank will mark what still needs live collection.</p>
-        </section>
-
-        <section class="source-module readiness-module" aria-label="Real data requirements">
-          <h2>Actual-use checklist</h2>
-          <ul id="readinessList" class="readiness-list"></ul>
         </section>
       </aside>
 

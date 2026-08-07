@@ -112,6 +112,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 2. Bright Data trace replay
    - Implemented trace provenance in receipts.
    - Judges can see provider, trace status, tool, URL/query, result count, retrieval time, byte count, and content hash.
+   - Hardening added: Bright Data Dependency is capped below the "Bright strong" filter unless the selected project has an executed Bright Data provider trace.
 
 3. Originality radar
    - Implemented deterministic field-overlap radar.
@@ -135,6 +136,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 7. Submission composer
    - Create final lablab fields, tool list, demo script, and "how native.builder was used" explanation from the actual proof run.
    - Partially implemented through Markdown submission packet and checklist.
+   - Added Submission Cockpit gates to the UI and exported packet so the native.builder URL, executed Bright Data trace, live backend, and actual reviewed project cannot be hidden by demo evidence.
 
 ## Candidate Live Architecture
 

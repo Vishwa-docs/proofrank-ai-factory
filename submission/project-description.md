@@ -19,9 +19,11 @@ Judges and sponsor teams review many AI projects under time pressure. Claims are
 
 ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, similar-project overlap, disputes, and the recommended review action.
 
+The Submission Cockpit keeps the workflow honest by separating required final-submission gates from competitive-strength checks. It shows whether the native.builder URL exists, whether at least one executed Bright Data trace is present, whether an actual reviewer-supplied project has been audited, whether the live backend is configured, and whether the demo/source/video/export package are ready.
+
 ## Why Bright Data
 
-Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. In live mode it uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible commands. Receipts distinguish executed Bright Data traces from direct fallback, planned, claimed, pending, or failed rows. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
+Bright Data is the load-bearing evidence acquisition layer. ProofRank needs live public web access to inspect submission pages, demo URLs, GitHub repos, presentations, prior-art signals, and sponsor usage claims. The current fallback app implements Bright Data Request API collection and prepares Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible steps for the native.builder live workflow. Receipts distinguish executed Bright Data traces from direct fallback, planned, claimed, pending, or failed rows. Without Bright Data, ProofRank is limited to uploaded snapshots and demo fixtures.
 
 ## Why Native.builder
 
@@ -50,4 +52,5 @@ ProofRank is not an AI judge and not a generic scraper. It is a diligence engine
 4. Select a project.
 5. Open the Claim Ledger.
 6. Review the Adversarial Tribunal, Originality Radar, Proof Receipt, and trace table.
-7. Export the sponsor-ready diligence packet.
+7. Check the Submission Cockpit for remaining native.builder, Bright Data, and real-project gates.
+8. Export the sponsor-ready diligence packet.

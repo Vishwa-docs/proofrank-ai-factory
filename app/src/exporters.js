@@ -2,6 +2,7 @@ import { brightDataTraceState, buildVerdict, calculateScores } from "./scoring.j
 import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
 import { buildOriginalityRadar } from "./originality.js";
+import { buildReadiness, readinessSummary } from "./readiness.js";
 
 function escapeCsv(value) {
   const text = String(value ?? "");
@@ -53,6 +54,7 @@ export function buildReceipt(project, fieldProjects = []) {
   const tribunal = buildTribunal({ ...project, scores, verdict });
   const traceState = brightDataTraceState(project);
   const originalityRadar = buildOriginalityRadar(project, fieldProjects.length ? fieldProjects : [project]);
+  const readiness = buildReadiness(project, { projects: fieldProjects.length ? fieldProjects : [project] });
 
   return {
     id: project.id,
@@ -69,6 +71,7 @@ export function buildReceipt(project, fieldProjects = []) {
     },
     technologies: project.technologies,
     traceState,
+    readiness,
     claimLedger: buildClaimLedger(project),
     tribunal,
     originalityRadar,
@@ -79,6 +82,7 @@ export function buildReceipt(project, fieldProjects = []) {
 
 export function buildSubmissionPacket(project, fieldProjects = []) {
   const receipt = buildReceipt(project, fieldProjects);
+  const primarySubmissionStatus = receipt.readiness.nativeBuilderReady ? "NATIVE.BUILDER PRIMARY" : "FALLBACK ONLY";
   return `# ${project.title}
 
 ## Problem
@@ -95,7 +99,7 @@ ProofRank audits public AI product pages, demos, repositories, presentations, an
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. In live mode, ProofRank uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI workflows to discover project evidence, fetch public pages, inspect demo surfaces, and compare originality signals.
+Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API and prepares Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI workflows for native.builder live mode. Sponsor-fit credit requires an executed Bright Data provider trace in the receipt.
 
 ## Native.builder Usage
 
@@ -103,12 +107,23 @@ The competition app should be created and published through native.builder using
 
 ## Current Self-Audit
 
+- Primary submission status: ${primarySubmissionStatus}
 - Overall score: ${receipt.scores.overall}
 - Bright Data fit: ${receipt.scores.brightDataFit}
 - Bright Data trace state: ${receipt.traceState}
+- Submission readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
+
+## Submission Gates
+
+${receipt.readiness.gates
+  .map(
+    (gate) =>
+      `- ${gate.status === "passed" ? "PASS" : gate.required ? "ACTION" : "IMPROVE"}: ${gate.label} - ${gate.detail} Proof: ${gate.proof}`
+  )
+  .join("\n")}
 
 ## Adversarial Tribunal
 

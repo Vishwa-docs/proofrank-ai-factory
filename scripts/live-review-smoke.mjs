@@ -20,11 +20,27 @@ const project = await collectReviewerProject(
   }
 );
 
+const collectionMode = describeLiveFetchMode(process.env);
+const successfulTraces = project.brightDataTraces.filter(
+  (trace) => trace.traceStatus === "executed" && Number(trace.resultCount || 0) > 0
+);
+const executedBrightDataTraces = project.brightDataTraces.filter(
+  (trace) => trace.provider === "bright-data" && trace.traceStatus === "executed"
+);
+const failures = [];
+
+if (!project.evidence.hasPublicDemo) failures.push("public demo was not collected");
+if (!successfulTraces.length) failures.push("no successful collection traces were recorded");
+if (collectionMode !== "direct-fetch" && !executedBrightDataTraces.length) {
+  failures.push("Bright Data mode did not record an executed Bright Data trace");
+}
+
 console.log(
   JSON.stringify(
     {
-      ok: true,
-      collectionMode: describeLiveFetchMode(process.env),
+      ok: failures.length === 0,
+      collectionMode,
+      failures,
       project: {
         id: project.id,
         title: project.title,
@@ -57,3 +73,7 @@ console.log(
     2
   )
 );
+
+if (failures.length) {
+  process.exitCode = 1;
+}

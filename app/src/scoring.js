@@ -74,13 +74,14 @@ export function calculateScores(project) {
       boolPoints(evidence.secretRiskVisible, 8)
   );
 
-  const brightDataFit = clampScore(
+  const rawBrightDataFit = clampScore(
     (BRIGHT_ROLE_POINTS[evidence.brightDataRole] || 0) +
       Math.min(brightTools.length, 3) * 7 +
       boolPoints(evidence.agenticLoop, 12) +
       boolPoints(executedBrightTrace, 10) +
       boolPoints(evidence.proofReceipt, 6)
   );
+  const brightDataFit = executedBrightTrace ? rawBrightDataFit : Math.min(rawBrightDataFit, 72);
 
   const presentation = clampScore(
     boolPoints(evidence.hasDemo, 25) +

@@ -16,6 +16,7 @@ required_files=(
   "app/src/claims.js"
   "app/src/tribunal.js"
   "app/src/originality.js"
+  "app/src/readiness.js"
   "app/src/brightDataAdapter.js"
   "app/src/liveFetchers.js"
   "app/src/liveReviewer.js"
@@ -27,6 +28,7 @@ required_files=(
   "scripts/live-review-smoke.mjs"
   "scripts/live-event-smoke.mjs"
   "scripts/capture-demo-assets.mjs"
+  "app/tests/readiness.test.js"
   "submission/native-builder-prompt.md"
   "submission/bright-data-setup.md"
   "submission/project-description.md"
@@ -42,38 +44,38 @@ done
 
 npm run test
 
-if [[ -z "${PORT:-}" ]]; then
-  for candidate in 4173 4283 4383 4483 4583 4683 4783 4883 4983 5083 5183; do
-    if python3 - "$candidate" <<'PY'
-import socket
+LOG_FILE="/tmp/proofrank-http.log"
+PORT_FILE="$(mktemp /tmp/proofrank-port.XXXXXX)"
+python3 - "$PORT_FILE" > "$LOG_FILE" 2>&1 <<'PY' &
+import functools
+import http.server
+import socketserver
 import sys
 
-sock = socket.socket()
-try:
-    sock.bind(("127.0.0.1", int(sys.argv[1])))
-except OSError:
-    sys.exit(1)
-finally:
-    sock.close()
+handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory="app")
+with socketserver.TCPServer(("127.0.0.1", 0), handler) as httpd:
+    with open(sys.argv[1], "w", encoding="utf-8") as file:
+        file.write(str(httpd.server_address[1]))
+    httpd.serve_forever()
 PY
-    then
-      PORT="$candidate"
-      break
-    fi
-  done
-fi
-
-test -n "${PORT:-}"
-LOG_FILE="/tmp/proofrank-http.log"
-python3 -m http.server "$PORT" --directory app > "$LOG_FILE" 2>&1 &
 server_pid=$!
 
 cleanup() {
   kill "$server_pid" >/dev/null 2>&1 || true
+  wait "$server_pid" >/dev/null 2>&1 || true
+  rm -f "$PORT_FILE" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
-sleep 1
+for _ in {1..50}; do
+  if [[ -s "$PORT_FILE" ]]; then
+    PORT="$(cat "$PORT_FILE")"
+    break
+  fi
+  sleep 0.1
+done
+
+test -n "${PORT:-}"
 curl -s "http://127.0.0.1:${PORT}/" | grep -q "ProofRank"
 
 echo "verification passed"

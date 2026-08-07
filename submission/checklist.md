@@ -19,6 +19,7 @@
 - Add token to native.builder server-side environment variables.
 - Run one live Bright Data-backed audit.
 - Confirm the proof receipt shows at least one `provider: bright-data` trace with `traceStatus: executed`.
+- Confirm the Submission Cockpit marks the Bright Data gate as passed.
 
 ## Optional But Strong
 
@@ -30,6 +31,7 @@
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
 - Show Originality Radar and its Bright Data prior-art queries.
+- Show the Submission Cockpit so judges see native.builder, executed Bright Data, and real-project readiness at a glance.
 
 Public support links already created:
 
@@ -82,7 +84,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank uses Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible collection steps to inspect public submission pages, demos, repos, decks, prior-art signals, and sponsor usage claims. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row. The Originality Radar prepares Bright Data `search_engine` and `discover` queries for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. The current fallback app implements the server-side review path through Bright Data's Request API and prepares Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar prepares Bright Data `search_engine` and `discover` queries for field-overlap and prior-art review.
 ```
 
 External tools:

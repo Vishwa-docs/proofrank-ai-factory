@@ -65,6 +65,8 @@ const adjacentProject = {
 
 const receipt = buildReceipt(project, [project, adjacentProject]);
 assert.equal(receipt.traceState, "executed");
+assert.equal(receipt.readiness.sponsorProofReady, true);
+assert.equal(receipt.readiness.gates.find((gate) => gate.id === "bright-data").status, "passed");
 assert.equal(receipt.originalityRadar.riskLabel, "Defensible wedge");
 assert.equal(receipt.tribunal.panel.length, 3);
 assert.equal(receipt.tribunal.finalRecommendation.label, "Push for sponsor shortlist");
@@ -73,7 +75,10 @@ assert.ok(receipt.tribunal.disputes.some((dispute) => dispute.topic === "Sponsor
 const packet = buildSubmissionPacket(project, [project, adjacentProject]);
 assert.match(packet, /Adversarial Tribunal/);
 assert.match(packet, /Originality Radar/);
+assert.match(packet, /Submission Gates/);
 assert.match(packet, /Bright Data trace state: executed/);
+assert.match(packet, /Submission readiness: Not submission-safe yet/);
+assert.match(packet, /Primary submission status: FALLBACK ONLY/);
 assert.match(packet, /Push for sponsor shortlist/);
 
 console.log("exporter tests passed");

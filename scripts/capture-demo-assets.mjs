@@ -80,7 +80,7 @@ try {
   await page.waitForSelector("#rankedList .project-row", { timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
-  await capture(page, "02-claim-ledger.png", ".tribunal-panel");
+  await capture(page, "02-claim-ledger.png", ".claim-ledger");
   await capture(page, "03-proof-receipt.png", ".evidence-rail");
   await page.locator("#modeSelect").selectOption("live");
   await page.waitForTimeout(180);
