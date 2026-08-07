@@ -11,7 +11,7 @@ Create a functional deployed app, not a landing page. The first screen must be t
 ## Core Workflow
 
 1. User enters an event URL or project URL.
-2. User chooses Signed proof or Bright Data Live mode.
+2. User chooses Signed proof or Bright Data Live (secure API) mode.
 3. User clicks Run review.
 4. The app discovers or loads project submissions.
 5. The app ranks projects by:
@@ -31,8 +31,8 @@ Create a functional deployed app, not a landing page. The first screen must be t
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
 - Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, short value statement, mode selector, Run review button, Export packet button, Bright proof button, and one decision card.
-- Decision card shows Finalist-ready, Overall 100, Bright prize 100, Sponsor bundle executed, signed receipt ID, Package-ready, and Native app published.
+- First viewport with event metadata, a large ProofRank headline, short value statement, mode selector, Review target button, Export packet button, Bright proof button, and one decision card.
+- Decision card shows Submission-ready, Bright proof 100, Overall self-audit 97, Bright Data proof passed, signed receipt ID `pr-20260807t183213304z-3f290db0`, proof package ready, final lablab submission pending, and Native app published.
 - Tabs below the first viewport: Overview, Queue, Proof, Setup.
 - Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 - Queue shows filters, ranked projects, and field map.
@@ -42,7 +42,7 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Do not show the old default sample project as the selected project. Use Signed proof and Package-ready copy.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Use ProofRank as the selected signed sample, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
 
 ## Claim Ledger
 

@@ -25,8 +25,9 @@ Current Native.builder state:
 - Product Architect and Task Planner passes completed.
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
-- A final UI correction was published and render-verified on desktop and 320px mobile.
-- The public first viewport shows `Run review`, `Export packet`, `Bright proof`, `Finalist-ready`, and `ProofRank`, with no stale cockpit strings above the fold.
+- A final UI correction is present in the GitHub/Vercel build, but the currently published native.builder URL is stale.
+- Current native.builder first viewport still shows `WIN`, `Finalist-ready`, `Overall 100`, and older receipt ID `pr-20260807t145909828z-553fb028`.
+- Before submitting, open the workspace and ask native.builder to update the published app using `submission/native-builder-prompt.md`. The desired first viewport should show `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and final lablab submission pending.
 - Use the Native.builder URL above as the primary submission URL.
 
 If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.
@@ -70,7 +71,7 @@ Bright Data-powered public AI product diligence for hackathon judges, sponsors, 
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Setup gates expose whether that gate has actually passed, while the Originality Radar uses Bright Data search and discover for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery proof bundle. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 ```
 
 How native.builder was used:

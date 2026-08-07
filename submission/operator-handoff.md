@@ -16,7 +16,7 @@ Date: 2026-08-07
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder public render check: `submission/native-builder-render-check.json` shows desktop and 320px mobile first viewports with no stale cockpit strings and no horizontal overflow.
+- Native.builder status: published and eligible as the primary native.builder URL, but the currently hosted copy is stale relative to the hardened Vercel/GitHub build. It still says `WIN`, `Finalist-ready`, `Overall 100`, and `Sponsor bundle executed`. Republish with the current `submission/native-builder-prompt.md` before final submission if you want the primary URL to match the strongest presentation.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
@@ -47,10 +47,11 @@ Date: 2026-08-07
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
    - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the app.
    - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-   - Public render verification passed after publishing: desktop and 320px mobile both show `Run review`, `Export packet`, `Bright proof`, `Finalist-ready`, and `ProofRank` above the fold, with no `Demo Evidence`, `AUDIT CONTROLS`, `REVIEWER INTAKE`, `Submission URL`, `Ranked Queue`, `Submission Cockpit`, or `AgentArena` in the first viewport.
+   - Current public native.builder probe: reachable, but stale. It shows `WIN`, `Finalist-ready`, `Overall 100`, and the older receipt ID `pr-20260807t145909828z-553fb028`.
+   - Desired republished first viewport: `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted later.
-   - Use the native.builder URL as the primary lablab submission URL.
+   - Use the native.builder URL as the primary lablab submission URL after refreshing if possible; otherwise attach the polished Vercel fallback URL prominently in the project links and description.
 
 3. Actual project to review
    - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://proofrank-ai-factory.vercel.app/`.
