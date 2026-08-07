@@ -36,8 +36,9 @@ function liveReceiptProof(liveReceipt = {}) {
     liveReceipt.runId || "run receipt",
     liveReceipt.provider || "unknown-provider",
     liveReceipt.traceStatus || "unknown-trace",
+    liveReceipt.hasSourceTrace ? "source trace" : "missing source trace",
     liveReceipt.hasSearchEngine ? "search_engine" : "missing search_engine",
-    liveReceipt.signed ? "signed" : "unsigned"
+    liveReceipt.signatureVerified ? "signature verified" : liveReceipt.signed ? "signature unverified" : "unsigned"
   ].join(" / ");
 }
 
@@ -115,10 +116,12 @@ export function buildFinalReadinessReport(state = {}) {
         bool(state.liveReceipt?.ok) &&
         state.liveReceipt?.provider === "bright-data" &&
         state.liveReceipt?.traceStatus === "executed" &&
+        bool(state.liveReceipt?.hasSourceTrace) &&
         bool(state.liveReceipt?.hasSearchEngine) &&
-        bool(state.liveReceipt?.signed),
+        bool(state.liveReceipt?.signed) &&
+        bool(state.liveReceipt?.signatureVerified),
       proof: liveReceiptProof(state.liveReceipt),
-      action: "Run the actual project through MCP mode and export a signed receipt with executed Bright Data traces."
+      action: "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source and search traces."
     }),
     gate({
       id: "lablab-submission",

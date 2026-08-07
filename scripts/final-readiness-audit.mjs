@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildFinalReadinessReport, summarizeFinalReadiness } from "../app/src/finalReadinessAudit.js";
 import { createBrightDataMcpClient } from "../app/src/brightDataMcpClient.js";
+import { buildFinalReceiptGate } from "../app/src/finalReceipt.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 loadLocalEnv();
@@ -215,14 +216,27 @@ async function liveReceipt() {
     const parsed = JSON.parse(await readFile(receiptPath, "utf8"));
     const traces = parsed.brightDataTraces || parsed.project?.brightDataTraces || [];
     const runReceipt = parsed.runReceipt || parsed.project?.runReceipt || {};
+    const gate = buildFinalReceiptGate(
+      {
+        brightDataTraces: traces,
+        runReceipt
+      },
+      {
+        signingSecret: envValue("PROOFRANK_RECEIPT_SIGNING_SECRET")
+      }
+    );
     return {
-      ok: true,
+      ok: gate.ok,
       path: relativePath,
-      provider: traces.some((trace) => trace.provider === "bright-data") ? "bright-data" : "",
-      traceStatus: traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "executed") ? "executed" : "",
-      hasSearchEngine: traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "executed" && trace.tool === "search_engine"),
-      signed: Boolean(runReceipt.signature),
-      runId: runReceipt.runId || ""
+      provider: gate.provider,
+      traceStatus: gate.traceStatus,
+      hasSourceTrace: gate.hasSourceTrace,
+      hasSearchEngine: gate.hasSearchEngine,
+      signed: gate.signed,
+      signatureVerified: gate.signatureVerified,
+      traceDigestVerified: gate.traceDigestVerified,
+      runId: gate.runId,
+      failures: gate.failures
     };
   } catch (error) {
     return {

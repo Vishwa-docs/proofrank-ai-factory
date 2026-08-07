@@ -17,6 +17,7 @@
 7. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
 8. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
 9. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
+10. Run `npm run final:receipt -- REPO_URL DEMO_URL` to create the signed sponsor proof artifact.
 
 ## Current Credential Status
 
@@ -96,6 +97,7 @@ npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
 PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -109,6 +111,22 @@ http://127.0.0.1:8787/api/review-project
 ```
 
 Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The lablab event page may block direct fetches with HTTP 403, so event-level collection should use Bright Data/Web Unlocker. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed. In MCP mode, `live:smoke` also requires an executed `search_engine` trace.
+
+## Final Sponsor Receipt
+
+After `brightdata:mcp-smoke` succeeds, generate the final proof artifact:
+
+```bash
+PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+```
+
+The command writes `submission/final-brightdata-receipt.json`. It refuses to pass
+unless the run includes an executed Bright Data `scrape_as_markdown` or equivalent
+source trace with content, an executed Bright Data `search_engine` trace, matching
+trace counts and digest, and an HMAC signature verified with
+`PROOFRANK_RECEIPT_SIGNING_SECRET`. Direct mode can be tested with `--allow-direct`;
+it writes to `/tmp/proofrank-final-brightdata-receipt-debug.json` by default and
+should not be used for the Bright Data prize.
 
 ## Proof Receipt Trace Shape
 

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node app/tests/scoring.test.js && node app/tests/parser.test.js && node app/tests/claims.test.js && node app/tests/tribunal.test.js && node app/tests/originality.test.js && node app/tests/readiness.test.js && node app/tests/finalReadinessAudit.test.js && node app/tests/exporters.test.js && node app/tests/brightDataMcpClient.test.js && node app/tests/liveFetchers.test.js && node app/tests/liveReviewer.test.js && node app/tests/liveEventReviewer.test.js && node app/tests/liveReviewApi.test.js && node app/tests/liveReviewServer.test.js",
+    "test": "node app/tests/scoring.test.js && node app/tests/parser.test.js && node app/tests/claims.test.js && node app/tests/tribunal.test.js && node app/tests/originality.test.js && node app/tests/readiness.test.js && node app/tests/finalReadinessAudit.test.js && node app/tests/finalReceipt.test.js && node app/tests/exporters.test.js && node app/tests/brightDataMcpClient.test.js && node app/tests/liveFetchers.test.js && node app/tests/liveReviewer.test.js && node app/tests/liveEventReviewer.test.js && node app/tests/liveReviewApi.test.js && node app/tests/liveReviewServer.test.js",
     "visual:check": "/Users/daver/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node scripts/visual-check.mjs",
     "live:server": "node scripts/live-review-server.mjs",
     "live:smoke": "node scripts/live-review-smoke.mjs",
@@ -16,6 +16,7 @@
     "demo:assets": "node scripts/capture-demo-assets.mjs",
     "workflow:proof": "node scripts/workflow-proof.mjs",
     "final:audit": "node scripts/final-readiness-audit.mjs",
+    "final:receipt": "node scripts/final-brightdata-receipt.mjs",
     "dev": "python3 -m http.server 4173 --directory app",
     "start:api": "node scripts/live-review-server.mjs",
     "start": "npm run start:api"

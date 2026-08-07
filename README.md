@@ -83,6 +83,20 @@ npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 ```
 
+Generate the signed final Bright Data proof receipt after the MCP smoke passes:
+
+```bash
+PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+```
+
+`final:receipt` forces MCP collection by default and fails unless the selected
+project has an executed Bright Data source scrape trace, an executed
+`search_engine` trace, a trace digest that matches the receipt contents, and a
+signature verified with `PROOFRANK_RECEIPT_SIGNING_SECRET`.
+
+Direct debugging is available with `--allow-direct`; it writes to a `/tmp`
+debug path by default and does not count as Bright Data sponsor proof.
+
 Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data proof. The lablab event page may return HTTP 403 in direct mode, which is why the event-level path is designed for Bright Data/Web Unlocker.
 
 ```bash
@@ -157,6 +171,7 @@ Built and verified:
 - Operator handoff for account-gated final steps in `submission/operator-handoff.md`
 - Redacted Bright Data account authentication check with `npm run brightdata:auth-check`
 - Server-issued run receipts with optional HMAC signatures for live project reviews
+- One-command final Bright Data receipt writer at `npm run final:receipt`
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 - Machine-readable final readiness audit at `submission/final-readiness-audit.json`
 
@@ -182,4 +197,5 @@ Account-gated work still requiring the team owner:
 - Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401 on `brightdata:auth-check`
 - Deploy the live review API with the settings in `submission/deploy-live-api.md`
 - Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
+- Generate `submission/final-brightdata-receipt.json` with `npm run final:receipt`
 - Publish the native.builder app URL and paste it into the lablab.ai submission

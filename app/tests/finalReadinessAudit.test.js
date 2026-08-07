@@ -52,8 +52,10 @@ const baseState = {
     ok: false,
     provider: "",
     traceStatus: "",
+    hasSourceTrace: false,
     hasSearchEngine: false,
-    signed: false
+    signed: false,
+    signatureVerified: false
   },
   lablabSubmission: {
     ok: false,
@@ -105,8 +107,10 @@ const complete = buildFinalReadinessReport({
     ok: true,
     provider: "bright-data",
     traceStatus: "executed",
+    hasSourceTrace: true,
     hasSearchEngine: true,
     signed: true,
+    signatureVerified: true,
     runId: "pr-20260807t140000000z-11111111"
   },
   lablabSubmission: {
@@ -118,7 +122,51 @@ const complete = buildFinalReadinessReport({
 assert.equal(complete.canSubmit, true);
 assert.equal(complete.requiredPassed, complete.requiredTotal);
 assert.equal(complete.nextActions.length, 0);
-assert.equal(complete.gates.find((gate) => gate.id === "live-receipt").proof, "pr-20260807t140000000z-11111111 / bright-data / executed / search_engine / signed");
+assert.equal(
+  complete.gates.find((gate) => gate.id === "live-receipt").proof,
+  "pr-20260807t140000000z-11111111 / bright-data / executed / source trace / search_engine / signature verified"
+);
 assert.match(summarizeFinalReadiness(complete), /Final-ready/);
+
+const unsignedReceipt = buildFinalReadinessReport({
+  ...baseState,
+  nativeBuilder: {
+    ok: true,
+    url: "https://proofrank.nativelyai.app"
+  },
+  brightAuth: {
+    ok: true,
+    httpStatus: 200,
+    tokenShape: {
+      looksLikeUuid: false
+    }
+  },
+  mcpTools: {
+    ok: true,
+    baseToolsPresent: true,
+    sampleTools: ["search_engine", "scrape_as_markdown", "discover"]
+  },
+  liveApi: {
+    ok: true,
+    url: "https://proofrank-live.example.com/health"
+  },
+  liveReceipt: {
+    ok: true,
+    provider: "bright-data",
+    traceStatus: "executed",
+    hasSourceTrace: true,
+    hasSearchEngine: true,
+    signed: true,
+    signatureVerified: false,
+    runId: "pr-forged"
+  },
+  lablabSubmission: {
+    ok: true,
+    url: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/silverspoon/submission"
+  }
+});
+
+assert.equal(unsignedReceipt.canSubmit, false);
+assert.equal(unsignedReceipt.gates.find((gate) => gate.id === "live-receipt").status, "needs-action");
 
 console.log("final readiness audit tests passed");

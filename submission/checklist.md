@@ -20,7 +20,9 @@
 - Set live collection mode to `mcp` for the final sponsor-prize proof run.
 - Confirm `npm run brightdata:mcp-smoke` lists `search_engine`, `scrape_as_markdown`, and `discover`.
 - Run one live Bright Data-backed audit.
-- Confirm the proof receipt shows at least one `provider: bright-data` trace with `traceStatus: executed`.
+- Run `PROOFRANK_RECEIPT_SIGNING_SECRET=... npm run final:receipt -- REPO_URL DEMO_URL`.
+- Confirm the proof receipt shows at least one executed Bright Data source trace and one executed Bright Data `search_engine` trace.
+- Confirm `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
 - Confirm the Submission Cockpit marks the Bright Data gate as passed.
 
 ## Optional But Strong
@@ -31,6 +33,7 @@
 - Use the generated 2:20 demo video at `submission/proofrank-demo.mp4`.
 - Attach `submission/workflow-proof.json` if judges ask for an interaction proof artifact.
 - Run `npm run final:audit` and keep `submission/final-readiness-audit.json` with the final packet.
+- Keep `submission/final-brightdata-receipt.json` with the final packet after the Bright Data token is fixed.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
@@ -46,6 +49,7 @@ Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag
 Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
 Workflow proof artifact: submission/workflow-proof.json
+Final Bright Data receipt: submission/final-brightdata-receipt.json after token validation
 ```
 
 Operator handoff:
