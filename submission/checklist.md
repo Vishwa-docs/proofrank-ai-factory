@@ -28,7 +28,8 @@
 - Create a public GitHub repo and enable the included GitHub Pages workflow as a fallback app URL.
 - Keep the included MIT `LICENSE` file in the public repo for submission compliance.
 - Upload or link the local reference app and submission docs.
-- Use the generated 1:58 demo video at `submission/proofrank-demo.mp4`.
+- Use the generated 2:20 demo video at `submission/proofrank-demo.mp4`.
+- Attach `submission/workflow-proof.json` if judges ask for an interaction proof artifact.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
@@ -43,6 +44,7 @@ Fallback app: https://vishwa-docs.github.io/proofrank-ai-factory/
 Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
 Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
+Workflow proof artifact: submission/workflow-proof.json
 ```
 
 Operator handoff:

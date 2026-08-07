@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-08-07T13:43:09.476Z",
+  "durationMs": 2376,
+  "appTitle": "ProofRank",
+  "selectedProject": "ProofRank AI Factory",
+  "rankedRows": 9,
+  "statusLine": "ProofRank AI Factory added to the review queue.",
+  "brightProof": "Bright proof No executed run yet Live collection required",
+  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected. GitHubBright Data collection pending Overall 25 DemoGitHub Eligibility 52 Demo, repo, build proof Bright fit 6 Live web is load-bearing Bright prize 19 Executed sponsor rank Business 0 Clear user and urgency Originality 18 Distinct wedge and proof Presentation 55 Judge-ready explanation Recommended action Manual review required Evidence depth 1 receipt items, 1 collection traces, Bright D",
+  "receiptText": "Run receipt Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Saved evidence mirrors these collection steps. search_engineDiscover public mentions and possible duplicatess",
+  "readinessItems": [
+    {
+      "status": "Action",
+      "label": "Native.builder primary URL",
+      "detail": "Publish the primary app from native.builder; the GitHub Pages build is only fallback evidence."
+    },
+    {
+      "status": "Action",
+      "label": "Executed Bright Data trace",
+      "detail": "Current trace state is pending; sponsor proof needs an executed Bright Data run."
+    },
+    {
+      "status": "Action",
+      "label": "Actual project reviewed",
+      "detail": "A reviewer target is present, but it only has pending/manual evidence."
+    },
+    {
+      "status": "Action",
+      "label": "Live collection backend",
+      "detail": "Demo mode can rank fixtures, but real use needs the backend running in live mode."
+    },
+    {
+      "status": "Passed",
+      "label": "Public app URL",
+      "detail": "Judges need a reachable application URL for the complete workflow."
+    },
+    {
+      "status": "Passed",
+      "label": "Public source evidence",
+      "detail": "Public implementation evidence makes native.builder and live-review claims easier to inspect."
+    },
+    {
+      "status": "Passed",
+      "label": "Under-three-minute demo video",
+      "detail": "The hackathon requires a short video showing one complete workflow."
+    },
+    {
+      "status": "Passed",
+      "label": "No visible secret risk",
+      "detail": "Public repos and receipts should not expose API keys, tokens, or private account state."
+    },
+    {
+      "status": "Passed",
+      "label": "Exportable proof packet",
+      "detail": "A judge packet should include scores, claim ledger, traces, tribunal, and originality findings."
+    }
+  ],
+  "exportedFiles": [
+    "review-vishwa-docs-proofrank-ai-factory-proof-receipt.json",
+    "review-vishwa-docs-proofrank-ai-factory-submission-packet.md"
+  ],
+  "screenshotPath": "/Users/daver/Desktop/LabLabAI AI Factory NativeBuilder Hackathon/submission/demo-assets/workflow-proof.png",
+  "consoleMessages": [],
+  "ok": true
+}

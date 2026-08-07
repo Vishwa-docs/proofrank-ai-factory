@@ -1,6 +1,6 @@
 # ProofRank Demo Script
 
-Target duration: under 3 minutes. The generated reference video is 1 minute 58 seconds.
+Target duration: under 3 minutes. The generated reference video is 2 minutes 20 seconds.
 
 ## 0:00-0:12 - Pain
 
@@ -16,7 +16,7 @@ Say:
 
 ## 0:30-0:58 - Tribunal And Originality Radar
 
-Open ProofRank or a strong Bright Data-native project in the ranked queue. Point to the five score tiles, Adversarial Tribunal, Originality Radar, and Claim Ledger.
+Open ProofRank or a strong Bright Data-native project in the ranked queue. Point to the six score tiles, Adversarial Tribunal, Originality Radar, and Claim Ledger.
 
 Say:
 
@@ -38,7 +38,7 @@ Say:
 
 "The queue is scored by eligibility, Bright Data dependency, business value, originality, and presentation. The Bright Data score is intentionally separate, so sponsor reviewers can see whether Bright Data is truly load-bearing or merely mentioned."
 
-## 1:44-1:58 - Action
+## 1:44-2:20 - Action
 
 Click exports: CSV, selected receipt JSON, and Submission Packet.
 

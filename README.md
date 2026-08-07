@@ -157,12 +157,14 @@ Built and verified:
 - Operator handoff for account-gated final steps in `submission/operator-handoff.md`
 - Redacted Bright Data account authentication check with `npm run brightdata:auth-check`
 - Server-issued run receipts with optional HMAC signatures for live project reviews
+- Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 
 Refresh demo screenshots and video:
 
 ```bash
 npm run demo:assets
 bash scripts/create_demo_video.sh
+npm run workflow:proof
 ```
 
 Design and implementation plan:

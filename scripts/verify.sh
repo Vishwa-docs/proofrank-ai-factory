@@ -30,6 +30,7 @@ required_files=(
   "scripts/live-review-smoke.mjs"
   "scripts/live-event-smoke.mjs"
   "scripts/capture-demo-assets.mjs"
+  "scripts/workflow-proof.mjs"
   "railway.json"
   "app/tests/brightDataMcpClient.test.js"
   "app/tests/readiness.test.js"
