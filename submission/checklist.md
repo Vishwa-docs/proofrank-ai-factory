@@ -30,6 +30,7 @@
 - Upload or link the local reference app and submission docs.
 - Use the generated 2:20 demo video at `submission/proofrank-demo.mp4`.
 - Attach `submission/workflow-proof.json` if judges ask for an interaction proof artifact.
+- Run `npm run final:audit` and keep `submission/final-readiness-audit.json` with the final packet.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.

@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-08-07T13:50:08.510Z",
+  "gitHead": "716a036",
+  "canSubmit": false,
+  "requiredPassed": 4,
+  "requiredTotal": 10,
+  "optionalPassed": 2,
+  "optionalTotal": 2,
+  "score": 45,
+  "gates": [
+    {
+      "id": "public-fallback",
+      "label": "Public fallback app",
+      "required": true,
+      "status": "passed",
+      "proof": "ProofRank and Bright proof strip are present in deployed HTML.",
+      "action": "Deploy the public fallback app and confirm the Bright proof strip is visible."
+    },
+    {
+      "id": "release-video",
+      "label": "Under-three-minute demo video",
+      "required": true,
+      "status": "passed",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 140s",
+      "action": "Upload a demo video shorter than three minutes and verify the public release asset."
+    },
+    {
+      "id": "workflow-proof",
+      "label": "Replayable UI workflow proof",
+      "required": true,
+      "status": "passed",
+      "proof": "submission/workflow-proof.json",
+      "action": "Run npm run workflow:proof and attach the generated JSON artifact."
+    },
+    {
+      "id": "target-review",
+      "label": "Actual review target URLs",
+      "required": true,
+      "status": "passed",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory / https://vishwa-docs.github.io/proofrank-ai-factory/",
+      "action": "Provide a public GitHub repo and reachable deployed demo for the project to review."
+    },
+    {
+      "id": "native-builder",
+      "label": "Native.builder primary URL",
+      "required": true,
+      "status": "needs-action",
+      "proof": "No nativelyai.app URL configured.",
+      "action": "Publish the native.builder app and paste the public nativelyai.app URL."
+    },
+    {
+      "id": "bright-auth",
+      "label": "Bright Data account auth",
+      "required": true,
+      "status": "needs-action",
+      "proof": "HTTP 401; token shape looks UUID-like.",
+      "action": "Replace BRIGHTDATA_API_TOKEN with a real Bright Data account API key."
+    },
+    {
+      "id": "mcp-tools",
+      "label": "Bright Data MCP base tools",
+      "required": true,
+      "status": "needs-action",
+      "proof": "MCP tools were not listed.",
+      "action": "Run npm run brightdata:mcp-smoke until search_engine, scrape_as_markdown, and discover are listed."
+    },
+    {
+      "id": "live-api",
+      "label": "Public live review API",
+      "required": true,
+      "status": "needs-action",
+      "proof": "No public live API health check passed.",
+      "action": "Deploy the live review API and confirm /health returns ok."
+    },
+    {
+      "id": "live-receipt",
+      "label": "Signed executed Bright Data receipt",
+      "required": true,
+      "status": "needs-action",
+      "proof": "No signed executed Bright Data project receipt attached.",
+      "action": "Run the actual project through MCP mode and export a signed receipt with executed Bright Data traces."
+    },
+    {
+      "id": "lablab-submission",
+      "label": "lablab.ai final submission",
+      "required": true,
+      "status": "needs-action",
+      "proof": "No final lablab submission URL recorded.",
+      "action": "Submit from the authenticated team-owner lablab.ai account."
+    },
+    {
+      "id": "candidate-targets",
+      "label": "Candidate review target shortlist",
+      "required": false,
+      "status": "passed",
+      "proof": "research/candidate-review-targets.md",
+      "action": "Keep the scored shortlist updated if review targets change."
+    },
+    {
+      "id": "pitch-deck",
+      "label": "Pitch deck artifact",
+      "required": false,
+      "status": "passed",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx",
+      "action": "Attach or regenerate the pitch deck if judges request slides."
+    }
+  ],
+  "nextActions": [
+    "Publish the native.builder app and paste the public nativelyai.app URL.",
+    "Replace BRIGHTDATA_API_TOKEN with a real Bright Data account API key.",
+    "Run npm run brightdata:mcp-smoke until search_engine, scrape_as_markdown, and discover are listed.",
+    "Deploy the live review API and confirm /health returns ok.",
+    "Run the actual project through MCP mode and export a signed receipt with executed Bright Data traces.",
+    "Submit from the authenticated team-owner lablab.ai account."
+  ],
+  "summary": "Not final-ready: 4/10 required gates passed. Next action: Publish the native.builder app and paste the public nativelyai.app URL."
+}

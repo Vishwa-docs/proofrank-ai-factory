@@ -158,6 +158,7 @@ Built and verified:
 - Redacted Bright Data account authentication check with `npm run brightdata:auth-check`
 - Server-issued run receipts with optional HMAC signatures for live project reviews
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
+- Machine-readable final readiness audit at `submission/final-readiness-audit.json`
 
 Refresh demo screenshots and video:
 
@@ -165,6 +166,7 @@ Refresh demo screenshots and video:
 npm run demo:assets
 bash scripts/create_demo_video.sh
 npm run workflow:proof
+npm run final:audit
 ```
 
 Design and implementation plan:
