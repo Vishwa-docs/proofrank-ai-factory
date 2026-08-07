@@ -18,6 +18,13 @@ const elements = {
   receipt: document.querySelector("#receipt"),
   fieldMap: document.querySelector("#fieldMap"),
   fieldSummary: document.querySelector("#fieldSummary"),
+  readinessList: document.querySelector("#readinessList"),
+  reviewerRepoUrl: document.querySelector("#reviewerRepoUrl"),
+  reviewerDemoUrl: document.querySelector("#reviewerDemoUrl"),
+  reviewerTitle: document.querySelector("#reviewerTitle"),
+  reviewerTeam: document.querySelector("#reviewerTeam"),
+  reviewerHint: document.querySelector("#reviewerHint"),
+  addReviewerProject: document.querySelector("#addReviewerProject"),
   exportCsv: document.querySelector("#exportCsv"),
   exportReceipts: document.querySelector("#exportReceipts"),
   exportSelected: document.querySelector("#exportSelected"),
@@ -29,8 +36,67 @@ const state = {
   filter: "all",
   selectedId: "proofrank",
   projects: rankProjects(fixtureProjects),
-  uploadedProjects: []
+  uploadedProjects: [],
+  reviewerProjects: []
 };
+
+function displayText(value = "") {
+  return String(value)
+    .replace(/[—–]/g, "-")
+    .replace(/→/g, "to")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function escapeHtml(value = "") {
+  return displayText(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    };
+    return entities[char];
+  });
+}
+
+function escapeAttr(value = "") {
+  return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+function isHttpUrl(value = "") {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function labelFromSlug(value = "") {
+  const acronyms = new Map([
+    ["ai", "AI"],
+    ["api", "API"],
+    ["mcp", "MCP"],
+    ["proofrank", "ProofRank"],
+    ["ui", "UI"],
+    ["ux", "UX"],
+    ["github", "GitHub"]
+  ]);
+
+  return displayText(value)
+    .replace(/[-_]+/g, " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => acronyms.get(word.toLowerCase()) || word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function sourceProjects() {
+  const base = state.uploadedProjects.length ? state.uploadedProjects : fixtureProjects;
+  return [...state.reviewerProjects, ...base];
+}
 
 function selectedProject() {
   return state.projects.find((project) => project.id === state.selectedId) || state.projects[0];
@@ -49,8 +115,14 @@ function filteredProjects() {
 }
 
 function setStatus(message, tone = "ready") {
-  elements.statusLine.textContent = message;
+  elements.statusLine.textContent = displayText(message);
   elements.statusLine.className = `status-line ${tone === "warn" ? "warn" : ""} ${tone === "error" ? "error" : ""}`.trim();
+}
+
+function statusClass(project) {
+  if (project.verdict.label === "Finalist-ready") return "good";
+  if (project.verdict.label === "High risk") return "risk";
+  return "review";
 }
 
 function renderRankedList() {
@@ -65,14 +137,16 @@ function renderRankedList() {
   elements.rankedList.innerHTML = projects
     .map((project, index) => {
       const selected = project.id === state.selectedId ? " is-selected" : "";
+      const tools = (project.evidence?.brightDataTools || []).slice(0, 2).map(escapeHtml).join(", ") || "No Bright Data proof";
       return `
-        <button class="project-row${selected}" type="button" data-id="${project.id}" role="listitem">
+        <button class="project-row queue-row${selected}" type="button" data-id="${escapeAttr(project.id)}" role="listitem">
           <span class="rank-number">${index + 1}</span>
-          <span>
-            <h3>${project.title}</h3>
-            <p>${project.team} - ${project.verdict.label}</p>
+          <span class="queue-main">
+            <strong>${escapeHtml(project.title)}</strong>
+            <span>${escapeHtml(project.team)} / ${escapeHtml(project.domain || "General")}</span>
           </span>
-          <span class="row-score">${project.scores.overall}</span>
+          <span class="queue-proof">${escapeHtml(tools)}</span>
+          <span class="row-score ${statusClass(project)}">${project.scores.overall}</span>
         </button>
       `;
     })
@@ -86,12 +160,13 @@ function renderRankedList() {
   });
 }
 
-function scoreTile(label, value) {
+function scoreTile(label, value, detail = "") {
   return `
     <div class="score-tile">
-      <span>${label}</span>
+      <span>${escapeHtml(label)}</span>
       <strong>${value}</strong>
-      <div class="bar" style="--bar-width: ${value}%"><i></i></div>
+      <p>${escapeHtml(detail)}</p>
+      <div class="meter" style="--bar-width: ${value}%"><i></i></div>
     </div>
   `;
 }
@@ -100,21 +175,21 @@ function renderClaimLedger(project) {
   const claims = buildClaimLedger(project);
   return `
     <section class="claim-ledger">
-      <div class="section-head">
-        <h2>Claim Ledger</h2>
-        <span class="muted">confidence, not absolutism</span>
+      <div class="module-head compact">
+        <h2>Claim ledger</h2>
+        <span class="hint">Source-backed, not absolute</span>
       </div>
       <div class="claim-grid">
         ${claims
           .map(
             (claim) => `
-              <div class="claim-row">
-                <span class="claim-status ${claim.status.toLowerCase().replace(/\s+/g, "-")}">${claim.status}</span>
+              <article class="claim-row">
+                <span class="claim-status ${claim.status.toLowerCase().replace(/\s+/g, "-")}">${escapeHtml(claim.status)}</span>
                 <div>
-                  <h3>${claim.claim}</h3>
-                  <p>${claim.evidence}</p>
+                  <h3>${escapeHtml(claim.claim)}</h3>
+                  <p>${escapeHtml(claim.evidence)}</p>
                 </div>
-              </div>
+              </article>
             `
           )
           .join("")}
@@ -123,52 +198,66 @@ function renderClaimLedger(project) {
   `;
 }
 
+function renderSourceLinks(project) {
+  const links = [
+    ["Submission", project.submissionUrl],
+    ["Demo", project.demoUrl],
+    ["GitHub", project.githubUrl],
+    ["Deck", project.presentationUrl]
+  ].filter(([, url]) => url && isHttpUrl(url));
+
+  if (!links.length) return `<p class="hint">No public source links attached yet.</p>`;
+
+  return links
+    .map(([label, url]) => `<a class="source-link" href="${escapeAttr(url)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`)
+    .join("");
+}
+
 function renderScorecard(project) {
-  const scoreDeg = `${project.scores.overall * 3.6}deg`;
-  const tags = project.technologies.map((technology) => `<span class="tag">${technology}</span>`).join("");
+  const tags = project.technologies.map((technology) => `<span class="tag">${escapeHtml(technology)}</span>`).join("");
   const risks = project.verdict.risks.length
-    ? project.verdict.risks
-        .map((risk) => `<span class="risk-tag${risk.includes("Bright Data") ? " high" : ""}">${risk}</span>`)
-        .join("")
-    : `<span class="risk-tag">No major audit risk</span>`;
+    ? project.verdict.risks.map((risk) => `<li>${escapeHtml(risk)}</li>`).join("")
+    : `<li>No major audit risk visible in current evidence.</li>`;
 
   elements.scorecard.innerHTML = `
-    <section class="hero-score">
-      <div>
-        <h2>${project.title}</h2>
-        <p>${project.summary}</p>
+    <section class="focus-strip">
+      <div class="focus-copy">
+        <span class="verdict-pill ${statusClass(project)}">${escapeHtml(project.verdict.label)}</span>
+        <h2>${escapeHtml(project.title)}</h2>
+        <p>${escapeHtml(project.summary)}</p>
         <div class="tag-row">${tags}</div>
       </div>
-      <div class="score-ring" style="--score-deg: ${scoreDeg}" aria-label="Overall score ${project.scores.overall}">
-        <span>${project.scores.overall}</span>
+      <div class="score-block" aria-label="Overall score ${project.scores.overall}">
+        <span>Overall</span>
+        <strong>${project.scores.overall}</strong>
       </div>
+    </section>
+
+    <section class="source-links" aria-label="Attached sources">
+      ${renderSourceLinks(project)}
     </section>
 
     <section class="score-grid" aria-label="Score breakdown">
-      ${scoreTile("Eligibility", project.scores.eligibility)}
-      ${scoreTile("BD Dependency", project.scores.brightDataFit)}
-      ${scoreTile("Business", project.scores.businessValue)}
-      ${scoreTile("Originality", project.scores.originality)}
-      ${scoreTile("Presentation", project.scores.presentation)}
+      ${scoreTile("Eligibility", project.scores.eligibility, "Demo, repo, build proof")}
+      ${scoreTile("Bright fit", project.scores.brightDataFit, "Live web is load-bearing")}
+      ${scoreTile("Business", project.scores.businessValue, "Clear user and urgency")}
+      ${scoreTile("Originality", project.scores.originality, "Distinct wedge and proof")}
+      ${scoreTile("Presentation", project.scores.presentation, "Judge-ready explanation")}
     </section>
 
-    <section class="detail-grid">
-      <div class="detail-box">
-        <h3>Verdict</h3>
-        <p><strong>${project.verdict.label}</strong><br>${project.verdict.action}</p>
+    <section class="review-notes">
+      <div>
+        <h3>Recommended action</h3>
+        <p>${escapeHtml(project.verdict.action)}</p>
       </div>
-      <div class="detail-box">
-        <h3>Target Review</h3>
-        <p>${project.domain} queue for ${project.trackTags.slice(0, 3).join(", ") || "general review"}.</p>
+      <div>
+        <h3>Evidence depth</h3>
+        <p>${(project.evidenceItems || []).length} receipt items, ${(project.brightDataTraces || []).length} collection traces.</p>
       </div>
-      <div class="detail-box">
-        <h3>Evidence Count</h3>
-        <p>${(project.evidenceItems || []).length} receipt items and ${(project.brightDataTraces || []).length} Bright Data trace rows.</p>
+      <div>
+        <h3>Current blocker</h3>
+        <ul>${risks}</ul>
       </div>
-    </section>
-
-    <section class="risk-row" aria-label="Review risks">
-      ${risks}
     </section>
 
     ${renderClaimLedger(project)}
@@ -180,12 +269,12 @@ function renderReceipt(project) {
     .map(
       (item) => `
       <article class="receipt-item">
-        <h3>${item.title}</h3>
-        <p>${item.excerpt}</p>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.excerpt)}</p>
         <div class="source-meta">
-          <span>${item.sourceType}</span>
+          <span>${escapeHtml(item.sourceType)}</span>
           <span>${Math.round(item.confidence * 100)}% confidence</span>
-          <span>${item.collector}</span>
+          <span>${escapeHtml(item.collector)}</span>
         </div>
       </article>
     `
@@ -196,17 +285,17 @@ function renderReceipt(project) {
     .map(
       (trace) => `
       <tr>
-        <td>${trace.tool}</td>
-        <td>${trace.queryOrUrl}</td>
+        <td>${escapeHtml(trace.tool)}</td>
+        <td>${escapeHtml(trace.queryOrUrl)}</td>
         <td>${trace.resultCount}</td>
-        <td>${trace.status}</td>
+        <td>${escapeHtml(trace.status)}</td>
       </tr>
     `
     )
     .join("");
 
   const livePlan = buildMcpQueries(elements.eventUrl.value || EVENT_URL, project)
-    .map((query) => `<li><strong>${query.tool}</strong>: ${query.purpose}</li>`)
+    .map((query) => `<li><strong>${escapeHtml(query.tool)}</strong><span>${escapeHtml(query.purpose)}</span></li>`)
     .join("");
 
   elements.receipt.innerHTML = `
@@ -228,9 +317,9 @@ function renderReceipt(project) {
       </tbody>
     </table>
 
-    <div class="receipt-item">
-      <h3>Live Collection Plan</h3>
-      <p>${state.mode === "live" ? "Ready for server-side Bright Data execution." : "Demo mode mirrors these live collection steps."}</p>
+    <div class="receipt-item live-plan">
+      <h3>Live collection plan</h3>
+      <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Demo mode mirrors these collection steps."}</p>
       <ul>${livePlan}</ul>
     </div>
   `;
@@ -251,16 +340,58 @@ function renderFieldMap() {
         .map(([domain, projects]) => {
           const averageBright = Math.round(projects.reduce((sum, project) => sum + project.scores.brightDataFit, 0) / projects.length);
           return `
-            <div class="map-cell">
-              <h3>${domain}</h3>
-              <p>${projects.length} project${projects.length === 1 ? "" : "s"} - avg Bright Data ${averageBright}</p>
-              <div class="bar" style="--bar-width: ${averageBright}%"><i></i></div>
-            </div>
+            <article class="map-cell">
+              <h3>${escapeHtml(domain)}</h3>
+              <p>${projects.length} project${projects.length === 1 ? "" : "s"} / avg Bright fit ${averageBright}</p>
+              <div class="meter" style="--bar-width: ${averageBright}%"><i></i></div>
+            </article>
           `;
         })
         .join("")}
     </div>
   `;
+}
+
+function renderReadiness(project = selectedProject()) {
+  const checklist = [
+    {
+      label: "Bright Data token",
+      ready: state.mode === "live" && Boolean(elements.apiKey.value.trim()),
+      detail: "Needed server-side for Remote MCP, SERP, scraping, and discovery."
+    },
+    {
+      label: "Public app URL",
+      ready: Boolean(project?.demoUrl && isHttpUrl(project.demoUrl)),
+      detail: "Judges need a reachable end-to-end workflow."
+    },
+    {
+      label: "GitHub source",
+      ready: Boolean(project?.githubUrl && isHttpUrl(project.githubUrl)),
+      detail: "Reviewer mode can inspect public repositories directly."
+    },
+    {
+      label: "Native.builder URL",
+      ready: Boolean(project?.evidence?.nativeBuilderExplained && project?.demoUrl?.includes("nativelyai.app")),
+      detail: "Eligibility depends on showing meaningful native.builder use."
+    },
+    {
+      label: "Demo video",
+      ready: Boolean(project?.evidence?.hasDemo),
+      detail: "Submission requires one complete workflow in under three minutes."
+    }
+  ];
+
+  elements.readinessList.innerHTML = checklist
+    .map(
+      (item) => `
+        <li class="${item.ready ? "ready" : "needed"}">
+          <span>${item.ready ? "Ready" : "Needed"}</span>
+          <strong>${escapeHtml(item.label)}</strong>
+          <p>${escapeHtml(item.detail)}</p>
+        </li>
+      `
+    )
+    .join("");
 }
 
 function render() {
@@ -269,13 +400,14 @@ function render() {
   renderScorecard(project);
   renderReceipt(project);
   renderFieldMap();
+  renderReadiness(project);
 }
 
 function runAudit() {
   const eventUrl = elements.eventUrl.value || EVENT_URL;
   const apiKey = elements.apiKey.value.trim();
 
-  setStatus("Audit running across submission evidence...", "ready");
+  setStatus("Review running across submission evidence.", "ready");
   elements.runAudit.disabled = true;
 
   window.setTimeout(() => {
@@ -283,18 +415,19 @@ function runAudit() {
       const checklist = setupChecklist().join(" ");
       setStatus(`Live token missing. Demo mode remains ready. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
+      state.projects = rankProjects(sourceProjects());
       render();
       return;
     }
 
-    const sourceProjects = state.uploadedProjects.length ? state.uploadedProjects : fixtureProjects;
-    state.projects = rankProjects(sourceProjects);
+    state.projects = rankProjects(sourceProjects());
     if (!state.projects.some((project) => project.id === state.selectedId)) {
       state.selectedId = state.projects[0]?.id || "proofrank";
     }
 
     const commandCount = buildCliCommands(eventUrl, selectedProject()).length;
-    setStatus(`${state.projects.length} submissions ranked. ${commandCount} Bright Data commands prepared.`, "ready");
+    const liveNote = state.mode === "live" ? "server workflow required next" : "commands prepared";
+    setStatus(`${state.projects.length} submissions ranked. ${commandCount} Bright Data ${liveNote}.`, "ready");
     elements.runAudit.disabled = false;
     render();
   }, 520);
@@ -310,12 +443,110 @@ function handleUpload(file) {
       return;
     }
     state.uploadedProjects = [fixtureProjects[0], ...parsed];
-    state.projects = rankProjects(state.uploadedProjects);
+    state.projects = rankProjects(sourceProjects());
     state.selectedId = state.projects[0].id;
     setStatus(`${parsed.length} uploaded submission cards parsed.`, "ready");
     render();
   });
   reader.readAsText(file);
+}
+
+function reviewerProjectFromInputs() {
+  const repoUrl = elements.reviewerRepoUrl.value.trim();
+  const demoUrl = elements.reviewerDemoUrl.value.trim();
+
+  if (!isHttpUrl(repoUrl) || !repoUrl.includes("github.com/")) {
+    setStatus("Add a public GitHub repository URL before adding a project.", "error");
+    return null;
+  }
+
+  const repoParts = new URL(repoUrl).pathname.split("/").filter(Boolean);
+  const owner = repoParts[0] || "GitHub owner";
+  const repo = repoParts[1] || "project";
+  const title = elements.reviewerTitle.value.trim() || labelFromSlug(repo);
+  const team = elements.reviewerTeam.value.trim() || labelFromSlug(owner);
+  const hasDemo = isHttpUrl(demoUrl);
+  const id = `review-${owner}-${repo}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  return {
+    id,
+    title,
+    team,
+    summary:
+      "Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.",
+    eventUrl: elements.eventUrl.value || EVENT_URL,
+    submissionUrl: "",
+    demoUrl: hasDemo ? demoUrl : "",
+    githubUrl: repoUrl,
+    presentationUrl: "",
+    createdAt: new Date().toISOString().slice(0, 10),
+    domain: "Reviewer input",
+    technologies: ["GitHub", "Bright Data collection pending"],
+    trackTags: ["Reviewer supplied"],
+    evidence: {
+      hasDemo,
+      hasPublicDemo: hasDemo,
+      hasGithub: true,
+      hasPresentation: false,
+      nativeBuilderExplained: false,
+      builtDuringEvent: false,
+      isFunctional: hasDemo,
+      notLandingPage: false,
+      demoWorkflow: false,
+      conciseSummary: true,
+      targetUser: false,
+      clearPain: false,
+      repeatableWorkflow: false,
+      buyerExists: false,
+      urgency: false,
+      differentiation: false,
+      lowCrowdOverlap: false,
+      proofReceipt: true,
+      specificWedge: false,
+      nonGenericAgent: false,
+      brightDataRole: "none",
+      brightDataTools: [],
+      agenticLoop: false,
+      brightDataTrace: false
+    },
+    evidenceItems: [
+      {
+        id: `${id}-repo-input`,
+        sourceType: "user-input",
+        sourceUrl: repoUrl,
+        title: "Reviewer supplied GitHub repository",
+        excerpt:
+          "Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals.",
+        collectedAt: new Date().toISOString(),
+        collector: "ProofRank reviewer intake",
+        confidence: 0.72,
+        supports: ["Review target"],
+        limitations: "No remote repository content has been fetched inside the static browser demo."
+      }
+    ],
+    brightDataTraces: [
+      {
+        mode: "pending-live",
+        tool: "Remote MCP",
+        queryOrUrl: repoUrl,
+        resultCount: 0,
+        status: "waiting for server-side collection",
+        collectedAt: new Date().toISOString()
+      }
+    ]
+  };
+}
+
+function addReviewerProject() {
+  const project = reviewerProjectFromInputs();
+  if (!project) return;
+
+  state.reviewerProjects = [project, ...state.reviewerProjects.filter((item) => item.id !== project.id)];
+  state.projects = rankProjects(sourceProjects());
+  state.selectedId = project.id;
+  elements.reviewerHint.textContent = "Project added. Live Bright Data collection is still needed for a real evidence receipt.";
+  setStatus(`${project.title} added to the review queue.`, "ready");
+  render();
 }
 
 document.querySelectorAll(".filter-chip").forEach((button) => {
@@ -329,11 +560,14 @@ document.querySelectorAll(".filter-chip").forEach((button) => {
 
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
-  setStatus(state.mode === "live" ? "Live mode selected. Add Bright Data token before running." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
+  setStatus(state.mode === "live" ? "Live mode selected. Add a server-side Bright Data token before running." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
+  renderReadiness(selectedProject());
 });
 
+elements.apiKey.addEventListener("input", () => renderReadiness(selectedProject()));
 elements.runAudit.addEventListener("click", runAudit);
 elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.target.files[0]));
+elements.addReviewerProject.addEventListener("click", addReviewerProject);
 
 elements.exportCsv.addEventListener("click", () => {
   downloadText("proofrank-judge-queue.csv", toCsv(state.projects), "text/csv");

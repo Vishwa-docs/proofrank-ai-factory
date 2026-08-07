@@ -1,0 +1,99 @@
+import { createRequire } from "node:module";
+import path from "node:path";
+
+const playwrightPackage =
+  process.env.PLAYWRIGHT_PACKAGE_JSON ||
+  "/Users/daver/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json";
+const chromePath =
+  process.env.CHROME_EXECUTABLE ||
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4283/";
+
+const require = createRequire(`file://${playwrightPackage}`);
+const { chromium } = require("playwright");
+
+const browser = await chromium.launch({
+  headless: true,
+  executablePath: chromePath
+});
+
+const results = [];
+
+for (const spec of [
+  { name: "desktop", width: 1440, height: 950 },
+  { name: "mobile", width: 390, height: 844 }
+]) {
+  const page = await browser.newPage({
+    viewport: { width: spec.width, height: spec.height },
+    deviceScaleFactor: 1
+  });
+  const messages = [];
+
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type())) {
+      messages.push(`${message.type()}: ${message.text()}`);
+    }
+  });
+  page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
+
+  await page.goto(targetUrl, { waitUntil: "networkidle" });
+  await page.waitForSelector("#rankedList .project-row", { timeout: 5000 });
+
+  if (spec.name === "desktop") {
+    await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
+    await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
+    await page.click("#addReviewerProject");
+    await page.waitForTimeout(200);
+  }
+
+  const metrics = await page.evaluate(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const panels = [...document.querySelectorAll(".panel, .filter-bar, .topbar")];
+    const offscreenPanels = panels.filter((element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.left < -1 || rect.right > html.clientWidth + 1;
+    });
+
+    return {
+      title: document.title,
+      rows: document.querySelectorAll(".project-row").length,
+      selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
+      readinessCount: document.querySelectorAll("#readinessList li").length,
+      receiptIncludesReviewer: (document.querySelector("#receipt")?.textContent || "").includes(
+        "Reviewer supplied"
+      ),
+      scrollWidth: html.scrollWidth,
+      clientWidth: html.clientWidth,
+      horizontalOverflow: html.scrollWidth > html.clientWidth + 1,
+      bodyHeight: Math.max(body.scrollHeight, html.scrollHeight),
+      offscreenPanels: offscreenPanels.length
+    };
+  });
+
+  const screenshotPath = path.join("/tmp", `proofrank-${spec.name}-redesign.png`);
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+  results.push({ spec, metrics, messages, screenshotPath });
+  await page.close();
+}
+
+await browser.close();
+
+const failures = results.flatMap((result) => {
+  const problems = [];
+  if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
+  if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
+  if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
+  if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
+  if (result.spec.name === "desktop" && !result.metrics.receiptIncludesReviewer) {
+    problems.push("desktop: reviewer project receipt did not render");
+  }
+  return problems;
+});
+
+console.log(JSON.stringify(results, null, 2));
+
+if (failures.length) {
+  console.error(failures.join("\n"));
+  process.exit(1);
+}

@@ -4,85 +4,131 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ProofRank</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230d1520'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%23f7fafc'%3EPR%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <header class="topbar">
+    <header class="topbar reveal" style="--i: 0">
       <div class="brand-block">
         <div class="mark" aria-hidden="true">PR</div>
-        <div>
+        <div class="brand-copy">
           <h1>ProofRank</h1>
-          <p>Public AI product diligence</p>
+          <p>Evidence review workbench for AI Factory</p>
         </div>
       </div>
-      <div class="topbar-actions">
-        <label class="mode-toggle" for="modeSelect">
-          <span>Mode</span>
-          <select id="modeSelect">
-            <option value="demo">Demo evidence</option>
-            <option value="live">Bright Data live</option>
-          </select>
-        </label>
-        <button id="exportCsv" class="icon-button" type="button" title="Export judge queue CSV" aria-label="Export judge queue CSV">
-          <span aria-hidden="true">CSV</span>
-        </button>
-        <button id="exportReceipts" class="icon-button" type="button" title="Export all receipts JSON" aria-label="Export all receipts JSON">
-          <span aria-hidden="true">JSON</span>
-        </button>
-        <button id="exportPacket" class="primary-button" type="button">Submission Packet</button>
+      <div class="topbar-actions" aria-label="Export actions">
+        <button id="exportCsv" class="text-button" type="button">Export CSV</button>
+        <button id="exportReceipts" class="text-button" type="button">Export JSON</button>
+        <button id="exportPacket" class="primary-button" type="button">Packet</button>
       </div>
     </header>
 
-    <main class="workspace">
-      <aside class="panel run-panel" aria-label="Audit controls and ranking">
-        <section class="control-section">
-          <label for="eventUrl">Event or project URL</label>
-          <div class="url-row">
-            <input id="eventUrl" type="url" value="https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits">
-            <button id="runAudit" class="primary-button" type="button">Run Audit</button>
+    <main class="workbench">
+      <aside class="source-rail panel reveal" style="--i: 1" aria-label="Sources and setup">
+        <section class="source-module">
+          <div class="module-head">
+            <h2>Run sources</h2>
+            <span id="queueCount" class="count-pill">0</span>
           </div>
-          <label for="apiKey" class="key-label">Bright Data token</label>
-          <input id="apiKey" type="password" placeholder="Optional for live mode">
+
+          <label class="field" for="eventUrl">
+            <span>Event URL</span>
+            <input id="eventUrl" type="url" value="https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits">
+          </label>
+
+          <label class="field" for="modeSelect">
+            <span>Collection mode</span>
+            <select id="modeSelect">
+              <option value="demo">Demo evidence</option>
+              <option value="live">Bright Data live</option>
+            </select>
+          </label>
+
+          <label class="field" for="apiKey">
+            <span>Bright Data token</span>
+            <input id="apiKey" type="password" placeholder="Server-side token for real runs">
+          </label>
+
+          <div class="action-row">
+            <button id="runAudit" class="primary-button wide" type="button">Run review</button>
+          </div>
+
           <label for="htmlUpload" class="file-drop">
             <span>Load saved lablab HTML</span>
             <input id="htmlUpload" type="file" accept=".html,.htm,text/html">
           </label>
-          <div id="statusLine" class="status-line">Demo evidence ready</div>
+
+          <div id="statusLine" class="status-line" role="status">Demo evidence ready</div>
         </section>
 
-        <section class="filter-section" aria-label="Filters">
+        <section class="source-module project-intake" aria-label="Review a GitHub project">
+          <div class="module-head compact">
+            <h2>Review a GitHub project</h2>
+          </div>
+          <label class="field" for="reviewerRepoUrl">
+            <span>GitHub repository</span>
+            <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
+          </label>
+          <label class="field" for="reviewerDemoUrl">
+            <span>Deployed app</span>
+            <input id="reviewerDemoUrl" type="url" placeholder="https://project.example">
+          </label>
+          <div class="split-fields">
+            <label class="field" for="reviewerTitle">
+              <span>Project</span>
+              <input id="reviewerTitle" type="text" placeholder="Optional">
+            </label>
+            <label class="field" for="reviewerTeam">
+              <span>Team</span>
+              <input id="reviewerTeam" type="text" placeholder="Optional">
+            </label>
+          </div>
+          <button id="addReviewerProject" class="secondary-button wide" type="button">Add project</button>
+          <p id="reviewerHint" class="hint">Add your actual repo here. ProofRank will mark what still needs live collection.</p>
+        </section>
+
+        <section class="source-module readiness-module" aria-label="Real data requirements">
+          <h2>Actual-use checklist</h2>
+          <ul id="readinessList" class="readiness-list"></ul>
+        </section>
+      </aside>
+
+      <section class="review-stage reveal" style="--i: 2" aria-label="Ranked review workbench">
+        <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">High risk</button>
-          <button class="filter-chip" data-filter="bright-strong" type="button">Bright Data strong</button>
+          <button class="filter-chip" data-filter="bright-strong" type="button">Bright strong</button>
           <button class="filter-chip" data-filter="missing-demo" type="button">Missing demo</button>
           <button class="filter-chip" data-filter="missing-github" type="button">Missing GitHub</button>
           <button class="filter-chip" data-filter="finalist-ready" type="button">Finalist-ready</button>
         </section>
 
-        <section>
-          <div class="section-head">
-            <h2>Ranked Queue</h2>
-            <span id="queueCount" class="count-pill">0</span>
+        <section class="queue-section panel" aria-label="Ranked queue">
+          <div class="module-head">
+            <h2>Ranked queue</h2>
+            <span class="hint">Click a row to inspect its receipt.</span>
           </div>
           <div id="rankedList" class="ranked-list" role="list"></div>
         </section>
-      </aside>
 
-      <section class="panel score-panel" aria-label="Selected project scorecard">
-        <div id="scorecard"></div>
-        <div class="field-map">
-          <div class="section-head">
-            <h2>Field Map</h2>
-            <span id="fieldSummary" class="muted"></span>
+        <section id="scorecard" class="scorecard panel" aria-label="Selected project scorecard"></section>
+
+        <section class="field-map panel" aria-label="Field map">
+          <div class="module-head">
+            <h2>Field map</h2>
+            <span id="fieldSummary" class="hint"></span>
           </div>
           <div id="fieldMap"></div>
-        </div>
+        </section>
       </section>
 
-      <aside class="panel receipt-panel" aria-label="Proof receipt">
-        <div class="section-head">
-          <h2>Proof Receipt</h2>
-          <button id="exportSelected" class="icon-button small" type="button" title="Export selected receipt JSON" aria-label="Export selected receipt JSON">Save</button>
+      <aside class="evidence-rail panel reveal" style="--i: 3" aria-label="Proof receipt">
+        <div class="module-head receipt-head">
+          <h2>Proof receipt</h2>
+          <button id="exportSelected" class="text-button small" type="button">Save JSON</button>
         </div>
         <div id="receipt"></div>
       </aside>

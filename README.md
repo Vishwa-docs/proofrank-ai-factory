@@ -100,6 +100,7 @@ Design and implementation plan:
 
 - `docs/superpowers/specs/2026-08-07-proofrank-design.md`
 - `docs/superpowers/plans/2026-08-07-proofrank-implementation.md`
+- `research/bright-data-readiness.md`
 
 Account-gated work still requiring the team owner:
 

@@ -29,7 +29,7 @@ done
 npm run test
 
 if [[ -z "${PORT:-}" ]]; then
-  for candidate in 4173 4283 4383 4483 4583; do
+  for candidate in 4173 4283 4383 4483 4583 4683 4783 4883 4983 5083 5183; do
     if python3 - "$candidate" <<'PY'
 import socket
 import sys
