@@ -1,3 +1,5 @@
+import { createBrightDataMcpClient, createBrightDataMcpFetchText, createBrightDataMcpSearch } from "./brightDataMcpClient.js";
+
 const BRIGHTDATA_REQUEST_URL = "https://api.brightdata.com/request";
 const DEFAULT_UNLOCKER_ZONE = "mcp_unlocker";
 
@@ -66,20 +68,46 @@ export function createBrightDataFetchText(options = {}) {
 export function describeLiveFetchMode(env = runtimeEnv()) {
   const apiToken = env.BRIGHTDATA_API_TOKEN || env.BRIGHT_DATA_API_TOKEN || env.BRIGHTDATA_TOKEN;
   const fetchMode = String(env.PROOFRANK_FETCH_MODE || "").toLowerCase();
+  if (fetchMode === "mcp" || fetchMode === "bright-data-mcp" || env.BRIGHTDATA_MCP_URL) return "bright-data-mcp";
   return fetchMode !== "direct" && apiToken ? "bright-data-request-api" : "direct-fetch";
 }
 
 export function createLiveFetchTextFromEnv(env = runtimeEnv(), options = {}) {
+  return createLiveCollectorsFromEnv(env, options).fetchText;
+}
+
+export function createLiveCollectorsFromEnv(env = runtimeEnv(), options = {}) {
   const apiToken = env.BRIGHTDATA_API_TOKEN || env.BRIGHT_DATA_API_TOKEN || env.BRIGHTDATA_TOKEN;
   const zone = env.BRIGHTDATA_UNLOCKER_ZONE || env.BRIGHTDATA_ZONE || DEFAULT_UNLOCKER_ZONE;
+  const collectionMode = describeLiveFetchMode(env);
 
-  if (describeLiveFetchMode(env) === "bright-data-request-api") {
-    return createBrightDataFetchText({
+  if (collectionMode === "bright-data-mcp") {
+    const client = createBrightDataMcpClient({
       apiToken,
-      zone,
+      endpoint: env.BRIGHTDATA_MCP_URL,
+      env,
       fetchImpl: options.fetchImpl
     });
+    return {
+      collectionMode,
+      fetchText: createBrightDataMcpFetchText({ client }),
+      searchText: createBrightDataMcpSearch({ client })
+    };
   }
 
-  return createDirectFetchText({ fetchImpl: options.fetchImpl });
+  if (collectionMode === "bright-data-request-api") {
+    return {
+      collectionMode,
+      fetchText: createBrightDataFetchText({
+        apiToken,
+        zone,
+        fetchImpl: options.fetchImpl
+      })
+    };
+  }
+
+  return {
+    collectionMode,
+    fetchText: createDirectFetchText({ fetchImpl: options.fetchImpl })
+  };
 }

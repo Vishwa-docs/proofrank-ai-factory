@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { handleLiveReviewRequest } from "../app/src/liveReviewApi.js";
-import { createLiveFetchTextFromEnv, describeLiveFetchMode } from "../app/src/liveFetchers.js";
+import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 const DEFAULT_PORT = 8787;
@@ -22,9 +22,11 @@ function readBody(request) {
 }
 
 export function createLiveReviewServer(options = {}) {
+  const liveCollectors = createLiveCollectorsFromEnv(process.env);
   const collectorOptions = {
-    fetchText: createLiveFetchTextFromEnv(process.env),
-    collectionMode: describeLiveFetchMode(process.env),
+    fetchText: liveCollectors.fetchText,
+    searchText: liveCollectors.searchText,
+    collectionMode: liveCollectors.collectionMode,
     ...(options.collectorOptions || {})
   };
 

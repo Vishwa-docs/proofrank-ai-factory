@@ -13,7 +13,8 @@ Hackathon judges and sponsor teams need to know which projects are real, accessi
 Bright Data is the load-bearing evidence layer in the intended live workflow:
 
 - The fallback app implements server-side collection through Bright Data's Request API.
-- Remote MCP or CLI search is prepared to discover submission pages, demo links, GitHub repos, presentations, and public comparison targets.
+- The fallback app also implements Bright Data Remote MCP collection through `scrape_as_markdown` and prior-art search through `search_engine`, with a reusable MCP client and smoke test.
+- CLI and `discover` commands are prepared to find submission pages, demo links, GitHub repos, presentations, and public comparison targets.
 - Web Scraper API or Web Unlocker is the planned path for dynamic or protected pages.
 - SERP checks title, team, and problem-statement similarity.
 - Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
@@ -61,6 +62,14 @@ Check the hosted Bright Data MCP token:
 
 ```bash
 npm run brightdata:mcp-smoke
+```
+
+Use the Remote MCP collector for live proof runs once the token is valid:
+
+```bash
+PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
+PROOFRANK_FETCH_MODE=mcp npm run live:server
 ```
 
 Run one bounded reviewer collection through Bright Data once the token is valid:
@@ -132,6 +141,7 @@ Built and verified:
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
 - Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has an executed Bright Data trace
+- Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap and Bright Data prior-art queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`
@@ -156,6 +166,6 @@ Account-gated work still requiring the team owner:
 
 - Authorize the Native.builder X/Privy login flow
 - Apply the `AIFACTORY26` Builder Plan promo code
-- Add a valid Bright Data API key server-side after claiming `aiaccess50`
+- Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401
 - Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
 - Publish the native.builder app URL and paste it into the lablab.ai submission

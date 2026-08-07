@@ -241,7 +241,7 @@ function buildReplayTraces({ repoUrl, demoUrl, submissionUrl, title }, collected
 }
 
 function providerForCollectionMode(collectionMode) {
-  return collectionMode === "bright-data-request-api" ? "bright-data" : "direct";
+  return String(collectionMode || "").startsWith("bright-data") ? "bright-data" : "direct";
 }
 
 function byteCount(value = "") {
@@ -308,6 +308,7 @@ export function parseGitHubRepoUrl(value = "") {
 export async function collectReviewerProject(input, options = {}) {
   const { owner, repo, canonicalUrl, readmeApiUrl } = parseGitHubRepoUrl(input.repoUrl);
   const fetchText = options.fetchText || defaultFetchText;
+  const searchText = options.searchText;
   const now = options.now || (() => new Date());
   const collectedAt = now().toISOString();
   const collectionMode = options.collectionMode || "direct-fetch";
@@ -325,6 +326,9 @@ export async function collectReviewerProject(input, options = {}) {
   let packageText = "";
   let licenseText = "";
   let commitsText = "";
+  let priorArtText = "";
+  let priorArtSearchAttempted = false;
+  let priorArtSearchSucceeded = false;
 
   async function fetchEvidence(url, requestOptions = {}, meta = {}) {
     try {
@@ -453,6 +457,35 @@ export async function collectReviewerProject(input, options = {}) {
     }
   }
 
+  const priorArtQuery = `"${title}" "${team}" hackathon Bright Data proof originality`;
+  if (searchText) {
+    priorArtSearchAttempted = true;
+    try {
+      priorArtText = await searchText(priorArtQuery);
+      priorArtSearchSucceeded = true;
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: "search_engine",
+          queryOrUrl: priorArtQuery,
+          collectedAt,
+          text: priorArtText
+        })
+      );
+    } catch (error) {
+      priorArtText = `Prior-art search unavailable: ${error.message}`;
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: "search_engine",
+          queryOrUrl: priorArtQuery,
+          collectedAt,
+          error
+        })
+      );
+    }
+  }
+
   const repoMetadataReachable = !repoMetadata.error;
   const treeReachable = treePaths.length > 0;
   const packageReachable = Boolean(packagePath && !packageText.startsWith("Package manifest unavailable:"));
@@ -461,9 +494,10 @@ export async function collectReviewerProject(input, options = {}) {
   const hackathonCommits = commitsDuringWindow(commitsText, options.hackathonWindow || HACKATHON_WINDOW);
   const riskyPaths = treePaths.filter(riskyFilePath);
   const secretRiskVisible = riskyPaths.length > 0 || textHasSecretRisk(`${readmeText}\n${packageText}`);
-  const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${treePaths.join(" ")}`;
+  const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${priorArtText} ${treePaths.join(" ")}`;
   const haystack = `${title} ${team} ${workflowText}`.toLowerCase();
-  const brightDataTools = [...new Set(extractBrightDataTools(haystack))];
+  const executedSearchTrace = collectionTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed");
+  const brightDataTools = [...new Set([...extractBrightDataTools(haystack), ...(executedSearchTrace ? ["SERP API"] : [])])];
   const brightDataRole = inferBrightRole(haystack, brightDataTools);
   const brightDataTraceStatus = summarizeTraceStatus(collectionTraces);
   const executedBrightDataTrace = brightDataTraceStatus === "executed";
@@ -472,7 +506,7 @@ export async function collectReviewerProject(input, options = {}) {
   const readmeReachable = !readmeText.startsWith("README unavailable:");
   const id = `review-${owner}-${repo}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const plannedTraces =
-    collectionMode === "bright-data-request-api"
+    providerForCollectionMode(collectionMode) === "bright-data"
       ? []
       : buildReplayTraces(
           {
@@ -560,6 +594,24 @@ export async function collectReviewerProject(input, options = {}) {
               confidence: demoReachable ? 0.78 : 0.24,
               supports: ["Demo availability", "Workflow proof"],
               limitations: demoReachable ? "Fetch confirms public content, not complete interactive success." : "Judges may not be able to access the demo."
+            }
+          ]
+        : []),
+      ...(priorArtSearchAttempted
+        ? [
+            {
+              id: `${id}-prior-art`,
+              sourceType: "prior-art-search",
+              sourceUrl: `https://www.google.com/search?q=${encodeURIComponent(priorArtQuery)}`,
+              title: priorArtSearchSucceeded ? "Prior-art search collected" : "Prior-art search unavailable",
+              excerpt: excerpt(priorArtText, "Prior-art search did not return usable text."),
+              collectedAt,
+              collector: providerForCollectionMode(collectionMode) === "bright-data" ? "ProofRank Bright Data search reviewer" : "ProofRank search reviewer",
+              confidence: priorArtSearchSucceeded ? 0.7 : 0.24,
+              supports: ["Originality", "Competitive field", "Public corroboration"],
+              limitations: priorArtSearchSucceeded
+                ? "Search evidence is a ranking signal, not a legal originality judgment."
+                : "Prior-art search failed or was unavailable for this run."
             }
           ]
         : []),

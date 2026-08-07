@@ -47,7 +47,7 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Added a local Node API at `/api/review-project`.
    - Added `/api/review-event` for event-level submission discovery.
    - Added direct-fetch fallback plus Bright Data REST request adapter.
-   - Added hosted Remote MCP smoke check.
+   - Added Bright Data Remote MCP client, hosted MCP smoke check, SSE/JSON response parsing, `tools/list`, `tools/call`, `scrape_as_markdown`, project-level `search_engine`, and `PROOFRANK_FETCH_MODE=mcp`.
    - Remaining blocker: replace the failing Bright Data credential with a valid API key.
    - Tokens are loaded from `.env.local` or native.builder server secrets, never client JavaScript.
 
@@ -108,7 +108,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 1. Real GitHub reviewer lane
    - User gives a repo URL and demo URL.
    - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, proof receipt traces, repository metadata, recursive tree, package manifest, event-window commits, license signal, and lightweight public secret-risk scan.
-   - Next: copied README/code similarity, releases, public issues, and richer prior-art search once Bright Data auth is fixed.
+   - Next: copied README/code similarity, releases, public issues, and richer `discover`-based prior-art search once Bright Data auth is fixed.
 
 2. Bright Data trace replay
    - Implemented trace provenance in receipts.
@@ -117,7 +117,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 
 3. Originality radar
    - Implemented deterministic field-overlap radar.
-   - Implemented Bright Data `search_engine` and `discover` prior-art queries.
+   - Implemented Bright Data `search_engine` trace execution in MCP mode and prepared `discover` prior-art queries.
    - Separates "common idea" from "direct copy risk" without making unsupported accusations.
 
 4. Demo proof runner
@@ -133,6 +133,7 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 6. No-demo-data mode
    - Partially implemented through live event review and live GitHub project review.
    - Remaining blocker: valid Bright Data credential and native.builder server-side deployment.
+   - The code path now exists for `mode: bright-data-mcp`; the final proof still needs one successful live run.
 
 7. Submission composer
    - Create final lablab fields, tool list, demo script, and "how native.builder was used" explanation from the actual proof run.

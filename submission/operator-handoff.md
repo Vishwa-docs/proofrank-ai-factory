@@ -18,6 +18,7 @@ Date: 2026-08-07
    - Current local token returns HTTP 401 on hosted Remote MCP.
    - Get a new API token from Bright Data account settings or welcome email.
    - Put it in `.env.local` as `BRIGHTDATA_API_TOKEN=...`.
+   - Keep or set `PROOFRANK_FETCH_MODE=mcp`.
    - Run `npm run brightdata:mcp-smoke`.
    - Success condition: `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`.
 
@@ -56,6 +57,8 @@ After the Bright Data token is fixed:
 
 ```bash
 npm run brightdata:mcp-smoke
+PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
+PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
 ```

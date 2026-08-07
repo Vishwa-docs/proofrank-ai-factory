@@ -1,11 +1,12 @@
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
-import { createLiveFetchTextFromEnv, describeLiveFetchMode } from "../app/src/liveFetchers.js";
+import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 loadLocalEnv();
 
 const repoUrl = process.argv[2] || "https://github.com/Vishwa-docs/proofrank-ai-factory";
 const demoUrl = process.argv[3] || "https://vishwa-docs.github.io/proofrank-ai-factory/";
+const liveCollectors = createLiveCollectorsFromEnv(process.env);
 
 const project = await collectReviewerProject(
   {
@@ -14,13 +15,14 @@ const project = await collectReviewerProject(
     eventUrl: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits"
   },
   {
-    fetchText: createLiveFetchTextFromEnv(process.env),
-    collectionMode: describeLiveFetchMode(process.env),
+    fetchText: liveCollectors.fetchText,
+    searchText: liveCollectors.searchText,
+    collectionMode: liveCollectors.collectionMode,
     now: () => new Date()
   }
 );
 
-const collectionMode = describeLiveFetchMode(process.env);
+const collectionMode = liveCollectors.collectionMode;
 const successfulTraces = project.brightDataTraces.filter(
   (trace) => trace.traceStatus === "executed" && Number(trace.resultCount || 0) > 0
 );
@@ -33,6 +35,9 @@ if (!project.evidence.hasPublicDemo) failures.push("public demo was not collecte
 if (!successfulTraces.length) failures.push("no successful collection traces were recorded");
 if (collectionMode !== "direct-fetch" && !executedBrightDataTraces.length) {
   failures.push("Bright Data mode did not record an executed Bright Data trace");
+}
+if (collectionMode === "bright-data-mcp" && !executedBrightDataTraces.some((trace) => trace.tool === "search_engine")) {
+  failures.push("Bright Data MCP mode did not record an executed search_engine trace");
 }
 
 console.log(

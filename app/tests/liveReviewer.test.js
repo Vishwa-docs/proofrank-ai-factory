@@ -182,6 +182,27 @@ assert.equal(brightCollected.evidence.brightDataTrace, true);
 assert.equal(brightCollected.evidence.brightDataTraceStatus, "executed");
 assert.ok(brightCollected.brightDataTraces.some((trace) => trace.mode === "bright-data-request-api" && trace.traceStatus === "executed"));
 
+const mcpCollected = await collectReviewerProject(
+  {
+    repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
+    demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/"
+  },
+  {
+    fetchText: fakeFetchText,
+    searchText: async (query) => `Search result for ${query}: ProofRank is distinct from generic judging dashboards and uses source-backed evidence.`,
+    collectionMode: "bright-data-mcp",
+    now: () => new Date("2026-08-07T12:00:00.000Z")
+  }
+);
+
+assert.equal(mcpCollected.evidence.brightDataTrace, true);
+assert.equal(mcpCollected.evidence.brightDataTraceStatus, "executed");
+assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.mode === "bright-data-mcp" && trace.provider === "bright-data"));
+assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed"));
+assert.ok(mcpCollected.brightDataTraces.every((trace) => trace.traceStatus === "executed"));
+assert.ok(mcpCollected.evidence.brightDataTools.includes("SERP API"));
+assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-search"));
+
 const brightFailed = await collectReviewerProject(
   {
     repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"

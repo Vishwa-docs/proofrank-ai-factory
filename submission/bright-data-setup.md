@@ -13,6 +13,7 @@
 3. Copy a real account API key from the welcome email or account settings.
 4. Store the token server-side in native.builder, never in client JavaScript.
 5. Run `npm run brightdata:mcp-smoke` before the final demo.
+6. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
 
 ## Current Credential Status
 
@@ -41,6 +42,12 @@ Optional pro or expanded tools for later:
 groups=browser,ecommerce,social
 ```
 
+ProofRank now includes a server-side Remote MCP client. It initializes the MCP
+session, lists tools for the smoke check, calls `scrape_as_markdown` for
+project/demo/event evidence, and calls `search_engine` for prior-art search in
+project reviews. The same client redacts token values from HTTP or JSON-RPC
+error messages.
+
 ## CLI Commands For Evidence Collection
 
 ```bash
@@ -55,6 +62,8 @@ npx --yes --package @brightdata/cli brightdata discover "PROJECT_TITLE" --intent
 ```text
 BRIGHTDATA_API_TOKEN=your_token_here
 BRIGHTDATA_UNLOCKER_ZONE=mcp_unlocker
+PROOFRANK_FETCH_MODE=mcp
+# Optional; omit to derive this from BRIGHTDATA_API_TOKEN.
 BRIGHTDATA_MCP_URL=https://mcp.brightdata.com/mcp?token=your_token_here
 PROOFRANK_MODE=live
 ```
@@ -63,6 +72,8 @@ PROOFRANK_MODE=live
 
 ```bash
 npm run brightdata:mcp-smoke
+PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
+PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -75,13 +86,13 @@ When the live server is running, use this endpoint in the ProofRank UI:
 http://127.0.0.1:8787/api/review-project
 ```
 
-Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The lablab event page may block direct fetches with HTTP 403, so event-level collection should use Bright Data/Web Unlocker. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed.
+Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The lablab event page may block direct fetches with HTTP 403, so event-level collection should use Bright Data/Web Unlocker. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed. In MCP mode, `live:smoke` also requires an executed `search_engine` trace.
 
 ## Proof Receipt Trace Shape
 
 ```json
 {
-  "mode": "bright-data-request-api",
+  "mode": "bright-data-mcp",
   "provider": "bright-data",
   "traceStatus": "executed",
   "tool": "scrape_as_markdown",

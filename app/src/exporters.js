@@ -99,7 +99,7 @@ ProofRank audits public AI product pages, demos, repositories, presentations, an
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API and prepares Remote MCP, SERP API, Web Scraper API, Web Unlocker, and CLI workflows for native.builder live mode. Sponsor-fit credit requires an executed Bright Data provider trace in the receipt.
+Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP scrape_as_markdown and search_engine, with Web Scraper API, Web Unlocker, discover, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data provider trace in the receipt.
 
 ## Native.builder Usage
 
