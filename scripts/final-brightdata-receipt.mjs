@@ -23,6 +23,9 @@ const demoUrl =
   process.argv[3] || process.env.PROOFRANK_REVIEW_DEMO_URL || "https://proofrank-ai-factory.vercel.app/";
 const nativeBuilderUrl =
   process.env.PROOFRANK_NATIVE_BUILDER_URL || process.env.NATIVE_BUILDER_APP_URL || "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/";
+const pitchDeckUrl =
+  process.env.PROOFRANK_PITCH_DECK_URL ||
+  "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx";
 const allowDirect = process.argv.includes("--allow-direct");
 const outputPath = resolveFinalReceiptOutputPath(root, process.env, allowDirect);
 
@@ -61,10 +64,14 @@ const collected = await collectReviewerProject(
 
 const project = scoreProject({
   ...collected,
+  presentationUrl: collected.presentationUrl || pitchDeckUrl,
   nativeBuilderUrl,
   evidence: {
     ...collected.evidence,
-    nativeBuilderPublished: Boolean(nativeBuilderUrl)
+    hasPresentation: Boolean(pitchDeckUrl) || collected.evidence?.hasPresentation,
+    nativeBuilderExplained: Boolean(nativeBuilderUrl) || collected.evidence?.nativeBuilderExplained,
+    nativeBuilderPublished: Boolean(nativeBuilderUrl),
+    lablabSubmissionPending: true
   }
 });
 const gate = buildFinalReceiptGate(project, { signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET });

@@ -184,19 +184,42 @@ function setStatus(message, tone = "ready") {
 }
 
 function updateRunProfile() {
-  elements.runModeLabel.textContent = state.mode === "live" ? "Bright Data live" : "Signed proof";
+  elements.runModeLabel.textContent = state.mode === "live" ? "Secure live" : "Signed proof";
+}
+
+function hasPendingFinalSubmission(project = {}) {
+  return project.evidence?.lablabSubmissionPending === true || project.evidence?.lablabSubmissionComplete === false;
+}
+
+function displayVerdictLabel(project = {}) {
+  if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) return "Submission-ready";
+  return project.verdict?.label || "Needs review";
+}
+
+function displayAction(project = {}, fallback = "") {
+  if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
+    return "Submit packet from lablab team account";
+  }
+  return fallback || project.verdict?.action || "Review evidence";
+}
+
+function displayPrimaryBlocker(project = {}, fallback = "") {
+  if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
+    return "Final lablab submission remains.";
+  }
+  return fallback || "No major audit risk visible in current evidence.";
 }
 
 function updateLiveProofStrip(project) {
   const traceState = brightDataTraceState(project);
   const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const receipt = project.runReceipt || {};
-  const proofScope = state.mode === "live" && project.id.startsWith("review-") ? "Live proof receipt" : "Selected sample proof";
+  const proofScope = state.mode === "live" && project.id.startsWith("review-") ? "Live proof receipt" : "Signed Bright Data receipt";
   const className =
     sponsorBundle || traceState === "executed" ? "is-executed" : traceState === "direct" || traceState === "planned" ? "is-pending" : "is-missing";
   const title =
     sponsorBundle
-      ? "Sponsor bundle executed"
+      ? "Bright Data proof passed"
       : traceState === "executed"
         ? "Partial Bright Data run"
       : traceState === "direct"
@@ -224,7 +247,8 @@ function updateLiveProofStrip(project) {
 }
 
 function statusClass(project) {
-  if (project.verdict.label === "Finalist-ready") return "good";
+  const label = displayVerdictLabel(project);
+  if (label === "Finalist-ready" || label === "Submission-ready") return "good";
   if (project.verdict.label === "High risk") return "risk";
   return "review";
 }
@@ -250,21 +274,26 @@ function setActiveSection(sectionName, options = {}) {
 function renderHeroDecision(project) {
   const readiness = buildReadiness(project, readinessContext());
   const traceState = hasBrightDataSponsorProofBundle(project) ? "executed" : brightDataTraceState(project);
-  const primaryBlocker = project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the judge packet.";
+  const primaryBlocker = displayPrimaryBlocker(project, project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the judge packet.");
   const nativeUrl = project.nativeBuilderUrl || (String(project.demoUrl || "").includes("nativelyai.app") ? project.demoUrl : "");
+  const verdictLabel = displayVerdictLabel(project);
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright proof" : "Overall";
+  const scoreValue = hasPendingFinalSubmission(project) ? project.scores.brightDataPrize : project.scores.overall;
 
-  elements.selectionSummaryMini.textContent = `${displayText(project.title)} / ${project.scores.overall}`;
+  elements.selectionSummaryMini.textContent = hasPendingFinalSubmission(project)
+    ? `${displayText(project.title)} / proof passed`
+    : `${displayText(project.title)} / ${project.scores.overall}`;
   elements.selectionSummaryMini.dataset.mobileLabel = displayText(project.title);
   elements.heroDecision.innerHTML = `
     <div class="decision-head">
-      <span class="verdict-pill ${statusClass(project)}">${escapeHtml(project.verdict.label)}</span>
-      <span class="decision-score"><span>Overall</span><strong>${project.scores.overall}</strong></span>
+      <span class="verdict-pill ${statusClass(project)}">${escapeHtml(verdictLabel)}</span>
+      <span class="decision-score"><span>${escapeHtml(scoreLabel)}</span><strong>${scoreValue}</strong></span>
     </div>
     <h2>${escapeHtml(project.title)}</h2>
     <p>${escapeHtml(compactSentence(project.summary))}</p>
     <div class="decision-metrics" aria-label="Selected project proof metrics">
       <div>
-        <span>Bright prize</span>
+        <span>Bright proof</span>
         <strong>${project.scores.brightDataPrize}</strong>
       </div>
       <div>
@@ -272,8 +301,8 @@ function renderHeroDecision(project) {
         <strong>${escapeHtml(traceState)}</strong>
       </div>
       <div>
-        <span>Native app</span>
-        <strong>${nativeUrl ? "published" : "missing"}</strong>
+        <span>Submission</span>
+        <strong>${hasPendingFinalSubmission(project) ? "pending" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
     <div class="decision-blocker">
@@ -584,21 +613,28 @@ function renderScorecard(project) {
       : ""
   ].join("");
   const traceState = brightDataTraceState(project);
-  const primaryRisk = project.verdict.risks[0] || "No major audit risk visible in current evidence.";
+  const primaryRisk = displayPrimaryBlocker(project, project.verdict.risks[0] || "No major audit risk visible in current evidence.");
   const sourceCount = [project.submissionUrl, project.demoUrl, project.githubUrl, project.presentationUrl].filter((url) => url && isHttpUrl(url)).length;
+  const verdictLabel = displayVerdictLabel(project);
+  const actionLabel = displayAction(project, project.verdict.action);
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright proof" : "Proof score";
+  const scoreValue = hasPendingFinalSubmission(project) ? project.scores.brightDataPrize : project.scores.overall;
+  const scoreDetail = hasPendingFinalSubmission(project)
+    ? `Overall self-audit ${project.scores.overall}`
+    : `Bright ${project.scores.brightDataPrize}`;
 
   elements.scorecard.innerHTML = `
     <section class="focus-strip">
       <div class="focus-copy">
-        <span class="verdict-pill ${statusClass(project)}">${escapeHtml(project.verdict.label)}</span>
+        <span class="verdict-pill ${statusClass(project)}">${escapeHtml(verdictLabel)}</span>
         <h2>${escapeHtml(project.title)}</h2>
         <p>${escapeHtml(compactSentence(project.summary))}</p>
         <div class="tag-row">${tags}</div>
       </div>
-      <div class="score-block" aria-label="Proof score ${project.scores.overall}">
-        <span>Proof score</span>
-        <strong>${project.scores.overall}</strong>
-        <small>Bright ${project.scores.brightDataPrize}</small>
+      <div class="score-block" aria-label="${escapeAttr(scoreLabel)} ${scoreValue}">
+        <span>${escapeHtml(scoreLabel)}</span>
+        <strong>${scoreValue}</strong>
+        <small>${escapeHtml(scoreDetail)}</small>
       </div>
     </section>
 
@@ -609,7 +645,7 @@ function renderScorecard(project) {
     <section class="review-notes">
       <div>
         <h3>Next action</h3>
-        <p>${escapeHtml(project.verdict.action)}</p>
+        <p>${escapeHtml(actionLabel)}</p>
       </div>
       <div>
         <h3>Proof depth</h3>
@@ -639,7 +675,7 @@ function renderScorecard(project) {
     </details>
 
     <details class="analysis-drawer">
-      <summary><span>Adversarial tribunal</span><strong>${escapeHtml(project.verdict.label)}</strong></summary>
+      <summary><span>Adversarial tribunal</span><strong>${escapeHtml(verdictLabel)}</strong></summary>
       ${renderTribunal(project)}
     </details>
 
@@ -727,7 +763,7 @@ function renderReceipt(project) {
       <summary>Live collection plan</summary>
       <div class="receipt-item live-plan">
         <h3>Planned collector calls</h3>
-        <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Signed proof mirrors these collection steps."}</p>
+        <p>${state.mode === "live" ? "Secure backend required; tokens never belong in the browser." : "Signed proof mirrors these collection steps."}</p>
         <ul>${livePlan}</ul>
       </div>
     </details>
@@ -1057,7 +1093,7 @@ async function addReviewerProject() {
   elements.reviewerHint.textContent =
     state.mode === "live"
       ? "Project collected with the live backend. Inspect the receipt and replay traces."
-      : "Target added. Switch to live mode when ready to issue a Bright Data receipt.";
+      : "Target added. Switch to secure live mode when ready to issue a Bright Data receipt.";
   setStatus(`${project.title} added to the review queue.`, "ready");
   render();
   setActiveSection("overview", { scroll: true });
@@ -1066,10 +1102,10 @@ async function addReviewerProject() {
 function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = "Collect live proof";
-    elements.reviewerHint.textContent = "Repo and demo will be collected server-side with recorded traces.";
+    elements.reviewerHint.textContent = "Repo and demo are collected server-side; API tokens stay off the page.";
   } else {
     elements.addReviewerProject.textContent = "Add target";
-    elements.reviewerHint.textContent = "Switch to live mode to issue a Bright Data receipt.";
+    elements.reviewerHint.textContent = "Switch to secure live mode to issue a Bright Data receipt.";
   }
 }
 
@@ -1108,7 +1144,10 @@ elements.navJumps.forEach((button) => {
 
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
-  setStatus(state.mode === "live" ? "Bright Data live selected. Start the backend before collecting." : "Signed Bright proof ready", state.mode === "live" ? "warn" : "ready");
+  setStatus(
+    state.mode === "live" ? "Secure live mode selected. Add a backend URL and review token before collecting." : "Signed Bright receipt ready.",
+    state.mode === "live" ? "warn" : "ready"
+  );
   updateRunProfile();
   updateReviewerModeCopy();
   render();

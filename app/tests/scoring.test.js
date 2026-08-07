@@ -24,7 +24,8 @@ const proofrankScores = calculateScores(proofrank);
 assert.equal(proofrankScores.brightDataFit, 100);
 assert.equal(proofrankScores.brightDataPrize, 100);
 assert.equal(proofrankScores.businessValue, 100);
-assert.equal(proofrankScores.overall, 100);
+assert.equal(proofrankScores.originality, 82);
+assert.equal(proofrankScores.overall, 97);
 
 const countersignScores = calculateScores(countersign);
 assert.equal(countersignScores.brightDataFit, 12);

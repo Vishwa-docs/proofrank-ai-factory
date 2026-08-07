@@ -22,11 +22,11 @@ native.builder generated and refined the ProofRank application structure, dashbo
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as the executed source/search/discovery proof bundle. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 
 ## External Tools
 
-native.builder, Bright Data Remote MCP, Bright Data SERP API, Bright Data Web Scraper API, Bright Data Web Unlocker, Bright Data CLI, GitHub, Vercel fallback app and API, GitHub Pages backup.
+native.builder, Bright Data Remote MCP, Bright Data `scrape_as_markdown`, Bright Data `search_engine`, Bright Data `discover`, GitHub, Vercel fallback app and API, GitHub Pages backup. Prepared expansion paths: Bright Data Web Scraper API, Web Unlocker, and CLI collectors.
 
 ## Required Links
 

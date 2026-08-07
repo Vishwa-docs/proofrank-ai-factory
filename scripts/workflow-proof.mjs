@@ -153,7 +153,7 @@ try {
     proof.selectedProject === "ProofRank" &&
     proof.rankedRows >= 8 &&
     proof.reviewerRowPresent === true &&
-    /Sponsor bundle executed|executed/i.test(proof.brightProof) &&
+    /Bright Data proof passed|executed/i.test(proof.brightProof) &&
     proof.exportedFiles.length === 2 &&
     messages.length === 0;
 
