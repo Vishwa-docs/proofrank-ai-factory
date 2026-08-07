@@ -290,6 +290,7 @@ function buildReplayCommand(collectionMode, repoUrl, demoUrl) {
 
 function buildRunReceipt({ collectionMode, collectedAt, traces, repoUrl, demoUrl }) {
   const executedTraces = traces.filter((trace) => trace.traceStatus === "executed");
+  const sponsorTools = traces.filter((trace) => trace.countsForSponsorFit !== false);
   const traceDigest = contentHash(
     traces
       .map((trace) => `${trace.provider}|${trace.tool}|${trace.traceStatus}|${trace.queryOrUrl}|${trace.byteCount}|${trace.contentHash}`)
@@ -304,7 +305,8 @@ function buildRunReceipt({ collectionMode, collectedAt, traces, repoUrl, demoUrl
     provider: providerForCollectionMode(collectionMode),
     traceCount: traces.length,
     executedTraceCount: executedTraces.length,
-    tools: [...new Set(traces.map((trace) => trace.tool))],
+    tools: [...new Set(sponsorTools.map((trace) => trace.tool))],
+    supportingTools: [...new Set(traces.filter((trace) => trace.countsForSponsorFit === false).map((trace) => trace.tool))],
     traceDigest,
     replayCommand: buildReplayCommand(collectionMode, repoUrl, demoUrl)
   };
@@ -324,6 +326,7 @@ function signRunReceipt(receipt, signingSecret = "") {
     traceCount: receipt.traceCount,
     executedTraceCount: receipt.executedTraceCount,
     tools: receipt.tools,
+    supportingTools: receipt.supportingTools,
     traceDigest: receipt.traceDigest,
     replayCommand: receipt.replayCommand
   });
@@ -419,7 +422,8 @@ export async function collectReviewerProject(input, options = {}) {
           tool: meta.tool || "scrape_as_markdown",
           queryOrUrl: url,
           collectedAt,
-          text
+          text,
+          countsForSponsorFit: meta.countsForSponsorFit
         })
       );
       return text;
@@ -430,7 +434,8 @@ export async function collectReviewerProject(input, options = {}) {
           tool: meta.tool || "scrape_as_markdown",
           queryOrUrl: url,
           collectedAt,
-          error
+          error,
+          countsForSponsorFit: meta.countsForSponsorFit
         })
       );
       throw error;
@@ -446,7 +451,7 @@ export async function collectReviewerProject(input, options = {}) {
             Accept: "application/vnd.github+json"
           }
         },
-        { tool: "github_api" }
+        { tool: "github_api", countsForSponsorFit: false }
       ),
       {}
     );
@@ -486,7 +491,7 @@ export async function collectReviewerProject(input, options = {}) {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api" }
+      { tool: "github_api", countsForSponsorFit: false }
     );
   } catch (error) {
     treeText = JSON.stringify({
@@ -523,7 +528,7 @@ export async function collectReviewerProject(input, options = {}) {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api" }
+      { tool: "github_api", countsForSponsorFit: false }
     );
   } catch (error) {
     commitsText = JSON.stringify({
@@ -539,7 +544,7 @@ export async function collectReviewerProject(input, options = {}) {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api" }
+      { tool: "github_api", countsForSponsorFit: false }
     );
   } catch (error) {
     releasesText = JSON.stringify({
@@ -555,7 +560,7 @@ export async function collectReviewerProject(input, options = {}) {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api" }
+      { tool: "github_api", countsForSponsorFit: false }
     );
   } catch (error) {
     issuesText = JSON.stringify({
@@ -646,8 +651,20 @@ export async function collectReviewerProject(input, options = {}) {
   const secretRiskVisible = riskyPaths.length > 0 || textHasSecretRisk(`${readmeText}\n${packageText}`);
   const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${priorArtText} ${priorArtDiscoverText} ${treePaths.join(" ")}`;
   const haystack = `${title} ${team} ${workflowText}`.toLowerCase();
+  const executedSourceTrace = collectionTraces.some(
+    (trace) => trace.tool !== "search_engine" && trace.tool !== "discover" && trace.traceStatus === "executed"
+  );
   const executedSearchTrace = collectionTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed");
-  const brightDataTools = [...new Set([...extractBrightDataTools(haystack), ...(executedSearchTrace ? ["SERP API"] : [])])];
+  const executedDiscoverTrace = collectionTraces.some((trace) => trace.tool === "discover" && trace.traceStatus === "executed");
+  const executedMcpTrace = collectionTraces.some((trace) => trace.mode === "bright-data-mcp" && trace.traceStatus === "executed");
+  const brightDataTools = [
+    ...new Set([
+      ...extractBrightDataTools(haystack),
+      ...(executedMcpTrace || executedSourceTrace ? ["Remote MCP"] : []),
+      ...(executedSearchTrace ? ["SERP API"] : []),
+      ...(executedDiscoverTrace ? ["Discover"] : [])
+    ])
+  ];
   const brightDataRole = inferBrightRole(haystack, brightDataTools);
   const brightDataTraceStatus = summarizeTraceStatus(collectionTraces);
   const executedBrightDataTrace = brightDataTraceStatus === "executed";
@@ -718,13 +735,17 @@ export async function collectReviewerProject(input, options = {}) {
       buyerExists: hasAny(workflowText, [/\bjudge\b/i, /\bsponsor\b/i, /\baccelerator\b/i, /\bgrant\b/i, /\bbusiness\b/i]),
       urgency: hasAny(workflowText, [/\bdeadline\b/i, /\brisk\b/i, /\bbefore\b/i, /\btime pressure\b/i]),
       differentiation: hasAny(workflowText, [/\boriginality\b/i, /\bprior[-\s]art\b/i, /\bdifferentiat/i, /\bevidence\b/i]),
-      lowCrowdOverlap: hasAny(workflowText, [/\boriginality\b/i, /\bprior[-\s]art\b/i, /\bsponsor-side\b/i]),
+      lowCrowdOverlap: false,
       proofReceipt: hasAny(workflowText, [/\bproof receipt\b/i, /\bsource-backed\b/i, /\bcitation\b/i, /\btrace\b/i]),
       specificWedge: hasAny(workflowText, [/\bhackathon judge\b/i, /\bsponsor\b/i, /\bsubmission\b/i, /\brepository\b/i]),
-      nonGenericAgent: hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bcollector\b/i, /\bauditor\b/i]),
+      nonGenericAgent:
+        hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bcollector\b/i, /\bauditor\b/i, /\bdiligence\b/i]) ||
+        (executedSearchTrace && executedDiscoverTrace && hasAny(workflowText, [/\bproof receipt\b/i, /\bsource-backed\b/i, /\baudit\b/i])),
       brightDataRole,
       brightDataTools,
-      agenticLoop: hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bloop\b/i, /\breplay\b/i, /\bcollector\b/i]),
+      agenticLoop:
+        hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bloop\b/i, /\breplay\b/i, /\bcollector\b/i]) ||
+        (executedSourceTrace && executedSearchTrace && executedDiscoverTrace),
       brightDataTrace: executedBrightDataTrace,
       brightDataTraceStatus,
       brightDataTraceVisible: collectionTraces.length > 0 || plannedTraces.length > 0

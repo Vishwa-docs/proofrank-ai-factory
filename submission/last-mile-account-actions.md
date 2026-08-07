@@ -26,7 +26,7 @@ Current Native.builder state:
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
 - Final UI correction is published in Native.builder and browser-render verified on desktop and 320px mobile.
-- Current native.builder first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
+- Current native.builder first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t194356580z-26e38064`.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the saved render check used a cache-busting URL and passed.
 - Use the Native.builder URL above as the primary submission URL.
 

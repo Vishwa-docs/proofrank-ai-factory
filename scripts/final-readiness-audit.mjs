@@ -198,6 +198,22 @@ function reviewUrl(value = "") {
   }
 }
 
+function assetBundleFromHtml(text = "") {
+  const match =
+    String(text).match(/<script[^>]+src=["']([^"']*\/assets\/[^"']+\.js)["']/i) ||
+    String(text).match(/<link[^>]+href=["']([^"']*\/assets\/[^"']+\.js)["']/i);
+  return match?.[1] || "";
+}
+
+async function expectedReceiptRunId() {
+  try {
+    const receipt = JSON.parse(await readFile(path.join(root, "submission", "final-brightdata-receipt.json"), "utf8"));
+    return receipt.runReceipt?.runId || receipt.project?.runReceipt?.runId || "";
+  } catch {
+    return "";
+  }
+}
+
 async function liveApi() {
   const configured = envValue("PROOFRANK_LIVE_API_URL", "PROOFRANK_API_URL");
   const url = healthUrl(configured);
@@ -277,27 +293,32 @@ async function nativeBuilder() {
   checkedUrl.searchParams.set("verify", String(Date.now()));
   const reachable = await fetchText(checkedUrl.toString());
   const text = reachable.text || "";
+  const expectedRunId = await expectedReceiptRunId();
   const requiredCopy = [
     "ProofRank",
     "Submission-ready",
     "Bright Data proof passed",
     "Bright proof",
     "Overall self-audit",
-    "pr-20260807t183213304z-3f290db0"
-  ];
+    expectedRunId
+  ].filter(Boolean);
   const staleCopy = ["pr-20260807t145909828z-553fb028", "Sponsor bundle executed", "Finalist-ready", "Strong Pass"];
   const missingCopy = requiredCopy.filter((item) => !text.includes(item));
   const staleCopyFound = staleCopy.filter((item) => text.includes(item));
+  const liveBundle = assetBundleFromHtml(text);
   let renderCheck = { ok: false };
   try {
     const parsed = JSON.parse(await readFile(path.join(root, "submission", "native-builder-render-check.json"), "utf8"));
     const sameUrl = String(parsed.url || "").replace(/\/$/, "") === String(url || "").replace(/\/$/, "");
+    const sameBundle = Boolean(liveBundle && parsed.publishedBundle) && liveBundle === parsed.publishedBundle;
     renderCheck = {
-      ok: parsed.ok === true && sameUrl,
+      ok: parsed.ok === true && sameUrl && sameBundle,
       path: "submission/native-builder-render-check.json",
       checkedAt: parsed.checkedAt,
       verifiedUrl: parsed.verifiedUrl,
-      publishedBundle: parsed.publishedBundle
+      publishedBundle: parsed.publishedBundle,
+      liveBundle,
+      sameBundle
     };
   } catch (error) {
     renderCheck = {
@@ -316,6 +337,7 @@ async function nativeBuilder() {
     url,
     verifiedUrl: checkedUrl.toString(),
     status: reachable.status,
+    liveBundle,
     missingCopy,
     staleCopyFound,
     renderCheck

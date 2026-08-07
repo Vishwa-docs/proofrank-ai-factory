@@ -256,6 +256,9 @@ assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.mode === "bright-d
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed"));
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "discover" && trace.traceStatus === "executed"));
 assert.ok(mcpCollected.brightDataTraces.every((trace) => trace.traceStatus === "executed"));
+assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "github_api" && trace.countsForSponsorFit === false));
+assert.ok(!mcpCollected.runReceipt.tools.includes("github_api"));
+assert.ok(mcpCollected.runReceipt.supportingTools.includes("github_api"));
 assert.ok(mcpCollected.evidence.brightDataTools.includes("SERP API"));
 assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-search"));
 assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-discover"));

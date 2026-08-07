@@ -15,7 +15,8 @@ function bool(value) {
 
 function nativeBuilderProof(nativeBuilder = {}) {
   if (nativeBuilder.ok && nativeBuilder.renderCheck?.ok) {
-    return `${nativeBuilder.url} / browser render verified in ${nativeBuilder.renderCheck.path}.`;
+    const bundle = nativeBuilder.renderCheck.publishedBundle ? ` / bundle ${nativeBuilder.renderCheck.publishedBundle}` : "";
+    return `${nativeBuilder.url} / browser render verified in ${nativeBuilder.renderCheck.path}${bundle}.`;
   }
   if (nativeBuilder.ok && nativeBuilder.verifiedUrl) return `${nativeBuilder.url} / corrected public copy verified.`;
   if (nativeBuilder.missingCopy?.length || nativeBuilder.staleCopyFound?.length) {

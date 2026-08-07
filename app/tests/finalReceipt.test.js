@@ -36,6 +36,7 @@ function signRunReceipt(runReceipt) {
     traceCount: runReceipt.traceCount,
     executedTraceCount: runReceipt.executedTraceCount,
     tools: runReceipt.tools,
+    supportingTools: runReceipt.supportingTools,
     traceDigest: runReceipt.traceDigest,
     replayCommand: runReceipt.replayCommand
   });
@@ -55,7 +56,8 @@ function buildRunReceipt(traces, overrides = {}) {
     provider: "bright-data",
     traceCount: traces.length,
     executedTraceCount: executedTraces.length,
-    tools: [...new Set(traces.map((trace) => trace.tool))],
+    tools: [...new Set(traces.filter((trace) => trace.countsForSponsorFit !== false).map((trace) => trace.tool))],
+    supportingTools: [...new Set(traces.filter((trace) => trace.countsForSponsorFit === false).map((trace) => trace.tool))],
     traceDigest: traceDigest(traces),
     replayCommand: "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/",
     ...overrides
@@ -63,6 +65,16 @@ function buildRunReceipt(traces, overrides = {}) {
 }
 
 const validTraces = [
+  {
+    provider: "bright-data",
+    traceStatus: "executed",
+    tool: "github_api",
+    queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory",
+    resultCount: 1,
+    byteCount: 2048,
+    contentHash: "feedbeef",
+    countsForSponsorFit: false
+  },
   {
     provider: "bright-data",
     traceStatus: "executed",
@@ -128,21 +140,22 @@ assert.throws(() => assertFinalBrightDataReceipt(directOnly, { signingSecret }),
 
 const missingSearch = {
   ...validProject,
-  brightDataTraces: [validProject.brightDataTraces[0]]
+  brightDataTraces: [validProject.brightDataTraces[1]]
 };
+missingSearch.runReceipt = buildRunReceipt(missingSearch.brightDataTraces);
 assert.ok(buildFinalReceiptGate(missingSearch, { signingSecret }).failures.includes("no executed Bright Data search_engine trace"));
 
 const missingDiscover = {
   ...validProject,
-  brightDataTraces: [validProject.brightDataTraces[0], validProject.brightDataTraces[1]]
+  brightDataTraces: [validProject.brightDataTraces[1], validProject.brightDataTraces[2]]
 };
 missingDiscover.runReceipt = buildRunReceipt(missingDiscover.brightDataTraces);
 assert.ok(buildFinalReceiptGate(missingDiscover, { signingSecret }).failures.includes("no executed Bright Data discover trace"));
 
 const searchOnly = {
   ...validProject,
-  brightDataTraces: [validProject.brightDataTraces[1]],
-  runReceipt: buildRunReceipt([validProject.brightDataTraces[1]])
+  brightDataTraces: [validProject.brightDataTraces[2]],
+  runReceipt: buildRunReceipt([validProject.brightDataTraces[2]])
 };
 assert.ok(buildFinalReceiptGate(searchOnly, { signingSecret }).failures.includes("no executed Bright Data source scrape trace"));
 
@@ -150,11 +163,11 @@ const emptySourceTrace = {
   ...validProject,
   brightDataTraces: [
     {
-      ...validProject.brightDataTraces[0],
+      ...validProject.brightDataTraces[1],
       resultCount: 0,
       byteCount: 0
     },
-    validProject.brightDataTraces[1]
+    validProject.brightDataTraces[2]
   ]
 };
 emptySourceTrace.runReceipt = buildRunReceipt(emptySourceTrace.brightDataTraces);

@@ -173,8 +173,15 @@ export function buildOriginalityRadar(project, fieldProjects = []) {
 
   const topOverlap = comparisons[0]?.overlap || 0;
   const differentiators = buildDifferentiators(project);
-  const score = clampScore(100 - topOverlap * 0.75 + Math.min(differentiators.length, 3) * 3);
-  const riskLabel = topOverlap >= 78 ? "High overlap risk" : topOverlap >= 52 ? "Watch overlap" : "Defensible wedge";
+  const rawScore = clampScore(100 - topOverlap * 0.75 + Math.min(differentiators.length, 3) * 3);
+  const score = comparisons.length ? rawScore : Math.min(rawScore, 82);
+  const riskLabel = comparisons.length
+    ? topOverlap >= 78
+      ? "High overlap risk"
+      : topOverlap >= 52
+        ? "Watch overlap"
+        : "Defensible wedge"
+    : "Needs broader prior-art field";
 
   return {
     riskLabel,

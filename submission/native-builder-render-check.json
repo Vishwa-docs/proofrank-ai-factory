@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-08-07T19:10:50.310Z",
+  "checkedAt": "2026-08-07T19:53:23.358Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786129850310",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786132403358",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-DaO7J7pk.js",
+  "publishedBundle": "/assets/index-CWnECzP1.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -42,7 +42,7 @@
     "Bright Data proof passed",
     "Bright proof",
     "Overall self-audit",
-    "pr-20260807t183213304z-3f290db0"
+    "pr-20260807t194356580z-26e38064"
   ],
   "wantedInViewport": [
     "ProofRank",

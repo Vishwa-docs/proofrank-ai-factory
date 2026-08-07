@@ -27,4 +27,9 @@ assert.ok(cloneRadar.score < 55);
 assert.equal(cloneRadar.similarProjects[0].id, "proofrank");
 assert.ok(cloneRadar.similarProjects[0].overlap >= 80);
 
+const singleProjectRadar = buildOriginalityRadar(proofrank, [proofrank]);
+assert.equal(singleProjectRadar.riskLabel, "Needs broader prior-art field");
+assert.equal(singleProjectRadar.score, 82);
+assert.equal(singleProjectRadar.similarProjects.length, 0);
+
 console.log("originality tests passed");

@@ -1,0 +1,203 @@
+{
+  "generatedAt": "2026-08-07T19:48:41.681Z",
+  "purpose": "Secondary non-ProofRank review target showing the product can audit an actual public GitHub/demo project, not only its own submission.",
+  "collectionMode": "bright-data-mcp",
+  "repoUrl": "https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon",
+  "demoUrl": "https://huggingface.co/spaces/TheJackBright/polypharmacy-env",
+  "project": {
+    "id": "review-vishwa-docs-meta-pytorch-scalar-openenv-hackathon",
+    "title": "Meta PyTorch Scalar OpenEnv Hackathon",
+    "verdict": {
+      "label": "High risk",
+      "action": "Manual review required",
+      "risks": [
+        "Add native.builder usage explanation",
+        "Differentiate more sharply from adjacent entries"
+      ]
+    },
+    "scores": {
+      "eligibility": 52,
+      "brightDataFit": 67,
+      "brightDataPrize": 61,
+      "presentation": 55,
+      "businessValue": 20,
+      "originality": 16,
+      "overall": 44
+    },
+    "traceState": "executed",
+    "runReceipt": {
+      "runId": "pr-20260807t194710574z-0ff585fb",
+      "provider": "bright-data",
+      "collectionMode": "bright-data-mcp",
+      "traceCount": 9,
+      "executedTraceCount": 9,
+      "tools": [
+        "scrape_as_markdown",
+        "search_engine",
+        "discover"
+      ],
+      "supportingTools": [
+        "github_api"
+      ],
+      "signed": true,
+      "traceDigest": "0ff585fb"
+    },
+    "evidenceItemCount": 10,
+    "brightDataTraces": [
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "github_api",
+        "resultCount": 1,
+        "byteCount": 7613,
+        "contentHash": "efd0a260",
+        "countsForSponsorFit": false
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "scrape_as_markdown",
+        "resultCount": 1,
+        "byteCount": 25404,
+        "contentHash": "de41569d",
+        "countsForSponsorFit": true
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "github_api",
+        "resultCount": 1,
+        "byteCount": 767,
+        "contentHash": "bccc23a2",
+        "countsForSponsorFit": false
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "github_api",
+        "resultCount": 1,
+        "byteCount": 653,
+        "contentHash": "85c354a0",
+        "countsForSponsorFit": false
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "github_api",
+        "resultCount": 1,
+        "byteCount": 653,
+        "contentHash": "da15dcc8",
+        "countsForSponsorFit": false
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "github_api",
+        "resultCount": 1,
+        "byteCount": 653,
+        "contentHash": "7c50e014",
+        "countsForSponsorFit": false
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "scrape_as_markdown",
+        "resultCount": 1,
+        "byteCount": 1204,
+        "contentHash": "4e837708",
+        "countsForSponsorFit": true
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "search_engine",
+        "resultCount": 1,
+        "byteCount": 3461,
+        "contentHash": "1d06ef97",
+        "countsForSponsorFit": true
+      },
+      {
+        "provider": "bright-data",
+        "traceStatus": "executed",
+        "tool": "discover",
+        "resultCount": 1,
+        "byteCount": 2387,
+        "contentHash": "06d3da41",
+        "countsForSponsorFit": true
+      }
+    ],
+    "readinessSummary": [
+      "Publish the native.builder app and paste its public URL into the submission.",
+      "Export the selected receipt and Markdown packet after the live run.",
+      "Submit from the authenticated team-owner lablab.ai account."
+    ],
+    "originalityRadar": {
+      "riskLabel": "Defensible wedge",
+      "score": 100,
+      "topOverlap": 2,
+      "similarProjects": [
+        {
+          "id": "proofrank",
+          "title": "ProofRank",
+          "team": "SilverSpoon",
+          "overlap": 2,
+          "reasons": [
+            "shared terms: hackathon, remote, serp"
+          ],
+          "risk": "low"
+        },
+        {
+          "id": "half-life",
+          "title": "Half-Life - Decisions That Stopped Being True",
+          "team": "Kaizu",
+          "overlap": 1,
+          "reasons": [
+            "shared terms: serp, live"
+          ],
+          "risk": "low"
+        },
+        {
+          "id": "voice-to-ops",
+          "title": "Voice-to-Ops: field reports that write themselves",
+          "team": "Los elegantes",
+          "overlap": 1,
+          "reasons": [
+            "shared terms: follow"
+          ],
+          "risk": "low"
+        },
+        {
+          "id": "askable",
+          "title": "Askable",
+          "team": "NEURENTIA",
+          "overlap": 0,
+          "reasons": [
+            "low lexical overlap"
+          ],
+          "risk": "low"
+        }
+      ],
+      "differentiators": [
+        "Shows executed Bright Data trace provenance inside the receipt."
+      ],
+      "brightDataQueries": [
+        {
+          "tool": "search_engine",
+          "purpose": "Exact project and team prior-art search",
+          "query": "\"Meta PyTorch Scalar OpenEnv Hackathon\" \"Vishwa Docs\" hackathon"
+        },
+        {
+          "tool": "search_engine",
+          "purpose": "Sponsor-claim overlap search",
+          "query": "\"Meta PyTorch Scalar OpenEnv Hackathon\" \"Bright Data\" OR \"proof receipt\" OR \"source-backed\""
+        },
+        {
+          "tool": "discover",
+          "purpose": "Find adjacent products and copied-claim risk",
+          "query": "Meta PyTorch Scalar OpenEnv Hackathon compared with ProofRank",
+          "intent": "Find public projects with overlapping title, workflow, buyer, sponsor usage, or proof claims."
+        }
+      ]
+    }
+  }
+}

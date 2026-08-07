@@ -55,6 +55,7 @@ required_files=(
   "submission/final-brightdata-receipt.json"
   "submission/native-builder-render-check.json"
   "submission/workflow-proof.json"
+  "submission/external-review-proof.json"
   "submission/proofrank-demo.mp4"
   "submission/proofrank-pitch-deck.pptx"
   "submission/demo-assets/native-builder-desktop.png"
@@ -93,6 +94,11 @@ if (receipt.finalBrightDataGate?.ok !== true) {
 const workflow = parseJson("submission/workflow-proof.json");
 if (workflow.ok !== true || !Array.isArray(workflow.exportedFiles) || workflow.exportedFiles.length < 2) {
   throw new Error("workflow-proof.json must show a successful exported workflow");
+}
+
+const externalReview = parseJson("submission/external-review-proof.json");
+if (externalReview.collectionMode !== "bright-data-mcp" || externalReview.project?.traceState !== "executed") {
+  throw new Error("external-review-proof.json must show an executed Bright Data MCP review of the secondary target");
 }
 
 const nativeRender = parseJson("submission/native-builder-render-check.json");

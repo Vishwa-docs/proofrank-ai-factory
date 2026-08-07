@@ -95,8 +95,16 @@ const complete = buildFinalReadinessReport({
     ok: true,
     url: "https://proofrank.nativelyai.app",
     verifiedUrl: "https://proofrank.nativelyai.app/?verify=1",
+    liveBundle: "/assets/index-verified.js",
     missingCopy: [],
-    staleCopyFound: []
+    staleCopyFound: [],
+    renderCheck: {
+      ok: true,
+      path: "submission/native-builder-render-check.json",
+      publishedBundle: "/assets/index-verified.js",
+      liveBundle: "/assets/index-verified.js",
+      sameBundle: true
+    }
   },
   brightAuth: {
     ok: true,
@@ -151,8 +159,16 @@ const unsignedReceipt = buildFinalReadinessReport({
     ok: true,
     url: "https://proofrank.nativelyai.app",
     verifiedUrl: "https://proofrank.nativelyai.app/?verify=1",
+    liveBundle: "/assets/index-verified.js",
     missingCopy: [],
-    staleCopyFound: []
+    staleCopyFound: [],
+    renderCheck: {
+      ok: true,
+      path: "submission/native-builder-render-check.json",
+      publishedBundle: "/assets/index-verified.js",
+      liveBundle: "/assets/index-verified.js",
+      sameBundle: true
+    }
   },
   brightAuth: {
     ok: true,

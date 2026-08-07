@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-07T19:11:16.423Z",
-  "durationMs": 7909,
+  "generatedAt": "2026-08-07T19:49:06.466Z",
+  "durationMs": 8209,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank",
   "rankedRows": 9,
   "reviewerRowPresent": true,
   "statusLine": "ProofRank selected.",
-  "brightProof": "Signed Bright Data receipt Bright Data proof passed pr-20260807t183213304z-3f290db0 / signed",
+  "brightProof": "Signed Bright Data receipt Bright Data proof passed pr-20260807t194356580z-26e38064 / signed",
   "scorecardText": "Submission-ready ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed proof receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Bright proof 100 Overall self-audit 97 DemoGitHub Next action Submit packet from lablab team account Proof depth 2 public links, 4 receipt items, Bright Data executed. Current blocker Final lablab submission remains. Score breakdown97 overall Eligibility 100 Demo, repo, build proof Bright fit 100 Live web is load-bearing Bright prize 100 Sponsor bund",
-  "receiptText": "Run receipt pr-20260807t183213304z-3f290db0 bright-data-mcp / signed / 3f290db0 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Signed Bright Data sponsor receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. signed-r",
+  "receiptText": "Run receipt pr-20260807t194356580z-26e38064 bright-data-mcp / signed / 26e38064 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Signed Bright Data sponsor receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. signed-r",
   "readinessItems": [
     {
       "status": "Passed",

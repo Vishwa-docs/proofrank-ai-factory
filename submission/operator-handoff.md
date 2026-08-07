@@ -16,7 +16,7 @@ Date: 2026-08-07
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder status: published, browser-render-verified, and eligible as the primary native.builder URL. The verified public first viewport now shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`. Existing Safari tabs may need a hard refresh or cache-busting query to clear the pre-publish bundle.
+- Native.builder status: published, browser-render-verified, and eligible as the primary native.builder URL. The verified public first viewport now shows `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t194356580z-26e38064`. Existing Safari tabs may need a hard refresh or cache-busting query to clear the pre-publish bundle.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
@@ -48,7 +48,7 @@ Date: 2026-08-07
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
    - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, published the app, and republished the corrected final copy.
    - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-   - Current public native.builder probe: browser-render verified on desktop and 320px mobile. It shows `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t183213304z-3f290db0`.
+   - Current public native.builder probe: browser-render verified on desktop and 320px mobile. It shows `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright proof 100`, `Overall self-audit 97`, and receipt ID `pr-20260807t194356580z-26e38064`.
    - Cache note: a Safari tab that loaded before republish may still show the older bundle until hard refreshed; the render check uses a cache-busting URL and records the current published bundle.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted later.
@@ -57,6 +57,7 @@ Date: 2026-08-07
 3. Actual project to review
    - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://proofrank-ai-factory.vercel.app/`.
    - Secondary target if you want an older public project: `https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon` plus `https://huggingface.co/spaces/TheJackBright/polypharmacy-env`.
+   - Secondary external-review proof is prepared at `submission/external-review-proof.json`; use it only as a negative-control example that ProofRank can audit a non-ProofRank project.
    - See `research/candidate-review-targets.md` for the scored shortlist.
    - Provide a different real GitHub repo URL if you want another project reviewed.
    - Provide the matching deployed demo/app URL.

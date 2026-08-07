@@ -26,7 +26,9 @@ function traceDigest(traces = []) {
 }
 
 function executedBrightDataTraces(project = {}) {
-  return (project.brightDataTraces || []).filter((trace) => trace.provider === "bright-data" && trace.traceStatus === "executed");
+  return (project.brightDataTraces || []).filter(
+    (trace) => trace.provider === "bright-data" && trace.traceStatus === "executed" && trace.countsForSponsorFit !== false
+  );
 }
 
 function isUsefulTrace(trace = {}) {
@@ -46,6 +48,7 @@ function signaturePayload(runReceipt = {}) {
     traceCount: runReceipt.traceCount,
     executedTraceCount: runReceipt.executedTraceCount,
     tools: runReceipt.tools,
+    supportingTools: runReceipt.supportingTools,
     traceDigest: runReceipt.traceDigest,
     replayCommand: runReceipt.replayCommand
   });

@@ -86,7 +86,11 @@ const receiptProject =
         verdict: {
           ...project.verdict,
           label: "Submission-ready",
-          action: "Submit packet from lablab team account"
+          action: "Submit packet from lablab team account",
+          risks: [
+            "Final lablab.ai submission is still pending from the team-owner account.",
+            "Fresh public replay requires a private review token and server-side Bright Data secret; the public package includes a signed receipt."
+          ]
         }
       }
     : project;

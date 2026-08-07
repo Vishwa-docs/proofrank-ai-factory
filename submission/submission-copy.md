@@ -41,3 +41,5 @@ Demo video URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/do
 Final Bright Data receipt URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json`
 
 Workflow proof URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json`
+
+Secondary external review proof URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/external-review-proof.json`

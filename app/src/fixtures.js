@@ -94,7 +94,7 @@ export const fixtureProjects = [
         title: "Signed Bright Data sponsor receipt",
         excerpt:
           "Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification.",
-        collectedAt: "2026-08-07T18:32:13.304Z",
+        collectedAt: "2026-08-07T19:43:56.580Z",
         collector: "ProofRank live reviewer",
         confidence: 0.95,
         supports: ["Bright Data usage", "Application of technology"],
@@ -108,7 +108,7 @@ export const fixtureProjects = [
         title: "Bright Data prior-art discovery",
         excerpt:
           "Bright Data search_engine and discover calls collected public originality signals for the project and adjacent field.",
-        collectedAt: "2026-08-07T14:59:09.828Z",
+        collectedAt: "2026-08-07T19:43:56.580Z",
         collector: "ProofRank Bright Data discover reviewer",
         confidence: 0.72,
         supports: ["Originality", "Competitive field"],
@@ -117,17 +117,18 @@ export const fixtureProjects = [
     ],
     runReceipt: {
       issuer: "ProofRank live reviewer",
-      issuedAt: "2026-08-07T18:32:13.304Z",
-      runId: "pr-20260807t183213304z-3f290db0",
+      issuedAt: "2026-08-07T19:43:56.580Z",
+      runId: "pr-20260807t194356580z-26e38064",
       collectionMode: "bright-data-mcp",
       provider: "bright-data",
       traceCount: 9,
       executedTraceCount: 9,
-      tools: ["github_api", "scrape_as_markdown", "search_engine", "discover"],
-      traceDigest: "3f290db0",
+      tools: ["scrape_as_markdown", "search_engine", "discover"],
+      supportingTools: ["github_api"],
+      traceDigest: "26e38064",
       replayCommand:
         "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://proofrank-ai-factory.vercel.app/",
-      signature: "hmac-sha256:a16badf193332ace925fb6f18281bb5d28f265d16f51b0602e4e2b436a15d655"
+      signature: "hmac-sha256:dff646bf37532a0d4305ca107a337677c75e908db5092cd993c6e8eb5ccdbd6c"
     },
     brightDataTraces: [
       {
@@ -138,10 +139,10 @@ export const fixtureProjects = [
         queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
+        collectedAt: "2026-08-07T19:43:56.580Z",
         byteCount: 6900,
-        contentHash: "df6c2edd",
-        countsForSponsorFit: true
+        contentHash: "f1d47080",
+        countsForSponsorFit: false
       },
       {
         mode: "bright-data-mcp",
@@ -151,9 +152,9 @@ export const fixtureProjects = [
         queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/readme",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
+        collectedAt: "2026-08-07T19:43:56.580Z",
         byteCount: 15303,
-        contentHash: "7cc076ff",
+        contentHash: "e017bbc3",
         countsForSponsorFit: true
       },
       {
@@ -164,10 +165,10 @@ export const fixtureProjects = [
         queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/git/trees/main?recursive=1",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 32635,
-        contentHash: "6670b264",
-        countsForSponsorFit: true
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 33176,
+        contentHash: "b35f58bf",
+        countsForSponsorFit: false
       },
       {
         mode: "bright-data-mcp",
@@ -178,10 +179,10 @@ export const fixtureProjects = [
           "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/commits?since=2026-08-03T15%3A00%3A00.000Z&until=2026-08-10T15%3A00%3A00.000Z&per_page=25",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 91819,
-        contentHash: "dfee0d75",
-        countsForSponsorFit: true
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 91824,
+        contentHash: "1addb8f2",
+        countsForSponsorFit: false
       },
       {
         mode: "bright-data-mcp",
@@ -191,10 +192,10 @@ export const fixtureProjects = [
         queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/releases?per_page=5",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 21248,
-        contentHash: "ad69f7cf",
-        countsForSponsorFit: true
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 22889,
+        contentHash: "86a7c26e",
+        countsForSponsorFit: false
       },
       {
         mode: "bright-data-mcp",
@@ -204,10 +205,10 @@ export const fixtureProjects = [
         queryOrUrl: "https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/issues?state=open&per_page=5",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
+        collectedAt: "2026-08-07T19:43:56.580Z",
         byteCount: 653,
-        contentHash: "b6b26014",
-        countsForSponsorFit: true
+        contentHash: "ee6706d8",
+        countsForSponsorFit: false
       },
       {
         mode: "bright-data-mcp",
@@ -217,9 +218,9 @@ export const fixtureProjects = [
         queryOrUrl: "https://proofrank-ai-factory.vercel.app/",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 1659,
-        contentHash: "4a776d1c",
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 1671,
+        contentHash: "fe0f705f",
         countsForSponsorFit: true
       },
       {
@@ -230,9 +231,9 @@ export const fixtureProjects = [
         queryOrUrl: "\"ProofRank AI Factory\" \"Vishwa Docs\" hackathon Bright Data proof originality",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 3445,
-        contentHash: "9aa5cfff",
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 679,
+        contentHash: "acd95d6d",
         countsForSponsorFit: true
       },
       {
@@ -243,9 +244,9 @@ export const fixtureProjects = [
         queryOrUrl: "\"ProofRank AI Factory\" \"Vishwa Docs\" hackathon Bright Data proof originality",
         resultCount: 1,
         status: "ok",
-        collectedAt: "2026-08-07T18:32:13.304Z",
-        byteCount: 2485,
-        contentHash: "584eff93",
+        collectedAt: "2026-08-07T19:43:56.580Z",
+        byteCount: 2106,
+        contentHash: "8a95194d",
         countsForSponsorFit: true
       }
     ]

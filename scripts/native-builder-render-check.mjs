@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,14 +20,24 @@ const checkedAt = new Date();
 const url = new URL(baseUrl);
 url.searchParams.set("verify", String(checkedAt.getTime()));
 
+async function expectedReceiptRunId() {
+  try {
+    const receipt = JSON.parse(await readFile(path.join(root, "submission", "final-brightdata-receipt.json"), "utf8"));
+    return receipt.runReceipt?.runId || receipt.project?.runReceipt?.runId || "";
+  } catch {
+    return "";
+  }
+}
+
+const expectedRunId = await expectedReceiptRunId();
 const wantedInPage = [
   "ProofRank",
   "Submission-ready",
   "Bright Data proof passed",
   "Bright proof",
   "Overall self-audit",
-  "pr-20260807t183213304z-3f290db0"
-];
+  expectedRunId
+].filter(Boolean);
 const wantedInViewport = ["ProofRank", "Run review", "Export packet", "Bright proof", "Submission-ready"];
 const forbiddenStrings = [
   "WIN",

@@ -32,7 +32,7 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 
 - Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
 - First viewport with event metadata, a large ProofRank headline, short value statement, mode selector, Review target button, Export packet button, Bright proof button, and one decision card.
-- Decision card shows Submission-ready, Bright proof 100, Overall self-audit 97, Bright Data proof passed, signed receipt ID `pr-20260807t183213304z-3f290db0`, proof package ready, final lablab submission pending, and Native app published.
+- Decision card shows Submission-ready, Bright proof 100, Overall self-audit 97, Bright Data proof passed, signed receipt ID `pr-20260807t194356580z-26e38064`, proof package ready, final lablab submission pending, and Native app published.
 - Tabs below the first viewport: Overview, Queue, Proof, Setup.
 - Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
 - Queue shows filters, ranked projects, and field map.
@@ -42,7 +42,7 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Use ProofRank as the selected signed sample, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Setup. Use ProofRank as the selected signed live Bright Data receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
 
 ## Claim Ledger
 

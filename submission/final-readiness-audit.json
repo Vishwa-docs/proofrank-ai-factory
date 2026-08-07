@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T19:12:50.199Z",
+  "generatedAt": "2026-08-07T19:53:44.680Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 10,
@@ -45,7 +45,7 @@
       "label": "Native.builder primary URL",
       "required": true,
       "status": "passed",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json.",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json / bundle /assets/index-CWnECzP1.js.",
       "action": "Publish the native.builder app and paste the public nativelyai.app URL."
     },
     {
@@ -85,7 +85,7 @@
       "label": "Signed executed Bright Data receipt",
       "required": true,
       "status": "passed",
-      "proof": "pr-20260807t183213304z-3f290db0 / bright-data / executed / source trace / search_engine / discover / signature verified",
+      "proof": "pr-20260807t194356580z-26e38064 / bright-data / executed / source trace / search_engine / discover / signature verified",
       "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
     },
     {
