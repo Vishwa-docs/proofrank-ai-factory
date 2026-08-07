@@ -13,6 +13,7 @@ Date: 2026-08-07
 - Public live API health check: https://proofrank-ai-factory.vercel.app/health
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
+- Last-mile account actions: `submission/last-mile-account-actions.md`
 - Bright Data setup: `submission/bright-data-setup.md`
 - Live API deployment: `submission/deploy-live-api.md`
 - Submission Cockpit in the app showing required gates, competitive gates, and the next account-owner actions.

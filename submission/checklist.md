@@ -3,9 +3,9 @@
 ## Must Do In Native.builder
 
 - Create native.builder account or open existing account.
-- Authorize the Native.builder X/Privy login flow if prompted. Automation reached this boundary at the X OAuth screen before project creation.
+- Authorize the Native.builder login flow if prompted. Automation reached this boundary at the "Log in or sign up" modal after pasting the full prompt and clicking Start building.
 - Apply Builder Plan promo code `AIFACTORY26`.
-- Paste `submission/native-builder-prompt.md`.
+- If the prompt text is not still present after login, paste `submission/native-builder-prompt.md`.
 - Let native.builder generate the app.
 - Iterate until the app matches the local reference.
 - Publish to a public `nativelyai.app` URL.
@@ -15,15 +15,11 @@
 
 - Create or open Bright Data account.
 - Apply promo code `aiaccess50` if prompted.
-- Copy Bright Data API token.
-- Add token to native.builder server-side environment variables.
-- Set live collection mode to `mcp` for the final sponsor-prize proof run.
-- Confirm `npm run brightdata:mcp-smoke` lists `search_engine`, `scrape_as_markdown`, and `discover`.
-- Run one live Bright Data-backed audit.
-- Run `PROOFRANK_RECEIPT_SIGNING_SECRET=... npm run final:receipt -- REPO_URL DEMO_URL`.
-- Confirm the proof receipt shows at least one executed Bright Data source trace, one executed Bright Data `search_engine` trace, and one executed Bright Data `discover` trace.
-- Confirm `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
-- Confirm the Submission Cockpit marks the Bright Data gate as passed.
+- Current local Bright Data proof is complete.
+- `npm run brightdata:mcp-smoke` has verified `search_engine`, `scrape_as_markdown`, and `discover`.
+- `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
+- The public release includes `final-brightdata-receipt.json`.
+- If you want Native.builder itself to run full Bright Data live mode, add the Bright Data token only as a server-side/secure environment variable. Do not paste it into client UI or prompt text.
 
 ## Optional But Strong
 
@@ -33,7 +29,7 @@
 - Use the generated 2:20 demo video at `submission/proofrank-demo.mp4`.
 - Attach `submission/workflow-proof.json` if judges ask for an interaction proof artifact.
 - Run `npm run final:audit` and keep `submission/final-readiness-audit.json` with the final packet.
-- Keep `submission/final-brightdata-receipt.json` with the final packet after the Bright Data token is fixed.
+- Keep `submission/final-brightdata-receipt.json` with the final packet.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
@@ -52,7 +48,9 @@ Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/d
 Workflow proof artifact: submission/workflow-proof.json
 Workflow proof URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
-Final Bright Data receipt: submission/final-brightdata-receipt.json after token validation
+Final Bright Data receipt: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Public live API health: https://proofrank-ai-factory.vercel.app/health
+Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 ```
 
 Operator handoff:
@@ -96,7 +94,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. The current fallback app implements server-side review through Bright Data's Request API plus Remote MCP `scrape_as_markdown`, `search_engine`, and `discover`, with planned Web Scraper API, Web Unlocker, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires the executed Bright Data source/search/discovery bundle, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:
@@ -112,4 +110,5 @@ Native.builder app URL: PASTE_AFTER_PUBLISH
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://vishwa-docs.github.io/proofrank-ai-factory/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
+Final Bright Data receipt URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 ```
