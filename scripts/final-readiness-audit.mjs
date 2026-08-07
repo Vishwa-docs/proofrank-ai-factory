@@ -27,14 +27,6 @@ function envValue(...keys) {
   return "";
 }
 
-function gitHead() {
-  try {
-    return execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-  } catch {
-    return "";
-  }
-}
-
 async function fetchText(url) {
   try {
     const response = await fetch(url, {
@@ -258,7 +250,7 @@ async function buildAuditState() {
 
   return {
     generatedAt: new Date().toISOString(),
-    gitHead: gitHead(),
+    gitHead: envValue("PROOFRANK_AUDIT_GIT_HEAD"),
     publicFallback: {
       ok: fallback.ok && /ProofRank/.test(fallback.text) && /Bright proof/.test(fallback.text),
       url: fallbackUrl,
