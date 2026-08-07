@@ -509,7 +509,7 @@ async function collectEventViaApi(eventUrl) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ eventUrl })
+    body: JSON.stringify({ eventUrl, reviewFirstProject: true })
   });
 
   const body = await response.json().catch(() => ({}));
@@ -543,10 +543,21 @@ async function runAudit() {
       } else {
         state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
         state.projects = rankProjects(sourceProjects());
-        state.selectedId = state.projects[0]?.id || "proofrank";
+        state.selectedId = result.reviewedProject?.id || state.projects[0]?.id || "proofrank";
+        if (result.reviewError) {
+          setStatus(
+            `${liveProjects.length} live submissions collected. Project-level follow-up failed: ${result.reviewError}`,
+            "warn"
+          );
+          elements.runAudit.disabled = false;
+          render();
+          return;
+        }
         setStatus(
-          `${liveProjects.length} live submissions collected. Event intake is not sponsor proof; review a GitHub project next for executed Bright Data traces.`,
-          "warn"
+          result.reviewedProject
+            ? `${liveProjects.length} live submissions collected and one project-level review completed. Check the selected receipt for sponsor-proof trace state.`
+            : `${liveProjects.length} live submissions collected. Event intake is not sponsor proof; review a GitHub project next for executed Bright Data traces.`,
+          result.reviewedProject ? "ready" : "warn"
         );
       }
     } catch (error) {

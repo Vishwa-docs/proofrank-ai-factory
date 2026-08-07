@@ -139,6 +139,7 @@ Do not expose private tokens in the browser. Store the Bright Data API token ser
 Use these live collection steps:
 
 - Server endpoint `/api/review-event` fetches the event page, parses submission cards, and marks that event-intake trace as `countsForSponsorFit: false`.
+- `/api/review-event` may request exactly one bounded `/api/review-project` follow-up when the top parsed project has a real GitHub URL. If that follow-up fails, return event results with a `reviewError` instead of discarding event intake.
 - Server endpoint `/api/review-project` fetches a selected GitHub repo, demo URL, package manifest, license, commit window, and secret-risk signals.
 - Remote MCP `search_engine` for public mentions, prior-art risk, and sponsor usage claims.
 - Remote MCP `scrape_as_markdown` for submission pages, demo pages, GitHub README pages, and presentations.

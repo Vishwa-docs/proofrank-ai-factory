@@ -20,7 +20,10 @@ const eventCollector = async (input) => ({
   projects: [
     {
       id: "project-y",
-      title: "Project Y"
+      title: "Project Y",
+      team: "Team Y",
+      githubUrl: "https://github.com/example/project-y",
+      demoUrl: "https://project-y.example"
     }
   ]
 });
@@ -87,6 +90,70 @@ const eventJson = JSON.parse(eventReview.body);
 assert.equal(eventJson.mode, "live-event");
 assert.equal(eventJson.projectCount, 1);
 assert.equal(eventJson.projects[0].title, "Project Y");
+assert.equal(eventJson.reviewedProject, undefined);
+
+const chainedEventReview = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({
+      eventUrl: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits",
+      reviewFirstProject: true
+    })
+  },
+  options
+);
+
+assert.equal(chainedEventReview.status, 200);
+const chainedJson = JSON.parse(chainedEventReview.body);
+assert.equal(chainedJson.reviewedProject.title, "Project Y");
+assert.equal(chainedJson.reviewedProject.githubUrl, "https://github.com/example/project-y");
+assert.equal(chainedJson.projects[0].id, "review-demo");
+assert.equal(chainedJson.projects[0].githubUrl, "https://github.com/example/project-y");
+
+const eventWithoutGithub = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({
+      eventUrl: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits",
+      reviewFirstProject: true
+    })
+  },
+  {
+    ...options,
+    eventCollector: async (input) => ({
+      ...(await eventCollector(input)),
+      projects: [{ id: "no-repo", title: "No Repo", githubUrl: "public-github-linked" }]
+    })
+  }
+);
+
+assert.equal(eventWithoutGithub.status, 200);
+assert.equal(JSON.parse(eventWithoutGithub.body).reviewedProject, undefined);
+
+const eventWithReviewFailure = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({
+      eventUrl: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits",
+      reviewFirstProject: true
+    })
+  },
+  {
+    ...options,
+    collector: async () => {
+      throw new Error("project review failed");
+    }
+  }
+);
+
+assert.equal(eventWithReviewFailure.status, 200);
+const failedChainJson = JSON.parse(eventWithReviewFailure.body);
+assert.equal(failedChainJson.reviewedProject, undefined);
+assert.match(failedChainJson.reviewError, /project review failed/);
+assert.equal(failedChainJson.projects[0].title, "Project Y");
 
 const missingEventUrl = await handleLiveReviewRequest(
   {

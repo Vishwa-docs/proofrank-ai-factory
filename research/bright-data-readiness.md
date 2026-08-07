@@ -54,6 +54,7 @@ These are the pieces I cannot ethically or technically complete without the acco
 2. Live project ingestion
    - Implemented event-page ingestion endpoint and command-line smoke script.
    - Implemented GitHub repo metadata, README, package files, license, commits, deployed demo fetch, and public secret-risk scan.
+   - Added a bounded event-to-project follow-up: `/api/review-event` can review one top project when a real GitHub URL is available, while preserving event results if the follow-up fails.
    - Remaining: releases, public issues, and richer prior-art search once Bright Data auth is fixed.
    - Direct event fetch against lablab can return HTTP 403, so Bright Data/Web Unlocker is required for the real event scrape.
 

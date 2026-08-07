@@ -30,6 +30,26 @@ function parseBody(body) {
   }
 }
 
+function isHttpUrl(value = "") {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function projectReviewPayload(project = {}) {
+  if (!isHttpUrl(project.githubUrl || "")) return null;
+  return {
+    repoUrl: project.githubUrl,
+    demoUrl: isHttpUrl(project.demoUrl || "") ? project.demoUrl : "",
+    title: project.title,
+    team: project.team,
+    eventUrl: project.eventUrl
+  };
+}
+
 export async function handleLiveReviewRequest(request, options = {}) {
   const method = (request.method || "GET").toUpperCase();
   const pathname = parsePathname(request);
@@ -53,6 +73,16 @@ export async function handleLiveReviewRequest(request, options = {}) {
 
     try {
       const result = await eventCollector(payload, options.collectorOptions || {});
+      const reviewPayload = payload.reviewFirstProject ? projectReviewPayload(result.projects?.[0]) : null;
+      if (reviewPayload) {
+        try {
+          const reviewedProject = await collector(reviewPayload, options.collectorOptions || {});
+          result.projects = [reviewedProject, ...result.projects.slice(1)];
+          result.reviewedProject = reviewedProject;
+        } catch (error) {
+          result.reviewError = error.message;
+        }
+      }
       return json(200, { mode: "live-event", ...result });
     } catch (error) {
       return json(422, { error: error.message });
