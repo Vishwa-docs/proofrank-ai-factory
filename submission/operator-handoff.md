@@ -35,8 +35,11 @@ Date: 2026-08-07
    - Use the native.builder URL as the primary lablab submission URL.
 
 3. Actual project to review
-   - Provide the real GitHub repo URL.
-   - Provide the deployed demo/app URL.
+   - Preferred target from the current repo scan: `https://github.com/Vishwa-docs/proofrank-ai-factory` plus `https://vishwa-docs.github.io/proofrank-ai-factory/`.
+   - Secondary target if you want an older public project: `https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon` plus `https://huggingface.co/spaces/TheJackBright/polypharmacy-env`.
+   - See `research/candidate-review-targets.md` for the scored shortlist.
+   - Provide a different real GitHub repo URL if you want another project reviewed.
+   - Provide the matching deployed demo/app URL.
    - Confirm the repo is public for judges, or provide temporary read-only access.
    - Run ProofRank live mode, add that repo/demo pair, and export the selected proof receipt.
    - Success condition: the Submission Cockpit shows the actual project, live backend, public app, source, demo video, and executed Bright Data gates as passed.
