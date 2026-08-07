@@ -3,6 +3,7 @@
 ## Must Do In Native.builder
 
 - Create native.builder account or open existing account.
+- Authorize the Native.builder X/Privy login flow if prompted. Automation reached this boundary at the X OAuth screen before project creation.
 - Apply Builder Plan promo code `AIFACTORY26`.
 - Paste `submission/native-builder-prompt.md`.
 - Let native.builder generate the app.
