@@ -6,6 +6,7 @@ cd "$ROOT_DIR"
 
 required_files=(
   "app/index.html"
+  "LICENSE"
   "app/styles.css"
   "app/src/main.js"
   "app/src/fixtures.js"

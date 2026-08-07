@@ -8,6 +8,7 @@
     "visual:check": "/Users/daver/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node scripts/visual-check.mjs",
     "live:server": "node scripts/live-review-server.mjs",
     "live:smoke": "node scripts/live-review-smoke.mjs",
+    "live:smoke:direct": "PROOFRANK_FETCH_MODE=direct node scripts/live-review-smoke.mjs",
     "brightdata:mcp-smoke": "node scripts/brightdata-mcp-smoke.mjs",
     "dev": "python3 -m http.server 4173 --directory app"
   }

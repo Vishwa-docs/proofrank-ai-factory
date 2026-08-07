@@ -23,6 +23,7 @@
 ## Optional But Strong
 
 - Create a public GitHub repo and enable the included GitHub Pages workflow as a fallback app URL.
+- Keep the included MIT `LICENSE` file in the public repo for submission compliance.
 - Upload or link the local reference app and submission docs.
 - Use the generated 1:58 demo video at `submission/proofrank-demo.mp4`.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.

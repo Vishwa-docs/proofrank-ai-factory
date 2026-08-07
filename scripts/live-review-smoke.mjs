@@ -1,5 +1,5 @@
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
-import { createLiveFetchTextFromEnv } from "../app/src/liveFetchers.js";
+import { createLiveFetchTextFromEnv, describeLiveFetchMode } from "../app/src/liveFetchers.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 loadLocalEnv();
@@ -23,7 +23,7 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      collectionMode: process.env.BRIGHTDATA_API_TOKEN ? "bright-data-request-api" : "direct-fetch",
+      collectionMode: describeLiveFetchMode(process.env),
       project: {
         id: project.id,
         title: project.title,

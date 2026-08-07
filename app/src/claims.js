@@ -56,6 +56,22 @@ export function buildClaimLedger(project) {
         "Receipt includes source-backed evidence plus a visible collection trace.",
         "Add timestamped source traces and confidence labels."
       )
+    },
+    {
+      claim: "Repository evidence is reproducible",
+      status:
+        evidence.secretRiskVisible
+          ? "Needs Proof"
+          : evidence.repoTreeCollected && evidence.packageManifestPresent && evidence.licensePresent && evidence.builtDuringEvent
+            ? "Verified"
+            : evidence.repoTreeCollected && evidence.packageManifestPresent
+              ? "Weak Evidence"
+              : "Needs Proof",
+      evidence: evidence.secretRiskVisible
+        ? "Public source evidence includes possible secret-bearing files or credential-looking values."
+        : evidence.repoTreeCollected && evidence.packageManifestPresent && evidence.licensePresent && evidence.builtDuringEvent
+          ? "Repository tree, package manifest, license, and hackathon-window commits are visible."
+          : "Collect repository tree, package manifest, license, and event-window commits before treating the build as reproducible."
     }
   ];
 }

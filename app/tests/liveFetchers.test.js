@@ -3,7 +3,8 @@ import {
   buildBrightDataRequest,
   createBrightDataFetchText,
   createDirectFetchText,
-  createLiveFetchTextFromEnv
+  createLiveFetchTextFromEnv,
+  describeLiveFetchMode
 } from "../src/liveFetchers.js";
 
 const request = buildBrightDataRequest("https://example.com/project", {
@@ -68,6 +69,25 @@ const envText = createLiveFetchTextFromEnv(
 );
 
 assert.equal(await envText("https://example.com"), "env-zone");
+
+const directEnvText = createLiveFetchTextFromEnv(
+  {
+    BRIGHTDATA_API_TOKEN: "test-token",
+    PROOFRANK_FETCH_MODE: "direct"
+  },
+  {
+    fetchImpl: async (url) => ({
+      ok: true,
+      status: 200,
+      text: async () => `direct ${url}`
+    })
+  }
+);
+
+assert.equal(await directEnvText("https://example.com/direct"), "direct https://example.com/direct");
+assert.equal(describeLiveFetchMode({ BRIGHTDATA_API_TOKEN: "test-token" }), "bright-data-request-api");
+assert.equal(describeLiveFetchMode({ BRIGHTDATA_API_TOKEN: "test-token", PROOFRANK_FETCH_MODE: "direct" }), "direct-fetch");
+assert.equal(describeLiveFetchMode({}), "direct-fetch");
 
 await assert.rejects(
   () => createBrightDataFetchText({ apiToken: "" })("https://example.com"),

@@ -68,6 +68,12 @@ Run one bounded reviewer collection:
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 ```
 
+Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed:
+
+```bash
+npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+```
+
 Start the local API used by the browser UI:
 
 ```bash

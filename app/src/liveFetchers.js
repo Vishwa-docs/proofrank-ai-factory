@@ -63,11 +63,17 @@ export function createBrightDataFetchText(options = {}) {
   };
 }
 
+export function describeLiveFetchMode(env = runtimeEnv()) {
+  const apiToken = env.BRIGHTDATA_API_TOKEN || env.BRIGHT_DATA_API_TOKEN || env.BRIGHTDATA_TOKEN;
+  const fetchMode = String(env.PROOFRANK_FETCH_MODE || "").toLowerCase();
+  return fetchMode !== "direct" && apiToken ? "bright-data-request-api" : "direct-fetch";
+}
+
 export function createLiveFetchTextFromEnv(env = runtimeEnv(), options = {}) {
   const apiToken = env.BRIGHTDATA_API_TOKEN || env.BRIGHT_DATA_API_TOKEN || env.BRIGHTDATA_TOKEN;
   const zone = env.BRIGHTDATA_UNLOCKER_ZONE || env.BRIGHTDATA_ZONE || DEFAULT_UNLOCKER_ZONE;
 
-  if (apiToken) {
+  if (describeLiveFetchMode(env) === "bright-data-request-api") {
     return createBrightDataFetchText({
       apiToken,
       zone,

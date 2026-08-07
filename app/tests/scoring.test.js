@@ -22,4 +22,61 @@ const ranked = rankProjects(fixtureProjects);
 assert.equal(ranked[0].id, "half-life");
 assert.ok(ranked.findIndex((project) => project.id === "proofrank") <= 2);
 
+const reviewBase = {
+  evidence: {
+    hasDemo: true,
+    hasPublicDemo: true,
+    hasGithub: true,
+    hasPresentation: false,
+    nativeBuilderExplained: true,
+    builtDuringEvent: true,
+    isFunctional: true,
+    notLandingPage: true,
+    demoWorkflow: true,
+    conciseSummary: true,
+    targetUser: true,
+    clearPain: true,
+    repeatableWorkflow: true,
+    buyerExists: true,
+    urgency: true,
+    differentiation: true,
+    lowCrowdOverlap: true,
+    proofReceipt: true,
+    specificWedge: true,
+    nonGenericAgent: true,
+    brightDataRole: "agentic",
+    brightDataTools: ["Remote MCP", "Web Scraper API"],
+    agenticLoop: true,
+    brightDataTrace: true
+  }
+};
+
+const deepReviewScores = calculateScores({
+  ...reviewBase,
+  evidence: {
+    ...reviewBase.evidence,
+    repoTreeCollected: true,
+    packageManifestPresent: true,
+    licensePresent: true,
+    secretRiskVisible: false
+  }
+});
+
+const shallowReviewScores = calculateScores({
+  ...reviewBase,
+  evidence: {
+    ...reviewBase.evidence,
+    repoTreeCollected: false,
+    packageManifestPresent: false,
+    licensePresent: false,
+    secretRiskVisible: true
+  }
+});
+
+assert.ok(deepReviewScores.eligibility > shallowReviewScores.eligibility);
+assert.ok(deepReviewScores.overall > shallowReviewScores.overall);
+
+const riskyVerdict = buildVerdict({ evidence: { ...reviewBase.evidence, secretRiskVisible: true } }, shallowReviewScores);
+assert.ok(riskyVerdict.risks.includes("Remove visible secrets or sensitive files from public repo"));
+
 console.log("scoring tests passed");

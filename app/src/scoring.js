@@ -33,7 +33,12 @@ export function calculateScores(project) {
       boolPoints(evidence.nativeBuilderExplained, 18) +
       boolPoints(evidence.builtDuringEvent, 10) +
       boolPoints(evidence.isFunctional, 18) +
-      boolPoints(evidence.notLandingPage, 12)
+      boolPoints(evidence.notLandingPage, 12) +
+      boolPoints(evidence.repoTreeCollected, 4) +
+      boolPoints(evidence.packageManifestPresent, 4) +
+      boolPoints(evidence.licensePresent, 3) +
+      boolPoints(evidence.repoTreeCollected && !evidence.secretRiskVisible, 5) -
+      boolPoints(evidence.secretRiskVisible, 8)
   );
 
   const brightDataFit = clampScore(
@@ -94,6 +99,7 @@ export function buildVerdict(project, scores = calculateScores(project)) {
   if (!evidence.nativeBuilderExplained) risks.push("Add native.builder usage explanation");
   if (!evidence.hasGithub) risks.push("Add public source or implementation evidence");
   if (!evidence.brightDataTrace) risks.push("Show Bright Data collection trace");
+  if (evidence.secretRiskVisible) risks.push("Remove visible secrets or sensitive files from public repo");
   if (scores.brightDataFit < 55) risks.push("Bright Data usage is not load-bearing enough");
   if (scores.originality < 70) risks.push("Differentiate more sharply from adjacent entries");
 

@@ -108,8 +108,8 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 
 1. Real GitHub reviewer lane
    - User gives a repo URL and demo URL.
-   - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, and proof receipt traces.
-   - Next: package/dependency file checks, commit-window checks, secret-risk scan, copied README similarity, and license check.
+   - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, proof receipt traces, repository metadata, recursive tree, package manifest, event-window commits, license signal, and lightweight public secret-risk scan.
+   - Next: copied README/code similarity, releases, public issues, and richer prior-art search once Bright Data auth is fixed.
 
 2. Bright Data trace replay
    - Every receipt gets a "replay query" field.

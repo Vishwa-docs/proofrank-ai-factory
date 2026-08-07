@@ -19,6 +19,13 @@ const ACRONYMS = new Map([
   ["proofrank", "ProofRank"]
 ]);
 
+const HACKATHON_WINDOW = {
+  start: "2026-08-03T15:00:00.000Z",
+  end: "2026-08-10T15:00:00.000Z"
+};
+
+const PACKAGE_PATHS = ["package.json", "pyproject.toml", "requirements.txt", "Cargo.toml", "go.mod"];
+
 function cleanText(value = "") {
   return String(value).replace(/\s+/g, " ").trim();
 }
@@ -74,6 +81,81 @@ function excerpt(value, fallback) {
 
 function extractBrightDataTools(text) {
   return TOOL_PATTERNS.filter(([, pattern]) => pattern.test(text)).map(([label]) => label);
+}
+
+function parseJson(value, fallback) {
+  try {
+    return JSON.parse(String(value || ""));
+  } catch {
+    return fallback;
+  }
+}
+
+function buildRawGitHubUrl(owner, repo, branch, path) {
+  const safeBranch = encodeURIComponent(branch);
+  const safePath = String(path)
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+  return `https://raw.githubusercontent.com/${owner}/${repo}/${safeBranch}/${safePath}`;
+}
+
+function buildCommitsApiUrl(owner, repo, window = HACKATHON_WINDOW) {
+  const url = new URL(`https://api.github.com/repos/${owner}/${repo}/commits`);
+  url.searchParams.set("since", window.start);
+  url.searchParams.set("until", window.end);
+  url.searchParams.set("per_page", "25");
+  return url.toString();
+}
+
+function pathsFromTree(treeText) {
+  const parsed = parseJson(treeText, {});
+  return (parsed.tree || [])
+    .filter((item) => item?.type === "blob" && item.path)
+    .map((item) => item.path);
+}
+
+function findFirstPath(paths, candidates) {
+  const byLower = new Map(paths.map((path) => [path.toLowerCase(), path]));
+  for (const candidate of candidates) {
+    if (byLower.has(candidate.toLowerCase())) return byLower.get(candidate.toLowerCase());
+  }
+  return "";
+}
+
+function findLicensePath(paths) {
+  return paths.find((path) => /(^|\/)licen[sc]e(\..*)?$/i.test(path)) || "";
+}
+
+function riskyFilePath(path) {
+  const base = path.toLowerCase().split("/").pop();
+  return [".env", ".env.local", ".env.production", ".env.prod", "credentials.json", "service-account.json", "id_rsa"].includes(base) || base.endsWith(".pem");
+}
+
+function textHasSecretRisk(text) {
+  return /(?:api[_-]?key|secret|token|password|private[_-]?key)\s*[:=]\s*["']?(?!your_|replace|example|sample|dummy|test|redacted)[a-z0-9_./+=-]{20,}/i.test(
+    text
+  );
+}
+
+function summarizePackageManifest(text) {
+  const parsed = parseJson(text, null);
+  if (!parsed) return excerpt(text, "Package manifest collected.");
+
+  const scripts = Object.keys(parsed.scripts || {}).slice(0, 6);
+  const dependencies = [...Object.keys(parsed.dependencies || {}), ...Object.keys(parsed.devDependencies || {})].slice(0, 8);
+  return `Scripts: ${scripts.join(", ") || "none"}. Dependencies: ${dependencies.join(", ") || "none"}.`;
+}
+
+function commitsDuringWindow(commitsText, window = HACKATHON_WINDOW) {
+  const commits = parseJson(commitsText, []);
+  const start = new Date(window.start).getTime();
+  const end = new Date(window.end).getTime();
+
+  return commits.filter((commit) => {
+    const date = new Date(commit?.commit?.author?.date || commit?.commit?.committer?.date || commit?.created_at || "").getTime();
+    return Number.isFinite(date) && date >= start && date <= end;
+  });
 }
 
 function inferBrightRole(text, tools) {
@@ -166,13 +248,38 @@ export async function collectReviewerProject(input, options = {}) {
   const fetchText = options.fetchText || defaultFetchText;
   const now = options.now || (() => new Date());
   const collectedAt = now().toISOString();
+  const repoApiUrl = `https://api.github.com/repos/${owner}/${repo}`;
   const demoUrl = isHttpUrl(input.demoUrl) ? input.demoUrl : "";
   const submissionUrl = isHttpUrl(input.submissionUrl) ? input.submissionUrl : "";
   const title = cleanText(input.title) || labelFromSlug(repo);
   const team = cleanText(input.team) || labelFromSlug(owner);
 
+  let repoMetadata = {};
   let readmeText = "";
   let demoText = "";
+  let treeText = "";
+  let packageText = "";
+  let licenseText = "";
+  let commitsText = "";
+
+  try {
+    repoMetadata = parseJson(
+      await fetchText(repoApiUrl, {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      }),
+      {}
+    );
+  } catch (error) {
+    repoMetadata = {
+      error: error.message
+    };
+  }
+
+  const defaultBranch = cleanText(repoMetadata.default_branch) || "main";
+  const treeApiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`;
+  const commitsApiUrl = buildCommitsApiUrl(owner, repo, options.hackathonWindow || HACKATHON_WINDOW);
 
   try {
     readmeText = decodePossibleGitHubReadme(
@@ -186,6 +293,51 @@ export async function collectReviewerProject(input, options = {}) {
     readmeText = `README unavailable: ${error.message}`;
   }
 
+  try {
+    treeText = await fetchText(treeApiUrl, {
+      headers: {
+        Accept: "application/vnd.github+json"
+      }
+    });
+  } catch (error) {
+    treeText = JSON.stringify({
+      error: error.message,
+      tree: []
+    });
+  }
+
+  const treePaths = pathsFromTree(treeText);
+  const packagePath = findFirstPath(treePaths, PACKAGE_PATHS);
+  const licensePath = findLicensePath(treePaths);
+
+  if (packagePath) {
+    try {
+      packageText = await fetchText(buildRawGitHubUrl(owner, repo, defaultBranch, packagePath));
+    } catch (error) {
+      packageText = `Package manifest unavailable: ${error.message}`;
+    }
+  }
+
+  if (licensePath) {
+    try {
+      licenseText = await fetchText(buildRawGitHubUrl(owner, repo, defaultBranch, licensePath));
+    } catch (error) {
+      licenseText = `License unavailable: ${error.message}`;
+    }
+  }
+
+  try {
+    commitsText = await fetchText(commitsApiUrl, {
+      headers: {
+        Accept: "application/vnd.github+json"
+      }
+    });
+  } catch (error) {
+    commitsText = JSON.stringify({
+      error: error.message
+    });
+  }
+
   if (demoUrl) {
     try {
       demoText = await fetchText(demoUrl);
@@ -194,13 +346,21 @@ export async function collectReviewerProject(input, options = {}) {
     }
   }
 
-  const haystack = `${title} ${team} ${readmeText} ${demoText}`.toLowerCase();
+  const repoMetadataReachable = !repoMetadata.error;
+  const treeReachable = treePaths.length > 0;
+  const packageReachable = Boolean(packagePath && !packageText.startsWith("Package manifest unavailable:"));
+  const metadataLicense = repoMetadata.license?.spdx_id && repoMetadata.license.spdx_id !== "NOASSERTION" ? repoMetadata.license.spdx_id : "";
+  const licensePresent = Boolean(metadataLicense || (licensePath && !licenseText.startsWith("License unavailable:")));
+  const hackathonCommits = commitsDuringWindow(commitsText, options.hackathonWindow || HACKATHON_WINDOW);
+  const riskyPaths = treePaths.filter(riskyFilePath);
+  const secretRiskVisible = riskyPaths.length > 0 || textHasSecretRisk(`${readmeText}\n${packageText}`);
+  const workflowText = `${readmeText} ${demoText} ${packageText} ${licenseText} ${treePaths.join(" ")}`;
+  const haystack = `${title} ${team} ${workflowText}`.toLowerCase();
   const brightDataTools = [...new Set(extractBrightDataTools(haystack))];
   const brightDataRole = inferBrightRole(haystack, brightDataTools);
   const hasDemo = Boolean(demoUrl);
   const demoReachable = hasDemo && !demoText.startsWith("Demo unavailable:");
   const readmeReachable = !readmeText.startsWith("README unavailable:");
-  const workflowText = `${readmeText} ${demoText}`;
   const id = `review-${owner}-${repo}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
   return {
@@ -225,8 +385,13 @@ export async function collectReviewerProject(input, options = {}) {
       hasPublicDemo: demoReachable,
       hasGithub: true,
       hasPresentation: Boolean(input.presentationUrl),
-      nativeBuilderExplained: hasAny(haystack, [/\bnative\.builder\b/i, /\bnatively\b/i]),
-      builtDuringEvent: false,
+      repoMetadataCollected: repoMetadataReachable,
+      repoTreeCollected: treeReachable,
+      packageManifestPresent: packageReachable,
+      licensePresent,
+      builtDuringEvent: hackathonCommits.length > 0,
+      secretRiskVisible,
+      nativeBuilderExplained: hasAny(haystack, [/\bnative\.builder\b/i, /\bnatively\b/i, /\bnative-builder-prompt\b/i]),
       isFunctional: demoReachable || hasAny(workflowText, [/\bworkflow\b/i, /\bdashboard\b/i, /\breview\b/i, /\bexport\b/i]),
       notLandingPage: hasAny(workflowText, [/\bworkflow\b/i, /\branked queue\b/i, /\bproof receipt\b/i, /\bexport\b/i]),
       demoWorkflow: demoReachable && hasAny(demoText, [/\brun\b/i, /\breview\b/i, /\bqueue\b/i, /\bworkflow\b/i, /\bexport\b/i]),
@@ -274,7 +439,97 @@ export async function collectReviewerProject(input, options = {}) {
               limitations: demoReachable ? "Fetch confirms public content, not complete interactive success." : "Judges may not be able to access the demo."
             }
           ]
-        : [])
+        : []),
+      {
+        id: `${id}-metadata`,
+        sourceType: "github-metadata",
+        sourceUrl: canonicalUrl,
+        title: repoMetadataReachable ? "Repository metadata collected" : "Repository metadata unavailable",
+        excerpt: repoMetadataReachable
+          ? `Default branch ${defaultBranch}. License ${metadataLicense || "unknown"}. Last push ${repoMetadata.pushed_at || "unknown"}.`
+          : `Repository metadata unavailable: ${repoMetadata.error}`,
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: repoMetadataReachable ? 0.86 : 0.24,
+        supports: ["Repository availability", "License metadata"],
+        limitations: repoMetadataReachable ? "Metadata does not prove the app was built primarily in native.builder." : "GitHub API metadata could not be collected."
+      },
+      {
+        id: `${id}-tree`,
+        sourceType: "github-tree",
+        sourceUrl: `${canonicalUrl}/tree/${defaultBranch}`,
+        title: treeReachable ? "Repository tree collected" : "Repository tree unavailable",
+        excerpt: treeReachable
+          ? `${treePaths.length} files found. Key files: ${treePaths.slice(0, 8).join(", ")}.`
+          : `Repository tree unavailable: ${parseJson(treeText, {}).error || "no files found"}`,
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: treeReachable ? 0.84 : 0.22,
+        supports: ["Source depth", "Implementation surface"],
+        limitations: treeReachable ? "Tree inspection shows file presence, not full code quality." : "Repository may be private, missing, or inaccessible."
+      },
+      ...(packagePath
+        ? [
+            {
+              id: `${id}-package`,
+              sourceType: "package-manifest",
+              sourceUrl: buildRawGitHubUrl(owner, repo, defaultBranch, packagePath),
+              title: packageReachable ? "Package manifest collected" : "Package manifest unavailable",
+              excerpt: summarizePackageManifest(packageText),
+              collectedAt,
+              collector: "ProofRank GitHub reviewer",
+              confidence: packageReachable ? 0.78 : 0.25,
+              supports: ["Build reproducibility", "Dependency evidence"],
+              limitations: packageReachable ? "Manifest presence does not prove all scripts run successfully." : "Manifest path was found but content could not be fetched."
+            }
+          ]
+        : []),
+      {
+        id: `${id}-commits`,
+        sourceType: "github-commits",
+        sourceUrl: `${canonicalUrl}/commits/${defaultBranch}`,
+        title: hackathonCommits.length ? "Hackathon-window commits collected" : "No hackathon-window commits found",
+        excerpt: hackathonCommits.length
+          ? `${hackathonCommits.length} commit${hackathonCommits.length === 1 ? "" : "s"} found during the event window. Latest: ${cleanText(
+              hackathonCommits[0]?.commit?.message || hackathonCommits[0]?.sha || "commit"
+            )}.`
+          : "No commits were visible through the public GitHub API inside the configured August 3-10, 2026 event window.",
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: hackathonCommits.length ? 0.82 : 0.42,
+        supports: ["Built during event", "Repository activity"],
+        limitations: "Commit history can be squashed, rebased, private, or imported from another workspace."
+      },
+      ...(licensePresent
+        ? [
+            {
+              id: `${id}-license`,
+              sourceType: "license",
+              sourceUrl: licensePath ? buildRawGitHubUrl(owner, repo, defaultBranch, licensePath) : canonicalUrl,
+              title: "License evidence collected",
+              excerpt: metadataLicense ? `GitHub reports ${metadataLicense}.` : excerpt(licenseText, "License file collected."),
+              collectedAt,
+              collector: "ProofRank GitHub reviewer",
+              confidence: 0.76,
+              supports: ["Submission ownership", "Reuse permission"],
+              limitations: "License metadata does not verify rights to third-party assets, datasets, or generated media."
+            }
+          ]
+        : []),
+      {
+        id: `${id}-secret-scan`,
+        sourceType: "secret-risk-scan",
+        sourceUrl: canonicalUrl,
+        title: secretRiskVisible ? "Possible secret risk visible" : "Secret-risk scan passed",
+        excerpt: secretRiskVisible
+          ? `Potentially sensitive files or values detected: ${riskyPaths.slice(0, 5).join(", ") || "high-entropy assignment text"}.`
+          : "No obvious secret-bearing filenames or high-entropy credential assignments were visible in fetched public evidence.",
+        collectedAt,
+        collector: "ProofRank GitHub reviewer",
+        confidence: treeReachable || readmeReachable ? 0.64 : 0.26,
+        supports: ["Public-source hygiene"],
+        limitations: "This is a lightweight public-evidence scan, not a full secret scanner."
+      }
     ],
     brightDataTraces: buildReplayTraces(
       {

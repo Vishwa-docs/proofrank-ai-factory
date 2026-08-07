@@ -64,6 +64,7 @@ PROOFRANK_MODE=live
 ```bash
 npm run brightdata:mcp-smoke
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:server
 ```
 
@@ -72,6 +73,8 @@ When the live server is running, use this endpoint in the ProofRank UI:
 ```text
 http://127.0.0.1:8787/api/review-project
 ```
+
+Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes.
 
 ## Proof Receipt Trace Shape
 
