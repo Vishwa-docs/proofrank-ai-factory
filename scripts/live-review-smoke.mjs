@@ -18,6 +18,7 @@ const project = await collectReviewerProject(
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
     collectionMode: liveCollectors.collectionMode,
+    signingSecret: process.env.PROOFRANK_RECEIPT_SIGNING_SECRET,
     now: () => new Date()
   }
 );
@@ -55,6 +56,19 @@ console.log(
         brightDataTools: project.evidence.brightDataTools,
         brightDataTrace: project.evidence.brightDataTrace,
         brightDataTraceStatus: project.evidence.brightDataTraceStatus,
+        runReceipt: project.runReceipt
+          ? {
+              runId: project.runReceipt.runId,
+              collectionMode: project.runReceipt.collectionMode,
+              provider: project.runReceipt.provider,
+              traceCount: project.runReceipt.traceCount,
+              executedTraceCount: project.runReceipt.executedTraceCount,
+              tools: project.runReceipt.tools,
+              traceDigest: project.runReceipt.traceDigest,
+              signed: Boolean(project.runReceipt.signature),
+              replayCommand: project.runReceipt.replayCommand
+            }
+          : null,
         receiptItems: project.evidenceItems.length,
         receipts: project.evidenceItems.map((item) => ({
           sourceType: item.sourceType,

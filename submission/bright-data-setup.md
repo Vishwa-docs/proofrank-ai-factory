@@ -12,16 +12,18 @@
 2. Apply promo code `aiaccess50` if prompted.
 3. Copy a real account API key from the welcome email or account settings.
 4. Store the token server-side in native.builder, never in client JavaScript.
-5. Run `npm run brightdata:mcp-smoke` before the final demo.
-6. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
-7. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
-8. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
+5. Run `npm run brightdata:auth-check` to confirm the token passes Bright Data account authentication.
+6. Run `npm run brightdata:mcp-smoke` before the final demo.
+7. Set `PROOFRANK_FETCH_MODE=mcp` for the final live proof run.
+8. Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` unless you intentionally need a larger bounded run.
+9. Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend publicly.
 
 ## Current Credential Status
 
 - A Bright Data value has been stored locally in `.env.local`, which is ignored by Git.
-- On 2026-08-07, both the Bright Data REST request smoke and hosted Remote MCP smoke returned HTTP 401 with that value.
-- Before final submission, replace it with a Bright Data API key that passes `npm run brightdata:mcp-smoke`.
+- On 2026-08-07, both `npm run brightdata:auth-check` and the hosted Remote MCP smoke returned HTTP 401 with that value.
+- The stored value is UUID-shaped; replace it with a Bright Data account API key, not a coupon code, customer ID, or proxy password.
+- Before final submission, use a key that passes `npm run brightdata:auth-check` and `npm run brightdata:mcp-smoke`.
 - The browser UI now talks to a local/native.builder API endpoint; it never asks judges to paste a Bright Data token into client JavaScript.
 
 ## Remote MCP
@@ -79,6 +81,7 @@ BRIGHTDATA_UNLOCKER_ZONE=mcp_unlocker
 PROOFRANK_FETCH_MODE=mcp
 PROOFRANK_MAX_BRIGHTDATA_CALLS=12
 PROOFRANK_REVIEW_TOKEN=generate_a_random_value
+PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_different_random_value
 PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
 PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 # Optional; omit to derive this from BRIGHTDATA_API_TOKEN.
@@ -89,6 +92,7 @@ PROOFRANK_MODE=live
 ## Local Live Commands
 
 ```bash
+npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
 PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -122,3 +126,7 @@ Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright
   "contentHash": "1a2b3c4d"
 }
 ```
+
+Server-issued project reviews also include a `runReceipt` with a run id, tool
+list, trace digest, replay command, and optional `hmac-sha256` signature when
+`PROOFRANK_RECEIPT_SIGNING_SECRET` is configured.

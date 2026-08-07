@@ -32,6 +32,7 @@ export function createLiveReviewServer(options = {}) {
     fetchText: liveCollectors.fetchText,
     searchText: liveCollectors.searchText,
     collectionMode: liveCollectors.collectionMode,
+    signingSecret: options.signingSecret ?? process.env.PROOFRANK_RECEIPT_SIGNING_SECRET,
     ...(options.collectorOptions || {})
   };
 

@@ -8,6 +8,7 @@ const countersign = fixtureProjects.find((project) => project.id === "countersig
 const proofrankScores = calculateScores(proofrank);
 assert.equal(proofrankScores.brightDataFit, 72);
 assert.ok(proofrankScores.brightDataFit < 75);
+assert.ok(proofrankScores.brightDataPrize <= 64);
 assert.equal(proofrankScores.businessValue, 100);
 assert.ok(proofrankScores.overall >= 85);
 
@@ -127,6 +128,9 @@ const executedTraceProject = {
 const plannedTraceScores = calculateScores(plannedTraceProject);
 const executedTraceScores = calculateScores(executedTraceProject);
 assert.ok(executedTraceScores.brightDataFit > plannedTraceScores.brightDataFit);
+assert.ok(executedTraceScores.brightDataPrize > plannedTraceScores.brightDataPrize);
+assert.ok(plannedTraceScores.brightDataPrize <= 64);
+assert.ok(executedTraceScores.brightDataPrize >= 86);
 assert.ok(buildVerdict(plannedTraceProject, plannedTraceScores).risks.includes("Run at least one executed Bright Data collection trace"));
 assert.equal(buildVerdict(executedTraceProject, executedTraceScores).label, "Finalist-ready");
 

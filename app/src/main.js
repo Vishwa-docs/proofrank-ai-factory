@@ -10,6 +10,8 @@ import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv 
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
+  runModeLabel: document.querySelector("#runModeLabel"),
+  liveProofStrip: document.querySelector("#liveProofStrip"),
   eventUrl: document.querySelector("#eventUrl"),
   liveApiUrl: document.querySelector("#liveApiUrl"),
   htmlUpload: document.querySelector("#htmlUpload"),
@@ -140,6 +142,40 @@ function filteredProjects() {
 function setStatus(message, tone = "ready") {
   elements.statusLine.textContent = displayText(message);
   elements.statusLine.className = `status-line ${tone === "warn" ? "warn" : ""} ${tone === "error" ? "error" : ""}`.trim();
+}
+
+function updateRunProfile() {
+  elements.runModeLabel.textContent = state.mode === "live" ? "Bright Data live" : "Saved evidence";
+}
+
+function updateLiveProofStrip(project) {
+  const traceState = brightDataTraceState(project);
+  const receipt = project.runReceipt || {};
+  const className =
+    traceState === "executed" ? "is-executed" : traceState === "direct" || traceState === "planned" ? "is-pending" : "is-missing";
+  const title =
+    traceState === "executed"
+      ? "Executed Bright Data run"
+      : traceState === "direct"
+        ? "Direct evidence only"
+        : traceState === "planned"
+          ? "Replay planned"
+          : "No executed run yet";
+  const detail =
+    traceState === "executed"
+      ? `${receipt.runId || "Run receipt issued"} / ${receipt.signature ? "signed" : "unsigned"}`
+      : traceState === "direct"
+        ? "Bright Data replay still required"
+        : traceState === "planned"
+          ? "Bright Data commands prepared"
+          : "Live collection required";
+
+  elements.liveProofStrip.className = `live-proof-strip ${className}`;
+  elements.liveProofStrip.innerHTML = `
+    <span>Bright proof</span>
+    <strong>${escapeHtml(title)}</strong>
+    <small>${escapeHtml(detail)}</small>
+  `;
 }
 
 function statusClass(project) {
@@ -352,6 +388,7 @@ function renderScorecard(project) {
     <section class="score-grid" aria-label="Score breakdown">
       ${scoreTile("Eligibility", project.scores.eligibility, "Demo, repo, build proof")}
       ${scoreTile("Bright fit", project.scores.brightDataFit, "Live web is load-bearing")}
+      ${scoreTile("Bright prize", project.scores.brightDataPrize, "Executed sponsor rank")}
       ${scoreTile("Business", project.scores.businessValue, "Clear user and urgency")}
       ${scoreTile("Originality", project.scores.originality, "Distinct wedge and proof")}
       ${scoreTile("Presentation", project.scores.presentation, "Judge-ready explanation")}
@@ -381,6 +418,7 @@ function renderScorecard(project) {
 }
 
 function renderReceipt(project) {
+  const runReceipt = project.runReceipt;
   const receiptItems = (project.evidenceItems || [])
     .map(
       (item) => `
@@ -419,6 +457,12 @@ function renderReceipt(project) {
     .join("");
 
   elements.receipt.innerHTML = `
+    <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
+      <span>Run receipt</span>
+      <strong>${escapeHtml(runReceipt?.runId || "Not issued")}</strong>
+      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "signed" : "unsigned"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server receipt.")}</small>
+    </div>
+
     <div class="receipt-list">
       ${receiptItems || `<div class="empty-state">No evidence items available.</div>`}
     </div>
@@ -440,7 +484,7 @@ function renderReceipt(project) {
 
     <div class="receipt-item live-plan">
       <h3>Live collection plan</h3>
-      <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Demo mode mirrors these collection steps."}</p>
+      <p>${state.mode === "live" ? "Ready for a server-side Bright Data workflow." : "Saved evidence mirrors these collection steps."}</p>
       <ul>${livePlan}</ul>
     </div>
   `;
@@ -505,6 +549,8 @@ function renderReadiness(project = selectedProject()) {
 
 function render() {
   const project = selectedProject();
+  updateRunProfile();
+  updateLiveProofStrip(project);
   renderRankedList();
   renderScorecard(project);
   renderReceipt(project);
@@ -543,7 +589,7 @@ async function runAudit() {
   if (state.mode === "live") {
     if (!isHttpUrl(liveApiUrl)) {
       const checklist = setupChecklist().join(" ");
-      setStatus(`Live API endpoint missing. Demo mode remains ready. ${checklist}`, "warn");
+      setStatus(`Review API missing. Saved evidence remains ready. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
       state.projects = rankProjects(sourceProjects());
       render();
@@ -555,7 +601,7 @@ async function runAudit() {
       const result = await collectEventViaApi(eventUrl);
       const liveProjects = (result.projects || []).filter((project) => project.id !== "proofrank");
       if (!liveProjects.length) {
-        setStatus("Live event collection returned no submission cards. Demo evidence remains loaded.", "warn");
+        setStatus("Live event collection returned no submission cards. Saved evidence remains loaded.", "warn");
       } else {
         state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
         state.projects = rankProjects(sourceProjects());
@@ -592,7 +638,7 @@ async function runAudit() {
     }
 
     const commandCount = buildCliCommands(eventUrl, selectedProject()).length;
-    const liveNote = state.mode === "live" ? "server workflow required next" : "commands prepared";
+    const liveNote = state.mode === "live" ? "server workflow required next" : "collection steps prepared";
     setStatus(`${state.projects.length} submissions ranked. ${commandCount} Bright Data ${liveNote}.`, "ready");
     elements.runAudit.disabled = false;
     render();
@@ -779,10 +825,10 @@ async function addReviewerProject() {
 function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = "Collect project";
-    elements.reviewerHint.textContent = "Live mode fetches the repo and demo through the backend, then records collection traces.";
+    elements.reviewerHint.textContent = "Repo and demo will be collected server-side with recorded traces.";
   } else {
     elements.addReviewerProject.textContent = "Add pending target";
-    elements.reviewerHint.textContent = "Demo mode only adds a pending target. Switch to Bright Data live for real evidence collection.";
+    elements.reviewerHint.textContent = "Pending targets stay gated until Bright Data collection runs.";
   }
 }
 
@@ -804,7 +850,8 @@ document.querySelectorAll(".filter-chip").forEach((button) => {
 
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
-  setStatus(state.mode === "live" ? "Live mode selected. Start the backend server before collecting." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
+  setStatus(state.mode === "live" ? "Bright Data live selected. Start the backend before collecting." : "Saved evidence ready", state.mode === "live" ? "warn" : "ready");
+  updateRunProfile();
   updateReviewerModeCopy();
   render();
 });

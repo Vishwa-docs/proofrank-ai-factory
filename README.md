@@ -20,6 +20,7 @@ Bright Data is the load-bearing evidence layer in the intended live workflow:
 - Server-side live runs enforce `PROOFRANK_MAX_BRIGHTDATA_CALLS` so credentialed demos stay bounded under the user-confirmed spend cap.
 - Public live backends can require `PROOFRANK_REVIEW_TOKEN`, restrict `PROOFRANK_ALLOWED_ORIGINS`, and reject URLs outside `PROOFRANK_ALLOWED_HOSTS` before Bright Data is called.
 - Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
+- Live project reviews issue a run receipt with replay command, trace digest, and optional HMAC signature via `PROOFRANK_RECEIPT_SIGNING_SECRET`.
 
 The local app also includes demo fixtures for reliable judging if credentials are not available.
 
@@ -63,6 +64,7 @@ is ignored by Git.
 Check the hosted Bright Data MCP token:
 
 ```bash
+npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
 ```
 
@@ -153,6 +155,8 @@ Built and verified:
 - Live API deployment handoff in `submission/deploy-live-api.md`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
 - Operator handoff for account-gated final steps in `submission/operator-handoff.md`
+- Redacted Bright Data account authentication check with `npm run brightdata:auth-check`
+- Server-issued run receipts with optional HMAC signatures for live project reviews
 
 Refresh demo screenshots and video:
 
@@ -171,7 +175,7 @@ Account-gated work still requiring the team owner:
 
 - Authorize the Native.builder X/Privy login flow
 - Apply the `AIFACTORY26` Builder Plan promo code
-- Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401
+- Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401 on `brightdata:auth-check`
 - Deploy the live review API with the settings in `submission/deploy-live-api.md`
 - Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
 - Publish the native.builder app URL and paste it into the lablab.ai submission

@@ -16,14 +16,15 @@ Date: 2026-08-07
 ## What I Need From You
 
 1. Valid Bright Data token
-   - Current local token returns HTTP 401 on hosted Remote MCP.
+   - Current local token returns HTTP 401 on Bright Data account auth and hosted Remote MCP.
    - Get a new API token from Bright Data account settings or welcome email.
    - Put it in `.env.local` as `BRIGHTDATA_API_TOKEN=...`.
    - Keep or set `PROOFRANK_FETCH_MODE=mcp`.
    - Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` for the final proof run unless you explicitly raise the bounded limit.
-   - Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend outside localhost.
+   - Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend outside localhost.
+   - Run `npm run brightdata:auth-check`.
    - Run `npm run brightdata:mcp-smoke`.
-   - Success condition: `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`.
+   - Success condition: auth check returns `ok: true`, then `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`; final project receipt includes a signed `runReceipt`.
 
 2. Native.builder publish
    - Open native.builder.
@@ -64,6 +65,7 @@ npm run live:smoke:direct -- https://github.com/Vishwa-docs/proofrank-ai-factory
 After the Bright Data token is fixed:
 
 ```bash
+npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
 PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/
 PROOFRANK_FETCH_MODE=mcp npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits

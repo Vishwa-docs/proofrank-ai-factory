@@ -18,6 +18,7 @@ export function toCsv(projects) {
     "overall",
     "eligibility",
     "brightDataFit",
+    "brightDataPrize",
     "businessValue",
     "originality",
     "presentation",
@@ -36,6 +37,7 @@ export function toCsv(projects) {
       scores.overall,
       scores.eligibility,
       scores.brightDataFit,
+      scores.brightDataPrize,
       scores.businessValue,
       scores.originality,
       scores.presentation,
@@ -75,6 +77,7 @@ export function buildReceipt(project, fieldProjects = []) {
     claimLedger: buildClaimLedger(project),
     tribunal,
     originalityRadar,
+    runReceipt: project.runReceipt || null,
     evidenceItems: project.evidenceItems || [],
     brightDataTraces: project.brightDataTraces || []
   };
@@ -110,7 +113,10 @@ The competition app should be created and published through native.builder using
 - Primary submission status: ${primarySubmissionStatus}
 - Overall score: ${receipt.scores.overall}
 - Bright Data fit: ${receipt.scores.brightDataFit}
+- Bright Data prize score: ${receipt.scores.brightDataPrize}
 - Bright Data trace state: ${receipt.traceState}
+- Run receipt: ${receipt.runReceipt?.runId || "Not issued"}
+- Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Submission readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}

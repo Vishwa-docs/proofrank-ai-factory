@@ -5,5 +5,12 @@
     "theme": "modern-minimal",
     "enrichment": "none",
     "brief": "ProofRank submission cockpit and evidence workbench hardening"
+  },
+  {
+    "date": "2026-08-07",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
+    "enrichment": "control hierarchy",
+    "brief": "Moved first-screen run controls from dev harness toward reviewer-grade evidence cockpit"
   }
 ]

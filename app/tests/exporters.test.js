@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { buildReceipt, buildSubmissionPacket } from "../src/exporters.js";
+import { buildReceipt, buildSubmissionPacket, toCsv } from "../src/exporters.js";
 
 const project = {
   id: "proofrank",
@@ -14,6 +14,7 @@ const project = {
     overall: 88,
     eligibility: 90,
     brightDataFit: 96,
+    brightDataPrize: 98,
     businessValue: 91,
     originality: 82,
     presentation: 85
@@ -45,6 +46,18 @@ const project = {
     lowCrowdOverlap: true
   },
   evidenceItems: [{ id: "receipt-1" }],
+  runReceipt: {
+    issuer: "ProofRank live reviewer",
+    issuedAt: "2026-08-07T12:00:00.000Z",
+    runId: "pr-20260807t120000000z-1a2b3c4d",
+    collectionMode: "bright-data-mcp",
+    provider: "bright-data",
+    traceCount: 2,
+    executedTraceCount: 2,
+    tools: ["scrape_as_markdown", "search_engine"],
+    traceDigest: "1a2b3c4d",
+    replayCommand: "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/example/proofrank https://example.com/demo"
+  },
   brightDataTraces: [
     {
       mode: "bright-data-request-api",
@@ -65,6 +78,9 @@ const adjacentProject = {
 
 const receipt = buildReceipt(project, [project, adjacentProject]);
 assert.equal(receipt.traceState, "executed");
+assert.equal(receipt.runReceipt.runId, "pr-20260807t120000000z-1a2b3c4d");
+assert.equal(receipt.runReceipt.traceDigest, "1a2b3c4d");
+assert.equal(receipt.scores.brightDataPrize, 98);
 assert.equal(receipt.readiness.sponsorProofReady, true);
 assert.equal(receipt.readiness.gates.find((gate) => gate.id === "bright-data").status, "passed");
 assert.equal(receipt.originalityRadar.riskLabel, "Defensible wedge");
@@ -77,8 +93,15 @@ assert.match(packet, /Adversarial Tribunal/);
 assert.match(packet, /Originality Radar/);
 assert.match(packet, /Submission Gates/);
 assert.match(packet, /Bright Data trace state: executed/);
+assert.match(packet, /Bright Data prize score: 98/);
+assert.match(packet, /Run receipt: pr-20260807t120000000z-1a2b3c4d/);
+assert.match(packet, /Replay command: PROOFRANK_FETCH_MODE=mcp npm run live:smoke/);
 assert.match(packet, /Submission readiness: Not submission-safe yet/);
 assert.match(packet, /Primary submission status: FALLBACK ONLY/);
 assert.match(packet, /Push for sponsor shortlist/);
+
+const csv = toCsv([project]);
+assert.match(csv.split("\n")[0], /brightDataPrize/);
+assert.match(csv, /,98,/);
 
 console.log("exporter tests passed");

@@ -144,6 +144,7 @@ For any public live backend, require:
 - Restricted CORS origins through `PROOFRANK_ALLOWED_ORIGINS`.
 - URL host allowlisting through `PROOFRANK_ALLOWED_HOSTS`.
 - A per-run Bright Data call budget such as `PROOFRANK_MAX_BRIGHTDATA_CALLS=12`.
+- A receipt signing secret such as `PROOFRANK_RECEIPT_SIGNING_SECRET` so live project receipts include an HMAC signature.
 
 The browser may pass the short-lived review token with an `x-proofrank-token` header from a judge-session URL parameter, but it must never expose the Bright Data API token.
 
@@ -171,6 +172,19 @@ Every live result should normalize into:
 - collectedAt
 - byteCount
 - contentHash
+
+Each server-issued project review should also include `runReceipt` with:
+
+- issuer
+- issuedAt
+- runId
+- collectionMode
+- provider
+- traceCount and executedTraceCount
+- tools
+- traceDigest
+- replayCommand
+- signature when a signing secret is configured
 
 ## Error Handling
 

@@ -1,3 +1,5 @@
+import { createHmac } from "node:crypto";
+
 const TOOL_PATTERNS = [
   ["Remote MCP", /\bremote\s+mcp\b|\bmcp\b/i],
   ["SERP API", /\bserp\s+api\b|\bsearch_engine\b/i],
@@ -260,6 +262,65 @@ function contentHash(value = "") {
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
+function safeRunIdTimestamp(value = "") {
+  return String(value || "")
+    .replace(/[-:.]/g, "")
+    .replace("Z", "z")
+    .toLowerCase();
+}
+
+function buildReplayCommand(collectionMode, repoUrl, demoUrl) {
+  const prefix =
+    collectionMode === "bright-data-mcp" ? "PROOFRANK_FETCH_MODE=mcp " : collectionMode === "direct-fetch" ? "PROOFRANK_FETCH_MODE=direct " : "";
+  return `${prefix}npm run live:smoke -- ${repoUrl}${demoUrl ? ` ${demoUrl}` : ""}`;
+}
+
+function buildRunReceipt({ collectionMode, collectedAt, traces, repoUrl, demoUrl }) {
+  const executedTraces = traces.filter((trace) => trace.traceStatus === "executed");
+  const traceDigest = contentHash(
+    traces
+      .map((trace) => `${trace.provider}|${trace.tool}|${trace.traceStatus}|${trace.queryOrUrl}|${trace.byteCount}|${trace.contentHash}`)
+      .join("\n")
+  );
+
+  const receipt = {
+    issuer: "ProofRank live reviewer",
+    issuedAt: collectedAt,
+    runId: `pr-${safeRunIdTimestamp(collectedAt)}-${traceDigest}`,
+    collectionMode,
+    provider: providerForCollectionMode(collectionMode),
+    traceCount: traces.length,
+    executedTraceCount: executedTraces.length,
+    tools: [...new Set(traces.map((trace) => trace.tool))],
+    traceDigest,
+    replayCommand: buildReplayCommand(collectionMode, repoUrl, demoUrl)
+  };
+
+  return receipt;
+}
+
+function signRunReceipt(receipt, signingSecret = "") {
+  const secret = String(signingSecret || "").trim();
+  if (!secret) return receipt;
+
+  const payload = JSON.stringify({
+    runId: receipt.runId,
+    issuedAt: receipt.issuedAt,
+    collectionMode: receipt.collectionMode,
+    provider: receipt.provider,
+    traceCount: receipt.traceCount,
+    executedTraceCount: receipt.executedTraceCount,
+    tools: receipt.tools,
+    traceDigest: receipt.traceDigest,
+    replayCommand: receipt.replayCommand
+  });
+
+  return {
+    ...receipt,
+    signature: `hmac-sha256:${createHmac("sha256", secret).update(payload).digest("hex")}`
+  };
+}
+
 export function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, text = "", error = null, countsForSponsorFit = true }) {
   const ok = !error;
   return {
@@ -517,6 +578,15 @@ export async function collectReviewerProject(input, options = {}) {
           },
           collectedAt
         );
+  const brightDataTraces = [...collectionTraces, ...plannedTraces];
+  const runReceipt = buildRunReceipt({
+    collectionMode,
+    collectedAt,
+    traces: brightDataTraces,
+    repoUrl: canonicalUrl,
+    demoUrl
+  });
+  const signedRunReceipt = signRunReceipt(runReceipt, options.signingSecret);
 
   return {
     id,
@@ -568,6 +638,7 @@ export async function collectReviewerProject(input, options = {}) {
       brightDataTraceStatus,
       brightDataTraceVisible: collectionTraces.length > 0 || plannedTraces.length > 0
     },
+    runReceipt: signedRunReceipt,
     evidenceItems: [
       {
         id: `${id}-readme`,
@@ -706,6 +777,6 @@ export async function collectReviewerProject(input, options = {}) {
         limitations: "This is a lightweight public-evidence scan, not a full secret scanner."
       }
     ],
-    brightDataTraces: [...collectionTraces, ...plannedTraces]
+    brightDataTraces
   };
 }

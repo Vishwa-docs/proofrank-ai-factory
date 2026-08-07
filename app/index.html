@@ -30,38 +30,58 @@
       <aside class="source-rail panel reveal" style="--i: 1" aria-label="Sources and setup">
         <section class="source-module">
           <div class="module-head">
-            <h2>Run sources</h2>
+            <h2>Evidence run</h2>
             <span id="queueCount" class="count-pill">0</span>
           </div>
+
+          <div class="run-profile" aria-label="Run profile">
+            <div>
+              <span>Event</span>
+              <strong>AI Factory</strong>
+            </div>
+            <div>
+              <span>Mode</span>
+              <strong id="runModeLabel">Saved evidence</strong>
+            </div>
+          </div>
+
+          <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
+            <span>Bright proof</span>
+            <strong>No executed run yet</strong>
+            <small>Live collection required</small>
+          </div>
+
+          <label class="field" for="modeSelect">
+            <span>Collection mode</span>
+            <select id="modeSelect">
+              <option value="demo">Saved evidence</option>
+              <option value="live">Bright Data live</option>
+            </select>
+          </label>
 
           <label class="field" for="eventUrl">
             <span>Event URL</span>
             <input id="eventUrl" type="url" value="https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits">
           </label>
 
-          <label class="field" for="modeSelect">
-            <span>Collection mode</span>
-            <select id="modeSelect">
-              <option value="demo">Demo evidence</option>
-              <option value="live">Bright Data live</option>
-            </select>
-          </label>
-
-          <label class="field" for="liveApiUrl">
-            <span>Live API endpoint</span>
-            <input id="liveApiUrl" type="url" placeholder="/api/review-project or http://127.0.0.1:8787/api/review-project">
-          </label>
+          <details class="backend-drawer">
+            <summary>Secure backend</summary>
+            <label class="field" for="liveApiUrl">
+              <span>Review API</span>
+              <input id="liveApiUrl" type="url" placeholder="/api/review-project or http://127.0.0.1:8787/api/review-project">
+            </label>
+          </details>
 
           <div class="action-row">
             <button id="runAudit" class="primary-button wide" type="button">Run review</button>
           </div>
 
           <label for="htmlUpload" class="file-drop">
-            <span>Load saved lablab HTML</span>
+            <span>Load event HTML</span>
             <input id="htmlUpload" type="file" accept=".html,.htm,text/html">
           </label>
 
-          <div id="statusLine" class="status-line" role="status">Demo evidence ready</div>
+          <div id="statusLine" class="status-line" role="status">Saved evidence ready</div>
         </section>
 
         <section class="source-module readiness-module" aria-label="Real data requirements">

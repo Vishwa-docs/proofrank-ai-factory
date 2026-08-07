@@ -119,6 +119,7 @@ assert.ok(project.evidence.brightDataTools.includes("Remote MCP"));
 assert.ok(project.evidence.brightDataTools.includes("Web Scraper API"));
 assert.equal(project.evidence.brightDataTrace, false);
 assert.equal(project.evidence.brightDataTraceStatus, "direct");
+assert.equal(project.runReceipt.replayCommand, "PROOFRANK_FETCH_MODE=direct npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/");
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-metadata"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "github-tree"));
 assert.ok(project.evidenceItems.some((item) => item.sourceType === "package-manifest"));
@@ -191,12 +192,23 @@ const mcpCollected = await collectReviewerProject(
     fetchText: fakeFetchText,
     searchText: async (query) => `Search result for ${query}: ProofRank is distinct from generic judging dashboards and uses source-backed evidence.`,
     collectionMode: "bright-data-mcp",
+    signingSecret: "test-signing-secret",
     now: () => new Date("2026-08-07T12:00:00.000Z")
   }
 );
 
 assert.equal(mcpCollected.evidence.brightDataTrace, true);
 assert.equal(mcpCollected.evidence.brightDataTraceStatus, "executed");
+assert.equal(mcpCollected.runReceipt.issuer, "ProofRank live reviewer");
+assert.equal(mcpCollected.runReceipt.collectionMode, "bright-data-mcp");
+assert.equal(mcpCollected.runReceipt.traceCount, mcpCollected.brightDataTraces.length);
+assert.match(mcpCollected.runReceipt.runId, /^pr-20260807t120000000z-[a-f0-9]{8}$/);
+assert.match(mcpCollected.runReceipt.traceDigest, /^[a-f0-9]{8}$/);
+assert.match(mcpCollected.runReceipt.signature, /^hmac-sha256:[a-f0-9]{64}$/);
+assert.ok(!JSON.stringify(mcpCollected.runReceipt).includes("test-signing-secret"));
+assert.equal(mcpCollected.runReceipt.replayCommand, "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https://vishwa-docs.github.io/proofrank-ai-factory/");
+assert.ok(mcpCollected.runReceipt.tools.includes("search_engine"));
+assert.ok(mcpCollected.runReceipt.tools.includes("scrape_as_markdown"));
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.mode === "bright-data-mcp" && trace.provider === "bright-data"));
 assert.ok(mcpCollected.brightDataTraces.some((trace) => trace.tool === "search_engine" && trace.traceStatus === "executed"));
 assert.ok(mcpCollected.brightDataTraces.every((trace) => trace.traceStatus === "executed"));

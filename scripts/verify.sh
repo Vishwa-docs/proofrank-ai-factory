@@ -24,6 +24,7 @@ required_files=(
   "app/src/liveEventReviewer.js"
   "app/src/liveReviewApi.js"
   "scripts/env-loader.mjs"
+  "scripts/brightdata-auth-check.mjs"
   "scripts/brightdata-mcp-smoke.mjs"
   "scripts/live-review-server.mjs"
   "scripts/live-review-smoke.mjs"

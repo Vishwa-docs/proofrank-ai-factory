@@ -114,10 +114,20 @@ export function calculateScores(project) {
       originality * WEIGHTS.originality +
       presentation * WEIGHTS.presentation
   );
+  const rawBrightDataPrize = clampScore(
+    brightDataFit * 0.45 +
+      eligibility * 0.15 +
+      businessValue * 0.15 +
+      originality * 0.15 +
+      presentation * 0.1 +
+      boolPoints(executedBrightTrace, 10)
+  );
+  const brightDataPrize = executedBrightTrace ? rawBrightDataPrize : Math.min(rawBrightDataPrize, 64);
 
   return {
     eligibility,
     brightDataFit,
+    brightDataPrize,
     presentation,
     businessValue,
     originality,
