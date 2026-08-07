@@ -9,6 +9,9 @@ Date: 2026-08-07
 - Refreshed demo video release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 - Workflow proof JSON release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 - Workflow proof screenshot release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
+- Native.builder render check release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-render-check.json
+- Native.builder desktop screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-desktop.png
+- Native.builder 320px screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-mobile-320.png
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/

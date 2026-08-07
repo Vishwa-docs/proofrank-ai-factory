@@ -52,6 +52,9 @@ Workflow proof artifact: submission/workflow-proof.json
 Workflow proof URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 Final Bright Data receipt: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Native.builder render check: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-render-check.json
+Native.builder desktop screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-desktop.png
+Native.builder 320px screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-mobile-320.png
 Public live API health: https://proofrank-ai-factory.vercel.app/api/health
 Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 ```
