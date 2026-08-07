@@ -18,6 +18,7 @@ const elements = {
   runAudit: document.querySelector("#runAudit"),
   statusLine: document.querySelector("#statusLine"),
   rankedList: document.querySelector("#rankedList"),
+  proofTopology: document.querySelector("#proofTopology"),
   queueCount: document.querySelector("#queueCount"),
   scorecard: document.querySelector("#scorecard"),
   receipt: document.querySelector("#receipt"),
@@ -227,6 +228,83 @@ function scoreTile(label, value, detail = "") {
       <p>${escapeHtml(detail)}</p>
       <div class="meter" style="--bar-width: ${value}%"><i></i></div>
     </div>
+  `;
+}
+
+function routeStatus(passed, pending = false) {
+  if (passed) return "passed";
+  if (pending) return "pending";
+  return "missing";
+}
+
+function routeStatusLabel(status) {
+  if (status === "passed") return "Ready";
+  if (status === "pending") return "Pending";
+  return "Action";
+}
+
+function renderProofTopology(project) {
+  const traceState = brightDataTraceState(project);
+  const executedBright = traceState === "executed";
+  const evidenceItemCount = (project.evidenceItems || []).length;
+  const hasItems = evidenceItemCount > 0;
+  const hasPacket = Boolean(project.evidence?.proofReceipt);
+  const route = [
+    {
+      label: "Event source",
+      detail: "lablab.ai submission context",
+      status: routeStatus(isHttpUrl(project.eventUrl || elements.eventUrl.value))
+    },
+    {
+      label: "Repository",
+      detail: project.githubUrl || "Public source missing",
+      status: routeStatus(isHttpUrl(project.githubUrl || ""), project.evidence?.hasGithub === true)
+    },
+    {
+      label: "Deployed app",
+      detail: project.demoUrl || "Public app missing",
+      status: routeStatus(isHttpUrl(project.demoUrl || ""), project.evidence?.hasPublicDemo === true)
+    },
+    {
+      label: "Bright trace",
+      detail: executedBright ? "Executed sponsor proof" : `Current state: ${traceState}`,
+      status: routeStatus(executedBright, ["planned", "claimed", "pending", "direct"].includes(traceState))
+    },
+    {
+      label: "Claim ledger",
+      detail: `${evidenceItemCount} evidence item${evidenceItemCount === 1 ? "" : "s"}`,
+      status: routeStatus(hasItems)
+    },
+    {
+      label: "Judge packet",
+      detail: hasPacket ? "Receipt and exports ready" : "Receipt export missing",
+      status: routeStatus(hasPacket)
+    }
+  ];
+
+  elements.proofTopology.innerHTML = `
+    <div class="module-head proof-head">
+      <div>
+        <h2>Evidence route</h2>
+        <p class="hint">The Bright Data gate is the load-bearing sponsor proof.</p>
+      </div>
+      <span class="route-verdict ${executedBright ? "passed" : "pending"}">${escapeHtml(
+        executedBright ? "Sponsor proof executed" : "Sponsor proof not executed"
+      )}</span>
+    </div>
+    <ol class="route-map">
+      ${route
+        .map(
+          (item) => `
+            <li class="route-node ${escapeAttr(item.status)}">
+              <span>${escapeHtml(routeStatusLabel(item.status))}</span>
+              <strong>${escapeHtml(item.label)}</strong>
+              <p>${escapeHtml(item.detail)}</p>
+            </li>
+          `
+        )
+        .join("")}
+    </ol>
   `;
 }
 
@@ -551,6 +629,7 @@ function render() {
   const project = selectedProject();
   updateRunProfile();
   updateLiveProofStrip(project);
+  renderProofTopology(project);
   renderRankedList();
   renderScorecard(project);
   renderReceipt(project);

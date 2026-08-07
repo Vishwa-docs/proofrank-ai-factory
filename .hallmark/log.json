@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-08-07",
+    "macrostructure": "Map / Diagram",
+    "theme": "modern-minimal",
+    "enrichment": "evidence route map",
+    "brief": "ProofRank evidence route redesign for Bright Data sponsor proof clarity"
+  },
+  {
+    "date": "2026-08-07",
     "macrostructure": "Workbench",
     "theme": "modern-minimal",
     "enrichment": "none",

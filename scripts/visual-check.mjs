@@ -21,7 +21,11 @@ const results = [];
 
 for (const spec of [
   { name: "desktop", width: 1440, height: 950 },
-  { name: "mobile", width: 390, height: 844 }
+  { name: "tablet-768", width: 768, height: 1024 },
+  { name: "mobile-414", width: 414, height: 896 },
+  { name: "mobile-390", width: 390, height: 844 },
+  { name: "mobile-375", width: 375, height: 812 },
+  { name: "mobile-320", width: 320, height: 740 }
 ]) {
   const page = await browser.newPage({
     viewport: { width: spec.width, height: spec.height },
@@ -59,6 +63,7 @@ for (const spec of [
       title: document.title,
       rows: document.querySelectorAll(".project-row").length,
       selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
+      routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       readinessCount: document.querySelectorAll("#readinessList li").length,
       receiptIncludesReviewer: (document.querySelector("#receipt")?.textContent || "").includes(
         "Reviewer supplied"
@@ -83,6 +88,7 @@ const failures = results.flatMap((result) => {
   const problems = [];
   if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
+  if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: proof route did not render`);
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
   if (result.spec.name === "desktop" && !result.metrics.receiptIncludesReviewer) {

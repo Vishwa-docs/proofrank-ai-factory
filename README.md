@@ -164,8 +164,10 @@ Built and verified:
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
+- Evidence Route map that shows event source, repository, deployed app, Bright trace, claim ledger, and judge packet state for the selected project
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
+- Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
 - Live API deployment handoff in `submission/deploy-live-api.md`
@@ -176,6 +178,7 @@ Built and verified:
 - One-command final Bright Data receipt writer at `npm run final:receipt`
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 - Machine-readable final readiness audit at `submission/final-readiness-audit.json`
+- Responsive visual check covering 1440, 768, 414, 390, 375, and 320 px viewports
 
 Refresh demo screenshots and video:
 

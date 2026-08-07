@@ -38,6 +38,7 @@
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
 - Show Originality Radar and its Bright Data prior-art queries.
+- Show the Evidence Route map so the sponsor judge can see where Bright Data is load-bearing and where proof is still pending.
 - Show the Submission Cockpit so judges see native.builder, executed Bright Data, and real-project readiness at a glance.
 
 Public support links already created:
