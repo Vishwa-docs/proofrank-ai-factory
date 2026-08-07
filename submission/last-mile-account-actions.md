@@ -2,7 +2,7 @@
 
 Date: 2026-08-07
 
-ProofRank is currently at 9/11 required final readiness gates. Native.builder is published, the Bright Data proof package is ready, and the two remaining external gates are public live API security configuration plus the final lablab.ai submission URL.
+ProofRank is currently at 10/11 required final readiness gates. Native.builder is published, the Bright Data proof package is ready, and the public live API security gate is now closed. The remaining external gate is the final lablab.ai submission URL.
 
 ## 1. Native.builder Status
 
@@ -45,7 +45,7 @@ Then run:
 npm run final:audit
 ```
 
-Expected state before lablab submit: 9/11 required gates until `PROOFRANK_REVIEW_TOKEN` and `PROOFRANK_ALLOWED_HOSTS` are configured on the public live API. After those pass, only lablab final submission should remain.
+Expected state before lablab submit: 10/11 required gates, with only lablab final submission remaining.
 
 ## 3. Submit On lablab.ai
 
@@ -81,11 +81,9 @@ native.builder generated and refined the ProofRank application structure, dashbo
 
 ## 4. After Submission
 
-Put the live API security values and final lablab submission URL in `.env.local`:
+Put the final lablab submission URL in `.env.local`:
 
 ```text
-PROOFRANK_REVIEW_TOKEN=GENERATED_REVIEW_TOKEN
-PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 PROOFRANK_LABLAB_SUBMISSION_URL=https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/YOUR_TEAM/YOUR_PROJECT
 ```
 

@@ -36,7 +36,8 @@ Date: 2026-08-07
    - Keep or set `PROOFRANK_FETCH_MODE=mcp`.
    - Set `BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover`.
    - Keep `PROOFRANK_MAX_BRIGHTDATA_CALLS=12` for final proof runs and `PROOFRANK_BRIGHTDATA_CAP_USD=20` for the preferred Bright Data budget.
-   - Set `PROOFRANK_REVIEW_TOKEN`, `PROOFRANK_RECEIPT_SIGNING_SECRET`, `PROOFRANK_ALLOWED_ORIGINS`, and `PROOFRANK_ALLOWED_HOSTS` before exposing the backend outside localhost.
+   - Public API security is configured in Vercel: unauthenticated POST returns `401`, and authenticated disallowed-host POST returns `422`.
+   - Add `PROOFRANK_RECEIPT_SIGNING_SECRET` and `BRIGHTDATA_API_TOKEN` to Vercel only if you explicitly want full public Bright Data reviews from the deployed API. The current final sponsor proof uses the local signed Bright Data receipt.
    - Run `npm run brightdata:auth-check`.
    - Run `npm run brightdata:mcp-smoke`.
    - Success condition already achieved locally: auth check returns `ok: true`, `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`, and `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true` with an executed source trace, an executed `search_engine` trace, an executed `discover` trace, and `signatureVerified: true`.
@@ -69,8 +70,8 @@ Date: 2026-08-07
 
 5. Public live backend
    - Vercel serverless wrappers are now included in `api/`; the public health route is `/api/health`.
-   - The no-secret production API shell is live at `https://proofrank-ai-factory.vercel.app/api/review-project`.
-   - Current final-audit blocker: the public endpoint returns validation for unauthenticated POST instead of proving auth first. Deploy the latest API code and set `PROOFRANK_REVIEW_TOKEN` plus `PROOFRANK_ALLOWED_HOSTS` in Vercel before using public Bright Data mode.
+   - The secured production API shell is live at `https://proofrank-ai-factory.vercel.app/api/review-project`.
+   - Public API security probe passed after deployment: `/api/health` returned `200`, unauthenticated `POST /api/review-project` returned `401`, and authenticated disallowed-host POST returned `422`.
    - For full Bright Data mode, set the Bright Data and ProofRank security variables in the Vercel dashboard or explicitly approve credential upload to Vercel.
    - If Vercel free function timeouts interrupt full Bright Data reviews, keep Vercel for `/api/health` and short live checks, then use the local signed receipt for the final sponsor proof.
 
@@ -99,4 +100,4 @@ npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https:
 
 ## Current Honest Status
 
-ProofRank has a published and render-verified Native.builder app, public fallback app, collateral package, local signed Bright Data sponsor receipt with executed MCP traces, and public Vercel live API shell. The final readiness audit is currently 9/11 required gates. Remaining gates: public live API security configuration and final lablab.ai submission.
+ProofRank has a published and render-verified Native.builder app, public fallback app, collateral package, local signed Bright Data sponsor receipt with executed MCP traces, and secured public Vercel live API shell. The final readiness audit is currently 10/11 required gates. Remaining gate: final lablab.ai submission from the authenticated team-owner account.

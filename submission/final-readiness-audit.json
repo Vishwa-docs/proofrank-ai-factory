@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-07T17:34:19.430Z",
+  "generatedAt": "2026-08-07T17:40:10.847Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 9,
+  "requiredPassed": 10,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 83,
+  "score": 92,
   "gates": [
     {
       "id": "public-fallback",
@@ -76,8 +76,8 @@
       "id": "live-api-security",
       "label": "Public live API security controls",
       "required": true,
-      "status": "needs-action",
-      "proof": "unauthenticated POST HTTP 422; disallowed host not verified.",
+      "status": "passed",
+      "proof": "unauthenticated POST HTTP 401; disallowed host HTTP 422.",
       "action": "Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422."
     },
     {
@@ -114,8 +114,7 @@
     }
   ],
   "nextActions": [
-    "Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/11 required gates passed. Next action: Set PROOFRANK_REVIEW_TOKEN and PROOFRANK_ALLOWED_HOSTS, then confirm unauthenticated POST returns 401 and a disallowed host returns 422."
+  "summary": "Not final-ready: 10/11 required gates passed. Next action: Submit from the authenticated team-owner lablab.ai account."
 }

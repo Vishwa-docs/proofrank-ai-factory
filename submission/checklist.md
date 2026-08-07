@@ -22,6 +22,7 @@
 - `npm run brightdata:mcp-smoke` has verified `search_engine`, `scrape_as_markdown`, and `discover`.
 - `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
 - The public release includes `final-brightdata-receipt.json`.
+- Public live API security is configured: unauthenticated review POSTs return `401`, and authenticated disallowed-host POSTs return `422`.
 - If you want Native.builder itself to run full Bright Data live mode, add the Bright Data token only as a server-side/secure environment variable. Do not paste it into client UI or prompt text.
 
 ## Optional But Strong

@@ -3,7 +3,7 @@
 ProofRank's static fallback can rank demo evidence by itself, but true end-to-end
 Bright Data collection needs the Node live review API deployed behind HTTPS.
 
-Current no-secret production API shell:
+Current secured production API shell:
 
 ```text
 https://proofrank-ai-factory.vercel.app/api/review-project
@@ -15,9 +15,10 @@ Health check:
 https://proofrank-ai-factory.vercel.app/api/health
 ```
 
-This production deployment is configured for direct public-fetch mode only. To
-turn it into the full Bright Data live backend, add the secret variables in the
-Vercel dashboard or approve that credential upload explicitly.
+This production deployment now requires `PROOFRANK_REVIEW_TOKEN` for POST
+requests and restricts review targets with `PROOFRANK_ALLOWED_HOSTS`. To turn it
+into the full public Bright Data live backend, add the Bright Data secret
+variables in the Vercel dashboard or approve that credential upload explicitly.
 
 ## Vercel Path
 
@@ -39,21 +40,26 @@ vercel env add PROOFRANK_BRIGHTDATA_CAP_USD production
 vercel --prod
 ```
 
-Use these production values:
+Current security gate values already configured in production:
+
+```text
+PROOFRANK_REVIEW_TOKEN=generated_random_value
+PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
+```
+
+Use these values only if enabling full public Bright Data reviews:
 
 ```text
 BRIGHTDATA_API_TOKEN=your_valid_bright_data_token
 PROOFRANK_FETCH_MODE=mcp
 BRIGHTDATA_MCP_TOOLS=search_engine,scrape_as_markdown,discover
 PROOFRANK_MAX_BRIGHTDATA_CALLS=12
-PROOFRANK_REVIEW_TOKEN=generate_a_random_value
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_different_random_value
 PROOFRANK_ALLOWED_ORIGINS=https://your-app.nativelyai.app,https://vishwa-docs.github.io
-PROOFRANK_ALLOWED_HOSTS=github.com,*.github.io,lablab.ai,*.nativelyai.app
 PROOFRANK_BRIGHTDATA_CAP_USD=20
 ```
 
-After deploy on Railway standalone Node:
+After Vercel deploy:
 
 ```bash
 curl https://YOUR-VERCEL-DOMAIN/api/health
@@ -66,9 +72,10 @@ https://YOUR-VERCEL-DOMAIN/api/review-project
 ```
 
 Vercel is the best zero-credit option for the public health gate and short
-reviews. Full Bright Data proof runs can take longer than a free serverless
-timeout, so the final sponsor receipt should still be generated locally with
-`npm run final:receipt` or on a longer-timeout host if Vercel interrupts it.
+reviews. The security gate currently passes. Full Bright Data proof runs can
+take longer than a free serverless timeout, so the final sponsor receipt should
+still be generated locally with `npm run final:receipt` or on a longer-timeout
+host if Vercel interrupts it.
 
 ## Railway Path
 
