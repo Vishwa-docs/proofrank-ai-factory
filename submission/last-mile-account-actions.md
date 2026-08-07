@@ -6,16 +6,33 @@ ProofRank is currently at 8/10 required readiness gates. The remaining gates are
 
 ## 1. Finish Native.builder
 
-Safari is already on Native.builder with the full ProofRank prompt pasted. The automation clicked **Start building** and stopped at the **Log in or sign up** modal.
+Native.builder project workspace:
+
+```text
+https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
+```
+
+Safari created this workspace. You logged in, created `JackB's Workspace`, the full ProofRank prompt was pasted, and generation was started. Native.builder asked whether to connect Supabase for secure Bright Data Live mode, saying this is required for Edge Function secret storage on their platform. To avoid granting persistent access without action-time confirmation, the safe answer was selected: build now with no real token stored in Native.builder, use Demo Evidence plus a Bright Data Live adapter pointed at a server-side API base URL, and keep Supabase Edge Functions as the recommended later native secure-secret path.
+
+Current Native.builder state:
+
+- Product Architect PRD pass completed.
+- Task Planner completed a six-task build plan.
+- The next visible action was **Start building - Task 1: Foundation & Layout**.
+- The preview still shows the default placeholder, so the actual app UI has not been generated yet.
+- Normal Safari site storage for `builder.nativelyai.com` is currently causing the builder shell to render blank. Private Browsing loads the public Natively home correctly, which indicates the service itself is reachable.
 
 Do this:
 
-1. Log in or sign up using email, Google, or Twitter.
-2. Apply promo code `AIFACTORY26` if the Builder plan upgrade appears.
-3. If the prompt disappears after login, paste `submission/native-builder-prompt.md` again.
-4. Let Native.builder generate the app.
-5. Publish it to a public `nativelyai.app` URL.
-6. Copy that URL.
+1. Recover Native.builder access by either logging in through the working Private Browsing window, or clearing only Natively site data in normal Safari and logging in again.
+2. Open the project workspace URL above.
+3. Click **Start building - Task 1: Foundation & Layout**.
+4. Let the six planned Native.builder build tasks run in order until the preview contains the ProofRank UI.
+5. Apply promo code `AIFACTORY26` if the Builder plan upgrade appears.
+6. Publish it to a public `nativelyai.app` URL.
+7. Copy that URL.
+
+If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.
 
 Use this as the primary submission URL.
 

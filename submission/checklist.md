@@ -2,11 +2,15 @@
 
 ## Must Do In Native.builder
 
-- Create native.builder account or open existing account.
-- Authorize the Native.builder login flow if prompted. Automation reached this boundary at the "Log in or sign up" modal after pasting the full prompt and clicking Start building.
+- Native.builder workspace exists: `JackB's Workspace`.
+- Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
+- The full ProofRank prompt was pasted and generation was started.
+- Product Architect PRD pass completed.
+- Task Planner completed a six-task build plan.
+- Next Native.builder action: click **Start building - Task 1: Foundation & Layout** once builder access is recovered.
+- Normal Safari site storage currently makes `builder.nativelyai.com` render blank; Private Browsing loads the public site, so recover by logging in there or clearing Natively site data in normal Safari.
+- For truly native-builder-hosted Bright Data Live mode, confirm and connect Supabase for secure Edge Function secrets. Otherwise continue with the no-secret external live adapter already selected.
 - Apply Builder Plan promo code `AIFACTORY26`.
-- If the prompt text is not still present after login, paste `submission/native-builder-prompt.md`.
-- Let native.builder generate the app.
 - Iterate until the app matches the local reference.
 - Publish to a public `nativelyai.app` URL.
 - Copy the public app URL.

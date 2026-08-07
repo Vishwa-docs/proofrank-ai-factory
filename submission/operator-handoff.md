@@ -12,6 +12,7 @@ Date: 2026-08-07
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/health
 - Native.builder prompt: `submission/native-builder-prompt.md`
+- Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/checklist.md` and `submission/project-description.md`
 - Last-mile account actions: `submission/last-mile-account-actions.md`
 - Bright Data setup: `submission/bright-data-setup.md`
@@ -36,11 +37,12 @@ Date: 2026-08-07
    - Success condition already achieved locally: auth check returns `ok: true`, `baseToolsPresent` is `true` for `search_engine`, `scrape_as_markdown`, and `discover`, and `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true` with an executed source trace, an executed `search_engine` trace, an executed `discover` trace, and `signatureVerified: true`.
 
 2. Native.builder publish
-   - Open native.builder.
-   - Current Safari status: the full `submission/native-builder-prompt.md` was pasted and `Start building` was clicked; Native.builder then stopped at a "Log in or sign up" modal.
-   - Choose email, Google, or Twitter login yourself, because that creates/uses an account grant.
+   - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
+   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted the full `submission/native-builder-prompt.md`, completed the Product Architect PRD pass, answered follow-up questions with the safe no-secret live adapter path, and completed the Task Planner pass.
+   - Next visible Native.builder action: **Start building - Task 1: Foundation & Layout**.
+   - Current browser blocker: normal Safari site storage for `builder.nativelyai.com` now renders the builder shell blank. Private Browsing loads Natively correctly, so the service is reachable; recover by logging in through Private Browsing or clearing Natively site data in normal Safari and logging in again.
+   - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted.
-   - If the prompt is gone after login, paste `submission/native-builder-prompt.md` again.
    - Build until the app matches the public fallback.
    - Publish the public `nativelyai.app` URL.
    - Use the native.builder URL as the primary lablab submission URL.

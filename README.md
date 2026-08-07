@@ -200,10 +200,8 @@ Design and implementation plan:
 
 Account-gated work still requiring the team owner:
 
-- Authorize the Native.builder X/Privy login flow
+- Recover Native.builder access for `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd` after the normal Safari profile started rendering the builder shell blank. Private Browsing loads the public Natively site, so use Private Browsing login or clear Natively site data in normal Safari.
+- Click **Start building - Task 1: Foundation & Layout**. Product Architect and Task Planner passes are complete, but the preview still shows the default placeholder.
 - Apply the `AIFACTORY26` Builder Plan promo code
-- Add a valid Bright Data API key server-side after claiming `aiaccess50`; current local value still returns HTTP 401 on `brightdata:auth-check`
-- Deploy the live review API with the settings in `submission/deploy-live-api.md`
-- Run one Bright Data-backed project audit so the receipt has an executed sponsor trace
-- Generate `submission/final-brightdata-receipt.json` with `npm run final:receipt`
+- Keep the signed Bright Data receipt in the final submission packet
 - Publish the native.builder app URL and paste it into the lablab.ai submission
