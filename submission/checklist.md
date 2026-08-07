@@ -26,6 +26,7 @@
 - Upload or link the local reference app and submission docs.
 - Use the generated 1:58 demo video at `submission/proofrank-demo.mp4`.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
+- Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
 
 ## lablab.ai Submission Fields

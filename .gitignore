@@ -7,5 +7,9 @@ dist/
 coverage/
 playwright-report/
 test-results/
+.tmp/
 submission/demo-assets/proofrank-demo-voice.aiff
 submission/demo-assets/slides.txt
+submission/deck-preview/
+submission/proofrank-pitch-deck/
+submission/*.inspect.ndjson
