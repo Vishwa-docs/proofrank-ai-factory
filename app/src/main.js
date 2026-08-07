@@ -1,6 +1,6 @@
 import { EVENT_URL, fixtureProjects } from "./fixtures.js";
 import { extractProjectsFromHtml } from "./parser.js";
-import { brightDataTraceState, rankProjects } from "./scoring.js";
+import { brightDataTraceState, hasBrightDataSponsorProofBundle, rankProjects } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
 import { buildOriginalityRadar } from "./originality.js";
@@ -151,20 +151,25 @@ function updateRunProfile() {
 
 function updateLiveProofStrip(project) {
   const traceState = brightDataTraceState(project);
+  const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const receipt = project.runReceipt || {};
   const className =
-    traceState === "executed" ? "is-executed" : traceState === "direct" || traceState === "planned" ? "is-pending" : "is-missing";
+    sponsorBundle || traceState === "executed" ? "is-executed" : traceState === "direct" || traceState === "planned" ? "is-pending" : "is-missing";
   const title =
-    traceState === "executed"
-      ? "Executed Bright Data run"
+    sponsorBundle
+      ? "Sponsor bundle executed"
+      : traceState === "executed"
+        ? "Partial Bright Data run"
       : traceState === "direct"
         ? "Direct evidence only"
         : traceState === "planned"
           ? "Replay planned"
           : "No executed run yet";
   const detail =
-    traceState === "executed"
+    sponsorBundle
       ? `${receipt.runId || "Run receipt issued"} / ${receipt.signature ? "signed" : "unsigned"}`
+      : traceState === "executed"
+        ? "Source plus search plus discover required"
       : traceState === "direct"
         ? "Bright Data replay still required"
         : traceState === "planned"
@@ -246,6 +251,7 @@ function routeStatusLabel(status) {
 function renderProofTopology(project) {
   const traceState = brightDataTraceState(project);
   const executedBright = traceState === "executed";
+  const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const evidenceItemCount = (project.evidenceItems || []).length;
   const hasItems = evidenceItemCount > 0;
   const hasPacket = Boolean(project.evidence?.proofReceipt);
@@ -266,9 +272,9 @@ function renderProofTopology(project) {
       status: routeStatus(isHttpUrl(project.demoUrl || ""), project.evidence?.hasPublicDemo === true)
     },
     {
-      label: "Bright trace",
-      detail: executedBright ? "Executed sponsor proof" : `Current state: ${traceState}`,
-      status: routeStatus(executedBright, ["planned", "claimed", "pending", "direct"].includes(traceState))
+      label: "Bright bundle",
+      detail: sponsorBundle ? "Source, search, discover executed" : executedBright ? "Partial sponsor proof" : `Current state: ${traceState}`,
+      status: routeStatus(sponsorBundle, executedBright || ["planned", "claimed", "pending", "direct"].includes(traceState))
     },
     {
       label: "Claim ledger",
@@ -288,8 +294,8 @@ function renderProofTopology(project) {
         <h2>Evidence route</h2>
         <p class="hint">The Bright Data gate is the load-bearing sponsor proof.</p>
       </div>
-      <span class="route-verdict ${executedBright ? "passed" : "pending"}">${escapeHtml(
-        executedBright ? "Sponsor proof executed" : "Sponsor proof not executed"
+      <span class="route-verdict ${sponsorBundle ? "passed" : "pending"}">${escapeHtml(
+        sponsorBundle ? "Sponsor proof bundle executed" : "Sponsor proof bundle incomplete"
       )}</span>
     </div>
     <ol class="route-map">
@@ -466,7 +472,7 @@ function renderScorecard(project) {
     <section class="score-grid" aria-label="Score breakdown">
       ${scoreTile("Eligibility", project.scores.eligibility, "Demo, repo, build proof")}
       ${scoreTile("Bright fit", project.scores.brightDataFit, "Live web is load-bearing")}
-      ${scoreTile("Bright prize", project.scores.brightDataPrize, "Executed sponsor rank")}
+      ${scoreTile("Bright prize", project.scores.brightDataPrize, "Sponsor bundle rank")}
       ${scoreTile("Business", project.scores.businessValue, "Clear user and urgency")}
       ${scoreTile("Originality", project.scores.originality, "Distinct wedge and proof")}
       ${scoreTile("Presentation", project.scores.presentation, "Judge-ready explanation")}
@@ -697,7 +703,7 @@ async function runAudit() {
         setStatus(
           result.reviewedProject
             ? `${liveProjects.length} live submissions collected and one project-level review completed. Check the selected receipt for sponsor-proof trace state.`
-            : `${liveProjects.length} live submissions collected. Event intake is not sponsor proof; review a GitHub project next for executed Bright Data traces.`,
+            : `${liveProjects.length} live submissions collected. Event intake is not sponsor proof; review a GitHub project next for the Bright Data proof bundle.`,
           result.reviewedProject ? "ready" : "warn"
         );
       }

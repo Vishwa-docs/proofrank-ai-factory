@@ -52,9 +52,9 @@ const project = {
     runId: "pr-20260807t120000000z-1a2b3c4d",
     collectionMode: "bright-data-mcp",
     provider: "bright-data",
-    traceCount: 2,
-    executedTraceCount: 2,
-    tools: ["scrape_as_markdown", "search_engine"],
+    traceCount: 3,
+    executedTraceCount: 3,
+    tools: ["scrape_as_markdown", "search_engine", "discover"],
     traceDigest: "1a2b3c4d",
     replayCommand: "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/example/proofrank https://example.com/demo"
   },
@@ -63,7 +63,31 @@ const project = {
       mode: "bright-data-request-api",
       provider: "bright-data",
       traceStatus: "executed",
-      tool: "scrape_as_markdown"
+      tool: "scrape_as_markdown",
+      queryOrUrl: "https://github.com/example/proofrank",
+      resultCount: 1,
+      byteCount: 2048,
+      contentHash: "abcd1234"
+    },
+    {
+      mode: "bright-data-request-api",
+      provider: "bright-data",
+      traceStatus: "executed",
+      tool: "search_engine",
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon",
+      resultCount: 1,
+      byteCount: 1024,
+      contentHash: "ef567890"
+    },
+    {
+      mode: "bright-data-request-api",
+      provider: "bright-data",
+      traceStatus: "executed",
+      tool: "discover",
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" originality",
+      resultCount: 1,
+      byteCount: 1536,
+      contentHash: "1234abcd"
     }
   ]
 };

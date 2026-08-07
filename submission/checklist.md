@@ -96,7 +96,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. The current fallback app implements server-side review through Bright Data's Request API plus Remote MCP `scrape_as_markdown`, `search_engine`, and `discover`, with planned Web Scraper API, Web Unlocker, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires an executed Bright Data trace, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. The current fallback app implements server-side review through Bright Data's Request API plus Remote MCP `scrape_as_markdown`, `search_engine`, and `discover`, with planned Web Scraper API, Web Unlocker, and CLI-compatible collection steps for the native.builder live workflow. Proof receipts show trace state, provider, byte count, and content hash; sponsor-fit credit requires the executed Bright Data source/search/discovery bundle, not merely a planned or claimed row. The Submission Cockpit exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:

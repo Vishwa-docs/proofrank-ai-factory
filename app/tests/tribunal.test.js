@@ -36,13 +36,28 @@ const strongProject = {
       mode: "bright-data-request-api",
       provider: "bright-data",
       traceStatus: "executed",
-      tool: "scrape_as_markdown"
+      tool: "scrape_as_markdown",
+      resultCount: 1,
+      byteCount: 2048,
+      contentHash: "abcd1234"
     },
     {
       mode: "bright-data-request-api",
       provider: "bright-data",
       traceStatus: "executed",
-      tool: "search_engine"
+      tool: "search_engine",
+      resultCount: 1,
+      byteCount: 1024,
+      contentHash: "ef567890"
+    },
+    {
+      mode: "bright-data-request-api",
+      provider: "bright-data",
+      traceStatus: "executed",
+      tool: "discover",
+      resultCount: 1,
+      byteCount: 1536,
+      contentHash: "1234abcd"
     }
   ]
 };

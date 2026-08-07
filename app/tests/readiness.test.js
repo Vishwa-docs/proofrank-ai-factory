@@ -2,6 +2,20 @@ import assert from "node:assert/strict";
 import { fixtureProjects } from "../src/fixtures.js";
 import { buildReadiness, readinessSummary } from "../src/readiness.js";
 
+function executedTrace(tool, overrides = {}) {
+  return {
+    provider: "bright-data",
+    traceStatus: "executed",
+    tool,
+    queryOrUrl: "https://github.com/example/project",
+    resultCount: 1,
+    countsForSponsorFit: true,
+    byteCount: 1024,
+    contentHash: "abcd1234",
+    ...overrides
+  };
+}
+
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 
 const fallbackReadiness = buildReadiness(proofrank, {
@@ -63,14 +77,15 @@ const executedProject = {
     repoMetadataCollected: true
   },
   brightDataTraces: [
-    {
-      provider: "bright-data",
-      traceStatus: "executed",
-      tool: "scrape_as_markdown",
-      queryOrUrl: "https://github.com/example/project",
-      resultCount: 1,
-      countsForSponsorFit: true
-    }
+    executedTrace("scrape_as_markdown"),
+    executedTrace("search_engine", {
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon",
+      contentHash: "ef567890"
+    }),
+    executedTrace("discover", {
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon originality",
+      contentHash: "1234abcd"
+    })
   ]
 };
 

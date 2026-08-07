@@ -116,7 +116,8 @@ GitHub repo plus deployed app URL. `Run review` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the
-project receipt still needs an executed Bright Data provider trace.
+project receipt still needs the full Bright Data sponsor proof bundle: source
+scrape, `search_engine`, and `discover`.
 
 The full verifier also starts a temporary static server and runs a smoke test:
 
@@ -161,12 +162,12 @@ Built and verified:
 
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
-- Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has an executed Bright Data trace
+- Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has a full Bright Data sponsor proof bundle
 - Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, `discover`, and `PROOFRANK_FETCH_MODE=mcp`
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
-- Evidence Route map that shows event source, repository, deployed app, Bright trace, claim ledger, and judge packet state for the selected project
+- Evidence Route map that shows event source, repository, deployed app, Bright bundle, claim ledger, and judge packet state for the selected project
 - Submission Cockpit that separates required final-submission gates from competitive polish checks
 - Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`

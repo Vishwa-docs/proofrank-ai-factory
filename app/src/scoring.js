@@ -13,23 +13,41 @@ const BRIGHT_ROLE_POINTS = {
   agentic: 55
 };
 
+const SOURCE_TRACE_PATTERN = /scrape|unlock|browser|crawl|request|dataset|web_data/i;
+
 function isBrightDataMode(value = "") {
   return /\bbright[-\s]?data\b|remote[-\s]?mcp|web[-\s]?unlocker|serp|web[-\s]?scraper/i.test(String(value));
 }
 
+function isBrightDataTrace(trace = {}) {
+  return trace.provider === "bright-data" || isBrightDataMode(trace.mode);
+}
+
+function isUsefulTrace(trace = {}) {
+  return Number(trace.resultCount || 0) > 0 && Number(trace.byteCount || 0) > 0 && trace.contentHash && trace.contentHash !== "00000000";
+}
+
+function isExecutedSponsorTrace(trace = {}) {
+  return trace.countsForSponsorFit !== false && trace.traceStatus === "executed" && isBrightDataTrace(trace) && isUsefulTrace(trace);
+}
+
+function isSourceTrace(trace = {}) {
+  return trace.tool !== "search_engine" && SOURCE_TRACE_PATTERN.test(String(trace.tool || "")) && isUsefulTrace(trace);
+}
+
 export function hasExecutedBrightDataTrace(project = {}) {
-  const evidence = project.evidence || {};
   const traces = project.brightDataTraces || [];
 
-  return (
-    traces.some(
-      (trace) =>
-        trace.countsForSponsorFit !== false &&
-        trace.traceStatus === "executed" &&
-        (trace.provider === "bright-data" || isBrightDataMode(trace.mode) || isBrightDataMode(trace.tool))
-    ) ||
-    (evidence.brightDataTrace === true && evidence.brightDataTraceStatus === "executed")
-  );
+  return traces.some(isExecutedSponsorTrace);
+}
+
+export function hasBrightDataSponsorProofBundle(project = {}) {
+  const traces = (project.brightDataTraces || []).filter(isExecutedSponsorTrace);
+  const hasSourceTrace = traces.some(isSourceTrace);
+  const hasSearchTrace = traces.some((trace) => trace.tool === "search_engine");
+  const hasDiscoverTrace = traces.some((trace) => trace.tool === "discover");
+
+  return hasSourceTrace && hasSearchTrace && hasDiscoverTrace;
 }
 
 export function brightDataTraceState(project = {}) {
@@ -38,6 +56,7 @@ export function brightDataTraceState(project = {}) {
 
   if (hasExecutedBrightDataTrace(project)) return "executed";
   if (traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "failed")) return "failed";
+  if (evidence.brightDataTraceStatus === "executed") return "claimed";
   if (evidence.brightDataTraceStatus) return evidence.brightDataTraceStatus;
   if (traces.some((trace) => trace.traceStatus === "planned" || trace.mode === "planned")) return "planned";
   if (traces.some((trace) => trace.provider === "direct" && trace.traceStatus === "executed")) return "direct";
@@ -57,6 +76,7 @@ export function calculateScores(project) {
   const evidence = project.evidence || {};
   const brightTools = evidence.brightDataTools || [];
   const executedBrightTrace = hasExecutedBrightDataTrace(project);
+  const sponsorProofBundle = hasBrightDataSponsorProofBundle(project);
 
   const eligibility = clampScore(
     boolPoints(evidence.hasDemo, 14) +
@@ -78,10 +98,11 @@ export function calculateScores(project) {
     (BRIGHT_ROLE_POINTS[evidence.brightDataRole] || 0) +
       Math.min(brightTools.length, 3) * 7 +
       boolPoints(evidence.agenticLoop, 12) +
-      boolPoints(executedBrightTrace, 10) +
+      boolPoints(executedBrightTrace, 5) +
+      boolPoints(sponsorProofBundle, 5) +
       boolPoints(evidence.proofReceipt, 6)
   );
-  const brightDataFit = executedBrightTrace ? rawBrightDataFit : Math.min(rawBrightDataFit, 72);
+  const brightDataFit = sponsorProofBundle ? rawBrightDataFit : executedBrightTrace ? Math.min(rawBrightDataFit, 84) : Math.min(rawBrightDataFit, 72);
 
   const presentation = clampScore(
     boolPoints(evidence.hasDemo, 25) +
@@ -120,9 +141,10 @@ export function calculateScores(project) {
       businessValue * 0.15 +
       originality * 0.15 +
       presentation * 0.1 +
-      boolPoints(executedBrightTrace, 10)
+      boolPoints(executedBrightTrace, 4) +
+      boolPoints(sponsorProofBundle, 8)
   );
-  const brightDataPrize = executedBrightTrace ? rawBrightDataPrize : Math.min(rawBrightDataPrize, 64);
+  const brightDataPrize = sponsorProofBundle ? rawBrightDataPrize : executedBrightTrace ? Math.min(rawBrightDataPrize, 78) : Math.min(rawBrightDataPrize, 64);
 
   return {
     eligibility,
@@ -138,12 +160,15 @@ export function calculateScores(project) {
 export function buildVerdict(project, scores = calculateScores(project)) {
   const evidence = project.evidence || {};
   const executedBrightTrace = hasExecutedBrightDataTrace(project);
+  const sponsorProofBundle = hasBrightDataSponsorProofBundle(project);
   const risks = [];
 
   if (!evidence.hasPublicDemo) risks.push("Publish public demo before submission");
   if (!evidence.nativeBuilderExplained) risks.push("Add native.builder usage explanation");
   if (!evidence.hasGithub) risks.push("Add public source or implementation evidence");
-  if (!executedBrightTrace) risks.push("Run at least one executed Bright Data collection trace");
+  if (!sponsorProofBundle) {
+    risks.push(executedBrightTrace ? "Complete the Bright Data sponsor proof bundle" : "Run the Bright Data sponsor proof bundle");
+  }
   if (evidence.secretRiskVisible) risks.push("Remove visible secrets or sensitive files from public repo");
   if (scores.brightDataFit < 55) risks.push("Bright Data usage is not load-bearing enough");
   if (scores.originality < 70) risks.push("Differentiate more sharply from adjacent entries");
@@ -151,7 +176,7 @@ export function buildVerdict(project, scores = calculateScores(project)) {
   let label = "High risk";
   let action = "Manual review required";
 
-  if (scores.overall >= 86 && evidence.hasPublicDemo && scores.brightDataFit >= 75 && executedBrightTrace) {
+  if (scores.overall >= 86 && evidence.hasPublicDemo && scores.brightDataFit >= 75 && sponsorProofBundle) {
     label = "Finalist-ready";
     action = "Shortlist for judge review";
   } else if (scores.overall >= 78 && scores.brightDataFit >= 70) {

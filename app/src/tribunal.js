@@ -1,4 +1,4 @@
-import { brightDataTraceState, hasExecutedBrightDataTrace } from "./scoring.js";
+import { brightDataTraceState, hasBrightDataSponsorProofBundle, hasExecutedBrightDataTrace } from "./scoring.js";
 
 function clampPercent(value) {
   return Math.max(0, Math.min(100, Math.round(value)));
@@ -17,8 +17,9 @@ function sponsorJudge(project) {
   const scores = project.scores || {};
   const tools = evidence.brightDataTools || [];
   const executedBrightTrace = hasExecutedBrightDataTrace(project);
+  const sponsorProofBundle = hasBrightDataSponsorProofBundle(project);
   const traceState = brightDataTraceState(project);
-  const confidence = clampPercent((scores.brightDataFit || 0) * 0.7 + bool(executedBrightTrace) * 12 + bool(evidence.proofReceipt) * 10 + Math.min(tools.length, 3) * 3);
+  const confidence = clampPercent((scores.brightDataFit || 0) * 0.65 + bool(executedBrightTrace) * 6 + bool(sponsorProofBundle) * 12 + bool(evidence.proofReceipt) * 8 + Math.min(tools.length, 3) * 3);
 
   return {
     role: "Bright Data sponsor judge",
@@ -32,11 +33,12 @@ function sponsorJudge(project) {
     reasons: compactReasons([
       evidence.brightDataRole === "agentic" ? "Agentic Bright Data role is visible." : "",
       tools.length ? `${tools.join(", ")} are referenced.` : "",
-      executedBrightTrace ? "Receipt includes executed Bright Data trace rows." : "",
+      sponsorProofBundle ? "Receipt includes executed source, search, and discovery traces." : executedBrightTrace ? "Receipt includes partial executed Bright Data traces." : "",
       evidence.proofReceipt ? "Output is framed as a proof receipt rather than a generic summary." : ""
     ]),
     objections: compactReasons([
       !executedBrightTrace ? `Bright Data trace is ${traceState}, not executed.` : "",
+      executedBrightTrace && !sponsorProofBundle ? "Sponsor bundle is missing search, discovery, or source scrape proof." : "",
       (scores.brightDataFit || 0) < 75 ? "Sponsor-fit score is below shortlist strength." : "",
       evidence.brightDataRole === "none" ? "Bright Data is not described as load-bearing." : ""
     ])
@@ -120,11 +122,11 @@ function disputeLog(project, panel) {
 
   disputes.push({
     topic: "Sponsor dependency",
-    status: (scores.brightDataFit || 0) >= 75 && hasExecutedBrightDataTrace(project) ? "resolved" : "open",
+    status: (scores.brightDataFit || 0) >= 75 && hasBrightDataSponsorProofBundle(project) ? "resolved" : "open",
     detail:
-      (scores.brightDataFit || 0) >= 75 && hasExecutedBrightDataTrace(project)
-        ? "Bright Data usage is executed and visible enough for a sponsor-side review."
-        : "Need a replayable Bright Data run before claiming sponsor-prize strength."
+      (scores.brightDataFit || 0) >= 75 && hasBrightDataSponsorProofBundle(project)
+        ? "Bright Data usage is executed across source, search, and discovery proof."
+        : "Need a replayable Bright Data source, search, and discovery bundle before claiming sponsor-prize strength."
   });
 
   if (!evidence.hasPublicDemo || !evidence.nativeBuilderExplained || !evidence.builtDuringEvent) {

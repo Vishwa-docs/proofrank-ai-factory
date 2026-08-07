@@ -70,7 +70,7 @@ Use deterministic scoring, then allow future AI enrichment.
 - Originality: 15%
 - Presentation: 15%
 
-Bright Data Dependency should be high only when Bright Data is load-bearing, agentic, traceable, visible in receipts, and backed by at least one executed Bright Data trace.
+Bright Data Dependency should be high only when Bright Data is load-bearing, agentic, traceable, visible in receipts, and backed by the full executed Bright Data sponsor proof bundle: source scrape, `search_engine`, and `discover`.
 
 ## Adversarial Tribunal
 
@@ -101,7 +101,7 @@ Show a readiness cockpit that separates required submission gates from competiti
 Required gates:
 
 - Native.builder primary URL
-- Executed Bright Data trace
+- Bright Data sponsor proof bundle
 - Actual project reviewed
 - Live collection backend
 - Public app URL
@@ -113,7 +113,7 @@ Competitive gates:
 - No visible secret risk
 - Exportable proof packet
 
-The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or executed Bright Data trace is missing, the app should say the project is still gated rather than submission-safe.
+The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or Bright Data sponsor proof bundle is missing, the app should say the project is still gated rather than submission-safe.
 
 The Actual project reviewed gate must not pass for a manually typed or pending target. It should pass only when a reviewer-supplied project has live-collected repository/demo evidence and at least one non-pending collection trace.
 
@@ -195,7 +195,7 @@ Each server-issued project review should also include `runReceipt` with:
 - Failed fetch: keep project in queue and mark accessibility risk.
 - Missing demo: reduce eligibility and presentation score.
 - Missing native.builder explanation: add evidence gap.
-- Missing executed Bright Data trace: reduce Bright Data Dependency score and keep a sponsor-dependency dispute open.
+- Missing Bright Data sponsor proof bundle: reduce Bright Data Dependency score and keep a sponsor-dependency dispute open.
 - Visible secret-risk files or credential-looking values: flag source hygiene risk.
 - Ambiguous originality: mark Weak Evidence, not a hard accusation.
 

@@ -23,7 +23,7 @@ assert.equal(success.server, "brightdata-mcp");
 assert.equal(success.baseToolsPresent, true);
 assert.deepEqual(success.sampleTools, ["search_engine", "scrape_as_markdown", "discover", "extra_tool"]);
 
-const uuidToken = "a003bd38-893d-4fbe-823e-b5ded86ee98a";
+const uuidToken = "11111111-2222-4333-8444-555555555555";
 const failure = buildMcpSmokeFailureReport(new Error(`initialize failed with HTTP 401: token=${uuidToken}`), {
   BRIGHTDATA_API_TOKEN: uuidToken
 });

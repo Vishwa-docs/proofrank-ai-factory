@@ -2,6 +2,21 @@ import assert from "node:assert/strict";
 import { fixtureProjects } from "../src/fixtures.js";
 import { buildVerdict, calculateScores, rankProjects } from "../src/scoring.js";
 
+function executedTrace(tool, overrides = {}) {
+  return {
+    mode: "bright-data-request-api",
+    provider: "bright-data",
+    traceStatus: "executed",
+    tool,
+    queryOrUrl: "https://example.com/demo",
+    resultCount: 1,
+    status: "ok",
+    byteCount: 1024,
+    contentHash: "abcd1234",
+    ...overrides
+  };
+}
+
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 const countersign = fixtureProjects.find((project) => project.id === "countersign");
 
@@ -19,22 +34,13 @@ assert.ok(countersignScores.overall < proofrankScores.overall);
 const proofrankVerdict = buildVerdict(proofrank, proofrankScores);
 assert.equal(proofrankVerdict.label, "Strong but gated");
 assert.ok(!proofrankVerdict.risks.includes("Publish public demo before submission"));
-assert.ok(proofrankVerdict.risks.includes("Run at least one executed Bright Data collection trace"));
+assert.ok(proofrankVerdict.risks.includes("Run the Bright Data sponsor proof bundle"));
 
 const ranked = rankProjects(fixtureProjects);
 assert.equal(ranked[0].id, "proofrank");
 
 const reviewBase = {
-  brightDataTraces: [
-    {
-      mode: "bright-data-request-api",
-      traceStatus: "executed",
-      tool: "scrape_as_markdown",
-      queryOrUrl: "https://example.com/demo",
-      resultCount: 1,
-      status: "ok"
-    }
-  ],
+  brightDataTraces: [executedTrace("scrape_as_markdown")],
   evidence: {
     hasDemo: true,
     hasPublicDemo: true,
@@ -113,25 +119,34 @@ const plannedTraceProject = {
 
 const executedTraceProject = {
   ...reviewBase,
+  brightDataTraces: [executedTrace("scrape_as_markdown")]
+};
+
+const sponsorBundleProject = {
+  ...reviewBase,
   brightDataTraces: [
-    {
-      mode: "bright-data-request-api",
-      traceStatus: "executed",
-      tool: "scrape_as_markdown",
-      queryOrUrl: "https://example.com/demo",
-      resultCount: 1,
-      status: "ok"
-    }
+    executedTrace("scrape_as_markdown"),
+    executedTrace("search_engine", {
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon",
+      contentHash: "ef567890"
+    }),
+    executedTrace("discover", {
+      queryOrUrl: "\"ProofRank\" \"Bright Data\" hackathon originality",
+      contentHash: "1234abcd"
+    })
   ]
 };
 
 const plannedTraceScores = calculateScores(plannedTraceProject);
 const executedTraceScores = calculateScores(executedTraceProject);
+const sponsorBundleScores = calculateScores(sponsorBundleProject);
 assert.ok(executedTraceScores.brightDataFit > plannedTraceScores.brightDataFit);
 assert.ok(executedTraceScores.brightDataPrize > plannedTraceScores.brightDataPrize);
 assert.ok(plannedTraceScores.brightDataPrize <= 64);
-assert.ok(executedTraceScores.brightDataPrize >= 86);
-assert.ok(buildVerdict(plannedTraceProject, plannedTraceScores).risks.includes("Run at least one executed Bright Data collection trace"));
-assert.equal(buildVerdict(executedTraceProject, executedTraceScores).label, "Finalist-ready");
+assert.ok(executedTraceScores.brightDataPrize <= 78);
+assert.ok(sponsorBundleScores.brightDataPrize >= 86);
+assert.ok(buildVerdict(plannedTraceProject, plannedTraceScores).risks.includes("Run the Bright Data sponsor proof bundle"));
+assert.ok(buildVerdict(executedTraceProject, executedTraceScores).risks.includes("Complete the Bright Data sponsor proof bundle"));
+assert.equal(buildVerdict(sponsorBundleProject, sponsorBundleScores).label, "Finalist-ready");
 
 console.log("scoring tests passed");

@@ -30,7 +30,7 @@ Run adversarial tribunal.
 
 Run Originality Radar across the current field.
 
-Separate executed Bright Data traces from planned, claimed, direct, pending, and failed evidence.
+Separate the executed Bright Data proof bundle from planned, claimed, direct, pending, and failed evidence.
 
 Score eligibility, Bright Data dependency, business value, originality, and presentation.
 

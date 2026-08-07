@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-08-07T14:28:03.599Z",
-  "durationMs": 2431,
+  "generatedAt": "2026-08-07T14:40:23.716Z",
+  "durationMs": 2332,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank AI Factory",
   "rankedRows": 9,
   "statusLine": "ProofRank AI Factory added to the review queue.",
   "brightProof": "Bright proof No executed run yet Live collection required",
-  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected. GitHubBright Data collection pending Overall 25 DemoGitHub Eligibility 52 Demo, repo, build proof Bright fit 6 Live web is load-bearing Bright prize 19 Executed sponsor rank Business 0 Clear user and urgency Originality 18 Distinct wedge and proof Presentation 55 Judge-ready explanation Recommended action Manual review required Evidence depth 1 receipt items, 1 collection traces, Bright D",
+  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected. GitHubBright Data collection pending Overall 25 DemoGitHub Eligibility 52 Demo, repo, build proof Bright fit 6 Live web is load-bearing Bright prize 19 Sponsor bundle rank Business 0 Clear user and urgency Originality 18 Distinct wedge and proof Presentation 55 Judge-ready explanation Recommended action Manual review required Evidence depth 1 receipt items, 1 collection traces, Bright Dat",
   "receiptText": "Run receipt Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Saved evidence mirrors these collection steps. search_engineDiscover public mentions and possible duplicatess",
   "readinessItems": [
     {
@@ -16,8 +16,8 @@
     },
     {
       "status": "Action",
-      "label": "Executed Bright Data trace",
-      "detail": "Current trace state is pending; sponsor proof needs an executed Bright Data run."
+      "label": "Bright Data sponsor proof bundle",
+      "detail": "Current trace state is pending; sponsor proof needs executed source, search_engine, and discover traces."
     },
     {
       "status": "Action",

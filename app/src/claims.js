@@ -1,4 +1,4 @@
-import { brightDataTraceState, hasExecutedBrightDataTrace } from "./scoring.js";
+import { brightDataTraceState, hasBrightDataSponsorProofBundle, hasExecutedBrightDataTrace } from "./scoring.js";
 
 function statusFor(value, strongLabel = "Verified") {
   return value ? strongLabel : "Not Found";
@@ -14,6 +14,7 @@ export function buildClaimLedger(project) {
   const brightTools = evidence.brightDataTools || [];
   const brightDependency = scores.brightDataFit ?? 0;
   const executedBrightTrace = hasExecutedBrightDataTrace(project);
+  const sponsorProofBundle = hasBrightDataSponsorProofBundle(project);
   const traceState = brightDataTraceState(project);
 
   return [
@@ -37,10 +38,12 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Bright Data is load-bearing",
-      status: brightDependency >= 80 && executedBrightTrace ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
+      status: brightDependency >= 80 && sponsorProofBundle ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
       evidence:
-        brightTools.length > 0 && executedBrightTrace
-          ? `${brightTools.join(", ")} executed with dependency score ${brightDependency}.`
+        brightTools.length > 0 && sponsorProofBundle
+          ? `${brightTools.join(", ")} completed source, search, and discovery proof with dependency score ${brightDependency}.`
+          : brightTools.length > 0 && executedBrightTrace
+            ? `${brightTools.join(", ")} executed partially with dependency score ${brightDependency}; sponsor bundle is incomplete.`
           : brightTools.length > 0
             ? `${brightTools.join(", ")} referenced with dependency score ${brightDependency}; trace state is ${traceState}.`
           : "No visible Bright Data tool usage in public evidence."
@@ -56,11 +59,11 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Review packet is defensible",
-      status: evidence.proofReceipt && executedBrightTrace ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Proof",
+      status: evidence.proofReceipt && sponsorProofBundle ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Proof",
       evidence: evidenceText(
-        evidence.proofReceipt && executedBrightTrace,
-        "Receipt includes source-backed evidence plus an executed Bright Data collection trace.",
-        "Add timestamped Bright Data execution traces and confidence labels."
+        evidence.proofReceipt && sponsorProofBundle,
+        "Receipt includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
+        "Add timestamped Bright Data source, search, and discovery traces with confidence labels."
       )
     },
     {

@@ -1,4 +1,4 @@
-import { brightDataTraceState, hasExecutedBrightDataTrace } from "./scoring.js";
+import { brightDataTraceState, hasBrightDataSponsorProofBundle } from "./scoring.js";
 
 function isHttpUrl(value = "") {
   try {
@@ -84,7 +84,7 @@ export function buildReadiness(project = {}, context = {}) {
     isLoopbackHost(hostFromUrl(context.liveApiUrl || "")) &&
     context.pageOrigin &&
     !isLoopbackHost(hostFromUrl(context.pageOrigin));
-  const sponsorProofReady = hasExecutedBrightDataTrace(project);
+  const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
   const nativeBuilderReady = looksLikeNativeBuilderUrl(project);
   const traceState = sponsorProofReady ? "executed" : brightDataTraceState(project);
   const liveReviewedProjectCount = projects.filter(hasLiveReviewerEvidence).length;
@@ -102,15 +102,15 @@ export function buildReadiness(project = {}, context = {}) {
     }),
     gate({
       id: "bright-data",
-      label: "Executed Bright Data trace",
+      label: "Bright Data sponsor proof bundle",
       passed: sponsorProofReady,
       detail: sponsorProofReady
-        ? "At least one receipt contains an executed Bright Data provider trace."
-        : `Current trace state is ${traceState}; sponsor proof needs an executed Bright Data run.`,
+        ? "Receipt contains executed Bright Data source, search_engine, and discover traces."
+        : `Current trace state is ${traceState}; sponsor proof needs executed source, search_engine, and discover traces.`,
       proof: sponsorProofReady
-        ? "provider=bright-data and traceStatus=executed"
-        : "Planned, claimed, direct, pending, and failed traces do not pass this gate.",
-      action: "Fix the Bright Data token, rerun live collection, and export a receipt with executed sponsor traces."
+        ? "provider=bright-data with executed source scrape, search_engine, and discover traces"
+        : "Single, planned, claimed, direct, pending, and failed traces do not pass this gate.",
+      action: "Fix the Bright Data token, rerun live collection, and export the full sponsor proof bundle."
     }),
     gate({
       id: "actual-review-target",
