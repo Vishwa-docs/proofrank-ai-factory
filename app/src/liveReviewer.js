@@ -260,7 +260,7 @@ function contentHash(value = "") {
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
-function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, text = "", error = null }) {
+export function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, text = "", error = null, countsForSponsorFit = true }) {
   const ok = !error;
   return {
     mode: collectionMode,
@@ -272,11 +272,12 @@ function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, t
     status: ok ? "ok" : `failed: ${error.message}`,
     collectedAt,
     byteCount: ok ? byteCount(text) : 0,
-    contentHash: ok ? contentHash(text) : "00000000"
+    contentHash: ok ? contentHash(text) : "00000000",
+    countsForSponsorFit
   };
 }
 
-function summarizeTraceStatus(traces) {
+export function summarizeTraceStatus(traces) {
   if (traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "executed")) return "executed";
   if (traces.some((trace) => trace.provider === "bright-data" && trace.traceStatus === "failed")) return "failed";
   if (traces.some((trace) => trace.provider === "direct" && trace.traceStatus === "executed")) return "direct";

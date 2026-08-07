@@ -63,6 +63,7 @@ PROOFRANK_MODE=live
 
 ```bash
 npm run brightdata:mcp-smoke
+npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:server
@@ -74,7 +75,7 @@ When the live server is running, use this endpoint in the ProofRank UI:
 http://127.0.0.1:8787/api/review-project
 ```
 
-Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed.
+Use `live:smoke:direct` only to validate real GitHub/demo ingestion while Bright Data credentials are being corrected. The lablab event page may block direct fetches with HTTP 403, so event-level collection should use Bright Data/Web Unlocker. The prize demo should use the Bright Data-backed path once `brightdata:mcp-smoke` passes. ProofRank marks direct fallback as `traceStatus: executed` with `provider: direct`, but sponsor-fit scoring only closes when `provider: bright-data` is executed.
 
 ## Proof Receipt Trace Shape
 

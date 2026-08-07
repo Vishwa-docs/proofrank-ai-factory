@@ -22,7 +22,12 @@ export function hasExecutedBrightDataTrace(project = {}) {
   const traces = project.brightDataTraces || [];
 
   return (
-    traces.some((trace) => trace.traceStatus === "executed" && (trace.provider === "bright-data" || isBrightDataMode(trace.mode) || isBrightDataMode(trace.tool))) ||
+    traces.some(
+      (trace) =>
+        trace.countsForSponsorFit !== false &&
+        trace.traceStatus === "executed" &&
+        (trace.provider === "bright-data" || isBrightDataMode(trace.mode) || isBrightDataMode(trace.tool))
+    ) ||
     (evidence.brightDataTrace === true && evidence.brightDataTraceStatus === "executed")
   );
 }

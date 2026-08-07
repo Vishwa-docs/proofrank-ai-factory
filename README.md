@@ -66,9 +66,10 @@ Run one bounded reviewer collection through Bright Data once the token is valid:
 
 ```bash
 npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 ```
 
-Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data proof:
+Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data proof. The lablab event page may return HTTP 403 in direct mode, which is why the event-level path is designed for Bright Data/Web Unlocker.
 
 ```bash
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -82,7 +83,8 @@ npm run live:server
 
 Then open the app, switch collection mode to `Bright Data live`, keep the live
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
-GitHub repo plus deployed app URL.
+GitHub repo plus deployed app URL. `Run review` calls the sibling
+`/api/review-event` endpoint to collect live event submission cards.
 
 The full verifier also starts a temporary static server and runs a smoke test:
 

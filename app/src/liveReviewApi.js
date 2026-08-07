@@ -1,4 +1,5 @@
 import { collectReviewerProject } from "./liveReviewer.js";
+import { collectEventProjects } from "./liveEventReviewer.js";
 
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
@@ -33,9 +34,30 @@ export async function handleLiveReviewRequest(request, options = {}) {
   const method = (request.method || "GET").toUpperCase();
   const pathname = parsePathname(request);
   const collector = options.collector || collectReviewerProject;
+  const eventCollector = options.eventCollector || collectEventProjects;
 
   if (method === "OPTIONS") return { status: 204, headers: JSON_HEADERS, body: "" };
   if (method === "GET" && pathname === "/health") return json(200, { ok: true, service: "proofrank-live-review" });
+
+  if (method === "POST" && pathname === "/api/review-event") {
+    let payload;
+    try {
+      payload = parseBody(request.body);
+    } catch (error) {
+      return json(400, { error: error.message });
+    }
+
+    if (!payload.eventUrl) {
+      return json(422, { error: "eventUrl is required." });
+    }
+
+    try {
+      const result = await eventCollector(payload, options.collectorOptions || {});
+      return json(200, { mode: "live-event", ...result });
+    } catch (error) {
+      return json(422, { error: error.message });
+    }
+  }
 
   if (method !== "POST" || pathname !== "/api/review-project") {
     return json(404, { error: "Route not found." });

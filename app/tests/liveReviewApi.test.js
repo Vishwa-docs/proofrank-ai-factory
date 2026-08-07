@@ -10,7 +10,24 @@ const collector = async (input) => ({
   }
 });
 
-const health = await handleLiveReviewRequest({ method: "GET", pathname: "/health" }, { collector });
+const eventCollector = async (input) => ({
+  eventUrl: input.eventUrl,
+  projectCount: 1,
+  eventTrace: {
+    provider: "bright-data",
+    traceStatus: "executed"
+  },
+  projects: [
+    {
+      id: "project-y",
+      title: "Project Y"
+    }
+  ]
+});
+
+const options = { collector, eventCollector };
+
+const health = await handleLiveReviewRequest({ method: "GET", pathname: "/health" }, options);
 assert.equal(health.status, 200);
 assert.deepEqual(JSON.parse(health.body), { ok: true, service: "proofrank-live-review" });
 
@@ -23,7 +40,7 @@ const review = await handleLiveReviewRequest(
       title: "ProofRank"
     })
   },
-  { collector }
+  options
 );
 
 assert.equal(review.status, 200);
@@ -38,7 +55,7 @@ const malformed = await handleLiveReviewRequest(
     pathname: "/api/review-project",
     body: "{nope"
   },
-  { collector }
+  options
 );
 assert.equal(malformed.status, 400);
 assert.match(JSON.parse(malformed.body).error, /Invalid JSON/);
@@ -49,12 +66,40 @@ const missingRepo = await handleLiveReviewRequest(
     pathname: "/api/review-project",
     body: JSON.stringify({ demoUrl: "https://example.com" })
   },
-  { collector }
+  options
 );
 assert.equal(missingRepo.status, 422);
 assert.match(JSON.parse(missingRepo.body).error, /repoUrl/);
 
-const notFound = await handleLiveReviewRequest({ method: "GET", pathname: "/api/unknown" }, { collector });
+const eventReview = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({
+      eventUrl: "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits"
+    })
+  },
+  options
+);
+
+assert.equal(eventReview.status, 200);
+const eventJson = JSON.parse(eventReview.body);
+assert.equal(eventJson.mode, "live-event");
+assert.equal(eventJson.projectCount, 1);
+assert.equal(eventJson.projects[0].title, "Project Y");
+
+const missingEventUrl = await handleLiveReviewRequest(
+  {
+    method: "POST",
+    pathname: "/api/review-event",
+    body: JSON.stringify({})
+  },
+  options
+);
+assert.equal(missingEventUrl.status, 422);
+assert.match(JSON.parse(missingEventUrl.body).error, /eventUrl/);
+
+const notFound = await handleLiveReviewRequest({ method: "GET", pathname: "/api/unknown" }, options);
 assert.equal(notFound.status, 404);
 
 console.log("live review API tests passed");

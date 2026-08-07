@@ -502,15 +502,38 @@ function render() {
   renderReadiness(project);
 }
 
-function runAudit() {
+function liveEventEndpoint() {
+  const endpoint = elements.liveApiUrl.value.trim();
+  if (!isHttpUrl(endpoint)) throw new Error("A live API endpoint is required.");
+  const url = new URL(endpoint);
+  url.pathname = url.pathname.replace(/\/api\/review-project\/?$/, "/api/review-event");
+  if (!url.pathname.endsWith("/api/review-event")) url.pathname = "/api/review-event";
+  return url.toString();
+}
+
+async function collectEventViaApi(eventUrl) {
+  const response = await fetch(liveEventEndpoint(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ eventUrl })
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error || `Live event API failed with status ${response.status}.`);
+  return body;
+}
+
+async function runAudit() {
   const eventUrl = elements.eventUrl.value || EVENT_URL;
   const liveApiUrl = elements.liveApiUrl.value.trim();
 
   setStatus("Review running across submission evidence.", "ready");
   elements.runAudit.disabled = true;
 
-  window.setTimeout(() => {
-    if (state.mode === "live" && !isHttpUrl(liveApiUrl)) {
+  if (state.mode === "live") {
+    if (!isHttpUrl(liveApiUrl)) {
       const checklist = setupChecklist().join(" ");
       setStatus(`Live API endpoint missing. Demo mode remains ready. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
@@ -519,6 +542,31 @@ function runAudit() {
       return;
     }
 
+    try {
+      setStatus("Collecting live event submissions through the backend.", "ready");
+      const result = await collectEventViaApi(eventUrl);
+      const liveProjects = (result.projects || []).filter((project) => project.id !== "proofrank");
+      if (!liveProjects.length) {
+        setStatus("Live event collection returned no submission cards. Demo evidence remains loaded.", "warn");
+      } else {
+        state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
+        state.projects = rankProjects(sourceProjects());
+        state.selectedId = state.projects[0]?.id || "proofrank";
+        setStatus(
+          `${liveProjects.length} live submissions collected. Event trace ${result.eventTrace?.provider || "unknown"} / ${result.eventTrace?.traceStatus || "unknown"}.`,
+          "ready"
+        );
+      }
+    } catch (error) {
+      setStatus(error.message, "error");
+    }
+
+    elements.runAudit.disabled = false;
+    render();
+    return;
+  }
+
+  window.setTimeout(() => {
     state.projects = rankProjects(sourceProjects());
     if (!state.projects.some((project) => project.id === state.selectedId)) {
       state.selectedId = state.projects[0]?.id || "proofrank";
