@@ -41,6 +41,12 @@ Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/d
 Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
 ```
 
+Operator handoff:
+
+```text
+submission/operator-handoff.md
+```
+
 ## lablab.ai Submission Fields
 
 Project name:

@@ -33,6 +33,7 @@ required_files=(
   "submission/demo-script.md"
   "submission/pitch-deck.md"
   "submission/checklist.md"
+  "submission/operator-handoff.md"
 )
 
 for file in "${required_files[@]}"; do

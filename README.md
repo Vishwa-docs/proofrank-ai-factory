@@ -132,6 +132,7 @@ Built and verified:
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
+- Operator handoff for account-gated final steps in `submission/operator-handoff.md`
 
 Refresh demo screenshots and video:
 
