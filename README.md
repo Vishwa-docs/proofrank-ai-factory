@@ -51,6 +51,33 @@ http://127.0.0.1:4173
 npm run test
 ```
 
+## Live Bright Data Run
+
+Copy `.env.example` to `.env.local` and fill the real credentials. `.env.local`
+is ignored by Git.
+
+Check the hosted Bright Data MCP token:
+
+```bash
+npm run brightdata:mcp-smoke
+```
+
+Run one bounded reviewer collection:
+
+```bash
+npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
+```
+
+Start the local API used by the browser UI:
+
+```bash
+npm run live:server
+```
+
+Then open the app, switch collection mode to `Bright Data live`, keep the live
+API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
+GitHub repo plus deployed app URL.
+
 The full verifier also starts a temporary static server and runs a smoke test:
 
 ```bash
@@ -106,5 +133,5 @@ Account-gated work still requiring the team owner:
 
 - Authorize the Native.builder X/Privy login flow
 - Apply the `AIFACTORY26` Builder Plan promo code
-- Add the Bright Data token server-side after claiming `aiaccess50`
+- Add a valid Bright Data API key server-side after claiming `aiaccess50`
 - Publish the native.builder app URL and paste it into the lablab.ai submission

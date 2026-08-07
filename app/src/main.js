@@ -8,7 +8,7 @@ import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
   eventUrl: document.querySelector("#eventUrl"),
-  apiKey: document.querySelector("#apiKey"),
+  liveApiUrl: document.querySelector("#liveApiUrl"),
   htmlUpload: document.querySelector("#htmlUpload"),
   runAudit: document.querySelector("#runAudit"),
   statusLine: document.querySelector("#statusLine"),
@@ -355,9 +355,9 @@ function renderFieldMap() {
 function renderReadiness(project = selectedProject()) {
   const checklist = [
     {
-      label: "Bright Data token",
-      ready: state.mode === "live" && Boolean(elements.apiKey.value.trim()),
-      detail: "Needed server-side for Remote MCP, SERP, scraping, and discovery."
+      label: "Live API server",
+      ready: state.mode === "demo" || isHttpUrl(elements.liveApiUrl.value.trim()),
+      detail: "Run the backend with the Bright Data token stored server-side."
     },
     {
       label: "Public app URL",
@@ -405,15 +405,15 @@ function render() {
 
 function runAudit() {
   const eventUrl = elements.eventUrl.value || EVENT_URL;
-  const apiKey = elements.apiKey.value.trim();
+  const liveApiUrl = elements.liveApiUrl.value.trim();
 
   setStatus("Review running across submission evidence.", "ready");
   elements.runAudit.disabled = true;
 
   window.setTimeout(() => {
-    if (state.mode === "live" && !apiKey) {
+    if (state.mode === "live" && !isHttpUrl(liveApiUrl)) {
       const checklist = setupChecklist().join(" ");
-      setStatus(`Live token missing. Demo mode remains ready. ${checklist}`, "warn");
+      setStatus(`Live API endpoint missing. Demo mode remains ready. ${checklist}`, "warn");
       elements.runAudit.disabled = false;
       state.projects = rankProjects(sourceProjects());
       render();
@@ -451,7 +451,7 @@ function handleUpload(file) {
   reader.readAsText(file);
 }
 
-function reviewerProjectFromInputs() {
+function reviewerInputPayload() {
   const repoUrl = elements.reviewerRepoUrl.value.trim();
   const demoUrl = elements.reviewerDemoUrl.value.trim();
 
@@ -460,11 +460,27 @@ function reviewerProjectFromInputs() {
     return null;
   }
 
+  return {
+    repoUrl,
+    demoUrl: isHttpUrl(demoUrl) ? demoUrl : "",
+    title: elements.reviewerTitle.value.trim(),
+    team: elements.reviewerTeam.value.trim(),
+    eventUrl: elements.eventUrl.value || EVENT_URL
+  };
+}
+
+function reviewerProjectFromInputs() {
+  const payload = reviewerInputPayload();
+  if (!payload) return null;
+
+  const repoUrl = payload.repoUrl;
+  const demoUrl = payload.demoUrl;
+
   const repoParts = new URL(repoUrl).pathname.split("/").filter(Boolean);
   const owner = repoParts[0] || "GitHub owner";
   const repo = repoParts[1] || "project";
-  const title = elements.reviewerTitle.value.trim() || labelFromSlug(repo);
-  const team = elements.reviewerTeam.value.trim() || labelFromSlug(owner);
+  const title = payload.title || labelFromSlug(repo);
+  const team = payload.team || labelFromSlug(owner);
   const hasDemo = isHttpUrl(demoUrl);
   const id = `review-${owner}-${repo}`.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
@@ -474,7 +490,7 @@ function reviewerProjectFromInputs() {
     team,
     summary:
       "Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.",
-    eventUrl: elements.eventUrl.value || EVENT_URL,
+    eventUrl: payload.eventUrl,
     submissionUrl: "",
     demoUrl: hasDemo ? demoUrl : "",
     githubUrl: repoUrl,
@@ -537,14 +553,55 @@ function reviewerProjectFromInputs() {
   };
 }
 
-function addReviewerProject() {
-  const project = reviewerProjectFromInputs();
+async function collectReviewerProjectViaApi(payload) {
+  const endpoint = elements.liveApiUrl.value.trim();
+  if (!isHttpUrl(endpoint)) throw new Error("A live API endpoint is required.");
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error || `Live API failed with status ${response.status}.`);
+  if (!body.project) throw new Error("Live API response did not include a project.");
+  return body.project;
+}
+
+async function addReviewerProject() {
+  const payload = reviewerInputPayload();
+  if (!payload) return;
+
+  let project;
+  elements.addReviewerProject.disabled = true;
+
+  try {
+    if (state.mode === "live") {
+      setStatus("Collecting live repository and demo evidence.", "ready");
+      project = await collectReviewerProjectViaApi(payload);
+    } else {
+      project = reviewerProjectFromInputs();
+    }
+  } catch (error) {
+    setStatus(error.message, "error");
+    elements.reviewerHint.textContent = "Live collection failed. Check the backend server and try again.";
+    elements.addReviewerProject.disabled = false;
+    return;
+  }
+
+  elements.addReviewerProject.disabled = false;
   if (!project) return;
 
   state.reviewerProjects = [project, ...state.reviewerProjects.filter((item) => item.id !== project.id)];
   state.projects = rankProjects(sourceProjects());
   state.selectedId = project.id;
-  elements.reviewerHint.textContent = "Project added. Live Bright Data collection is still needed for a real evidence receipt.";
+  elements.reviewerHint.textContent =
+    state.mode === "live"
+      ? "Project collected with the live backend. Inspect the receipt and replay traces."
+      : "Project added. Live Bright Data collection is still needed for a real evidence receipt.";
   setStatus(`${project.title} added to the review queue.`, "ready");
   render();
 }
@@ -560,11 +617,11 @@ document.querySelectorAll(".filter-chip").forEach((button) => {
 
 elements.modeSelect.addEventListener("change", () => {
   state.mode = elements.modeSelect.value;
-  setStatus(state.mode === "live" ? "Live mode selected. Add a server-side Bright Data token before running." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
+  setStatus(state.mode === "live" ? "Live mode selected. Start the backend server before collecting." : "Demo evidence ready", state.mode === "live" ? "warn" : "ready");
   renderReadiness(selectedProject());
 });
 
-elements.apiKey.addEventListener("input", () => renderReadiness(selectedProject()));
+elements.liveApiUrl.addEventListener("input", () => renderReadiness(selectedProject()));
 elements.runAudit.addEventListener("click", runAudit);
 elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.target.files[0]));
 elements.addReviewerProject.addEventListener("click", addReviewerProject);

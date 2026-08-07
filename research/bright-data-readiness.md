@@ -20,10 +20,10 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Publish the native.builder app and give me the final public Native app URL.
 
 2. Bright Data access
-   - Create or open the Bright Data account.
-   - Apply `aiaccess50`.
-   - Provide a Bright Data API token, preferably scoped to the hackathon account.
-   - Confirm a spend cap, because Pro/browser/data-feed tools may be billed differently from the free MCP tier.
+   - Bright Data value received and stored only in ignored `.env.local`.
+   - Spend cap confirmed at $50.
+   - Blocker: the current value returns HTTP 401 against both Bright Data REST request API and hosted Remote MCP.
+   - Needed next: a valid Bright Data API key from account settings or welcome email, plus confirmation that `npm run brightdata:mcp-smoke` passes.
 
 3. Real reviewer target
    - Provide the GitHub URL of the actual hackathon project you want reviewed.
@@ -37,15 +37,18 @@ These are the pieces I cannot ethically or technically complete without the acco
    - Approve the final lablab.ai submission because only your authenticated account can submit.
 
 5. Optional model/API key
-   - Pick exactly one of AI/ML API or Featherless if we add a second LLM provider through partner credits.
-   - Provide OpenAI/Anthropic/AI/ML/Featherless credentials only if you want live LLM adjudication beyond deterministic scoring.
+   - AI/ML API key received and stored only in ignored `.env.local`; spend cap confirmed at $10.
+   - Speechmatics API key and promo code received and stored only in ignored `.env.local`.
+   - These are optional for the Bright Data prize unless we add LLM adjudication or a narrated/audio submission workflow.
 
 ## What Is Left For True End-To-End Use
 
 1. Server-side Bright Data executor
-   - Current static app models the traces and review packet.
-   - Real mode needs a backend or native.builder workflow that calls Bright Data Remote MCP or REST from the server side.
-   - Tokens must never be stored in client JavaScript.
+   - Added a local Node API at `/api/review-project`.
+   - Added direct-fetch fallback plus Bright Data REST request adapter.
+   - Added hosted Remote MCP smoke check.
+   - Remaining blocker: replace the failing Bright Data credential with a valid API key.
+   - Tokens are loaded from `.env.local` or native.builder server secrets, never client JavaScript.
 
 2. Live project ingestion
    - Fetch lablab submission page.
@@ -105,8 +108,8 @@ ProofRank should stand apart by judging the judges' own problem: hackathon spons
 
 1. Real GitHub reviewer lane
    - User gives a repo URL and demo URL.
-   - ProofRank extracts README claims, dependencies, deployment links, commits during the hackathon window, and evidence of Bright Data integration.
-   - It flags secrets, private/inaccessible links, copied README text, and missing license.
+   - Implemented first pass: README, deployed demo content, source links, Bright Data tool mentions, workflow claims, and proof receipt traces.
+   - Next: package/dependency file checks, commit-window checks, secret-risk scan, copied README similarity, and license check.
 
 2. Bright Data trace replay
    - Every receipt gets a "replay query" field.
