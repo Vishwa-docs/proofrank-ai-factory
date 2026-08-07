@@ -21,7 +21,7 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Originality
    - Presentation
 6. User selects a project.
-7. Center panel shows the scorecard, Adversarial Tribunal, and Claim Ledger.
+7. Center panel shows the scorecard, Adversarial Tribunal, Originality Radar, and Claim Ledger.
 8. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
 9. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
 
@@ -31,7 +31,7 @@ Use a quiet, dense operations-dashboard layout.
 
 - Sticky top bar with ProofRank mark, mode selector, CSV export, JSON export, and Submission Packet button.
 - Left column with event URL input, live API endpoint input, HTML upload, Run Audit button, filters, and ranked queue.
-- Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Claim Ledger, and field map.
+- Center column with selected project summary, five score tiles, verdict, evidence gaps, Adversarial Tribunal, Originality Radar, Claim Ledger, and field map.
 - Right column with Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
@@ -80,6 +80,18 @@ For each selected project, show a three-perspective tribunal:
 - Business buyer: tests whether a real buyer has a repeatable urgent workflow.
 
 Each perspective should include a confidence score, strongest reasons, objections, and a short stance. The tribunal must produce a final recommendation and a dispute log. It should make uncertainty visible instead of hiding it behind one score.
+
+## Originality Radar
+
+For each selected project, compare against the current event field. Show:
+
+- Risk label: Defensible wedge, Watch overlap, or High overlap risk.
+- Numeric originality radar score.
+- Top similar projects with overlap score and reasons.
+- Defensible wedge bullets.
+- Bright Data `search_engine` and `discover` prior-art queries.
+
+The radar should not accuse projects of copying. It should show overlap, uncertainty, and the next source-backed checks.
 
 ## Demo Fixtures
 
@@ -153,6 +165,7 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 - A user can complete the audit workflow in under three minutes.
 - The Claim Ledger is visible in the first 90 seconds of the demo.
 - The Adversarial Tribunal is visible in the first 90 seconds of the demo.
+- The Originality Radar is visible in the first 90 seconds of the demo.
 - Bright Data Dependency score is prominent.
 - Exports produce usable files.
 - App can be published to a public native.builder URL.

@@ -28,6 +28,8 @@ Gather public evidence.
 
 Run adversarial tribunal.
 
+Run Originality Radar across the current field.
+
 Separate executed Bright Data traces from planned, claimed, direct, pending, and failed evidence.
 
 Score eligibility, Bright Data dependency, business value, originality, and presentation.
@@ -46,7 +48,7 @@ CLI: transparent reproducible commands for sponsor review.
 
 ## Slide 6 - Demo Results
 
-ProofRank ranks the current AI Factory field, shows a Claim Ledger and Adversarial Tribunal for each project, highlights evidence gaps, and exports judge-ready receipts.
+ProofRank ranks the current AI Factory field, shows a Claim Ledger, Adversarial Tribunal, and Originality Radar for each project, highlights evidence gaps, and exports judge-ready receipts.
 
 Key moment: Bright Data Dependency score separates executed sponsor-native evidence from superficial mentions.
 

@@ -15,6 +15,7 @@ required_files=(
   "app/src/exporters.js"
   "app/src/claims.js"
   "app/src/tribunal.js"
+  "app/src/originality.js"
   "app/src/brightDataAdapter.js"
   "app/src/liveFetchers.js"
   "app/src/liveReviewer.js"

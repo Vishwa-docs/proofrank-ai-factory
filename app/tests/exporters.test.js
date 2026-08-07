@@ -55,14 +55,24 @@ const project = {
   ]
 };
 
-const receipt = buildReceipt(project);
+const adjacentProject = {
+  ...project,
+  id: "adjacent",
+  title: "Adjacent Proof Tool",
+  team: "Another Team",
+  summary: "A proof receipt tool for judges."
+};
+
+const receipt = buildReceipt(project, [project, adjacentProject]);
 assert.equal(receipt.traceState, "executed");
+assert.equal(receipt.originalityRadar.riskLabel, "Defensible wedge");
 assert.equal(receipt.tribunal.panel.length, 3);
 assert.equal(receipt.tribunal.finalRecommendation.label, "Push for sponsor shortlist");
 assert.ok(receipt.tribunal.disputes.some((dispute) => dispute.topic === "Sponsor dependency"));
 
-const packet = buildSubmissionPacket(project);
+const packet = buildSubmissionPacket(project, [project, adjacentProject]);
 assert.match(packet, /Adversarial Tribunal/);
+assert.match(packet, /Originality Radar/);
 assert.match(packet, /Bright Data trace state: executed/);
 assert.match(packet, /Push for sponsor shortlist/);
 

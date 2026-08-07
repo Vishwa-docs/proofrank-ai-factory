@@ -126,6 +126,7 @@ Built and verified:
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, claim ledger, trace provenance, and export tests
 - Executed-vs-planned trace scoring so sponsor fit is not inflated by unrun collection plans
+- Originality Radar with similar-project overlap and Bright Data prior-art queries
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Bright Data setup and submission copy in `submission/`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`

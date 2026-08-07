@@ -3,6 +3,7 @@ import { extractProjectsFromHtml } from "./parser.js";
 import { brightDataTraceState, rankProjects } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
+import { buildOriginalityRadar } from "./originality.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
 import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 
@@ -240,6 +241,53 @@ function renderTribunal(project) {
   `;
 }
 
+function renderOriginalityRadar(project) {
+  const radar = buildOriginalityRadar(project, state.projects);
+  const similar = radar.similarProjects
+    .map(
+      (item) => `
+        <article class="similarity-card">
+          <div>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${item.overlap}</span>
+          </div>
+          <p>${escapeHtml(item.team || "Unknown team")}</p>
+          <ul>${item.reasons.slice(0, 3).map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}</ul>
+        </article>
+      `
+    )
+    .join("");
+  const differentiators = radar.differentiators.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  const queries = radar.brightDataQueries
+    .map((query) => `<li><strong>${escapeHtml(query.tool)}</strong><span>${escapeHtml(query.query || query.intent)}</span></li>`)
+    .join("");
+
+  return `
+    <section class="originality-panel">
+      <div class="module-head compact">
+        <h2>Originality radar</h2>
+        <span class="hint">${escapeHtml(radar.riskLabel)} / ${radar.score}</span>
+      </div>
+      <div class="originality-grid">
+        <div class="radar-summary">
+          <span>Top overlap</span>
+          <strong>${radar.topOverlap}</strong>
+          <p>${escapeHtml(radar.riskLabel)}</p>
+        </div>
+        <div class="differentiator-list">
+          <h3>Defensible wedge</h3>
+          <ul>${differentiators}</ul>
+        </div>
+      </div>
+      <div class="similarity-grid">${similar}</div>
+      <div class="query-strip">
+        <h3>Bright Data prior-art queries</h3>
+        <ul>${queries}</ul>
+      </div>
+    </section>
+  `;
+}
+
 function renderSourceLinks(project) {
   const links = [
     ["Submission", project.submissionUrl],
@@ -304,6 +352,8 @@ function renderScorecard(project) {
     </section>
 
     ${renderTribunal(project)}
+
+    ${renderOriginalityRadar(project)}
 
     ${renderClaimLedger(project)}
   `;
@@ -686,15 +736,15 @@ elements.exportCsv.addEventListener("click", () => {
 });
 
 elements.exportReceipts.addEventListener("click", () => {
-  downloadJson("proofrank-all-receipts.json", state.projects.map(buildReceipt));
+  downloadJson("proofrank-all-receipts.json", state.projects.map((project) => buildReceipt(project, state.projects)));
 });
 
 elements.exportSelected.addEventListener("click", () => {
-  downloadJson(`${selectedProject().id}-proof-receipt.json`, buildReceipt(selectedProject()));
+  downloadJson(`${selectedProject().id}-proof-receipt.json`, buildReceipt(selectedProject(), state.projects));
 });
 
 elements.exportPacket.addEventListener("click", () => {
-  downloadText("proofrank-submission-packet.md", buildSubmissionPacket(fixtureProjects[0]), "text/markdown");
+  downloadText("proofrank-submission-packet.md", buildSubmissionPacket(fixtureProjects[0], state.projects), "text/markdown");
 });
 
 render();

@@ -1,6 +1,7 @@
 import { brightDataTraceState, buildVerdict, calculateScores } from "./scoring.js";
 import { buildClaimLedger } from "./claims.js";
 import { buildTribunal } from "./tribunal.js";
+import { buildOriginalityRadar } from "./originality.js";
 
 function escapeCsv(value) {
   const text = String(value ?? "");
@@ -46,11 +47,12 @@ export function toCsv(projects) {
   return [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
 }
 
-export function buildReceipt(project) {
+export function buildReceipt(project, fieldProjects = []) {
   const scores = project.scores || calculateScores(project);
   const verdict = project.verdict || buildVerdict(project, scores);
   const tribunal = buildTribunal({ ...project, scores, verdict });
   const traceState = brightDataTraceState(project);
+  const originalityRadar = buildOriginalityRadar(project, fieldProjects.length ? fieldProjects : [project]);
 
   return {
     id: project.id,
@@ -69,13 +71,14 @@ export function buildReceipt(project) {
     traceState,
     claimLedger: buildClaimLedger(project),
     tribunal,
+    originalityRadar,
     evidenceItems: project.evidenceItems || [],
     brightDataTraces: project.brightDataTraces || []
   };
 }
 
-export function buildSubmissionPacket(project) {
-  const receipt = buildReceipt(project);
+export function buildSubmissionPacket(project, fieldProjects = []) {
+  const receipt = buildReceipt(project, fieldProjects);
   return `# ${project.title}
 
 ## Problem
@@ -122,6 +125,17 @@ The competition app should be created and published through native.builder using
           .join("; ")
       : "None"
   }
+
+## Originality Radar
+
+- Originality risk: ${receipt.originalityRadar.riskLabel}
+- Originality score: ${receipt.originalityRadar.score}
+- Closest overlap: ${
+    receipt.originalityRadar.similarProjects[0]
+      ? `${receipt.originalityRadar.similarProjects[0].title} (${receipt.originalityRadar.similarProjects[0].overlap})`
+      : "No comparison field attached"
+  }
+- Bright Data prior-art query: ${receipt.originalityRadar.brightDataQueries[0]?.query || "Not available"}
 
 ## Demo Workflow
 

@@ -856,6 +856,127 @@ input::placeholder {
   color: var(--color-risk);
 }
 
+.originality-panel {
+  display: grid;
+  gap: var(--space-md);
+  padding-block: var(--space-lg);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.originality-grid {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.3fr);
+  gap: var(--space-sm);
+}
+
+.radar-summary,
+.differentiator-list,
+.similarity-card,
+.query-strip {
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-muted);
+}
+
+.radar-summary {
+  display: grid;
+  place-content: center;
+  gap: var(--space-2xs);
+  min-height: 9rem;
+  text-align: center;
+}
+
+.radar-summary span,
+.radar-summary p,
+.similarity-card p {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.radar-summary strong {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
+  line-height: 0.95;
+}
+
+.differentiator-list,
+.query-strip {
+  padding: var(--space-md);
+}
+
+.differentiator-list h3,
+.query-strip h3 {
+  font-size: var(--text-sm);
+}
+
+.differentiator-list ul,
+.similarity-card ul,
+.query-strip ul {
+  display: grid;
+  gap: var(--space-xs);
+  margin: var(--space-sm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.differentiator-list li,
+.similarity-card li,
+.query-strip li {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.similarity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.similarity-card {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+}
+
+.similarity-card > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-xs);
+  align-items: start;
+}
+
+.similarity-card strong {
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.similarity-card span {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--color-warn);
+  border-radius: 50%;
+  color: var(--color-warn);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.query-strip li {
+  display: grid;
+  gap: var(--space-2xs);
+  overflow-wrap: anywhere;
+}
+
+.query-strip strong {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
 .claim-grid,
 .receipt-list {
   display: grid;
@@ -1110,7 +1231,8 @@ input::placeholder {
   }
 
   .score-grid,
-  .tribunal-grid {
+  .tribunal-grid,
+  .similarity-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1151,6 +1273,8 @@ input::placeholder {
 
   .split-fields,
   .score-grid,
+  .originality-grid,
+  .similarity-grid,
   .tribunal-grid,
   .claim-row {
     grid-template-columns: 1fr;
