@@ -6,14 +6,14 @@ ProofRank is a public AI product diligence engine for hackathons, accelerators, 
 
 ## Primary Goal
 
-Create a functional deployed app, not a landing page. The first screen must be the audit workspace.
+Create a functional deployed app, not a landing page. The first screen must be a review workspace where a visitor can paste public project links.
 
 ## Core Workflow
 
-1. User enters an event URL or project URL.
-2. User chooses Signed receipt or Bright Data Live (secure API) mode.
-3. User clicks Run review.
-4. The app discovers or loads project submissions.
+1. User pastes a public GitHub repository URL and optional deployed app URL in the first viewport.
+2. User can run Demo review (sample/local data) without credentials.
+3. User can open Links and choose Live Bright Data review when a private backend tokenized session is available.
+4. The app adds the project to a ranked queue and can also discover or load event submissions.
 5. The app ranks projects by:
    - Eligibility
    - Bright Data Dependency
@@ -21,31 +21,31 @@ Create a functional deployed app, not a landing page. The first screen must be t
    - Originality
    - Presentation
 6. User selects a project.
-7. Center panel shows the scorecard, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
-8. Collect tab shows project intake, event collection, and required readiness gates.
-9. Right panel shows source-backed Proof Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
-10. User exports CSV, all receipts JSON, selected receipt JSON, and submission packet Markdown.
+7. Result shows the scorecard, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
+8. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
+9. Evidence tab shows source-backed Evidence Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
+10. User exports CSV, all evidence receipts JSON, selected evidence receipt JSON, and submission packet Markdown.
 
 ## Required UI
 
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
-- Sticky top bar with ProofRank mark, Overview, Queue, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, short value statement, Review project button, Proof receipt button, and one decision card.
-- Decision card shows Submission-ready, Bright Data proof passed, signed receipt ID `pr-20260807t200529345z-23568b05`, proof package ready, final lablab submission pending, and Native app published. Use status language such as Passed and executed in the first viewport; keep detailed numeric scoring inside the score breakdown.
-- Overview includes a compact Bright Data proof strip above the collapsible analysis drawers. It must show the exact sponsor proof bundle (`scrape_as_markdown`, `search_engine`, `discover`), the signed receipt ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
-- Tabs below the first viewport: Overview, Queue, Proof, Collect.
-- Overview shows selected project summary, score tiles, evidence route, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
-- Queue shows filters, ranked projects, and field map.
-- Proof shows Proof Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
-- Collect contains Event URL, Review API, keyboard-accessible HTML upload, GitHub/deployed-app intake, and submission gates. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
+- Sticky top bar with ProofRank mark, Review project, Ranked, and Export actions.
+- First viewport with event metadata, a large ProofRank headline, short value statement, a GitHub repo field, a demo app field, Review these links button, Use sample button, View evidence button, and one decision card.
+- Decision card shows Submission-ready, Bright Data evidence passed, evidence receipt ID `pr-20260807t200529345z-23568b05`, evidence package ready, final lablab submission pending, and Native app published. Use status language such as Passed and executed in the first viewport; keep detailed numeric scoring inside the score breakdown.
+- Result includes a compact Bright Data evidence strip above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence receipt ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
+- Tabs below the first viewport: Result, Ranked, Evidence, Links.
+- Result shows selected project summary, score tiles, evidence route, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
+- Ranked shows filters, ranked projects, and field map.
+- Evidence shows Evidence Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
+- Links contains Event URL, Live review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. Those belong in Collect. Use ProofRank as the selected signed live Bright Data receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data proof passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links. Advanced live settings belong in Links. Use ProofRank as the selected Bright Data evidence receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data evidence passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
 
-## Claim Ledger
+## Claim Check
 
 For each selected project, extract and show these claims:
 
@@ -77,24 +77,24 @@ Use deterministic scoring, then allow future AI enrichment.
 
 Bright Data Dependency should be high only when Bright Data is load-bearing, agentic, traceable, visible in receipts, and backed by the full executed Bright Data sponsor proof bundle: source scrape, `search_engine`, and `discover`.
 
-## Adversarial Tribunal
+## Review Panel
 
-For each selected project, show a three-perspective tribunal:
+For each selected project, show a three-perspective review panel:
 
 - Bright Data sponsor judge: argues whether Bright Data is genuinely load-bearing.
 - Skeptical hackathon judge: attacks eligibility, native.builder proof, public demo reachability, event-window commits, and source hygiene.
 - Business buyer: tests whether a real buyer has a repeatable urgent workflow.
 
-Each perspective should include a confidence score, strongest reasons, objections, and a short stance. The tribunal must produce a final recommendation and a dispute log. It should make uncertainty visible instead of hiding it behind one score.
+Each perspective should include a confidence score, strongest reasons, objections, and a short stance. The panel must produce a final recommendation and a dispute log. It should make uncertainty visible instead of hiding it behind one score.
 
-## Originality Radar
+## Similarity Check
 
 For each selected project, compare against the current event field. Show:
 
-- Risk label: Defensible wedge, Watch overlap, or High overlap risk.
-- Numeric originality radar score.
+- Risk label: Distinct angle, Watch overlap, or High overlap risk.
+- Numeric originality score.
 - Top similar projects with overlap score and reasons.
-- Defensible wedge bullets.
+- What makes it different bullets.
 - Bright Data `search_engine` and `discover` prior-art queries.
 
 The radar should not accuse projects of copying. It should show overlap, uncertainty, and the next source-backed checks.
@@ -149,7 +149,7 @@ Include fixture records for:
 - NIGHTWATCH: Factory Early Warning
 - Voice-to-Ops: field reports that write themselves
 
-Use these records to make Signed receipt mode fully functional without credentials.
+Use these records to make Demo review mode fully functional without credentials.
 
 ## Bright Data Live Mode
 
@@ -208,7 +208,7 @@ Each server-issued project review should also include `runReceipt` with:
 
 ## Error Handling
 
-- Missing token: run Signed receipt mode and show setup checklist.
+- Missing token: run Demo review mode and show setup checklist.
 - Missing or invalid review token: return 401 from the live backend and show a clear live-setup status.
 - Disallowed origin or URL host: reject before calling Bright Data.
 - Bright Data call budget exhausted: stop collection and mark the trace as failed rather than continuing.
@@ -224,7 +224,7 @@ Each server-issued project review should also include `runReceipt` with:
 Implement:
 
 - Judge queue CSV
-- All proof receipts JSON
+- All evidence receipts JSON
 - Selected receipt JSON
 - ProofRank submission packet Markdown
 
@@ -234,14 +234,14 @@ Frame ProofRank as "Bright Data-powered public AI product diligence." Hackathons
 
 ## Acceptance Criteria
 
-- The app runs with no credentials in Signed receipt mode.
+- The app runs with no credentials in Demo review mode.
 - Live mode has a secure Bright Data integration plan and token handling.
 - A user can complete the audit workflow in under three minutes.
-- The Claim Ledger is visible in the first 90 seconds of the demo.
-- The Adversarial Tribunal is visible in the first 90 seconds of the demo.
+- The Claim Check is visible in the first 90 seconds of the demo.
+- The Review Panel is visible in the first 90 seconds of the demo.
 - The Winner Benchmark is visible in the first 90 seconds of the demo.
-- The Originality Radar is visible in the first 90 seconds of the demo.
-- The Collect tab makes native.builder, Bright Data, and real-project readiness visible without opening docs.
+- The Similarity Check is visible in the first 90 seconds of the demo.
+- The Links tab makes native.builder, Bright Data, and real-project readiness visible without opening docs.
 - Bright Data Dependency score is prominent.
 - Exports produce usable files.
 - App can be published to a public native.builder URL.

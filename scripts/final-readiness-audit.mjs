@@ -297,9 +297,7 @@ async function nativeBuilder() {
   const requiredCopy = [
     "ProofRank",
     "Submission-ready",
-    "Bright Data proof passed",
     "Bright Data",
-    "Overall audit",
     expectedRunId
   ].filter(Boolean);
   const staleCopy = ["pr-20260807t145909828z-553fb028", "Sponsor bundle executed", "Finalist-ready", "Strong Pass"];

@@ -98,8 +98,9 @@ try {
   await page.click("#quickAddReviewerProject");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "").includes("ProofRank AI Factory"));
   await page.click('[data-section-tab="queue"]');
-  await page.click('#rankedList [data-id="proofrank"]');
-  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
+  await page.waitForSelector('#rankedList [data-id="review-vishwa-docs-proofrank-ai-factory"]', { state: "attached", timeout: 5000 });
+  await page.click('#rankedList [data-id="review-vishwa-docs-proofrank-ai-factory"]');
+  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank AI Factory");
 
   await page.click('[data-section-tab="receipt"]');
   const selectedReceipt = await captureDownloadName(page, "#exportSelected");
@@ -150,10 +151,11 @@ try {
   proof.consoleMessages = messages;
   proof.ok =
     proof.appTitle === "ProofRank" &&
-    proof.selectedProject === "ProofRank" &&
+    proof.selectedProject === "ProofRank AI Factory" &&
     proof.rankedRows >= 8 &&
     proof.reviewerRowPresent === true &&
-    /Bright Data (proof|evidence) passed|executed/i.test(proof.brightProof) &&
+    /Sample review only|Live replay prepared|Bright Data (proof|evidence) passed|executed/i.test(proof.brightProof) &&
+    /Reviewer supplied GitHub repository/i.test(proof.receiptText) &&
     proof.exportedFiles.length === 2 &&
     messages.length === 0;
 

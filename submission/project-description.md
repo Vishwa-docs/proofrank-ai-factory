@@ -2,7 +2,7 @@
 
 ## One-Liner
 
-ProofRank is a Bright Data-powered public AI product diligence engine that turns public submission pages, demos, repos, decks, and technology claims into ranked, source-backed proof receipts.
+ProofRank is a Bright Data-powered public AI product diligence engine that turns public submission pages, demos, repos, decks, and technology claims into ranked, source-backed evidence receipts.
 
 ## Problem
 
@@ -17,9 +17,9 @@ Judges and sponsor teams review many AI projects under time pressure. Claims are
 
 ## Solution
 
-ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Ledger, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Proof Receipt, showing source snippets, confidence, limitations, trace provenance, release/demo artifacts, public issue signals, similar-project overlap, disputes, and the recommended review action.
+ProofRank audits public project evidence and creates a diligence queue. For every project it scores eligibility, Bright Data dependency, business value, originality, and presentation. It opens each score into a Claim Check, Review Panel, Winner Benchmark, Similarity Check, and Evidence Receipt, showing source snippets, confidence, limitations, trace provenance, release/demo artifacts, public issue signals, similar-project overlap, disputes, and the recommended review action.
 
-The Collect tab keeps the workflow honest by separating project intake, event collection, required final-submission gates, and competitive-strength checks. It shows whether the native.builder URL exists, whether the full Bright Data sponsor proof bundle is present, whether an actual reviewer-supplied project has been audited, whether the live backend is configured, and whether the demo/source/video/export package are ready.
+The Links tab keeps the workflow honest by separating project intake, event collection, required final-submission gates, and competitive-strength checks. It shows whether the native.builder URL exists, whether the full Bright Data sponsor evidence run is present, whether an actual reviewer-supplied project has been audited, whether the live backend is configured, and whether the demo/source/video/export package are ready.
 
 The Winner Benchmark compares each project against patterns seen in strong Bright Data sponsor-prize projects: decision-shaped output, executed live-web evidence, multi-tool Bright Data dependency, judge-visible proof trails, defensible originality, public end-to-end workflow, and a native.builder primary deployment. This makes the sponsor-prize strategy visible to judges instead of hiding it in the implementation.
 
@@ -33,7 +33,7 @@ The competition app was generated, refined, and published through native.builder
 
 ## Differentiation
 
-ProofRank is not an AI judge and not a generic scraper. It is a diligence engine. It extracts public claims, checks the evidence behind them, labels confidence, surfaces evidence gaps, runs three adversarial perspectives, compares field overlap through an Originality Radar, and exports a defensible review packet.
+ProofRank is not an AI judge and not a generic scraper. It is a diligence engine. It extracts public claims, checks the evidence behind them, labels confidence, surfaces evidence gaps, runs three review perspectives, compares field overlap through a Similarity Check, and exports a defensible review packet.
 
 ## External APIs And Tools
 
@@ -49,10 +49,10 @@ ProofRank is not an AI judge and not a generic scraper. It is a diligence engine
 ## Current Demo Workflow
 
 1. Open ProofRank.
-2. Run Signed proof review on the AI Factory event URL.
-3. Inspect the ranked queue.
+2. Paste a public GitHub repo and demo app URL.
+3. Add the project and inspect the ranked queue.
 4. Select a project.
-5. Open the Claim Ledger.
-6. Review the Adversarial Tribunal, Winner Benchmark, Originality Radar, Proof Receipt, and trace table.
-7. Check the Collect tab for remaining native.builder, Bright Data, and real-project gates.
+5. Open the Claim Check.
+6. Review the Review Panel, Winner Benchmark, Similarity Check, Evidence Receipt, and trace table.
+7. Check the Links tab for remaining native.builder, Bright Data, and real-project gates.
 8. Export the sponsor-ready diligence packet.

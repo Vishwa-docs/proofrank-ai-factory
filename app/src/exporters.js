@@ -110,11 +110,11 @@ Hackathon judges, sponsor partner teams, accelerator reviewers, grant reviewers,
 
 ## Solution
 
-ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits proof receipts with source-backed evidence, review risks, claim verdicts, and recommended diligence actions.
+ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence receipts with source-backed evidence, review risks, claim verdicts, and recommended diligence actions.
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP scrape_as_markdown, search_engine, and discover, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery bundle in the receipt.
+Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP scrape_as_markdown, search_engine, and discover, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery run in the receipt.
 
 ## Native.builder Usage
 
@@ -126,10 +126,10 @@ The competition app should be created and published through native.builder using
 - Overall score: ${receipt.scores.overall}
 - Bright Data fit: ${receipt.scores.brightDataFit}
 - Bright Data prize score: ${receipt.scores.brightDataPrize}
-- Bright Data trace state: ${receipt.traceState}
-- Run receipt: ${receipt.runReceipt?.runId || "Not issued"}
+- Bright Data evidence state: ${receipt.traceState}
+- Evidence receipt: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
-- Proof package readiness: ${readinessSummary(receipt.readiness)}
+- Evidence package readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
@@ -143,10 +143,10 @@ ${receipt.readiness.gates
   )
   .join("\n")}
 
-## Adversarial Tribunal
+## Review Panel
 
 - Final recommendation: ${receipt.tribunal.finalRecommendation.label}
-- Tribunal confidence: ${receipt.tribunal.finalRecommendation.confidence}
+- Panel confidence: ${receipt.tribunal.finalRecommendation.confidence}
 - Sponsor judge: ${receipt.tribunal.panel.find((judge) => judge.role === "Bright Data sponsor judge")?.stance || "Not available"}
 - Skeptical judge: ${receipt.tribunal.panel.find((judge) => judge.role === "Skeptical hackathon judge")?.stance || "Not available"}
 - Business buyer: ${receipt.tribunal.panel.find((judge) => judge.role === "Business buyer")?.stance || "Not available"}
@@ -159,7 +159,7 @@ ${receipt.readiness.gates
       : "None"
   }
 
-## Originality Radar
+## Similarity Check
 
 - Originality risk: ${receipt.originalityRadar.riskLabel}
 - Originality score: ${receipt.originalityRadar.score}
@@ -172,7 +172,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste the AI Factory event URL, run the audit, inspect the ranked queue, open the claim ledger, review proof receipts, and export the sponsor-ready diligence packet.
+Paste a public GitHub repo and demo app URL, add the project, inspect Result and Ranked, open Claim Check, review the evidence receipt, and export the sponsor-ready diligence packet.
 
 ## External Tools
 

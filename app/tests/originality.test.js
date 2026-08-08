@@ -5,11 +5,11 @@ import { buildOriginalityRadar } from "../src/originality.js";
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
 const radar = buildOriginalityRadar(proofrank, fixtureProjects);
 
-assert.equal(radar.riskLabel, "Defensible wedge");
+assert.equal(radar.riskLabel, "Distinct angle");
 assert.ok(radar.score >= 75);
 assert.ok(radar.similarProjects.length >= 3);
 assert.ok(radar.similarProjects.every((project) => project.id !== "proofrank"));
-assert.ok(radar.differentiators.some((item) => item.includes("proof receipts") || item.includes("tribunal")));
+assert.ok(radar.differentiators.some((item) => item.includes("evidence receipts") || item.includes("review panel")));
 assert.ok(radar.brightDataQueries.some((query) => query.tool === "search_engine" && query.query.includes("ProofRank")));
 assert.ok(radar.brightDataQueries.some((query) => query.tool === "discover"));
 

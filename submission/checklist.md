@@ -37,7 +37,7 @@
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
-- Show Originality Radar and its Bright Data prior-art queries.
+- Show Similarity Check and its Bright Data prior-art queries.
 - Show the Evidence Route map so the sponsor judge can see where Bright Data is load-bearing and where proof is still pending.
 - Show the Collect gates so judges see native.builder, executed Bright Data, and real-project readiness at a glance.
 
@@ -79,7 +79,7 @@ ProofRank
 Short description:
 
 ```text
-Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and grant reviewers. ProofRank audits project pages, demos, repos, decks, and technology claims, then exports ranked proof receipts with claim confidence, evidence gaps, and review actions.
+Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and grant reviewers. ProofRank audits project pages, demos, repos, decks, and technology claims, then exports ranked evidence receipts with claim confidence, evidence gaps, and review actions.
 ```
 
 Problem:
@@ -97,13 +97,13 @@ Hackathon judges, sponsor partner teams, accelerator reviewers, grant reviewers,
 How native.builder was used:
 
 ```text
-native.builder generated and refined the ProofRank application structure, dashboard UI, stateful audit workflow, Claim Ledger, Proof Receipt panel, export actions, responsive layout, and public deployment from the prepared product brief.
+native.builder generated and refined the ProofRank application structure, dashboard UI, stateful review workflow, Claim Check, Evidence Receipt panel, export actions, responsive layout, and public deployment from the prepared product brief.
 ```
 
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery proof bundle, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Collect gates expose whether that gate has actually passed, while the Originality Radar uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery evidence run, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Evidence receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:

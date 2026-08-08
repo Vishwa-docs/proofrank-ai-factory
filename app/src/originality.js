@@ -116,11 +116,11 @@ function buildDifferentiators(project = {}) {
   const differentiators = [];
 
   if (evidence.proofReceipt || text.includes("proof receipt")) {
-    differentiators.push("Turns judging into proof receipts instead of one-shot summaries.");
+    differentiators.push("Turns judging into evidence receipts instead of one-shot summaries.");
   }
 
   if (text.includes("tribunal") || (evidence.proofReceipt && evidence.lowCrowdOverlap)) {
-    differentiators.push("Combines claim ledger review with an adversarial tribunal.");
+    differentiators.push("Combines claim checks with a multi-perspective review panel.");
   }
 
   if (evidence.repoTreeCollected && evidence.packageManifestPresent) {
@@ -154,7 +154,7 @@ function buildQueries(project = {}, similarProjects = []) {
     {
       tool: "search_engine",
       purpose: "Sponsor-claim overlap search",
-      query: `"${title}" "Bright Data" OR "proof receipt" OR "source-backed"`
+      query: `"${title}" "Bright Data" OR "evidence receipt" OR "source-backed"`
     },
     {
       tool: "discover",
@@ -180,7 +180,7 @@ export function buildOriginalityRadar(project, fieldProjects = []) {
       ? "High overlap risk"
       : topOverlap >= 52
         ? "Watch overlap"
-        : "Defensible wedge"
+        : "Distinct angle"
     : "Needs broader prior-art field";
 
   return {

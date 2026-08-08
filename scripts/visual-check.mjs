@@ -50,6 +50,17 @@ for (const spec of [
     if (!focusedReviewTarget) {
       throw new Error("Topbar Review target did not focus the hero GitHub repository field.");
     }
+    await page.fill("#quickRepoUrl", "https://example.com/github.com/fake/project");
+    await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
+    await page.click("#quickAddReviewerProject");
+    await page.waitForTimeout(200);
+    const fakeRepoRejected = await page.evaluate(() => {
+      const status = document.querySelector("#statusLine")?.textContent || "";
+      return /public GitHub repository URL/i.test(status) && !document.querySelector('#rankedList [data-id^="review-example"]');
+    });
+    if (!fakeRepoRejected) {
+      throw new Error("Fake GitHub host was accepted by the hero review form.");
+    }
     await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
     await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
     await page.click("#quickAddReviewerProject");

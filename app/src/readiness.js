@@ -91,8 +91,9 @@ export function buildReadiness(project = {}, context = {}) {
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
   const nativeBuilderReady = looksLikeNativeBuilderUrl(project);
   const traceState = sponsorProofReady ? "executed" : brightDataTraceState(project);
+  const selectedProjectHasLiveEvidence = hasLiveReviewerEvidence(project);
   const selectedProjectHasRunReceipt = hasExecutedProjectReceipt(project);
-  const liveReviewedProjectCount = projects.filter((item) => hasLiveReviewerEvidence(item) || hasExecutedProjectReceipt(item)).length;
+  const selectedProjectReviewed = selectedProjectHasLiveEvidence || selectedProjectHasRunReceipt;
   const liveBackendSatisfied = liveApiConfigured || selectedProjectHasRunReceipt;
 
   const gates = [
@@ -121,19 +122,23 @@ export function buildReadiness(project = {}, context = {}) {
     gate({
       id: "actual-review-target",
       label: "Actual project reviewed",
-      passed: liveReviewedProjectCount > 0,
+      passed: selectedProjectReviewed,
       detail:
-        liveReviewedProjectCount > 0
-          ? `${liveReviewedProjectCount} user-supplied project${liveReviewedProjectCount === 1 ? "" : "s"} collected with live evidence.`
-          : reviewerProjectCount > 0
-            ? "A reviewer target is present, but it only has pending/manual evidence."
-            : "Add the real hackathon GitHub project and deployed app that ProofRank should review.",
+        selectedProjectHasRunReceipt
+          ? "Selected project has a signed executed Bright Data evidence receipt."
+          : selectedProjectHasLiveEvidence
+            ? "Selected project has fetched repository or demo evidence."
+            : reviewerProjectCount > 0
+              ? "A reviewer project is present, but the selected project only has pending/manual evidence."
+              : "Add the real hackathon GitHub project and deployed app that ProofRank should review.",
       proof:
-        liveReviewedProjectCount > 0
-          ? "Reviewer project has fetched repository/demo evidence and a non-pending collection trace."
-          : reviewerProjectCount > 0
-            ? "Pending reviewer intake does not count as an actual live review."
-            : "Only built-in demonstration submissions are loaded.",
+        selectedProjectHasRunReceipt
+          ? "Selected receipt contains executed Bright Data evidence."
+          : selectedProjectHasLiveEvidence
+            ? "Reviewer project has fetched repository/demo evidence and a non-pending collection trace."
+            : reviewerProjectCount > 0
+              ? "Pending reviewer intake does not count as an actual live review."
+              : "Only built-in demonstration submissions are loaded.",
       action: "Run live collection against the actual GitHub repository and deployed app URL."
     }),
     gate({
@@ -188,8 +193,8 @@ export function buildReadiness(project = {}, context = {}) {
       label: "Exportable proof packet",
       required: false,
       passed: Boolean(evidence.proofReceipt),
-      detail: "A judge packet should include scores, claim ledger, traces, tribunal, and originality findings.",
-      proof: evidence.proofReceipt ? "Proof receipt surface available." : "Receipt export not available.",
+      detail: "A judge packet should include scores, claim checks, evidence rows, review panel, and similarity findings.",
+      proof: evidence.proofReceipt ? "Evidence receipt surface available." : "Receipt export not available.",
       action: "Export the selected receipt and Markdown packet after the live run."
     })
   ];
@@ -223,10 +228,10 @@ export function buildReadiness(project = {}, context = {}) {
 export function readinessSummary(readiness) {
   const proofPackageReady = readiness.proofPackageReady ?? readiness.canSubmit;
   if (proofPackageReady) {
-    return `Proof package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Final lablab submission is tracked separately.`;
+    return `Evidence package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Final lablab submission is tracked separately.`;
   }
 
-  return `Proof package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Next action: ${
+  return `Evidence package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Next action: ${
     readiness.nextActions[0] || "Review missing proof."
   }`;
 }

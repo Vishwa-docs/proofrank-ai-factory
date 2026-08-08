@@ -8,7 +8,7 @@ export const fixtureProjects = [
     title: "ProofRank",
     team: "SilverSpoon",
     summary:
-      "Agentic submission truth auditor that ranks hackathon projects with source-backed proof receipts for accessibility, originality, sponsor usage, and review risk.",
+      "Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk.",
     eventUrl: EVENT_URL,
     submissionUrl: "",
     demoUrl: "https://proofrank-ai-factory.vercel.app/",

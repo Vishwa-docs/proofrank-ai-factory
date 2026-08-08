@@ -101,6 +101,25 @@ function isHttpUrl(value = "") {
   }
 }
 
+function parsePublicGithubRepoUrl(value = "") {
+  if (!isHttpUrl(value)) throw new Error("A public GitHub repository URL is required.");
+
+  const url = new URL(value);
+  if (url.hostname.toLowerCase() !== "github.com") {
+    throw new Error("A public GitHub repository URL is required.");
+  }
+
+  const [owner, repoPart] = url.pathname.split("/").filter(Boolean);
+  const repo = repoPart?.replace(/\.git$/i, "");
+  if (!owner || !repo) throw new Error("A public GitHub repository URL must include an owner and repository name.");
+
+  return {
+    owner,
+    repo,
+    canonicalUrl: `https://github.com/${owner}/${repo}`
+  };
+}
+
 function syncReviewTokenFromUrl() {
   try {
     const url = new URL(window.location.href);
@@ -1022,18 +1041,23 @@ function loadSampleReviewLinks() {
 function reviewerInputPayload() {
   const repoUrl = elements.reviewerRepoUrl.value.trim();
   const demoUrl = elements.reviewerDemoUrl.value.trim();
+  let githubRepo;
 
-  if (!isHttpUrl(repoUrl) || !repoUrl.includes("github.com/")) {
-    setStatus("Add a public GitHub repository URL before reviewing a project.", "error");
+  try {
+    githubRepo = parsePublicGithubRepoUrl(repoUrl);
+  } catch (error) {
+    setStatus(error.message, "error");
     setQuickHint("Paste a GitHub repository URL like https://github.com/org/project.", "error");
     return null;
   }
 
   return {
-    repoUrl,
+    repoUrl: githubRepo.canonicalUrl,
     demoUrl: isHttpUrl(demoUrl) ? demoUrl : "",
     title: elements.reviewerTitle.value.trim(),
     team: elements.reviewerTeam.value.trim(),
+    repoOwner: githubRepo.owner,
+    repoName: githubRepo.repo,
     eventUrl: elements.eventUrl.value || EVENT_URL
   };
 }
@@ -1045,9 +1069,8 @@ function reviewerProjectFromInputs() {
   const repoUrl = payload.repoUrl;
   const demoUrl = payload.demoUrl;
 
-  const repoParts = new URL(repoUrl).pathname.split("/").filter(Boolean);
-  const owner = repoParts[0] || "GitHub owner";
-  const repo = repoParts[1] || "project";
+  const owner = payload.repoOwner || "GitHub owner";
+  const repo = payload.repoName || "project";
   const title = payload.title || labelFromSlug(repo);
   const team = payload.team || labelFromSlug(owner);
   const hasDemo = isHttpUrl(demoUrl);
@@ -1190,6 +1213,17 @@ async function addReviewerProject() {
   setActiveSection("overview", { scroll: true });
 }
 
+async function addQuickReviewerProject() {
+  syncFullReviewFormFromQuick();
+  if (state.mode === "live") {
+    state.mode = "demo";
+    elements.modeSelect.value = "demo";
+    updateRunProfile();
+    updateReviewerModeCopy();
+  }
+  await addReviewerProject();
+}
+
 function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = "Run live review";
@@ -1264,23 +1298,18 @@ elements.liveApiUrl.addEventListener("input", () => renderReadiness(selectedProj
 elements.runAudit.addEventListener("click", runAudit);
 elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.target.files[0]));
 elements.addReviewerProject.addEventListener("click", addReviewerProject);
-elements.quickAddReviewerProject.addEventListener("click", () => {
-  syncFullReviewFormFromQuick();
-  addReviewerProject();
-});
+elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProject);
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
 elements.quickRepoUrl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
-    syncFullReviewFormFromQuick();
-    addReviewerProject();
+    addQuickReviewerProject();
   }
 });
 elements.quickDemoUrl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
-    syncFullReviewFormFromQuick();
-    addReviewerProject();
+    addQuickReviewerProject();
   }
 });
 
@@ -1289,11 +1318,11 @@ elements.exportCsv.addEventListener("click", () => {
 });
 
 elements.exportReceipts.addEventListener("click", () => {
-  downloadJson("proofrank-all-receipts.json", state.projects.map((project) => buildReceipt(project, state.projects)));
+  downloadJson("proofrank-all-evidence-receipts.json", state.projects.map((project) => buildReceipt(project, state.projects)));
 });
 
 elements.exportSelected.addEventListener("click", () => {
-  downloadJson(`${selectedProject().id}-proof-receipt.json`, buildReceipt(selectedProject(), state.projects));
+  downloadJson(`${selectedProject().id}-evidence-receipt.json`, buildReceipt(selectedProject(), state.projects));
 });
 
 function exportSubmissionPacket() {

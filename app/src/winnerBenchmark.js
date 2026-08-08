@@ -64,7 +64,7 @@ const BENCHMARKS = [
     label: "Judge-visible proof trail",
     points: 16,
     test: hasVisibleProof,
-    proof: "Evidence items, claim ledger, and receipt surfaces make verification inspectable.",
+    proof: "Evidence items, claim checks, and receipt surfaces make verification inspectable.",
     action: "Expose evidence snippets, trace provenance, limitations, and exportable receipts."
   },
   {

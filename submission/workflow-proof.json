@@ -1,34 +1,34 @@
 {
-  "generatedAt": "2026-08-08T06:09:38.035Z",
-  "durationMs": 5879,
+  "generatedAt": "2026-08-08T06:25:29.711Z",
+  "durationMs": 6182,
   "appTitle": "ProofRank",
-  "selectedProject": "ProofRank",
+  "selectedProject": "ProofRank AI Factory",
   "rankedRows": 9,
   "reviewerRowPresent": true,
-  "statusLine": "ProofRank selected.",
-  "brightProof": "Evidence report Bright Data evidence passed pr-20260807t200529345z-23568b05 / signed",
-  "scorecardText": "Submission-ready ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed proof receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Bright Data Passed Overall audit 97 DemoGitHub Next action Submit packet from lablab team account Evidence depth 2 public links, 4 receipt items, Bright Data executed. Current blocker Final lablab submission remains. Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Differentiator Executed web",
-  "receiptText": "Run receipt pr-20260807t200529345z-23568b05 bright-data-mcp / signed / 23568b05 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Signed Bright Data sponsor receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. signed-r",
+  "statusLine": "ProofRank AI Factory selected.",
+  "brightProof": "Evidence report Sample review only Run live collection when a tokenized backend session is available",
+  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. GitHubBright Data collection pending Evidence score 25 Bright 19 DemoGitHub Next action Manual review required Evidence depth 2 public links, 1 receipt items, Bright Data pending. Current blocker Add native.builder usage explanation Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Differentiator Executed web evidence Bright Data evidence rows are separated from planned, claimed, direct, and failed rows. Expansion Public AI diligence Hackathons are the entry point for",
+  "receiptText": "Run receipt Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Bright Data trace table Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Planned collector calls Demo review mirrors these collection steps without using live",
   "readinessItems": [
     {
-      "status": "Passed",
+      "status": "Action",
       "label": "Native.builder primary URL",
-      "detail": "Primary application URL points to a native.builder deployment."
+      "detail": "Publish the primary app from native.builder; the GitHub Pages build is only fallback evidence."
     },
     {
-      "status": "Passed",
+      "status": "Action",
       "label": "Bright Data sponsor proof bundle",
-      "detail": "Receipt contains executed Bright Data source, search_engine, and discover traces."
+      "detail": "Current trace state is pending; sponsor proof needs executed source, search_engine, and discover traces."
     },
     {
-      "status": "Passed",
+      "status": "Action",
       "label": "Actual project reviewed",
-      "detail": "1 user-supplied project collected with live evidence."
+      "detail": "A reviewer project is present, but the selected project only has pending/manual evidence."
     },
     {
-      "status": "Passed",
+      "status": "Action",
       "label": "Live collection backend",
-      "detail": "A signed server-side Bright Data run receipt is attached for this project."
+      "detail": "Demo mode can rank fixtures, but real use needs the backend running in live mode."
     },
     {
       "status": "Passed",
@@ -53,12 +53,12 @@
     {
       "status": "Passed",
       "label": "Exportable proof packet",
-      "detail": "A judge packet should include scores, claim ledger, traces, tribunal, and originality findings."
+      "detail": "A judge packet should include scores, claim checks, evidence rows, review panel, and similarity findings."
     }
   ],
   "exportedFiles": [
-    "proofrank-proof-receipt.json",
-    "proofrank-submission-packet.md"
+    "review-vishwa-docs-proofrank-ai-factory-evidence-receipt.json",
+    "review-vishwa-docs-proofrank-ai-factory-submission-packet.md"
   ],
   "screenshotPath": "/Users/daver/Desktop/LabLabAI AI Factory NativeBuilder Hackathon/submission/demo-assets/workflow-proof.png",
   "consoleMessages": [],

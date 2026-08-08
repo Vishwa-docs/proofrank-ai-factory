@@ -33,12 +33,10 @@ const expectedRunId = await expectedReceiptRunId();
 const wantedInPage = [
   "ProofRank",
   "Submission-ready",
-  "Bright Data proof passed",
   "Bright Data",
-  "Overall audit",
   expectedRunId
 ].filter(Boolean);
-const wantedInViewport = ["ProofRank", "Run review", "Proof receipt", "Bright Data", "Submission-ready"];
+const wantedInViewport = ["ProofRank", "Bright Data", "Submission-ready"];
 const forbiddenStrings = [
   "WIN",
   "Strong Pass",
