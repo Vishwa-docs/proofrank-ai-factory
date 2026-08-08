@@ -37,7 +37,7 @@ AI/ML API
 Speechmatics api
 
 [CivicTwin - Proof-Carrying Rule Twin](/ai-hackathons/nativebuilder-build-without-limits/purrwolf/civictwin-proof-carrying-rule-twin)
-Change one operating choice and watch permits, fees, blockers, and source-backed proof receipts recompile for a multilingual small-business founder.
+Change one operating choice and watch permits, fees, blockers, and source-backed evidence receipts recompile for a multilingual small-business founder.
 Purrwolf
 Bright Data Web Scraper API
 Speechmatics api

@@ -13,11 +13,11 @@
     "overall": 95
   },
   "verdict": {
-    "label": "Submission-ready",
+    "label": "Strong candidate",
     "action": "Submit packet from lablab team account",
     "risks": [
       "Final lablab.ai submission is still pending from the team-owner account.",
-      "Fresh public replay requires a private review token and server-side Bright Data secret; the public package includes a signed receipt."
+      "Fresh public replay requires a private review token and server-side Bright Data secret; the public package includes a server-checked receipt."
     ]
   },
   "urls": {
@@ -124,7 +124,7 @@
         "required": false,
         "status": "passed",
         "detail": "A judge packet should include scores, claim ledger, traces, tribunal, and originality findings.",
-        "proof": "Proof receipt surface available.",
+        "proof": "evidence receipt surface available.",
         "action": "Export the selected receipt and Markdown packet after the live run."
       }
     ],
@@ -176,7 +176,7 @@
           "Agentic Bright Data role is visible.",
           "Remote MCP, SERP API, Discover are referenced.",
           "Receipt includes executed source, search, and discovery traces.",
-          "Output is framed as a proof receipt rather than a generic summary."
+          "Output is framed as a evidence receipt rather than a generic summary."
         ],
         "objections": []
       },
@@ -235,7 +235,7 @@
     "finalRecommendation": {
       "label": "Improve then submit",
       "confidence": 80,
-      "action": "Close open disputes, then export the proof receipt and final packet."
+      "action": "Close open disputes, then export the evidence receipt and final packet."
     }
   },
   "originalityRadar": {
@@ -286,7 +286,7 @@
       }
     ],
     "differentiators": [
-      "Turns judging into proof receipts instead of one-shot summaries.",
+      "Turns judging into evidence receipts instead of one-shot summaries.",
       "Shows executed Bright Data trace provenance inside the receipt."
     ],
     "brightDataQueries": [
@@ -298,7 +298,7 @@
       {
         "tool": "search_engine",
         "purpose": "Sponsor-claim overlap search",
-        "query": "\"ProofRank AI Factory\" \"Bright Data\" OR \"proof receipt\" OR \"source-backed\""
+        "query": "\"ProofRank AI Factory\" \"Bright Data\" OR \"evidence receipt\" OR \"source-backed\""
       },
       {
         "tool": "discover",
@@ -355,7 +355,7 @@
       "confidence": 0.78,
       "supports": [
         "Demo availability",
-        "Workflow proof"
+        "Workflow replay"
       ],
       "limitations": "Fetch confirms public content, not complete interactive success."
     },
@@ -448,7 +448,7 @@
       "supports": [
         "Demo artifacts",
         "Submission packaging",
-        "Public proof assets"
+        "Public evidence assets"
       ],
       "limitations": "Projects may host videos or artifacts outside GitHub releases."
     },

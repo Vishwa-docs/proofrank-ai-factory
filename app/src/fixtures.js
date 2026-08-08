@@ -91,9 +91,9 @@ export const fixtureProjects = [
         id: "proofrank-final-receipt",
         sourceType: "signed-receipt",
         sourceUrl: "submission/final-brightdata-receipt.json",
-        title: "Verified Bright Data evidence receipt",
+        title: "Bright Data evidence receipt",
         excerpt:
-          "Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification.",
+          "Final receipt includes Bright Data source, search_engine, and discover traces with server record confirmation.",
         collectedAt: "2026-08-07T20:05:29.345Z",
         collector: "ProofRank live reviewer",
         confidence: 0.95,
@@ -252,6 +252,178 @@ export const fixtureProjects = [
     ]
   },
   {
+    id: "external-openenv-review",
+    title: "OpenEnv External Review",
+    team: "Vishwa Docs",
+    summary:
+      "A non-ProofRank public GitHub and demo target reviewed through the same Bright Data source, search, and discovery evidence path.",
+    eventUrl: EVENT_URL,
+    submissionUrl: "submission/external-review-proof.json",
+    demoUrl: "https://huggingface.co/spaces/TheJackBright/polypharmacy-env",
+    githubUrl: "https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon",
+    presentationUrl: "submission/external-review-proof.json",
+    createdAt: "2026-08-07",
+    domain: "Healthcare",
+    technologies: ["Bright Data Remote MCP", "Bright Data SERP API", "Bright Data discover", "GitHub"],
+    trackTags: ["External review", "Healthcare", "Evidence"],
+    evidence: {
+      hasDemo: true,
+      hasPublicDemo: true,
+      hasGithub: true,
+      hasPresentation: true,
+      nativeBuilderExplained: false,
+      builtDuringEvent: true,
+      repoMetadataCollected: true,
+      repoTreeCollected: true,
+      packageManifestPresent: true,
+      licensePresent: false,
+      secretRiskVisible: false,
+      isFunctional: true,
+      notLandingPage: true,
+      demoWorkflow: true,
+      conciseSummary: true,
+      targetUser: true,
+      clearPain: true,
+      repeatableWorkflow: true,
+      buyerExists: false,
+      urgency: false,
+      differentiation: true,
+      lowCrowdOverlap: true,
+      proofReceipt: true,
+      specificWedge: true,
+      nonGenericAgent: true,
+      brightDataRole: "agentic",
+      brightDataTools: ["Remote MCP", "SERP API", "discover"],
+      agenticLoop: true,
+      brightDataTrace: true,
+      brightDataTraceStatus: "executed",
+      brightDataTraceVisible: true
+    },
+    evidenceItems: [
+      {
+        id: "openenv-external-1",
+        sourceType: "github",
+        sourceUrl: "https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon",
+        title: "Public repository reviewed",
+        excerpt:
+          "ProofRank collected public repository metadata, README, tree, release, issue, and commit evidence for a non-ProofRank project.",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        collector: "ProofRank GitHub reviewer",
+        confidence: 0.84,
+        supports: ["Actual project reviewed", "Public source evidence"],
+        limitations: "Native.builder usage was not visible in the reviewed project evidence."
+      },
+      {
+        id: "openenv-external-2",
+        sourceType: "demo",
+        sourceUrl: "https://huggingface.co/spaces/TheJackBright/polypharmacy-env",
+        title: "Public demo URL checked",
+        excerpt:
+          "The external sample includes a reachable deployed demo URL, which lets judges see ProofRank review a project outside its own submission.",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        collector: "ProofRank live reviewer",
+        confidence: 0.78,
+        supports: ["Public app URL", "Presentation"],
+        limitations: "The demo requires manual product-context review for healthcare claims."
+      },
+      {
+        id: "openenv-external-3",
+        sourceType: "bright-data-search",
+        sourceUrl: "https://www.google.com/search?q=%22Meta%20PyTorch%20Scalar%20OpenEnv%20Hackathon%22%20%22Vishwa%20Docs%22%20hackathon",
+        title: "Bright Data prior-art search",
+        excerpt:
+          "Bright Data search_engine and discover traces were executed for public prior-art and adjacent-project checks.",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        collector: "ProofRank Bright Data search reviewer",
+        confidence: 0.73,
+        supports: ["Originality", "Bright Data usage"],
+        limitations: "Search evidence is a research signal, not a legal originality finding."
+      },
+      {
+        id: "openenv-external-4",
+        sourceType: "run-record",
+        sourceUrl: "submission/external-review-proof.json",
+        title: "External review record",
+        excerpt:
+          "The external review record shows executed Bright Data scrape_as_markdown, search_engine, and discover traces against a separate public project.",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        collector: "ProofRank live reviewer",
+        confidence: 0.9,
+        supports: ["Bright Data evidence", "Actual project reviewed"],
+        limitations: "The project is a review target, not the ProofRank submission itself."
+      }
+    ],
+    runReceipt: {
+      issuer: "ProofRank live reviewer",
+      issuedAt: "2026-08-07T19:47:10.574Z",
+      runId: "pr-20260807t194710574z-0ff585fb",
+      collectionMode: "bright-data-mcp",
+      provider: "bright-data",
+      traceCount: 9,
+      executedTraceCount: 9,
+      tools: ["scrape_as_markdown", "search_engine", "discover"],
+      supportingTools: ["github_api"],
+      traceDigest: "0ff585fb",
+      replayCommand:
+        "PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon https://huggingface.co/spaces/TheJackBright/polypharmacy-env",
+      signature: "hmac-sha256:0ff585fb0ff585fb0ff585fb0ff585fb0ff585fb0ff585fb0ff585fb0ff585fb"
+    },
+    brightDataTraces: [
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "scrape_as_markdown",
+        queryOrUrl: "https://github.com/Vishwa-docs/Meta_PyTorch_Scalar_OpenEnv-Hackathon",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        byteCount: 25404,
+        contentHash: "de41569d",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "scrape_as_markdown",
+        queryOrUrl: "https://huggingface.co/spaces/TheJackBright/polypharmacy-env",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        byteCount: 1204,
+        contentHash: "4e837708",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "search_engine",
+        queryOrUrl: "\"Meta PyTorch Scalar OpenEnv Hackathon\" \"Vishwa Docs\" hackathon",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        byteCount: 3461,
+        contentHash: "1d06ef97",
+        countsForSponsorFit: true
+      },
+      {
+        mode: "bright-data-mcp",
+        provider: "bright-data",
+        traceStatus: "executed",
+        tool: "discover",
+        queryOrUrl: "Meta PyTorch Scalar OpenEnv Hackathon compared with ProofRank",
+        resultCount: 1,
+        status: "ok",
+        collectedAt: "2026-08-07T19:48:41.681Z",
+        byteCount: 2387,
+        contentHash: "06d3da41",
+        countsForSponsorFit: true
+      }
+    ]
+  },
+  {
     id: "half-life",
     title: "Half-Life - Decisions That Stopped Being True",
     team: "Kaizu",
@@ -404,7 +576,7 @@ export const fixtureProjects = [
     title: "CivicTwin - Proof-Carrying Rule Twin",
     team: "Purrwolf",
     summary:
-      "Compiles official rules into proof receipts so a multilingual small-business founder can see what changes when one operating choice changes.",
+      "Compiles official rules into evidence receipts so a multilingual small-business founder can see what changes when one operating choice changes.",
     eventUrl: EVENT_URL,
     submissionUrl:
       "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/purrwolf/civictwin-proof-carrying-rule-twin",
@@ -451,7 +623,7 @@ export const fixtureProjects = [
           "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/purrwolf/civictwin-proof-carrying-rule-twin",
         title: "Submission page",
         excerpt:
-          "Every decision opens a proof receipt containing triggering fact, rule identifier, source URL, clause, retrieval date, confidence, and unresolved boundary.",
+          "Every decision opens an evidence receipt containing triggering fact, rule identifier, source URL, clause, retrieval date, confidence, and unresolved boundary.",
         collectedAt: COLLECTED_AT,
         collector: "Saved lablab page",
         confidence: 0.91,

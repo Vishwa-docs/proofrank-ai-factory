@@ -125,7 +125,7 @@ export function buildReadiness(project = {}, context = {}) {
       passed: selectedProjectReviewed,
       detail:
         selectedProjectHasRunReceipt
-          ? "Selected project has a verified executed Bright Data evidence receipt."
+          ? "Selected project has an executed Bright Data review record."
           : selectedProjectHasLiveEvidence
             ? "Selected project has fetched repository or demo evidence."
             : reviewerProjectCount > 0
@@ -133,7 +133,7 @@ export function buildReadiness(project = {}, context = {}) {
               : "Add the real hackathon GitHub project and deployed app that ProofRank should review.",
       proof:
         selectedProjectHasRunReceipt
-          ? "Selected receipt contains executed Bright Data evidence."
+          ? "Selected review record contains executed Bright Data evidence."
           : selectedProjectHasLiveEvidence
             ? "Reviewer project has fetched repository/demo evidence and a non-pending collection trace."
             : reviewerProjectCount > 0
@@ -146,7 +146,7 @@ export function buildReadiness(project = {}, context = {}) {
       label: "Live collection backend",
       passed: liveBackendSatisfied,
       detail: selectedProjectHasRunReceipt
-        ? "A verified server-side Bright Data run receipt is attached for this project."
+        ? "A server-side Bright Data run record is attached for this project."
         : liveApiConfigured
           ? "The UI is pointed at a live server-side review endpoint."
         : localhostBlocked
@@ -190,12 +190,12 @@ export function buildReadiness(project = {}, context = {}) {
     }),
     gate({
       id: "proof-export",
-      label: "Exportable proof packet",
+      label: "Exportable review memo",
       required: false,
       passed: Boolean(evidence.proofReceipt),
-      detail: "A judge packet should include scores, claim checks, evidence rows, review panel, and similarity findings.",
+      detail: "A review package should include scores, claim checks, evidence rows, review panel, and similarity findings.",
       proof: evidence.proofReceipt ? "Evidence report surface available." : "Evidence export not available.",
-      action: "Export the selected receipt and Markdown packet after the live run."
+      action: "Export the selected receipt and Markdown memo after the live run."
     })
   ];
 
@@ -228,10 +228,10 @@ export function buildReadiness(project = {}, context = {}) {
 export function readinessSummary(readiness) {
   const proofPackageReady = readiness.proofPackageReady ?? readiness.canSubmit;
   if (proofPackageReady) {
-    return `Evidence package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Final lablab submission is tracked separately.`;
+    return `Evidence package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates checked. Final lablab submission is tracked separately.`;
   }
 
-  return `Evidence package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates passed. Next action: ${
+  return `Evidence package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates checked. Next action: ${
     readiness.nextActions[0] || "Review missing proof."
   }`;
 }

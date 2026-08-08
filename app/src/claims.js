@@ -1,6 +1,6 @@
 import { brightDataTraceState, hasBrightDataSponsorProofBundle, hasExecutedBrightDataTrace } from "./scoring.js";
 
-function statusFor(value, strongLabel = "Verified") {
+function statusFor(value, strongLabel = "Supported") {
   return value ? strongLabel : "Not Found";
 }
 
@@ -20,7 +20,7 @@ export function buildClaimLedger(project) {
   return [
     {
       claim: "Public demo is reachable and shows a workflow",
-      status: evidence.hasPublicDemo && evidence.demoWorkflow ? "Verified" : evidence.hasDemo ? "Weak Evidence" : "Not Found",
+      status: evidence.hasPublicDemo && evidence.demoWorkflow ? "Supported" : evidence.hasDemo ? "Weak Evidence" : "Not Found",
       evidence: evidenceText(
         evidence.hasPublicDemo && evidence.demoWorkflow,
         "Public demo link and end-to-end workflow are visible from submitted evidence.",
@@ -38,7 +38,7 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Bright Data is load-bearing",
-      status: brightDependency >= 80 && sponsorProofBundle ? "Verified" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
+      status: brightDependency >= 80 && sponsorProofBundle ? "Supported" : brightDependency >= 50 ? "Weak Evidence" : "Not Found",
       evidence:
         brightTools.length > 0 && sponsorProofBundle
           ? `${brightTools.join(", ")} completed source, search, and discovery evidence with dependency score ${brightDependency}.`
@@ -50,7 +50,7 @@ export function buildClaimLedger(project) {
     },
     {
       claim: "Originality has public support",
-      status: evidence.lowCrowdOverlap && evidence.differentiation ? "Verified" : evidence.differentiation ? "Weak Evidence" : "Needs Evidence",
+      status: evidence.lowCrowdOverlap && evidence.differentiation ? "Supported" : evidence.differentiation ? "Weak Evidence" : "Needs Evidence",
       evidence: evidenceText(
         evidence.lowCrowdOverlap && evidence.differentiation,
         "The project has a specific wedge and lower overlap with the current field.",
@@ -58,8 +58,8 @@ export function buildClaimLedger(project) {
       )
     },
     {
-      claim: "Review packet is defensible",
-      status: evidence.proofReceipt && sponsorProofBundle ? "Verified" : evidence.proofReceipt ? "Weak Evidence" : "Needs Evidence",
+      claim: "Review memo is defensible",
+      status: evidence.proofReceipt && sponsorProofBundle ? "Supported" : evidence.proofReceipt ? "Weak Evidence" : "Needs Evidence",
       evidence: evidenceText(
         evidence.proofReceipt && sponsorProofBundle,
         "Receipt includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
@@ -72,7 +72,7 @@ export function buildClaimLedger(project) {
         evidence.secretRiskVisible
           ? "Needs Evidence"
           : evidence.repoTreeCollected && evidence.packageManifestPresent && evidence.licensePresent && evidence.builtDuringEvent
-            ? "Verified"
+            ? "Supported"
             : evidence.repoTreeCollected && evidence.packageManifestPresent
               ? "Weak Evidence"
               : "Needs Evidence",

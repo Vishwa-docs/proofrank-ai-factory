@@ -3,6 +3,13 @@
     "date": "2026-08-08",
     "macrostructure": "Workbench",
     "theme": "modern-minimal",
+    "enrichment": "judge packet and field comparison",
+    "brief": "Split Bright Data receipt from live setup, renamed verified sample to built-in receipt, added current-field comparison, and clarified draft link-only reviews"
+  },
+  {
+    "date": "2026-08-08",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
     "enrichment": "draft-live-verified evidence ladder",
     "brief": "Added review lenses, starter projects, explicit proof ownership, and Bright Data run timeline to reduce first-use ambiguity"
   },

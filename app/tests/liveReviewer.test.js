@@ -113,7 +113,7 @@ const fakeFetchText = async (url) => {
       <title>ProofRank</title>
       <body>
         <button>Run review</button>
-        <section>Ranked queue, proof receipt, GitHub repository, export JSON.</section>
+        <section>Ranked queue, evidence receipt, GitHub repository, export JSON.</section>
       </body>
     </html>
   `;

@@ -32,7 +32,7 @@ assert.equal(countersignScores.brightDataFit, 12);
 assert.ok(countersignScores.overall < proofrankScores.overall);
 
 const proofrankVerdict = buildVerdict(proofrank, proofrankScores);
-assert.equal(proofrankVerdict.label, "Finalist-ready");
+assert.equal(proofrankVerdict.label, "Strong candidate");
 assert.ok(!proofrankVerdict.risks.includes("Publish public demo before submission"));
 assert.ok(!proofrankVerdict.risks.includes("Run the Bright Data sponsor evidence bundle"));
 
@@ -147,6 +147,6 @@ assert.ok(executedTraceScores.brightDataPrize <= 78);
 assert.ok(sponsorBundleScores.brightDataPrize >= 86);
 assert.ok(buildVerdict(plannedTraceProject, plannedTraceScores).risks.includes("Run the Bright Data sponsor evidence bundle"));
 assert.ok(buildVerdict(executedTraceProject, executedTraceScores).risks.includes("Complete the Bright Data sponsor evidence bundle"));
-assert.equal(buildVerdict(sponsorBundleProject, sponsorBundleScores).label, "Finalist-ready");
+assert.equal(buildVerdict(sponsorBundleProject, sponsorBundleScores).label, "Strong candidate");
 
 console.log("scoring tests passed");

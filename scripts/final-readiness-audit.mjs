@@ -205,15 +205,6 @@ function assetBundleFromHtml(text = "") {
   return match?.[1] || "";
 }
 
-async function expectedReceiptRunId() {
-  try {
-    const receipt = JSON.parse(await readFile(path.join(root, "submission", "final-brightdata-receipt.json"), "utf8"));
-    return receipt.runReceipt?.runId || receipt.project?.runReceipt?.runId || "";
-  } catch {
-    return "";
-  }
-}
-
 async function liveApi() {
   const configured = envValue("PROOFRANK_LIVE_API_URL", "PROOFRANK_API_URL");
   const url = healthUrl(configured);
@@ -293,14 +284,21 @@ async function nativeBuilder() {
   checkedUrl.searchParams.set("verify", String(Date.now()));
   const reachable = await fetchText(checkedUrl.toString());
   const text = reachable.text || "";
-  const expectedRunId = await expectedReceiptRunId();
   const requiredCopy = [
     "ProofRank",
-    "Submission-ready",
     "Bright Data",
-    expectedRunId
+    "Review a public project",
+    "Evidence report",
+    "Live setup",
+    "Bright Data receipt present"
   ].filter(Boolean);
-  const staleCopy = ["pr-20260807t145909828z-553fb028", "Sponsor bundle executed", "Finalist-ready", "Strong Pass"];
+  const staleCopy = [
+    "pr-20260807t145909828z-553fb028",
+    "Sponsor bundle executed",
+    "Finalist-ready",
+    "Submission-ready",
+    "Strong Pass"
+  ];
   const missingCopy = requiredCopy.filter((item) => !text.includes(item));
   const staleCopyFound = staleCopy.filter((item) => text.includes(item));
   const liveBundle = assetBundleFromHtml(text);
@@ -395,6 +393,8 @@ async function liveReceipt() {
 async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
+  const fallbackRequiredCopy = ["Bright Data receipt present", "Review a public project", "Evidence report", "Create draft review"];
+  const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !String(fallbackBundle.text || "").includes(item));
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");
   const videoReachable = await fetchReachable(releaseVideoUrl);
   const targetRepoUrl = envValue("PROOFRANK_REVIEW_REPO_URL") || defaultReviewRepoUrl;
@@ -417,12 +417,15 @@ async function buildAuditState() {
         fallback.ok &&
         /ProofRank/.test(fallback.text) &&
         fallbackBundle.ok &&
-        /(Bright Data|Proof bundle|Package-ready)/.test(fallbackBundle.text),
+        fallbackMissingCopy.length === 0,
       url: fallbackUrl,
       status: fallback.status,
+      missingCopy: fallbackMissingCopy,
       evidence:
-        fallback.ok && fallbackBundle.ok
-          ? "ProofRank shell is deployed and the runtime bundle contains the Bright Data proof/package-ready UI."
+        fallback.ok && fallbackBundle.ok && fallbackMissingCopy.length === 0
+          ? "ProofRank shell is deployed and the runtime bundle contains the refreshed Bright Data receipt UI."
+          : fallback.ok && fallbackBundle.ok && fallbackMissingCopy.length > 0
+            ? `Fallback bundle is deployed but missing refreshed copy: ${fallbackMissingCopy.join(", ")}.`
           : `root HTTP ${fallback.status || 0}; bundle HTTP ${fallbackBundle.status || 0}`
     },
     releaseVideo: {

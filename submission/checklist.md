@@ -9,7 +9,7 @@
 - Task Planner completed a six-task build plan.
 - Native.builder build passes completed through the full MVP surface.
 - Published Native.builder app: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-- Native.builder was republished with the latest proof copy and `npm run native:render-check` passes on desktop and 320px mobile with receipt ID `pr-20260807t200529345z-23568b05`.
+- Native.builder must be republished with the latest review/evidence copy and `npm run native:render-check` must pass on desktop and 320px mobile with the current receipt language.
 - For truly native-builder-hosted Bright Data Live mode, confirm and connect Supabase for secure Edge Function secrets. Otherwise continue with the no-secret external live adapter already selected.
 - Apply Builder Plan promo code `AIFACTORY26`.
 - Use the public `nativelyai.app` URL as the primary app link.
@@ -18,7 +18,7 @@
 
 - Create or open Bright Data account.
 - Apply promo code `aiaccess50` if prompted.
-- Current local Bright Data proof is complete.
+- Current local Bright Data evidence run is complete; final lablab submission is still pending.
 - `npm run brightdata:mcp-smoke` has verified `search_engine`, `scrape_as_markdown`, and `discover`.
 - `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
 - The public release includes `final-brightdata-receipt.json`.
@@ -30,15 +30,15 @@
 - Create a public GitHub repo and enable the included GitHub Pages workflow as a fallback app URL.
 - Keep the included MIT `LICENSE` file in the public repo for submission compliance.
 - Upload or link the local reference app and submission docs.
-- Use the generated 2:20 demo video at `submission/proofrank-demo.mp4`.
-- Attach `submission/workflow-proof.json` if judges ask for an interaction proof artifact.
+- Use the generated sub-60-second demo video at `submission/proofrank-demo.mp4`.
+- Attach `submission/workflow-proof.json` if judges ask for an interaction evidence artifact.
 - Run `npm run final:audit` and keep `submission/final-readiness-audit.json` with the final packet.
 - Keep `submission/final-brightdata-receipt.json` with the final packet.
 - If a public video URL is required, upload `submission/proofrank-demo.mp4` to the team YouTube, Drive, or lablab-supported video host.
 - Use the generated pitch deck at `submission/proofrank-pitch-deck.pptx` if the judges or sponsor team want a concise presentation artifact.
 - Export CSV and selected receipt JSON during the demo.
 - Show Similarity Check and its Bright Data prior-art queries.
-- Show the Evidence Route map so the sponsor judge can see where Bright Data is load-bearing and where proof is still pending.
+- Show the Evidence Route map so the sponsor judge can see where Bright Data is load-bearing and where evidence is still pending.
 - Show the Collect gates so judges see native.builder, executed Bright Data, and real-project readiness at a glance.
 
 Public support links already created:
@@ -50,9 +50,9 @@ GitHub Pages backup: https://vishwa-docs.github.io/proofrank-ai-factory/
 Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
 Demo video asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-pitch-deck.pptx
-Workflow proof artifact: submission/workflow-proof.json
-Workflow proof URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
-Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
+Workflow replay artifact: submission/workflow-proof.json
+Workflow replay URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
+Workflow replay screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 Final Bright Data receipt: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 Native.builder render check: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-render-check.json
 Native.builder desktop screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-desktop.png
@@ -103,7 +103,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery evidence run, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Evidence receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery evidence run, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Evidence receipts show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:

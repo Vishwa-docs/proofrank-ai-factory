@@ -2,7 +2,7 @@
 
 Date: 2026-08-07
 
-ProofRank is currently at 9/11 required final readiness gates. The polished fallback app, Bright Data proof package, and public live API security gate are ready. The remaining external gates are republishing/verifying the Native.builder app with the latest prompt and the final lablab.ai submission URL.
+ProofRank is currently at 9/11 required final readiness gates. The polished fallback app, Bright Data evidence package, and public live API security gate are ready. The remaining external gates are republishing/verifying the Native.builder app with the latest prompt and the final lablab.ai submission URL.
 
 ## 1. Native.builder Status
 
@@ -18,7 +18,7 @@ Safari created this workspace. You logged in, created `JackB's Workspace`, the f
 https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 ```
 
-Native.builder asked whether to connect Supabase for secure Bright Data Live mode, saying this is required for Edge Function secret storage on their platform. To avoid granting persistent access without action-time confirmation, the safe answer was selected: build with no real token stored in Native.builder, use Signed proof plus a Bright Data Live adapter pointed at a server-side API base URL, and keep Supabase Edge Functions as the recommended later native secure-secret path.
+Native.builder asked whether to connect Supabase for secure Bright Data Live mode, saying this is required for Edge Function secret storage on their platform. To avoid granting persistent access without action-time confirmation, the safe answer was selected: build with no real token stored in Native.builder, use a Bright Data Live adapter pointed at a server-side API base URL, and keep Supabase Edge Functions as the recommended later native secure-secret path.
 
 Current Native.builder state:
 
@@ -26,7 +26,7 @@ Current Native.builder state:
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
 - Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
-- Current local/fallback first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, and receipt ID `pr-20260807t200529345z-23568b05`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
+- Current local/fallback first viewport shows public project links, `Review a public project`, `Evidence report`, and `Bright Data receipt present`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the saved render check used a cache-busting URL and passed.
 - Use the Native.builder URL above as the primary submission URL.
 
@@ -65,19 +65,19 @@ Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag
 Short description:
 
 ```text
-Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and grant reviewers. ProofRank audits project pages, demos, repos, decks, and technology claims, then exports ranked proof receipts with claim confidence, evidence gaps, and review actions.
+ProofRank is a Bright Data evidence workspace for AI hackathon judges. It reviews demo links, GitHub repos, claims, and prior art, then exports confidence scores, gaps, and sponsor-fit memos.
 ```
 
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery proof bundle. Proof receipts show trace state, provider, byte count, content hash, trace digest, and signature status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Originality Radar uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery evidence run. Evidence receipts show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 ```
 
 How native.builder was used:
 
 ```text
-native.builder generated and refined the ProofRank application structure, dashboard UI, stateful audit workflow, Claim Ledger, Proof Receipt panel, export actions, responsive layout, and public deployment from the prepared product brief.
+native.builder generated and refined the ProofRank application structure, dashboard UI, stateful review workflow, Claim Check, Evidence Receipt panel, export actions, responsive layout, and public deployment from the prepared product brief.
 ```
 
 ## 4. After Submission

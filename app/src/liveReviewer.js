@@ -726,7 +726,7 @@ export async function collectReviewerProject(input, options = {}) {
       secretRiskVisible,
       nativeBuilderExplained: hasAny(haystack, [/\bnative\.builder\b/i, /\bnatively\b/i, /\bnative-builder-prompt\b/i]),
       isFunctional: demoReachable || hasAny(workflowText, [/\bworkflow\b/i, /\bdashboard\b/i, /\breview\b/i, /\bexport\b/i]),
-      notLandingPage: hasAny(workflowText, [/\bworkflow\b/i, /\branked queue\b/i, /\bproof receipt\b/i, /\bexport\b/i]),
+      notLandingPage: hasAny(workflowText, [/\bworkflow\b/i, /\branked queue\b/i, /\bproof receipt\b/i, /\bevidence receipt\b/i, /\bexport\b/i]),
       demoWorkflow: demoReachable && hasAny(demoText, [/\brun\b/i, /\breview\b/i, /\bqueue\b/i, /\bworkflow\b/i, /\bexport\b/i]),
       conciseSummary: readmeReachable && cleanText(readmeText).length > 80,
       targetUser: hasAny(workflowText, [/\bjudge\b/i, /\bsponsor\b/i, /\bfounder\b/i, /\bteam\b/i, /\buser\b/i]),
@@ -736,11 +736,13 @@ export async function collectReviewerProject(input, options = {}) {
       urgency: hasAny(workflowText, [/\bdeadline\b/i, /\brisk\b/i, /\bbefore\b/i, /\btime pressure\b/i]),
       differentiation: hasAny(workflowText, [/\boriginality\b/i, /\bprior[-\s]art\b/i, /\bdifferentiat/i, /\bevidence\b/i]),
       lowCrowdOverlap: false,
-      proofReceipt: hasAny(workflowText, [/\bproof receipt\b/i, /\bsource-backed\b/i, /\bcitation\b/i, /\btrace\b/i]),
+      proofReceipt: hasAny(workflowText, [/\bproof receipt\b/i, /\bevidence receipt\b/i, /\bsource-backed\b/i, /\bcitation\b/i, /\btrace\b/i]),
       specificWedge: hasAny(workflowText, [/\bhackathon judge\b/i, /\bsponsor\b/i, /\bsubmission\b/i, /\brepository\b/i]),
       nonGenericAgent:
         hasAny(workflowText, [/\bagentic\b/i, /\bagent\b/i, /\bcollector\b/i, /\bauditor\b/i, /\bdiligence\b/i]) ||
-        (executedSearchTrace && executedDiscoverTrace && hasAny(workflowText, [/\bproof receipt\b/i, /\bsource-backed\b/i, /\baudit\b/i])),
+        (executedSearchTrace &&
+          executedDiscoverTrace &&
+          hasAny(workflowText, [/\bproof receipt\b/i, /\bevidence receipt\b/i, /\bsource-backed\b/i, /\baudit\b/i])),
       brightDataRole,
       brightDataTools,
       agenticLoop:
@@ -775,7 +777,7 @@ export async function collectReviewerProject(input, options = {}) {
               collectedAt,
               collector: "ProofRank live reviewer",
               confidence: demoReachable ? 0.78 : 0.24,
-              supports: ["Demo availability", "Workflow proof"],
+              supports: ["Demo availability", "Workflow replay"],
               limitations: demoReachable ? "Fetch confirms public content, not complete interactive success." : "Judges may not be able to access the demo."
             }
           ]

@@ -177,7 +177,7 @@ export function buildVerdict(project, scores = calculateScores(project)) {
   let action = "Manual review required";
 
   if (scores.overall >= 86 && evidence.hasPublicDemo && scores.brightDataFit >= 75 && sponsorProofBundle) {
-    label = "Finalist-ready";
+    label = "Strong candidate";
     action = "Shortlist for judge review";
   } else if (scores.overall >= 78 && scores.brightDataFit >= 70) {
     label = "Strong but gated";

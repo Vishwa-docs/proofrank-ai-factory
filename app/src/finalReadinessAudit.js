@@ -97,7 +97,7 @@ export function buildFinalReadinessReport(state = {}) {
       label: "Public fallback app",
       passed: bool(state.publicFallback?.ok),
       proof: state.publicFallback?.evidence || state.publicFallback?.url || "Fallback app was not verified.",
-      action: "Deploy the public fallback app and confirm the Bright Data proof strip is visible."
+      action: "Deploy the public fallback app and confirm the Bright Data receipt strip is visible."
     }),
     gate({
       id: "release-video",
@@ -110,7 +110,7 @@ export function buildFinalReadinessReport(state = {}) {
       id: "workflow-proof",
       label: "Replayable UI workflow proof",
       passed: bool(state.workflowProof?.ok),
-      proof: state.workflowProof?.path || "Workflow proof JSON was not generated.",
+      proof: state.workflowProof?.path || "Workflow replay JSON was not generated.",
       action: "Run npm run workflow:proof and attach the generated JSON artifact."
     }),
     gate({
@@ -222,9 +222,9 @@ export function buildFinalReadinessReport(state = {}) {
 
 export function summarizeFinalReadiness(report = {}) {
   if (report.canSubmit) {
-    return `Final-ready: ${report.requiredPassed}/${report.requiredTotal} required gates passed.`;
+    return `Final-ready: ${report.requiredPassed}/${report.requiredTotal} required gates checked.`;
   }
-  return `Not final-ready: ${report.requiredPassed || 0}/${report.requiredTotal || 0} required gates passed. Next action: ${
+  return `Not final-ready: ${report.requiredPassed || 0}/${report.requiredTotal || 0} required gates checked. Next action: ${
     report.nextActions?.[0] || "Review missing gates."
   }`;
 }

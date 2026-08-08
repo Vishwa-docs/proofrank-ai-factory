@@ -19,6 +19,26 @@ const browser = await chromium.launch({
 
 const results = [];
 
+async function tourTargetVisible(page, targetSelector) {
+  return page.evaluate((selector) => {
+    const tour = document.querySelector("#guidedTour");
+    const target = document.querySelector(selector);
+    if (!tour || !target || tour.hidden || !target.classList.contains("is-tour-target")) return false;
+    const tourRect = tour.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight;
+    const visible = (rect) =>
+      rect.width > 0 &&
+      rect.height > 0 &&
+      rect.right >= 0 &&
+      rect.left <= viewportWidth &&
+      rect.bottom >= 0 &&
+      rect.top <= viewportHeight;
+    return visible(tourRect) && visible(targetRect);
+  }, targetSelector);
+}
+
 for (const spec of [
   { name: "desktop", width: 1440, height: 950 },
   { name: "tablet-768", width: 768, height: 1024 },
@@ -41,7 +61,58 @@ for (const spec of [
   page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
 
   await page.goto(targetUrl, { waitUntil: "networkidle" });
+  await page.evaluate(() => {
+    window.__proofrankCopiedText = "";
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (text) => {
+          window.__proofrankCopiedText = String(text);
+        }
+      }
+    });
+  });
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
+
+  const initialQuickReviewCalm = await page.evaluate(() => {
+    const quick = document.querySelector(".quick-review");
+    const isVisible = (element) => {
+      if (!element) return false;
+      if (typeof element.checkVisibility === "function") {
+        return element.checkVisibility({ checkVisibilityCSS: true, checkOpacity: true });
+      }
+      return Boolean(element.offsetParent && getComputedStyle(element).visibility !== "hidden");
+    };
+    const visibleInputs = [...quick.querySelectorAll("input")].filter(isVisible);
+    const visiblePrimary = [...quick.querySelectorAll("button.primary-button")].filter(isVisible);
+    const visibleSecondary = [...quick.querySelectorAll(".quick-actions .text-button, .quick-actions .secondary-button")].filter(isVisible);
+    const hiddenGroups = [
+      ".visitor-mode",
+      ".bright-actions",
+      ".review-focus",
+      ".starter-projects",
+      ".public-room-note",
+      ".mode-ladder",
+      ".inline-qtip"
+    ].every((selector) => !isVisible(quick.querySelector(selector)));
+
+    return {
+      visibleInputs: visibleInputs.length,
+      visiblePrimary: visiblePrimary.length,
+      visibleSecondary: visibleSecondary.length,
+      hiddenGroups,
+      optionsClosed: document.querySelector("#reviewOptions")?.open === false
+    };
+  });
+  if (
+    initialQuickReviewCalm.visibleInputs > 2 ||
+    initialQuickReviewCalm.visiblePrimary !== 1 ||
+    initialQuickReviewCalm.visibleSecondary > 1 ||
+    !initialQuickReviewCalm.hiddenGroups ||
+    !initialQuickReviewCalm.optionsClosed
+  ) {
+    throw new Error(`Initial quick review is still too crowded: ${JSON.stringify(initialQuickReviewCalm)}`);
+  }
 
   if (spec.name === "desktop") {
     await page.click('.topbar [data-focus-target="quickRepoUrl"]');
@@ -52,64 +123,77 @@ for (const spec of [
     }
     await page.click("#startTourTop");
     await page.waitForTimeout(250);
-    const tourVisible = await page.evaluate(() => {
-      const tour = document.querySelector("#guidedTour");
-      const repo = document.querySelector("#quickRepoUrl");
-      return Boolean(tour && !tour.hidden && repo?.classList.contains("is-tour-target"));
-    });
+    const tourVisible = await tourTargetVisible(page, "#quickRepoUrl");
     if (!tourVisible) {
       throw new Error("Guided review did not open beside the repo field with a visible highlight.");
     }
     await page.click("#tourNext");
-    await page.waitForTimeout(300);
-    const tourStepTwo = await page.evaluate(() => {
-      return (
-        document.querySelector('[data-section-panel="overview"]')?.classList.contains("is-active") &&
-        document.querySelector("#scorecard")?.classList.contains("is-tour-target")
-      );
-    });
+    await page.waitForTimeout(750);
+    const tourStepTwo =
+      (await page.evaluate(() => document.querySelector('[data-section-panel="overview"]')?.classList.contains("is-active"))) &&
+      (await tourTargetVisible(page, "#scorecard"));
     if (!tourStepTwo) {
       throw new Error("Guided review step 2 did not highlight the scorecard.");
     }
     await page.click("#tourNext");
-    await page.waitForTimeout(300);
-    const tourStepThree = await page.evaluate(() => {
-      return (
-        document.querySelector('[data-section-panel="queue"]')?.classList.contains("is-active") &&
-        document.querySelector("#rankedList")?.classList.contains("is-tour-target")
-      );
-    });
+    await page.waitForTimeout(750);
+    const tourStepThree =
+      (await page.evaluate(() => document.querySelector('[data-section-panel="queue"]')?.classList.contains("is-active"))) &&
+      (await tourTargetVisible(page, "#rankedList"));
     if (!tourStepThree) {
       throw new Error("Guided review step 3 did not switch to Projects and highlight the ranked list.");
     }
     await page.click("#tourNext");
-    await page.waitForTimeout(300);
-    const tourStepFour = await page.evaluate(() => {
-      return (
-        document.querySelector('[data-section-panel="receipt"]')?.classList.contains("is-active") &&
-        document.querySelector("#receipt")?.classList.contains("is-tour-target")
-      );
-    });
+    await page.waitForTimeout(750);
+    const tourStepFour =
+      (await page.evaluate(() => document.querySelector('[data-section-panel="receipt"]')?.classList.contains("is-active"))) &&
+      (await tourTargetVisible(page, "#receipt"));
     if (!tourStepFour) {
       throw new Error("Guided review step 4 did not switch to Evidence and highlight the receipt.");
     }
     await page.click("#tourNext");
-    await page.waitForTimeout(300);
-    const tourStepFive = await page.evaluate(() => {
-      return (
-        document.querySelector('[data-section-panel="setup"]')?.classList.contains("is-active") &&
-        document.querySelector("#modeSelect")?.classList.contains("is-tour-target")
-      );
-    });
+    await page.waitForTimeout(750);
+    const tourStepFive =
+      (await page.evaluate(() => document.querySelector('[data-section-panel="setup"]')?.classList.contains("is-active"))) &&
+      (await tourTargetVisible(page, "#modeSelect"));
     if (!tourStepFive) {
       throw new Error("Guided review step 5 did not switch to Live setup and highlight review mode.");
     }
     await page.click("#tourClose");
+    await page.click("#reviewOptions summary");
+    await page.waitForTimeout(150);
+    const pitchCollapsedByDefault = await page.evaluate(() => {
+      return document.querySelector("#pitchCheckDrawer")?.open === false && !document.querySelector(".pitch-review-panel");
+    });
+    if (!pitchCollapsedByDefault) {
+      throw new Error("Presentation check should be collapsed by default and absent from Review until analysis runs.");
+    }
+    await page.click("#pitchCheckDrawer summary");
+    await page.click("#loadPitchSample");
+    await page.click("#analyzePitch");
+    await page.waitForTimeout(250);
+    const pitchReviewReady = await page.evaluate(() => {
+      const panel = document.querySelector(".pitch-review-panel");
+      const text = panel?.textContent || "";
+      return Boolean(
+        panel &&
+          /Presentation check/i.test(text) &&
+          /not video verification/i.test(text) &&
+          /Bright Data evidence status stays separate/i.test(text) &&
+          document.querySelectorAll(".pitch-review-rows li").length === 7
+      );
+    });
+    if (!pitchReviewReady) {
+      throw new Error("Presentation check did not render an honest evidence-support panel.");
+    }
+    await page.click('[data-section-tab="setup"]');
     const firstStepControlsReady = await page.evaluate(() => {
       return (
         document.querySelectorAll("[data-review-focus]").length === 3 &&
         document.querySelectorAll("[data-starter-project]").length === 3 &&
-        document.querySelectorAll(".mode-ladder span").length === 3
+        document.querySelectorAll(".mode-ladder span").length === 3 &&
+        Boolean(document.querySelector("#loadExternalSample")) &&
+        Boolean(document.querySelector(".bright-path"))
       );
     });
     if (!firstStepControlsReady) {
@@ -170,10 +254,10 @@ for (const spec of [
     const verifiedSampleSelected = await page.evaluate(() => {
       const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
       const strip = document.querySelector("#liveProofStrip")?.textContent || "";
-      return title === "ProofRank" && /Current proof:\s*ProofRank/i.test(strip) && /Bright Data evidence passed/i.test(strip);
+      return title === "ProofRank" && /Built-in receipt:\s*ProofRank/i.test(strip) && /Bright Data receipt present/i.test(strip);
     });
     if (!verifiedSampleSelected) {
-      throw new Error("Verified sample did not select the signed Bright Data project.");
+      throw new Error("Built-in receipt did not select the Bright Data review record.");
     }
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
@@ -195,11 +279,65 @@ for (const spec of [
     }
     const draftRoutePending = await page.evaluate(() => {
       const nodes = [...document.querySelectorAll("#proofTopology .route-node")];
+      const repoNode = nodes.find((node) => /Repository/i.test(node.textContent || ""));
+      const demoNode = nodes.find((node) => /Deployed app/i.test(node.textContent || ""));
       const packetNode = nodes.find((node) => /Review memo/i.test(node.textContent || ""));
-      return Boolean(packetNode?.classList.contains("pending") && /Draft memo ready/i.test(packetNode.textContent || ""));
+      return Boolean(
+        repoNode?.classList.contains("pending") &&
+          demoNode?.classList.contains("pending") &&
+          packetNode?.classList.contains("pending") &&
+          /Draft memo ready/i.test(packetNode.textContent || "")
+      );
     });
     if (!draftRoutePending) {
       throw new Error("Browser-created draft review looked like a fully passed live review packet.");
+    }
+    const draftCardReady = await page.evaluate(() => {
+      const card = document.querySelector(".draft-review-card");
+      const text = card?.textContent || "";
+      return Boolean(
+        card &&
+          /Draft review card/i.test(text) &&
+          /Link-only/i.test(text) &&
+          /URL accepted, content not fetched/i.test(text) &&
+          /Bright Data\s*Evidence pending/i.test(text) &&
+          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text)
+      );
+    });
+    if (!draftCardReady) {
+      throw new Error("Draft review card did not render honest link-only status after visitor draft.");
+    }
+    const draftBriefReady = await page.evaluate(() => {
+      const brief = document.querySelector(".visitor-brief.draft");
+      const text = brief?.textContent || "";
+      const forbidden = /verified|reachable|passed|certified|signed proof|submission-ready|finalist-ready/i.test(text);
+      return Boolean(
+        brief &&
+          /Link-only draft/i.test(text) &&
+          /Draft review created/i.test(text) &&
+          /repo content, demo reachability, functionality, and Bright Data evidence/i.test(text) &&
+          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text) &&
+          /Run live evidence/i.test(text) &&
+          !forbidden
+      );
+    });
+    if (!draftBriefReady) {
+      throw new Error("Visitor review brief did not explain the link-only draft state.");
+    }
+    await page.click('[data-score-action="copy-card"]');
+    await page.waitForTimeout(100);
+    const copiedDraftCardReady = await page.evaluate(() => {
+      const copied = window.__proofrankCopiedText || "";
+      const forbidden = /verified|reachable|passed|certified|signed proof/i.test(copied);
+      return (
+        /Draft review only/i.test(copied) &&
+        /not fetched|no repo\/demo fetch/i.test(copied) &&
+        /Bright Data evidence pending|no Bright Data evidence yet/i.test(copied) &&
+        !forbidden
+      );
+    });
+    if (!copiedDraftCardReady) {
+      throw new Error("Copied draft review card did not include honest limitations or contained forbidden proof language.");
     }
     await page.evaluate(() => {
       const select = document.querySelector("#modeSelect");
@@ -232,8 +370,98 @@ for (const spec of [
     }
     await page.click('[data-section-tab="queue"]');
     await page.click('#rankedList [data-id="proofrank"]');
+    const draftCardGoneForReceipt = await page.evaluate(() => !document.querySelector(".draft-review-card"));
+    if (!draftCardGoneForReceipt) {
+      throw new Error("Draft review card stayed visible after selecting the built-in Bright Data receipt.");
+    }
+    const receiptBriefReady = await page.evaluate(() => {
+      const brief = document.querySelector(".visitor-brief.evidence");
+      const text = brief?.textContent || "";
+      return Boolean(
+        brief &&
+          /Bright Data ready/i.test(text) &&
+          /Evidence-backed review/i.test(text) &&
+          /source fetch, search, and discovery/i.test(text) &&
+          /Export memo/i.test(text)
+      );
+    });
+    if (!receiptBriefReady) {
+      throw new Error("Visitor review brief did not switch to the Bright Data evidence state.");
+    }
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(700);
+  }
+
+  if (spec.name === "mobile-320") {
+    const mobilePitchCollapsed = await page.evaluate(() => {
+      return document.querySelector("#pitchCheckDrawer")?.open === false && !document.querySelector(".pitch-review-panel");
+    });
+    if (!mobilePitchCollapsed) {
+      throw new Error("Mobile presentation check should stay collapsed until the user opens it.");
+    }
+    await page.click(".qmark[aria-label='GitHub repo help']");
+    await page.waitForTimeout(100);
+    const qtipVisible = await page.evaluate(() => {
+      const button = document.querySelector(".qmark[aria-label='GitHub repo help']");
+      const panel = button?.closest(".field-label")?.querySelector(".tip-panel");
+      return button?.getAttribute("aria-expanded") === "true" && panel && getComputedStyle(panel).display !== "none";
+    });
+    if (!qtipVisible) {
+      throw new Error("Mobile GitHub QTip did not open from the keyboard/clickable help control.");
+    }
+    await page.click(".qmark[aria-label='GitHub repo help']");
+    await page.waitForTimeout(100);
+    const qtipClosed = await page.evaluate(() => {
+      const button = document.querySelector(".qmark[aria-label='GitHub repo help']");
+      return button?.getAttribute("aria-expanded") === "false";
+    });
+    if (!qtipClosed) {
+      throw new Error("Mobile GitHub QTip did not toggle closed.");
+    }
+    await page.click(".qmark[aria-label='GitHub repo help']");
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(100);
+    const qtipEscapeClosed = await page.evaluate(() => {
+      const button = document.querySelector(".qmark[aria-label='GitHub repo help']");
+      return button?.getAttribute("aria-expanded") === "false";
+    });
+    if (!qtipEscapeClosed) {
+      throw new Error("Mobile GitHub QTip did not close on Escape.");
+    }
+    await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+    await page.fill("#quickDemoUrl", "https://brightdata.com/");
+    await page.click("#quickAddReviewerProject");
+    await page.waitForTimeout(250);
+    const mobileDraftReady = await page.evaluate(() => {
+      const row = document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
+      const hint = document.querySelector("#quickReviewHint")?.textContent || "";
+      return Boolean(row) && /Live setup collects Bright Data evidence/i.test(hint);
+    });
+    if (!mobileDraftReady) {
+      throw new Error("Mobile visitor path did not create a draft review with honest Bright Data upgrade copy.");
+    }
+    const mobileDraftCardReady = await page.evaluate(() => {
+      const card = document.querySelector(".draft-review-card");
+      const text = card?.textContent || "";
+      return Boolean(card && /Draft review card/i.test(text) && /Link-only/i.test(text) && /Bright Data\s*Evidence pending/i.test(text));
+    });
+    if (!mobileDraftCardReady) {
+      throw new Error("Mobile visitor draft did not show the draft review card.");
+    }
+    const mobileBriefReady = await page.evaluate(() => {
+      const brief = document.querySelector(".visitor-brief.draft");
+      const text = brief?.textContent || "";
+      return Boolean(
+        brief &&
+          /Link-only draft/i.test(text) &&
+          /Draft review created/i.test(text) &&
+          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text) &&
+          /Run live evidence/i.test(text)
+      );
+    });
+    if (!mobileBriefReady) {
+      throw new Error("Mobile visitor draft did not show the review brief.");
+    }
   }
 
   const metrics = await page.evaluate(() => {
@@ -245,6 +473,29 @@ for (const spec of [
       return rect.left < -1 || rect.right > html.clientWidth + 1;
     });
 
+    const visibleText = document.body.innerText || "";
+    const forbiddenVisible = [
+      "signed proof",
+      "submission-ready",
+      "finalist-ready",
+      "overall 100",
+      "sponsor bundle executed",
+      "bright data passed",
+      "bright data evidence passed",
+      "evidence passed",
+      "evidence checks passed",
+      "server checked",
+      "server record ready",
+      "judge packet",
+      "bright data packet",
+      "ready record",
+      "certified",
+      "proves",
+      "proof plan",
+      "review packet is defensible",
+      "verified public demos"
+    ].filter((text) => visibleText.toLowerCase().includes(text));
+
     return {
       title: document.title,
       rows: document.querySelectorAll(".project-row").length,
@@ -252,10 +503,30 @@ for (const spec of [
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
       reviewRoomStats: document.querySelectorAll("#reviewRoomStats article").length,
+      sponsorMatrixRows: document.querySelectorAll("#sponsorMatrix .matrix-row").length,
+      sponsorMatrixCells: document.querySelectorAll("#sponsorMatrix .matrix-cell").length,
       reviewFocusCount: document.querySelectorAll("[data-review-focus]").length,
       starterCount: document.querySelectorAll("[data-starter-project]").length,
       modeLadderCount: document.querySelectorAll(".mode-ladder span").length,
+      externalSampleReady: Boolean(document.querySelector("#loadExternalSample")),
+      brightPathReady: document.querySelectorAll(".bright-path").length >= 2,
+      actionBoardCount: document.querySelectorAll(".action-board").length,
+      actionButtonCount: document.querySelectorAll(".action-board [data-score-action]").length,
+      visitorBriefCount: document.querySelectorAll(".visitor-brief").length,
+      visitorBriefActions: document.querySelectorAll(".visitor-brief [data-score-action]").length,
+      draftReviewCardCount: document.querySelectorAll(".draft-review-card").length,
+      draftReviewCardActions: document.querySelectorAll(".draft-review-card [data-score-action]").length,
+      fieldComparisonCount: document.querySelectorAll(".field-comparison article").length,
+      pitchDrawerPresent: Boolean(document.querySelector("#pitchCheckDrawer")),
+      pitchReviewRows: document.querySelectorAll(".pitch-review-rows li").length,
       traceTimelineSteps: document.querySelectorAll(".trace-timeline li").length,
+      qtipButtonCount: document.querySelectorAll(".qmark").length,
+      roomLinkReady: Boolean(document.querySelector("#copyAppLinkHero") && document.querySelector("#copyAppLink")),
+      publicRoomNoteReady: /Public test room/i.test(document.querySelector(".public-room-note")?.textContent || ""),
+      forbiddenVisible: [
+        ...forbiddenVisible,
+        ...["verified video", "transcribed by Speechmatics", "demo reachable"].filter((text) => visibleText.toLowerCase().includes(text))
+      ],
       readinessCount: document.querySelectorAll("#readinessList li").length,
       reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
       scrollWidth: html.scrollWidth,
@@ -278,13 +549,41 @@ const failures = results.flatMap((result) => {
   const problems = [];
   if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
-  if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: proof route did not render`);
+  if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: evidence route did not render`);
   if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.reviewRoomStats !== 4) problems.push(`${result.spec.name}: review room stats did not render`);
+  if (result.metrics.sponsorMatrixRows < 1) problems.push(`${result.spec.name}: sponsor evidence matrix did not render`);
+  if (result.metrics.sponsorMatrixCells < 6) problems.push(`${result.spec.name}: sponsor evidence matrix cells did not render`);
   if (result.metrics.reviewFocusCount !== 3) problems.push(`${result.spec.name}: review focus controls did not render`);
   if (result.metrics.starterCount !== 3) problems.push(`${result.spec.name}: starter projects did not render`);
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
+  if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
+  if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence report/live setup actions did not render`);
+  if (result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
+  if (result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
+  if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
+  if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
+  if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {
+    problems.push("mobile-320: draft review card did not remain visible after visitor draft");
+  }
+  if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardActions < 3) {
+    problems.push("mobile-320: draft review card actions did not render");
+  }
+  if (result.spec.name === "desktop" && result.metrics.draftReviewCardCount !== 0) {
+    problems.push("desktop: draft review card did not disappear after selecting built-in receipt");
+  }
+  if (result.metrics.fieldComparisonCount < 5) problems.push(`${result.spec.name}: field comparison panel did not render`);
+  if (!result.metrics.pitchDrawerPresent) problems.push(`${result.spec.name}: presentation check drawer did not render`);
+  if (result.spec.name === "desktop" && result.metrics.pitchReviewRows !== 7) {
+    problems.push("desktop: presentation check rows did not render after analysis");
+  }
   if (result.metrics.traceTimelineSteps !== 4) problems.push(`${result.spec.name}: Bright Data run timeline did not render`);
+  if (result.metrics.qtipButtonCount < 2) problems.push(`${result.spec.name}: QTip help buttons did not render`);
+  if (!result.metrics.roomLinkReady) problems.push(`${result.spec.name}: room link copy actions did not render`);
+  if (!result.metrics.publicRoomNoteReady) problems.push(`${result.spec.name}: public test room note did not render`);
+  if (result.metrics.forbiddenVisible.length) {
+    problems.push(`${result.spec.name}: forbidden old labels visible (${result.metrics.forbiddenVisible.join(", ")})`);
+  }
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
   if (result.spec.name === "desktop" && !result.metrics.reviewerRowPresent) {

@@ -80,18 +80,33 @@ try {
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
+  await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+  await page.fill("#quickDemoUrl", "https://brightdata.com/");
+  await page.click("#quickAddReviewerProject");
+  await page.waitForSelector(".draft-review-card", { state: "attached", timeout: 5000 });
+  await capture(page, "02-draft-card.png", ".draft-review-card");
+  await page.click("#reviewOptions summary");
+  await page.waitForTimeout(120);
+  await page.click("#loadSampleProject");
+  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
   await page.locator(".analysis-drawer summary", { hasText: "Claim check" }).click();
-  await capture(page, "02-claim-ledger.png", ".claim-ledger");
+  await capture(page, "03-claim-ledger.png", ".claim-ledger");
   await page.click('[data-section-tab="receipt"]');
-  await capture(page, "03-proof-receipt.png", ".evidence-rail");
+  await capture(page, "04-proof-receipt.png", ".evidence-rail");
   await page.click('[data-section-tab="setup"]');
   await page.locator("#modeSelect").selectOption("live");
   await page.waitForTimeout(180);
-  await capture(page, "04-bright-data-live.png", ".source-rail");
+  await capture(page, "05-bright-data-live.png", ".source-rail");
+  await page.click("#pitchCheckDrawer summary");
+  await page.click("#loadPitchSample");
+  await page.click("#analyzePitch");
+  await page.waitForFunction(() => document.querySelectorAll(".pitch-review-rows li").length === 7);
+  await page.waitForTimeout(700);
+  await capture(page, "06-pitch-check.png", ".pitch-review-panel");
   await page.click('[data-section-tab="queue"]');
-  await capture(page, "05-field-map.png", ".field-map");
+  await capture(page, "07-field-map.png", ".field-map");
   await page.locator(".export-menu summary").click();
-  await capture(page, "06-exports-ready.png", ".topbar");
+  await capture(page, "08-exports-ready.png", ".topbar");
   await page.click('[data-section-tab="overview"]');
   await capture(page, "proofrank-demo-thumb.png", ".scorecard");
 

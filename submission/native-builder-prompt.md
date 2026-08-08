@@ -11,39 +11,45 @@ Create a functional deployed app, not a landing page. The first screen must be a
 ## Core Workflow
 
 1. User pastes a public GitHub repository URL and optional deployed app URL in the first viewport.
-2. User can run Demo review (sample/local data) without credentials.
-3. User can open Links and choose Live Bright Data review when a private backend tokenized session is available.
-4. The app adds the project to a ranked queue and can also discover or load event submissions.
-5. The app ranks projects by:
+2. User can create a Draft review (link-only local review) without credentials.
+3. Draft projects show a Draft Review Card with link-only status, copyable draft summary, copyable draft link, and a primary Run Bright Data action.
+4. User can open Links and choose Live Bright Data review when a private backend tokenized session is available.
+5. The app adds the project to a ranked queue and can also discover or load event submissions.
+6. The app ranks projects by:
    - Eligibility
    - Bright Data Dependency
    - Business Value
    - Originality
    - Presentation
-6. User selects a project.
-7. Result shows the scorecard, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
-8. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
-9. Evidence tab shows source-backed Evidence Receipt and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
-10. User exports CSV, all evidence receipts JSON, selected evidence receipt JSON, and submission packet Markdown.
+7. User selects a project.
+8. Result shows the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
+9. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
+10. Links tab also includes a collapsed Presentation check. A user can paste a demo transcript or pitch notes, analyze them locally, and see which presentation claims still need evidence.
+11. Evidence tab shows source-backed Evidence Report and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
+12. User exports CSV, all evidence records JSON, selected evidence record JSON, and review memo Markdown.
 
 ## Required UI
 
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
-- Sticky top bar with ProofRank mark, Review project, Ranked, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, short value statement, a GitHub repo field, a demo app field, Review these links button, Use sample button, View evidence button, and one decision card.
-- Decision card shows Submission-ready, Bright Data evidence passed, evidence receipt ID `pr-20260807t200529345z-23568b05`, evidence package ready, final lablab submission pending, and Native app published. Use status language such as Passed and executed in the first viewport; keep detailed numeric scoring inside the score breakdown.
-- Result includes a compact Bright Data evidence strip above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence receipt ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
+- Sticky top bar with ProofRank mark, Review project, Start guided review, Projects, and Export actions.
+- First viewport with event metadata, a large ProofRank headline, short value statement, a GitHub repository field, a demo app field, Create draft review button, Copy draft link button, one safety sentence, a collapsed More options drawer, and one compact current-selection card.
+- The first viewport must not look crowded. Put samples, review lens, starter projects, room link, built-in receipt, external sample, and Bright Data setup actions inside More options.
+- Decision card shows the selected built-in receipt, Bright Data receipt present, evidence record ID `pr-20260807t200529345z-23568b05`, final lablab submission pending, and Native app published. Do not imply the final lablab submission is already complete. Keep detailed numeric scoring inside the score breakdown.
+- Result includes a compact Bright Data evidence report above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence record ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
+- Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet.
+- If the user runs Presentation check, Result shows a compact pitch evidence panel. It must say the source is pasted transcript text, not video verification, and that Bright Data evidence status stays separate.
+- Result includes an Against the field panel with ProofRank beside current AI Factory project patterns such as Half-Life, CivicTwin, Askable, and Querypex. It should show domain, Bright Data role, decision artifact, and evidence visibility so judges understand that ProofRank is the review operations product.
 - Tabs below the first viewport: Result, Ranked, Evidence, Links.
 - Result shows selected project summary, score tiles, evidence route, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
 - Ranked shows filters, ranked projects, and field map.
 - Evidence shows Evidence Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
-- Links contains Event URL, Live review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
+- Links contains Event URL, Live review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links. Advanced live settings belong in Links. Use ProofRank as the selected Bright Data evidence receipt, but do not present it as a self-awarded win. Use Submission-ready, Bright Data evidence passed, and final submission pending copy instead of Finalist-ready, WIN, Overall 100, or Sponsor bundle executed copy.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links. Advanced live settings belong in Links. Use ProofRank as the selected built-in Bright Data receipt, but do not present it as a self-awarded win. Use Bright Data receipt present and final submission pending copy instead of old finalist/winner/sponsor-bundle finality labels or claims that draft reviews fetch repository contents.
 
 ## Claim Check
 
@@ -53,15 +59,15 @@ For each selected project, extract and show these claims:
 - Project explains native.builder use.
 - Bright Data is load-bearing.
 - Originality has public support.
-- Review packet is defensible.
+- Review memo is defensible.
 - Repository evidence is reproducible.
 
 Each claim must have one of these statuses:
 
-- Verified
+- Supported
 - Weak Evidence
 - Not Found
-- Needs Proof
+- Needs Evidence
 
 Every claim must include a short evidence explanation and should avoid truth absolutism. Use "confidence" and "prior-art risk" language rather than calling a project fake or plagiarized.
 
@@ -75,14 +81,14 @@ Use deterministic scoring, then allow future AI enrichment.
 - Originality: 15%
 - Presentation: 15%
 
-Bright Data Dependency should be high only when Bright Data is load-bearing, agentic, traceable, visible in receipts, and backed by the full executed Bright Data sponsor proof bundle: source scrape, `search_engine`, and `discover`.
+Bright Data Dependency should be high only when Bright Data is load-bearing, agentic, traceable, visible in receipts, and backed by the full executed Bright Data sponsor evidence bundle: source fetch, `search_engine`, and `discover`.
 
 ## Review Panel
 
 For each selected project, show a three-perspective review panel:
 
 - Bright Data sponsor judge: argues whether Bright Data is genuinely load-bearing.
-- Skeptical hackathon judge: attacks eligibility, native.builder proof, public demo reachability, event-window commits, and source hygiene.
+- Skeptical hackathon judge: attacks eligibility, native.builder evidence, public demo reachability, event-window commits, and source hygiene.
 - Business buyer: tests whether a real buyer has a repeatable urgent workflow.
 
 Each perspective should include a confidence score, strongest reasons, objections, and a short stance. The panel must produce a final recommendation and a dispute log. It should make uncertainty visible instead of hiding it behind one score.
@@ -106,7 +112,7 @@ Show a sponsor-prize benchmark panel for the selected project. It should compare
 - Decision-shaped output
 - Executed live-web source/search/discovery bundle
 - Multi-tool Bright Data dependency
-- Judge-visible proof trail
+- Judge-visible evidence trail
 - Defensible originality wedge
 - Public end-to-end workflow
 - Native.builder primary deployment
@@ -115,12 +121,12 @@ The panel should show a numeric score, tier label, matched signals, and the top 
 
 ## Collect Gates
 
-Show readiness gates that separate required submission gates from competitive-strength checks. They must never mark saved, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor-proof.
+Show readiness gates that separate required submission gates from competitive-strength checks. They must never mark saved, planned, direct, claimed, pending, failed, or event-intake-only traces as sponsor evidence.
 
 Required gates:
 
 - Native.builder primary URL
-- Bright Data sponsor proof bundle
+- Bright Data sponsor evidence bundle
 - Actual project reviewed
 - Live collection backend
 - Public app URL
@@ -130,9 +136,9 @@ Required gates:
 Competitive gates:
 
 - No visible secret risk
-- Exportable proof packet
+- Exportable review memo
 
-The cockpit should show a compact readiness meter, passed/action/improve labels, proof text, and the next concrete action. If a native.builder URL or Bright Data sponsor proof bundle is missing, the app should say the proof package is still gated rather than package-ready.
+The cockpit should show a compact readiness meter, checked/action/improve labels, evidence text, and the next concrete action. If a native.builder URL or Bright Data sponsor evidence bundle is missing, the app should say the review package is still gated rather than ready to hand off.
 
 The Actual project reviewed gate must not pass for a manually typed or pending target. It should pass only when a reviewer-supplied project has live-collected repository/demo evidence and at least one non-pending collection trace.
 
@@ -215,7 +221,7 @@ Each server-issued project review should also include `runReceipt` with:
 - Failed fetch: keep project in queue and mark accessibility risk.
 - Missing demo: reduce eligibility and presentation score.
 - Missing native.builder explanation: add evidence gap.
-- Missing Bright Data sponsor proof bundle: reduce Bright Data Dependency score and keep a sponsor-dependency dispute open.
+- Missing Bright Data sponsor evidence bundle: reduce Bright Data Dependency score and keep a sponsor-dependency dispute open.
 - Visible secret-risk files or credential-looking values: flag source hygiene risk.
 - Ambiguous originality: mark Weak Evidence, not a hard accusation.
 
@@ -226,7 +232,7 @@ Implement:
 - Judge queue CSV
 - All evidence receipts JSON
 - Selected receipt JSON
-- ProofRank submission packet Markdown
+- ProofRank review memo Markdown
 
 ## Submission Narrative
 

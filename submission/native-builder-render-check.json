@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-08-08T06:26:01.766Z",
+  "checkedAt": "2026-08-08T07:32:52.621Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786170361766",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786174372621",
   "title": "ProofRank — AI Diligence Engine",
   "publishedBundle": "/assets/index-DxpYdOcJ.js",
   "screenshots": {
@@ -13,10 +13,26 @@
       "name": "desktop",
       "width": 1440,
       "height": 950,
-      "missingInPage": [],
-      "missingInViewport": [],
-      "forbiddenInPage": [],
-      "forbiddenInViewport": [],
+      "missingInPage": [
+        "GitHub repo",
+        "Create draft review",
+        "Open built-in receipt",
+        "Judge packet",
+        "Live setup",
+        "Bright Data receipt present"
+      ],
+      "missingInViewport": [
+        "GitHub repo",
+        "Judge packet"
+      ],
+      "forbiddenInPage": [
+        "Signed proof",
+        "Submission-ready"
+      ],
+      "forbiddenInViewport": [
+        "Signed proof",
+        "Submission-ready"
+      ],
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "horizontalOverflow": false,
@@ -26,10 +42,26 @@
       "name": "mobile-320",
       "width": 320,
       "height": 740,
-      "missingInPage": [],
-      "missingInViewport": [],
-      "forbiddenInPage": [],
-      "forbiddenInViewport": [],
+      "missingInPage": [
+        "GitHub repo",
+        "Create draft review",
+        "Open built-in receipt",
+        "Judge packet",
+        "Live setup",
+        "Bright Data receipt present"
+      ],
+      "missingInViewport": [
+        "GitHub repo",
+        "Judge packet"
+      ],
+      "forbiddenInPage": [
+        "Signed proof",
+        "Submission-ready"
+      ],
+      "forbiddenInViewport": [
+        "Signed proof",
+        "Submission-ready"
+      ],
       "scrollWidth": 320,
       "clientWidth": 320,
       "horizontalOverflow": false,
@@ -38,19 +70,26 @@
   ],
   "wantedInPage": [
     "ProofRank",
-    "Submission-ready",
     "Bright Data",
-    "pr-20260807t200529345z-23568b05"
+    "GitHub repo",
+    "Create draft review",
+    "Open built-in receipt",
+    "Judge packet",
+    "Live setup",
+    "Bright Data receipt present"
   ],
   "wantedInViewport": [
     "ProofRank",
     "Bright Data",
-    "Submission-ready"
+    "GitHub repo",
+    "Judge packet"
   ],
   "forbiddenStrings": [
+    "Signed proof",
     "WIN",
     "Strong Pass",
     "Finalist-ready",
+    "Submission-ready",
     "Sponsor bundle executed",
     "pr-20260807t145909828z-553fb028",
     "Demo Evidence",
@@ -62,5 +101,5 @@
     "AgentArena"
   ],
   "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
-  "ok": true
+  "ok": false
 }

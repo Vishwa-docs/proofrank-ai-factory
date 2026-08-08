@@ -49,7 +49,7 @@ const BENCHMARKS = [
     points: 20,
     test: hasBrightDataSponsorProofBundle,
     proof: "Bright Data source scrape, search_engine, and discover traces are executed and useful.",
-    action: "Run Bright Data source, search, and discovery traces, then export the verified evidence receipt."
+    action: "Run Bright Data source, search, and discovery traces, then export the evidence receipt."
   },
   {
     id: "multi-tool-bright-data",
@@ -60,8 +60,8 @@ const BENCHMARKS = [
     action: "Make Bright Data load-bearing with at least two visible tools or MCP capabilities."
   },
   {
-    id: "judge-visible-proof",
-    label: "Judge-visible proof trail",
+    id: "judge-visible-evidence",
+    label: "Judge-visible evidence trail",
     points: 16,
     test: hasVisibleProof,
     proof: "Evidence items, claim checks, and receipt surfaces make verification inspectable.",

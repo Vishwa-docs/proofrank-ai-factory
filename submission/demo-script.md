@@ -14,6 +14,10 @@ Say:
 
 "The draft review path lets judges try a public project without credentials. Live Bright Data review runs on the private backend, so API keys stay out of the browser."
 
+Show the Draft Review Card and say:
+
+"The draft card is deliberately link-only. It is useful to share, but it says what has not been fetched or checked yet."
+
 ## 0:30-0:48 - Review Panel And Similarity Check
 
 Open ProofRank or a strong Bright Data-native project in the Projects tab. Point to the recommendation, Review Panel, Prize Fit, Similarity Check, and Claim Check.
@@ -28,7 +32,7 @@ Move to the Evidence panel.
 
 Say:
 
-"Every claim expands into source-backed evidence, confidence, limitations, and live run provenance. The final packet exports as CSV, JSON, or Markdown."
+"Every claim expands into source-backed evidence, confidence, limitations, and live run provenance. The final memo exports as CSV, JSON, or Markdown."
 
 ## Demo Must Show
 
@@ -40,4 +44,4 @@ Say:
 - Show Claim Check.
 - Show the trace table and point out the executed/planned/claimed state.
 - Show a missing evidence risk.
-- Export a packet.
+- Export a memo.

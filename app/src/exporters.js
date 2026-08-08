@@ -10,6 +10,10 @@ function escapeCsv(value) {
   return `"${text.replace(/"/g, '""')}"`;
 }
 
+function visibleVerdictLabel(label = "") {
+  return label || "Needs review";
+}
+
 export function toCsv(projects) {
   const headers = [
     "rank",
@@ -41,7 +45,7 @@ export function toCsv(projects) {
       scores.businessValue,
       scores.originality,
       scores.presentation,
-      verdict.label,
+      visibleVerdictLabel(verdict.label),
       verdict.action,
       verdict.risks.join("; ")
     ].map(escapeCsv);
@@ -87,6 +91,7 @@ export function buildReceipt(project, fieldProjects = []) {
     technologies: project.technologies,
     traceState,
     readiness,
+    displayVerdict: visibleVerdictLabel(verdict.label),
     claimLedger: buildClaimLedger(project),
     tribunal,
     originalityRadar,
@@ -133,7 +138,7 @@ The competition app should be created and published through native.builder using
 - Evidence report: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Evidence package readiness: ${readinessSummary(receipt.readiness)}
-- Verdict: ${receipt.verdict.label}
+- Verdict: ${receipt.displayVerdict}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
 
@@ -175,7 +180,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence report, and export the sponsor-ready diligence packet.
+Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence report, and export the sponsor-ready review memo.
 
 ## External Tools
 
@@ -201,11 +206,12 @@ export function buildProgramReport(projects = [], options = {}) {
   const roomFocus = selected?.reviewFocus || options.reviewFocus || null;
   const executedBright = countBy(rankedProjects, hasBrightDataSponsorProject);
   const draftReviews = countBy(rankedProjects, (project) => String(project.id || "").startsWith("review-"));
-  const withDemo = countBy(rankedProjects, (project) => project.evidence?.hasPublicDemo || project.demoUrl);
-  const withGithub = countBy(rankedProjects, (project) => project.evidence?.hasGithub || project.githubUrl);
+  const withDemoLinks = countBy(rankedProjects, (project) => project.evidence?.hasPublicDemo || project.demoUrl);
+  const verifiedDemo = countBy(rankedProjects, (project) => project.evidence?.hasPublicDemo === true);
+  const withGithubLinks = countBy(rankedProjects, (project) => project.evidence?.hasGithub || project.githubUrl);
   const ready = countBy(rankedProjects, (project) => {
     const readiness = buildReadiness(project, { projects: rankedProjects });
-    return readiness.proofPackageReady || readiness.canSubmit || project.verdict?.label === "Finalist-ready";
+    return readiness.proofPackageReady || readiness.canSubmit || project.verdict?.label === "Strong candidate";
   });
 
   const topRows = rankedProjects
@@ -213,7 +219,7 @@ export function buildProgramReport(projects = [], options = {}) {
     .map((project, index) => {
       const scores = project.scores || calculateScores(project);
       const verdict = project.verdict || buildVerdict(project, scores);
-      return `${index + 1}. ${project.title} - ${verdict.label}; Bright Data ${brightDataTraceState(project)}; overall ${scores.overall}; next: ${projectReadinessLabel(project, rankedProjects)}`;
+      return `${index + 1}. ${project.title} - ${visibleVerdictLabel(verdict.label)}; Bright Data ${brightDataTraceState(project)}; overall ${scores.overall}; next: ${projectReadinessLabel(project, rankedProjects)}`;
     })
     .join("\n");
 
@@ -225,8 +231,9 @@ Generated: ${new Date().toISOString()}
 
 - Projects reviewed: ${rankedProjects.length}
 - Visitor-added draft reviews: ${draftReviews}
-- Projects with public demos: ${withDemo}
-- Projects with public GitHub evidence: ${withGithub}
+- Projects with demo links supplied: ${withDemoLinks}
+- Projects with fetched public demos: ${verifiedDemo}
+- Projects with public GitHub links: ${withGithubLinks}
 - Projects with executed Bright Data evidence: ${executedBright}
 - Projects with review-ready packages: ${ready}
 - Active review lens: ${roomFocus?.label || "Mixed reviewer lenses"}
@@ -235,7 +242,7 @@ Generated: ${new Date().toISOString()}
 
 - Project: ${selected?.title || "None selected"}
 - Team: ${selected?.team || "Not available"}
-- Recommendation: ${selected ? buildVerdict(selected, selected.scores || calculateScores(selected)).label : "Not available"}
+- Recommendation: ${selected ? visibleVerdictLabel(buildVerdict(selected, selected.scores || calculateScores(selected)).label) : "Not available"}
 - Review lens: ${selected?.reviewFocus?.label || roomFocus?.label || "General review"}
 - Bright Data state: ${selected ? brightDataTraceState(selected) : "not available"}
 - Public demo: ${selected?.demoUrl || "not attached"}

@@ -8,7 +8,7 @@ The dashboard now includes a Prize Fit panel that makes the Bright Data sponsor-
 
 ## Why This Exists
 
-Hackathon judges and sponsor teams need to know which projects are real, accessible, original, and genuinely using partner technology. Manual review is slow and inconsistent. ProofRank turns public web evidence into a source-backed review packet.
+Hackathon judges and sponsor teams need to know which projects are real, accessible, original, and genuinely using partner technology. Manual review is slow and inconsistent. ProofRank turns public web evidence into a source-backed review memo.
 
 ## Bright Data Fit
 
@@ -71,7 +71,7 @@ npm run brightdata:auth-check
 npm run brightdata:mcp-smoke
 ```
 
-Use the Remote MCP collector for live proof runs once the token is valid:
+Use the Remote MCP collector for live evidence runs once the token is valid:
 
 ```bash
 PROOFRANK_FETCH_MODE=mcp npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -99,9 +99,9 @@ the receipt contents, and a signature verified with
 `PROOFRANK_RECEIPT_SIGNING_SECRET`.
 
 Direct debugging is available with `--allow-direct`; it writes to a `/tmp`
-debug path by default and does not count as Bright Data sponsor proof.
+debug path by default and does not count as Bright Data sponsor evidence.
 
-Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data proof. The lablab event page may return HTTP 403 in direct mode, which is why the event-level path is designed for Bright Data/Web Unlocker.
+Validate real GitHub/demo ingestion without Bright Data spend while token access is being fixed. Direct mode is useful for debugging, but it does not count as executed Bright Data evidence. The lablab event page may return HTTP 403 in direct mode, which is why the event-level path is designed for Bright Data/Web Unlocker.
 
 ```bash
 npm run live:smoke:direct -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -119,7 +119,7 @@ GitHub repo plus deployed app URL. `Create draft review` validates public links 
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the
-project receipt still needs the full Bright Data sponsor proof bundle: source
+project receipt still needs the full Bright Data sponsor evidence bundle: source
 scrape, `search_engine`, and `discover`.
 
 The full verifier also starts a temporary static server and runs a smoke test:
@@ -162,12 +162,12 @@ Public release assets:
 
 ```text
 https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
-Workflow proof JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
-Workflow proof screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
+Workflow replay JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
+Workflow replay screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
 ```
 
 Use the Native.builder URL as the primary hackathon app link. Use Vercel as the
-fallback/live app link, and keep GitHub Pages as a backup proof-of-work link.
+fallback/live app link, and keep GitHub Pages as a backup evidence link.
 
 ## Current Status
 
@@ -175,12 +175,12 @@ Built and verified:
 
 - Dependency-free dashboard app in `app/`
 - Deterministic scoring, parser, checked-statement, trace provenance, and export tests
-- Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has a full Bright Data sponsor proof bundle
+- Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has a full Bright Data sponsor evidence bundle
 - Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, `discover`, and `PROOFRANK_FETCH_MODE=mcp`
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
-- Data Path map that shows event source, repository, deployed app, Bright bundle, checked statements, and review packet state for the selected project
+- Data Path map that shows event source, repository, deployed app, Bright bundle, checked statements, and review memo state for the selected project
 - Collect gates that separate required final-submission gates from competitive polish checks
 - Similarity Check with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
@@ -216,5 +216,5 @@ Account-gated work still requiring the team owner:
 
 - Submit the final project from the authenticated lablab.ai team-owner account.
 - Apply the `AIFACTORY26` Builder Plan promo code if Native.builder prompts for plan access later.
-- Keep the signed Bright Data receipt in the final submission packet.
+- Keep the Bright Data evidence receipt in the final submission materials.
 - Paste the Native.builder URL into the lablab.ai submission as the primary app URL.

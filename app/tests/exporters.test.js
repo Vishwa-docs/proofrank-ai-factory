@@ -106,7 +106,7 @@ const adjacentProject = {
   id: "adjacent",
   title: "Adjacent Proof Tool",
   team: "Another Team",
-  summary: "A proof receipt tool for judges."
+  summary: "An evidence receipt tool for judges."
 };
 
 const receipt = buildReceipt(project, [project, adjacentProject]);

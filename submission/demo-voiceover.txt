@@ -1,9 +1,9 @@
 ProofRank reviews public AI hackathon projects from their own links.
 
-Start with a GitHub repo and demo URL. ProofRank ranks the field, checks the demo and repo, and separates claims from evidence.
+Paste a GitHub repo and demo URL. Visitors get a browser-safe draft and copyable draft card immediately; private review sessions upgrade it with Bright Data evidence.
 
-The Bright Data gate is load-bearing. Source scrape, search, and discovery must run before the evidence checks pass.
+The Bright Data evidence report is the centerpiece: source fetch, prior-art search, signal discovery, and a server-issued review record.
 
-Judges get a verdict, shortlist, claim check, similarity check, review panel, and evidence report.
+ProofRank compares the field, separates claims from evidence, and can check a pasted demo script for pitch claims that still need Bright Data support.
 
-The final packet exports as CSV, JSON, or Markdown. ProofRank turns a crowded submission page into a defensible winner shortlist.
+Export the reviewer memo, evidence JSON, or room report. ProofRank turns a crowded submission page into a defensible shortlist.

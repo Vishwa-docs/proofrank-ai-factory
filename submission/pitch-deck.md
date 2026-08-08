@@ -4,7 +4,7 @@
 
 Bright Data-powered public AI product diligence.
 
-Hackathon wedge: verify and rank AI Factory submissions with proof receipts.
+Hackathon wedge: verify and rank AI Factory submissions with evidence receipts.
 
 ## Slide 2 - Problem
 
@@ -30,11 +30,11 @@ Run adversarial tribunal.
 
 Run Originality Radar across the current field.
 
-Separate the executed Bright Data proof bundle from planned, claimed, direct, pending, and failed evidence.
+Separate the executed Bright Data evidence bundle from planned, claimed, direct, pending, and failed evidence.
 
 Score eligibility, Bright Data dependency, business value, originality, and presentation.
 
-Export proof receipts and review actions.
+Export review receipts and review actions.
 
 ## Slide 5 - Bright Data Architecture
 

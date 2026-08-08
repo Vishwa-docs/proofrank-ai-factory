@@ -7,8 +7,8 @@ const proofrank = scoreProject(fixtureProjects.find((project) => project.id === 
 const countersign = scoreProject(fixtureProjects.find((project) => project.id === "countersign"));
 
 const proofrankClaims = buildClaimLedger(proofrank);
-assert.equal(proofrankClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Verified");
-assert.equal(proofrankClaims.find((claim) => claim.claim === "Public demo is reachable and shows a workflow").status, "Verified");
+assert.equal(proofrankClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Supported");
+assert.equal(proofrankClaims.find((claim) => claim.claim === "Public demo is reachable and shows a workflow").status, "Supported");
 
 const countersignClaims = buildClaimLedger(countersign);
 assert.equal(countersignClaims.find((claim) => claim.claim === "Bright Data is load-bearing").status, "Not Found");
@@ -44,7 +44,7 @@ const sourceProofClaims = buildClaimLedger(
   })
 );
 
-assert.equal(sourceProofClaims.find((claim) => claim.claim === "Repository evidence is reproducible").status, "Verified");
+assert.equal(sourceProofClaims.find((claim) => claim.claim === "Repository evidence is reproducible").status, "Supported");
 
 const riskySourceClaims = buildClaimLedger(
   scoreProject({

@@ -23,7 +23,7 @@ assert.equal(current.tier, "Sponsor-prize ready");
 assert.ok(current.score >= 90);
 assert.equal(current.gaps.length, 0);
 assert.ok(!current.gaps.some((gap) => /native\.builder/i.test(gap.action)));
-assert.ok(current.matches.some((match) => match.id === "judge-visible-proof"));
+assert.ok(current.matches.some((match) => match.id === "judge-visible-evidence"));
 assert.ok(current.matches.some((match) => match.id === "decision-work-product"));
 assert.ok(current.matches.some((match) => match.id === "native-builder-primary"));
 assert.ok(current.matches.some((match) => match.id === "executed-live-web"));

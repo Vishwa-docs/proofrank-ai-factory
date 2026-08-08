@@ -115,7 +115,7 @@ function buildDifferentiators(project = {}) {
   const text = textForProject(project).toLowerCase();
   const differentiators = [];
 
-  if (evidence.proofReceipt || text.includes("proof receipt")) {
+  if (evidence.proofReceipt || text.includes("proof receipt") || text.includes("evidence receipt")) {
     differentiators.push("Turns judging into evidence receipts instead of one-shot summaries.");
   }
 

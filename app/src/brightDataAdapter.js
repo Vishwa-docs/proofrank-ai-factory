@@ -1,27 +1,28 @@
 export function buildMcpQueries(eventUrl, project) {
   const title = project?.title || "event submissions";
   const team = project?.team || "unknown team";
+  const sourceUrl = project?.githubUrl || project?.submissionUrl || project?.demoUrl || eventUrl;
+  const demoPhrase = project?.demoUrl ? `demo ${project.demoUrl}` : "the public demo when supplied";
+  const repoPhrase = project?.githubUrl ? `repo ${project.githubUrl}` : "the public repository when supplied";
 
   return [
     {
-      tool: "search_engine",
-      purpose: "Discover public mentions and possible duplicates",
-      query: `"${title}" "${team}" hackathon project`
-    },
-    {
       tool: "scrape_as_markdown",
-      purpose: "Fetch submission page as judge-readable evidence",
-      url: project?.submissionUrl || eventUrl
-    },
-    {
-      tool: "scrape_as_markdown",
-      purpose: "Inspect public demo surface",
-      url: project?.demoUrl || "PROJECT_DEMO_URL"
+      purpose: "Fetch repo or submission source as judge-readable evidence",
+      url: sourceUrl
     },
     {
       tool: "search_engine",
       purpose: "Check sponsor usage claims against public artifacts",
       query: `"${title}" "Bright Data" OR "SERP API" OR "Web Scraper API" OR "Remote MCP"`
+    },
+    {
+      tool: "discover",
+      purpose: "Discover adjacent public evidence and originality signals",
+      query: `"${title}" "${team}" Bright Data hackathon`,
+      intent: `Find source-backed evidence for ${repoPhrase} and ${demoPhrase}, including originality, public usage, and Bright Data dependency.`,
+      numResults: 5,
+      includeContent: true
     }
   ];
 }

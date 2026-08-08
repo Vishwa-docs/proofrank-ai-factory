@@ -189,7 +189,7 @@
         {
           "tool": "search_engine",
           "purpose": "Sponsor-claim overlap search",
-          "query": "\"Meta PyTorch Scalar OpenEnv Hackathon\" \"Bright Data\" OR \"proof receipt\" OR \"source-backed\""
+          "query": "\"Meta PyTorch Scalar OpenEnv Hackathon\" \"Bright Data\" OR \"evidence receipt\" OR \"source-backed\""
         },
         {
           "tool": "discover",

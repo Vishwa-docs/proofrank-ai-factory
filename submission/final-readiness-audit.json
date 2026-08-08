@@ -1,27 +1,27 @@
 {
-  "generatedAt": "2026-08-08T06:54:09.100Z",
-  "gitHead": "77eea1a02a2aa174c3fdf63d8797b120683b77e7",
+  "generatedAt": "2026-08-08T08:21:23.636Z",
+  "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 10,
+  "requiredPassed": 8,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 92,
+  "score": 75,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
-      "status": "passed",
-      "proof": "ProofRank shell is deployed and the runtime bundle contains the Bright Data proof/package-ready UI.",
-      "action": "Deploy the public fallback app and confirm the Bright Data proof strip is visible."
+      "status": "needs-action",
+      "proof": "Fallback bundle is deployed but missing refreshed copy: Bright Data receipt present, Review a public project, Create draft review.",
+      "action": "Deploy the public fallback app and confirm the Bright Data receipt strip is visible."
     },
     {
       "id": "release-video",
       "label": "Under-three-minute demo video",
       "required": true,
       "status": "passed",
-      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 37s",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 40s",
       "action": "Upload a demo video shorter than three minutes and verify the public release asset."
     },
     {
@@ -44,8 +44,8 @@
       "id": "native-builder",
       "label": "Native.builder primary URL",
       "required": true,
-      "status": "passed",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json / bundle /assets/index-DxpYdOcJ.js.",
+      "status": "needs-action",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / render check needs attention in submission/native-builder-render-check.json / missing in browser render: GitHub repo, Create draft review, Open built-in receipt, Judge packet, Live setup, Bright Data receipt present / forbidden copy visible: Signed proof, Submission-ready",
       "action": "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
     },
     {
@@ -114,7 +114,9 @@
     }
   ],
   "nextActions": [
+    "Deploy the public fallback app and confirm the Bright Data receipt strip is visible.",
+    "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 10/11 required gates passed. Next action: Submit from the authenticated team-owner lablab.ai account."
+  "summary": "Not final-ready: 8/11 required gates checked. Next action: Deploy the public fallback app and confirm the Bright Data receipt strip is visible."
 }

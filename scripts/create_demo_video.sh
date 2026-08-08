@@ -11,11 +11,13 @@ VIDEO="$ROOT/submission/proofrank-demo.mp4"
 
 required_images=(
   "01-overview.png"
-  "02-claim-ledger.png"
-  "03-proof-receipt.png"
-  "04-bright-data-live.png"
-  "05-field-map.png"
-  "06-exports-ready.png"
+  "02-draft-card.png"
+  "03-claim-ledger.png"
+  "04-proof-receipt.png"
+  "05-bright-data-live.png"
+  "06-pitch-check.png"
+  "07-field-map.png"
+  "08-exports-ready.png"
 )
 
 for image in "${required_images[@]}"; do
@@ -77,13 +79,15 @@ add_slide() {
   printf "duration %s\n" "$duration" >> "$CONCAT"
 }
 
-add_slide "01-overview.png" 8
-add_slide "02-claim-ledger.png" 8
-add_slide "03-proof-receipt.png" 8
-add_slide "04-bright-data-live.png" 8
-add_slide "05-field-map.png" 8
-add_slide "06-exports-ready.png" 8
-printf "file '%s'\n" "$ASSET_DIR/06-exports-ready.png" >> "$CONCAT"
+add_slide "01-overview.png" 5
+add_slide "02-draft-card.png" 5
+add_slide "03-claim-ledger.png" 5
+add_slide "04-proof-receipt.png" 5
+add_slide "05-bright-data-live.png" 5
+add_slide "06-pitch-check.png" 5
+add_slide "07-field-map.png" 5
+add_slide "08-exports-ready.png" 5
+printf "file '%s'\n" "$ASSET_DIR/08-exports-ready.png" >> "$CONCAT"
 
 fade_start="$(awk -v duration="$voice_duration" 'BEGIN { value = duration - 2.5; if (value < 0) value = 0; printf "%.3f", value }')"
 
