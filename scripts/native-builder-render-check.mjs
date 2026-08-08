@@ -24,7 +24,7 @@ const wantedInPage = [
   "ProofRank",
   "Bright Data",
   "GitHub repository",
-  "Audit a public AI project",
+  "Paste a project. Get a judge memo.",
   "Run public review",
   "Replay sample",
   "Share blank test room",

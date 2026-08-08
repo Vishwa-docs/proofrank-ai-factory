@@ -593,6 +593,50 @@ async function copySelectedReviewCard(project = selectedProject()) {
   }
 }
 
+function judgeReadoutText(project = selectedProject()) {
+  const readiness = buildReadiness(project, readinessContext());
+  const sponsorReady = hasBrightDataSponsorProofBundle(project);
+  const traceState = brightDataTraceState(project);
+  const gaps = readiness.gates
+    .filter((gate) => gate.required && gate.status !== "passed")
+    .map((gate) => gate.label)
+    .slice(0, 2);
+  const brightStatus = sponsorReady
+    ? "Bright Data source, search, and discovery attached"
+    : traceState === "direct"
+      ? "Public evidence only; Bright Data run still needed"
+      : traceState === "planned"
+        ? "Bright Data run planned, not executed"
+        : "No Bright Data evidence attached yet";
+  const brightDelta = sponsorReady
+    ? "Adds live source pages, prior-art search, similar-project discovery, and a saved review record."
+    : "Would add live source pages, web search, similar-project discovery, and a saved review record.";
+  const businessValue = project.evidence?.targetUser && project.evidence?.repeatableWorkflow
+    ? "Turns public AI project review into a repeatable judge and sponsor memo."
+    : "Clarifies whether a public AI project deserves reviewer time before deeper diligence.";
+
+  return [
+    `Decision: ${displayVerdictLabel(project)}`,
+    `Bright Data status: ${brightStatus}`,
+    `What Bright Data added: ${brightDelta}`,
+    `Top evidence gaps: ${gaps.length ? gaps.join("; ") : "No required evidence gaps open"}`,
+    `Business value: ${businessValue}`,
+    `Next action: ${displayAction(project)}`
+  ].join("\n");
+}
+
+async function copyJudgeReadout(project = selectedProject()) {
+  const readout = judgeReadoutText(project);
+  try {
+    await navigator.clipboard.writeText(readout);
+    setStatus("Judge readout copied.", "ready");
+    setQuickHint("Judge readout copied: decision, Bright Data status, gaps, business value, and next action.", "ready");
+  } catch {
+    window.prompt("Copy this judge readout:", readout);
+    setStatus("Copy the judge readout from the browser prompt.", "ready");
+  }
+}
+
 function selectedReceiptJson() {
   return JSON.stringify(buildReceipt(selectedProject(), state.projects), null, 2);
 }
@@ -1729,6 +1773,85 @@ function renderJudgeMemoCard(project, readiness) {
   `;
 }
 
+function renderDecisionPath(project, readiness) {
+  const draft = isDraftProject(project);
+  const publicReview = isPublicReviewProject(project);
+  const sponsorReady = hasBrightDataSponsorProofBundle(project);
+  const hasPublicEvidence = publicReview || sponsorReady || project.evidence?.hasGithub || project.evidence?.hasPublicDemo;
+  const memoReady = sponsorReady || publicReview;
+  const primaryAction = draft
+    ? { action: "public", label: "Run public review" }
+    : sponsorReady
+      ? { action: "export", label: "Export memo" }
+      : { action: "live", label: "Add Bright Data evidence" };
+  const secondaryAction = sponsorReady
+    ? { action: "evidence", label: "Open evidence" }
+    : { action: "copy", label: "Copy replay link" };
+  const requiredGapCount = readiness.gates.filter((gate) => gate.required && gate.status !== "passed").length;
+  const title = draft
+    ? "Links are accepted. Evidence comes next."
+    : sponsorReady
+      ? "The sponsor story is inspectable."
+      : "Public evidence exists. Bright Data is the upgrade.";
+  const body = sponsorReady
+    ? "A judge can read the memo, inspect the Bright Data source/search/discovery path, and export the evidence packet."
+    : draft
+      ? "A first-time visitor can test their project without login. The first real product moment is the public review memo."
+      : "The project has browser-safe evidence. Reviewer access adds live-web source, search, and discovery rows.";
+  const steps = [
+    {
+      label: "Input",
+      state: "ready",
+      detail: project.githubUrl ? "GitHub link accepted" : "Paste a public GitHub repo"
+    },
+    {
+      label: "Public evidence",
+      state: hasPublicEvidence ? "ready" : "next",
+      detail: hasPublicEvidence ? "Repo or demo signals attached" : "Run public review first"
+    },
+    {
+      label: "Bright Data",
+      state: sponsorReady ? "ready" : publicReview ? "next" : "pending",
+      detail: sponsorReady ? "Source, search, discovery attached" : "Upgrade for sponsor review"
+    },
+    {
+      label: "Memo",
+      state: memoReady ? "ready" : "pending",
+      detail: memoReady ? "Decision and gaps visible" : "Generated after evidence"
+    }
+  ];
+  const stepRows = steps
+    .map(
+      (step, index) => `
+        <li class="${escapeAttr(step.state)}">
+          <span>${index + 1}</span>
+          <div>
+            <strong>${escapeHtml(step.label)}</strong>
+            <p>${escapeHtml(step.detail)}</p>
+          </div>
+        </li>
+      `
+    )
+    .join("");
+
+  return `
+    <section class="decision-path-card" aria-label="First review path">
+      <div class="decision-path-copy">
+        <span>Review path</span>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(body)}</p>
+      </div>
+      <ol class="decision-path-steps">${stepRows}</ol>
+      <div class="decision-path-actions">
+        <button class="primary-button small" data-score-action="${escapeAttr(primaryAction.action)}" type="button">${escapeHtml(primaryAction.label)}</button>
+        <button class="secondary-button small" data-score-action="${escapeAttr(secondaryAction.action)}" type="button">${escapeHtml(secondaryAction.label)}</button>
+        <button class="secondary-button small" data-score-action="copy-readout" type="button">Copy judge readout</button>
+        <span>${escapeHtml(requiredGapCount ? `${requiredGapCount} required gate${requiredGapCount === 1 ? "" : "s"} still open` : "No required evidence gates open")}</span>
+      </div>
+    </section>
+  `;
+}
+
 function renderPitchReviewPanel() {
   const review = state.pitchReview;
   if (!review) return "";
@@ -1964,6 +2087,25 @@ function renderPrizeBrief(project) {
   `;
 }
 
+function renderReviewerDetails(project, readiness) {
+  const sponsorReady = hasBrightDataSponsorProofBundle(project);
+  const summary = isDraftProject(project)
+    ? "Draft limits, public-review action, and export options"
+    : sponsorReady
+      ? "Prize lane, rubric memo, and export actions"
+      : "Bright Data lane, evidence gaps, and next actions";
+
+  return `
+    <details class="analysis-drawer reviewer-details">
+      <summary><span>Reviewer details</span><strong>${escapeHtml(summary)}</strong></summary>
+      ${renderPrizeBrief(project)}
+      ${renderActionBoard(project, readiness)}
+      ${renderDraftReviewCard(project)}
+      ${renderVisitorBrief(project)}
+    </details>
+  `;
+}
+
 function renderScorecard(project) {
   const reviewFocus = project.reviewFocus || selectedReviewFocus();
   const readiness = buildReadiness(project, readinessContext());
@@ -2018,13 +2160,9 @@ function renderScorecard(project) {
 
     ${renderJudgeMemoCard(project, readiness)}
 
-    ${renderPrizeBrief(project)}
+    ${renderDecisionPath(project, readiness)}
 
-    ${renderActionBoard(project, readiness)}
-
-    ${renderDraftReviewCard(project)}
-
-    ${renderVisitorBrief(project)}
+    ${renderReviewerDetails(project, readiness)}
 
     ${draft ? "" : `<details class="analysis-drawer decision-details">
       <summary><span>Review evidence details</span><strong>${escapeHtml(sponsorProofReady ? "Bright Data ready" : "Needs evidence")}</strong></summary>
@@ -3204,6 +3342,8 @@ elements.scorecard?.addEventListener("click", async (event) => {
     await copySelectedProjectLink();
   } else if (action === "copy-card") {
     await copySelectedReviewCard();
+  } else if (action === "copy-readout") {
+    await copyJudgeReadout();
   }
 });
 elements.receipt?.addEventListener("input", (event) => {

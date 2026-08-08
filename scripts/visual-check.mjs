@@ -608,6 +608,10 @@ for (const spec of [
     if (!draftBriefReady) {
       throw new Error("Visitor review brief did not explain the link-only draft state.");
     }
+    await page.evaluate(() => {
+      const details = document.querySelector(".reviewer-details");
+      if (details) details.open = true;
+    });
     await page.click('[data-score-action="copy-card"]');
     await page.waitForTimeout(100);
     const copiedDraftCardReady = await page.evaluate(() => {
@@ -816,6 +820,12 @@ for (const spec of [
       modeLadderCount: document.querySelectorAll(".mode-ladder span").length,
       externalSampleReady: Boolean(document.querySelector("#loadExternalSample")),
       brightPathReady: document.querySelectorAll(".bright-path").length >= 2,
+      decisionPathCount: document.querySelectorAll(".decision-path-card").length,
+      decisionPathStepCount: document.querySelectorAll(".decision-path-steps li").length,
+      decisionPathCopyReady: /Review path|Public evidence|Bright Data|Memo|Copy judge readout/i.test(
+        document.querySelector(".decision-path-card")?.textContent || ""
+      ),
+      judgeReadoutActionCount: document.querySelectorAll('[data-score-action="copy-readout"]').length,
       actionBoardCount: document.querySelectorAll(".action-board").length,
       actionButtonCount: document.querySelectorAll(".action-board [data-score-action]").length,
       prizeBriefCount: document.querySelectorAll(".prize-brief").length,
@@ -915,6 +925,10 @@ const failures = results.flatMap((result) => {
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
   if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
   if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/reviewer-access actions did not render`);
+  if (!blankState && result.metrics.decisionPathCount !== 1) problems.push(`${result.spec.name}: decision path did not render`);
+  if (!blankState && result.metrics.decisionPathStepCount !== 4) problems.push(`${result.spec.name}: decision path did not render four steps`);
+  if (!blankState && !result.metrics.decisionPathCopyReady) problems.push(`${result.spec.name}: decision path copy is missing`);
+  if (!blankState && result.metrics.judgeReadoutActionCount < 1) problems.push(`${result.spec.name}: copy judge readout action did not render`);
   if (!blankState && result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
   if (!blankState && result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
   if (!blankState && result.metrics.prizeBriefCount !== 1) problems.push(`${result.spec.name}: prize brief did not render`);

@@ -20,11 +20,11 @@ Show the link-only draft fallback or the public review result and say:
 
 ## 0:30-0:48 - Judge Memo And Bright Data Delta
 
-Open ProofRank or a strong Bright Data-native project in the Projects tab. Point to the Judge Memo card, Prize brief, Bright Data delta, Similarity Check, and Claim Check.
+Open ProofRank or a strong Bright Data-native project in the Projects tab. Point to the Judge Memo card, Review Path, Copy judge readout action, Bright Data delta, Similarity Check, and Claim Check.
 
 Say:
 
-"ProofRank starts with a decision, not a wall of metrics. The Judge Memo says whether to shortlist, collect more evidence, or export the memo. Bright Data changes the review by adding source fetch, web search, and similar-project discovery."
+"ProofRank starts with a decision, not a wall of metrics. The Judge Memo says whether to shortlist, collect more evidence, or export the memo. The judge readout copies the six-line sponsor answer, and Bright Data changes the review with source fetch, web search, and similar-project discovery."
 
 ## 0:48-0:58 - Evidence
 
@@ -39,7 +39,8 @@ Say:
 - Run public review.
 - Select a project.
 - Show the Judge Memo card.
-- Show the Prize brief.
+- Show the Review Path and Copy judge readout action.
+- Show the Prize brief or reviewer details drawer.
 - Show Similarity Check.
 - Show Claim Check.
 - Show the source table and point out the executed/planned/claimed state.

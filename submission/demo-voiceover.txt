@@ -1,9 +1,9 @@
 ProofRank lets anyone test an AI hackathon project from public links.
 
-Paste a GitHub repo and demo URL. The draft is honest: it saves the links, stays unscored, and shows what has not been checked yet.
+Paste a GitHub repo and demo URL. Public review collects safe repo and demo evidence; drafts stay clearly unscored.
 
-Run public review for safe GitHub and demo evidence. A Bright Data evidence run adds source fetch, web search, discovery, and an inspectable saved review.
+Reviewer access adds Bright Data source fetch, web search, discovery, and an inspectable saved review.
 
-ProofRank turns that evidence into a Judge Memo: shortlist, collect more evidence, or export the sponsor review. Bright Data changes the review with source fetch, web search, and similar-project discovery.
+The result is a Judge Memo: shortlist, collect evidence, or export. Copy judge readout gives sponsors the six-line answer.
 
-Export the trace-backed sponsor memo, evidence JSON, or room report. The result is a defensible shortlist, not another pile of links.
+Export the memo, evidence JSON, or room report. ProofRank creates a defensible shortlist, not another pile of links.

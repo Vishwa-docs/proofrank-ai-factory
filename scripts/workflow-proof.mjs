@@ -133,6 +133,10 @@ try {
       briefText: brief?.textContent?.replace(/\s+/g, " ").trim() || ""
     };
   });
+  await page.evaluate(() => {
+    const details = document.querySelector(".reviewer-details");
+    if (details) details.open = true;
+  });
   await page.click('[data-score-action="copy-card"]');
   await page.waitForFunction(() => /Draft review only/i.test(window.__proofrankCopiedText || ""));
   const copiedDraftCard = await page.evaluate(() => window.__proofrankCopiedText || "");

@@ -2480,6 +2480,130 @@ input::placeholder {
   line-height: 1.45;
 }
 
+.decision-path-card {
+  display: grid;
+  gap: var(--space-sm);
+  margin-block: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-muted);
+}
+
+.decision-path-copy {
+  display: grid;
+  gap: var(--space-2xs);
+  max-width: 68ch;
+}
+
+.decision-path-copy span,
+.decision-path-actions span {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.decision-path-copy h3 {
+  color: var(--color-ink);
+  font-size: var(--text-lg);
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+.decision-path-copy p {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.decision-path-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+}
+
+.decision-path-steps li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--space-xs);
+  min-width: 0;
+  min-height: 5.5rem;
+  padding: var(--space-sm);
+  background: var(--color-paper);
+}
+
+.decision-path-steps li > span {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-muted);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.decision-path-steps li.ready > span {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  color: var(--color-good);
+}
+
+.decision-path-steps li.next > span {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.decision-path-steps strong {
+  display: block;
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: 1.2;
+}
+
+.decision-path-steps p {
+  margin-top: var(--space-2xs);
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+}
+
+.decision-path-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.decision-path-actions span {
+  margin-left: auto;
+}
+
+.reviewer-details {
+  margin-block: var(--space-sm) var(--space-md);
+}
+
+.reviewer-details .prize-brief,
+.reviewer-details .action-board,
+.reviewer-details .draft-review-card,
+.reviewer-details .visitor-brief {
+  margin-block: 0;
+}
+
 .draft-review-card {
   display: grid;
   gap: var(--space-sm);
@@ -5338,6 +5462,10 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 
+  .decision-path-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .prize-actions {
     justify-content: flex-start;
     max-width: none;
@@ -5357,6 +5485,7 @@ input::placeholder {
 
   .pitch-review-rows li,
   .judge-memo-grid li,
+  .decision-path-steps li,
   .draft-review-card li,
   .visitor-brief li {
     min-height: auto;
@@ -5486,6 +5615,7 @@ input::placeholder {
   .action-board ul,
   .review-coach-checks,
   .flight-recorder-stages,
+  .decision-path-steps,
   .prize-lanes,
   .prize-pressure,
   .fix-score-strip,
@@ -5539,6 +5669,13 @@ input::placeholder {
 
   .action-buttons .secondary-button {
     flex: 1 1 100%;
+  }
+
+  .decision-path-actions .primary-button,
+  .decision-path-actions .secondary-button,
+  .decision-path-actions span {
+    width: 100%;
+    margin-left: 0;
   }
 
   .workbench {
