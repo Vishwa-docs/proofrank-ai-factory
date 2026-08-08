@@ -1,8 +1,8 @@
 # Last-Mile Account Actions
 
-Date: 2026-08-07
+Date: 2026-08-08
 
-ProofRank is currently at 9/11 required final readiness gates. The polished fallback app, Bright Data evidence package, and public live API security gate are ready. The remaining external gates are republishing/verifying the Native.builder app with the latest prompt and the final lablab.ai submission URL.
+ProofRank is currently at 8/11 required final readiness gates. The polished product exists locally at commit `840f1f2`, the Bright Data evidence package is ready, and the public live API security gate is ready. The remaining external gates are publishing the latest local commit to Vercel/GitHub, republishing/verifying the Native.builder app with the latest prompt, and adding the final lablab.ai submission URL.
 
 ## 1. Native.builder Status
 
@@ -25,10 +25,12 @@ Current Native.builder state:
 - Product Architect and Task Planner passes completed.
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
-- Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
+- Latest UI correction is implemented locally at commit `840f1f2`; the currently published Native.builder app is stale and still fails the render check.
+- Do not use the Native.builder URL as the primary submission URL until `npm run native:render-check` passes.
+- Republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
 - Current local/fallback first viewport shows public project links, `Run public review`, `Share blank test room`, the review coach, and the Bright Data flight recorder. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the render check uses a cache-busting URL and must be rerun after republish.
-- Use the Native.builder URL above as the primary submission URL.
+- Use the Native.builder URL above as the primary submission URL only after the render check is green.
 
 If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.
 
@@ -46,17 +48,17 @@ Then run:
 npm run final:audit
 ```
 
-Expected state after Native.builder republish and before lablab submit: 10/11 required gates, with only lablab final submission remaining.
+Expected state after Vercel publish and Native.builder republish, before lablab submit: 10/11 required gates, with only lablab final submission remaining.
 
 ## 3. Submit On lablab.ai
 
-Use these values:
+Use these values after Vercel publish and Native.builder republish are verified:
 
 ```text
 Project name: ProofRank
-Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
+Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ (only after render check passes)
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
-Fallback app URL: https://proofrank-ai-factory.vercel.app/
+Fallback app URL: https://proofrank-ai-factory.vercel.app/ (only after commit 840f1f2 or newer is deployed)
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 Final Bright Data saved review JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1

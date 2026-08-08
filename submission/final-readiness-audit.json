@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-08-08T09:57:56.171Z",
+  "generatedAt": "2026-08-08T10:44:35.436Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 9,
+  "requiredPassed": 8,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 83,
+  "score": 75,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
-      "status": "passed",
-      "proof": "ProofRank shell is deployed and the runtime bundle contains the refreshed Evidence and Readiness UI.",
+      "status": "needs-action",
+      "proof": "Fallback bundle is deployed but missing refreshed copy: Paste a project to get a judge memo, Receipt verifier.",
       "action": "Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
     },
     {
@@ -21,7 +21,7 @@
       "label": "Under-three-minute demo video",
       "required": true,
       "status": "passed",
-      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 43s",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 44s",
       "action": "Upload a demo video shorter than three minutes and verify the public release asset."
     },
     {
@@ -45,7 +45,7 @@
       "label": "Native.builder primary URL",
       "required": true,
       "status": "needs-action",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / render check needs attention in submission/native-builder-render-check.json / missing in browser render: GitHub repo, Create draft review, Open built-in receipt, Judge packet, Live setup, Bright Data receipt present / forbidden copy visible: Signed proof, Submission-ready",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / render check needs attention in submission/native-builder-render-check.json / missing in browser render: GitHub repository, Audit a public AI project, Run public review, Replay sample, Share blank test room, Bright Data flight recorder, Open Bright Data receipt, Readiness, Bright Data evidence attached / forbidden copy visible: Signed proof, Submission-ready",
       "action": "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
     },
     {
@@ -114,8 +114,9 @@
     }
   ],
   "nextActions": [
+    "Deploy the public fallback app and confirm the Bright Data evidence strip is visible.",
     "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/11 required gates checked. Next action: Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
+  "summary": "Not final-ready: 8/11 required gates checked. Next action: Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
 }

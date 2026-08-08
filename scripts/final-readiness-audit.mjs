@@ -399,7 +399,14 @@ async function liveReceipt() {
 async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
-  const fallbackRequiredCopy = ["Bright Data evidence attached", "Review public AI submissions", "Open Bright Data receipt", "Run public review"];
+  const fallbackRequiredCopy = [
+    "Bright Data evidence attached",
+    "Review public AI submissions",
+    "Open Bright Data receipt",
+    "Run public review",
+    "Paste a project to get a judge memo",
+    "Receipt verifier"
+  ];
   const fallbackRenderedText = `${fallback.text || ""}\n${fallbackBundle.text || ""}`;
   const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !fallbackRenderedText.includes(item));
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");

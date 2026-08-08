@@ -1,22 +1,23 @@
 # ProofRank Operator Handoff
 
-Date: 2026-08-07
+Date: 2026-08-08
 
 ## What Is Ready
 
-- Public fallback/live app: https://proofrank-ai-factory.vercel.app/
+- Latest polished local commit: `840f1f2 Make public review flow submission-ready`
+- Public fallback/live app target: https://proofrank-ai-factory.vercel.app/ (currently stale until commit `840f1f2` or newer is deployed)
 - GitHub Pages backup: https://vishwa-docs.github.io/proofrank-ai-factory/
 - Public repo: https://github.com/Vishwa-docs/proofrank-ai-factory
 - Refreshed demo video release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 - Workflow replay JSON release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 - Workflow replay screenshot release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
-- Native.builder render check artifact: `submission/native-builder-render-check.json` must be regenerated after the latest local UI copy is republished.
+- Native.builder render check artifact: `submission/native-builder-render-check.json` currently fails because the published Native.builder bundle is stale. Regenerate it after the latest local UI copy is republished.
 - Native.builder desktop screenshot: `submission/demo-assets/native-builder-desktop.png`
 - Native.builder 320px screenshot: `submission/demo-assets/native-builder-mobile-320.png`
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
-- Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder status: published, but republish is required to sync the latest local UI. The target first viewport should show public project links, Run public review as the default action, Share blank test room, the review coach, the Bright Data flight recorder, and final lablab.ai submission pending.
+- Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ (currently stale until republished)
+- Native.builder status: published, but republish is required to sync the latest local UI. Current public probe still shows old forbidden copy, so do not use it as the primary submission app until `npm run native:render-check` passes. The target first viewport should show public project links, Run public review as the default action, Share blank test room, the review coach, the Bright Data flight recorder, and final lablab.ai submission pending.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
@@ -31,6 +32,13 @@ Date: 2026-08-07
 - Final Bright Data saved review JSON: `submission/final-brightdata-receipt.json`.
 
 ## What I Need From You
+
+0. Publish latest fallback app
+   - Explicitly approve publishing the local commit to GitHub and Vercel production.
+   - Push commit `840f1f2` or newer to `Vishwa-docs/proofrank-ai-factory`.
+   - Deploy the linked Vercel project `proofrank-ai-factory`.
+   - Verify with `PROOFRANK_URL=https://proofrank-ai-factory.vercel.app/ npm run visual:check`.
+   - Success condition: the hosted Vercel app starts with a blank public review state, shows the GitHub/demo inputs near the top, includes the receipt verifier, and contains no visible `Signed proof` or `Submission-ready` copy.
 
 1. Bright Data source/search/discovery review
    - The replacement admin key now passes Bright Data account auth.
@@ -105,4 +113,4 @@ npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https:
 
 ## Current Honest Status
 
-ProofRank has a public fallback app, collateral package, Bright Data saved review JSON with executed MCP traces, and secured public Vercel live API shell. The latest local UI still needs Native.builder republish and public verification. Remaining gates: Native.builder render check and final lablab.ai submission from the authenticated team-owner account.
+ProofRank has a polished local product package, collateral package, Bright Data saved review JSON with executed MCP traces, and secured public Vercel live API shell. The latest local UI still needs Vercel/GitHub production publish, Native.builder republish, and public verification. Remaining gates: public fallback publish, Native.builder render check, and final lablab.ai submission from the authenticated team-owner account.

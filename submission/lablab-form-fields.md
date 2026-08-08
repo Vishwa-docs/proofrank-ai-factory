@@ -71,13 +71,13 @@ Web App
 
 ## Demo Application URL
 
-Use this after the final Native.builder republish/recheck:
+Use this after the final Native.builder republish/recheck passes:
 
 ```text
 https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 ```
 
-If you need the currently reachable web fallback before republishing Native.builder, use:
+If Native.builder is still stale, publish commit `840f1f2` or newer to the fallback app first, verify it with `PROOFRANK_URL=https://proofrank-ai-factory.vercel.app/ npm run visual:check`, then use:
 
 ```text
 https://proofrank-ai-factory.vercel.app/

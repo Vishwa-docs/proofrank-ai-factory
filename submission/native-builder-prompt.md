@@ -22,11 +22,13 @@ Create a functional deployed app, not a landing page. The first screen must be a
    - Originality
    - Presentation
 7. User selects a project.
-8. Review shows What to fix next, the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
-9. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
-10. Links tab also includes a collapsed Presentation check. A user can paste a demo transcript or pitch notes, analyze them locally, and see which presentation claims still need evidence.
-11. Evidence tab shows source-backed review evidence and a source table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
-12. User exports CSV, all review evidence JSON, selected review JSON, and review memo Markdown.
+8. Before a visitor selects or runs a project, Review must show a blank public test room state, not the ProofRank sample result. It should say "Paste a project to get a judge memo" and show the first three steps: Paste, Review, Verify.
+9. Review shows What to fix next, the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check after a project is selected.
+10. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
+11. Links tab also includes a collapsed Presentation check. A user can paste a demo transcript or pitch notes, analyze them locally, and see which presentation claims still need evidence.
+12. Evidence tab starts with a public Receipt verifier. A user can paste exported ProofRank evidence JSON or load the selected receipt. Browser verification checks trace digest consistency, Bright Data source/search/discovery coverage, and claim support. Full HMAC validation stays server-side because secrets must not be pasted into the browser.
+13. Evidence tab shows source-backed review evidence and a source table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
+14. User exports CSV, all review evidence JSON, selected review JSON, and review memo Markdown.
 
 ## Required UI
 
@@ -37,7 +39,8 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - The first viewport must not look crowded. Put samples, review lens, starter projects, blank test room link, ProofRank sample result, external sample, and Bright Data setup actions inside More options.
 - Decision card shows the selected ProofRank sample result, Bright Data evidence attached, review ID `pr-20260807t200529345z-23568b05`, still needs lablab.ai submission, and Native app published. Do not imply the final lablab.ai submission is already complete. Keep detailed numeric scoring inside the score breakdown.
 - Review tab starts with What to fix next before the long scorecard. It shows score if judged today for evidence-backed projects, but for visitor-created drafts it must say Draft / No ranking score until public or Bright Data evidence runs.
-- Result includes a compact Bright Data evidence panel above the collapsible analysis drawers. It must show the exact Bright Data source/search/discovery run (`scrape_as_markdown`, `search_engine`, `discover`), the review ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
+- Result starts with the decision, why it matters, and the next click. Keep detailed rubric, market-position, pitch, field-comparison, similarity, and claim-ledger sections inside collapsible analysis drawers so the review does not look like a wall of data.
+- Result includes a compact Bright Data evidence panel or drawer. It must show the exact Bright Data source/search/discovery run (`scrape_as_markdown`, `search_engine`, `discover`), the review ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
 - Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet. Draft projects must not show High risk, Review score 10, finalist-ready language, or any final verdict before public or Bright Data evidence runs.
 - If the user runs Presentation check, Result shows a compact pitch evidence panel. It must say the source is pasted transcript text, not video verification, and that Bright Data evidence status stays separate.
 - Result includes an Against the field panel with ProofRank beside current AI Factory project patterns such as Half-Life, CivicTwin, Askable, and Querypex. It should show domain, Bright Data role, decision artifact, and evidence visibility so judges understand that ProofRank is the review operations product.
@@ -51,6 +54,8 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
 Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links and make it unmistakable that other builders can test their own repo/demo. Advanced live settings belong in Readiness. Use ProofRank as the selected sample result, but do not present it as a self-awarded win. Use Bright Data evidence attached and lablab.ai submission pending copy instead of old finalist/winner/finality labels or claims that draft reviews fetch repository contents.
+
+Forbidden visible copy anywhere in the public UI: `Signed proof`, `Submission-ready`, `Finalist-ready`, `Strong Pass`, `Sponsor bundle executed`, `Open built-in receipt`, `Built-in receipt`, `Live setup`, `Bright Data receipt present`, `Evidence report`, `AUDIT CONTROLS`, `REVIEWER INTAKE`, `Submission URL`, `Ranked Queue`, `Submission Cockpit`, `AgentArena`.
 
 ## Claim Check
 

@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-08-08T07:32:52.621Z",
+  "checkedAt": "2026-08-08T10:42:56.110Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786174372621",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786185776110",
   "title": "ProofRank — AI Diligence Engine",
   "publishedBundle": "/assets/index-DxpYdOcJ.js",
   "screenshots": {
@@ -14,16 +14,20 @@
       "width": 1440,
       "height": 950,
       "missingInPage": [
-        "GitHub repo",
-        "Create draft review",
-        "Open built-in receipt",
-        "Judge packet",
-        "Live setup",
-        "Bright Data receipt present"
+        "GitHub repository",
+        "Audit a public AI project",
+        "Run public review",
+        "Replay sample",
+        "Share blank test room",
+        "Bright Data flight recorder",
+        "Open Bright Data receipt",
+        "Readiness",
+        "Bright Data evidence attached"
       ],
       "missingInViewport": [
-        "GitHub repo",
-        "Judge packet"
+        "GitHub repository",
+        "Run public review",
+        "Replay sample"
       ],
       "forbiddenInPage": [
         "Signed proof",
@@ -43,16 +47,20 @@
       "width": 320,
       "height": 740,
       "missingInPage": [
-        "GitHub repo",
-        "Create draft review",
-        "Open built-in receipt",
-        "Judge packet",
-        "Live setup",
-        "Bright Data receipt present"
+        "GitHub repository",
+        "Audit a public AI project",
+        "Run public review",
+        "Replay sample",
+        "Share blank test room",
+        "Bright Data flight recorder",
+        "Open Bright Data receipt",
+        "Readiness",
+        "Bright Data evidence attached"
       ],
       "missingInViewport": [
-        "GitHub repo",
-        "Judge packet"
+        "GitHub repository",
+        "Run public review",
+        "Replay sample"
       ],
       "forbiddenInPage": [
         "Signed proof",
@@ -71,18 +79,22 @@
   "wantedInPage": [
     "ProofRank",
     "Bright Data",
-    "GitHub repo",
-    "Create draft review",
-    "Open built-in receipt",
-    "Judge packet",
-    "Live setup",
-    "Bright Data receipt present"
+    "GitHub repository",
+    "Audit a public AI project",
+    "Run public review",
+    "Replay sample",
+    "Share blank test room",
+    "Bright Data flight recorder",
+    "Open Bright Data receipt",
+    "Readiness",
+    "Bright Data evidence attached"
   ],
   "wantedInViewport": [
     "ProofRank",
     "Bright Data",
-    "GitHub repo",
-    "Judge packet"
+    "GitHub repository",
+    "Run public review",
+    "Replay sample"
   ],
   "forbiddenStrings": [
     "Signed proof",
@@ -93,6 +105,11 @@
     "Sponsor bundle executed",
     "pr-20260807t145909828z-553fb028",
     "Demo Evidence",
+    "Open built-in receipt",
+    "Built-in receipt",
+    "Live setup",
+    "Bright Data receipt present",
+    "Evidence report",
     "AUDIT CONTROLS",
     "REVIEWER INTAKE",
     "Submission URL",
