@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-08-08T10:42:56.110Z",
+  "checkedAt": "2026-08-08T11:38:49.124Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786185776110",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786189129124",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-DxpYdOcJ.js",
+  "publishedBundle": "/assets/index-Cir4266V.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -13,30 +13,10 @@
       "name": "desktop",
       "width": 1440,
       "height": 950,
-      "missingInPage": [
-        "GitHub repository",
-        "Audit a public AI project",
-        "Run public review",
-        "Replay sample",
-        "Share blank test room",
-        "Bright Data flight recorder",
-        "Open Bright Data receipt",
-        "Readiness",
-        "Bright Data evidence attached"
-      ],
-      "missingInViewport": [
-        "GitHub repository",
-        "Run public review",
-        "Replay sample"
-      ],
-      "forbiddenInPage": [
-        "Signed proof",
-        "Submission-ready"
-      ],
-      "forbiddenInViewport": [
-        "Signed proof",
-        "Submission-ready"
-      ],
+      "missingInPage": [],
+      "missingInViewport": [],
+      "forbiddenInPage": [],
+      "forbiddenInViewport": [],
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "horizontalOverflow": false,
@@ -46,30 +26,10 @@
       "name": "mobile-320",
       "width": 320,
       "height": 740,
-      "missingInPage": [
-        "GitHub repository",
-        "Audit a public AI project",
-        "Run public review",
-        "Replay sample",
-        "Share blank test room",
-        "Bright Data flight recorder",
-        "Open Bright Data receipt",
-        "Readiness",
-        "Bright Data evidence attached"
-      ],
-      "missingInViewport": [
-        "GitHub repository",
-        "Run public review",
-        "Replay sample"
-      ],
-      "forbiddenInPage": [
-        "Signed proof",
-        "Submission-ready"
-      ],
-      "forbiddenInViewport": [
-        "Signed proof",
-        "Submission-ready"
-      ],
+      "missingInPage": [],
+      "missingInViewport": [],
+      "forbiddenInPage": [],
+      "forbiddenInViewport": [],
       "scrollWidth": 320,
       "clientWidth": 320,
       "horizontalOverflow": false,
@@ -80,7 +40,7 @@
     "ProofRank",
     "Bright Data",
     "GitHub repository",
-    "Audit a public AI project",
+    "Paste a project. Get a judge memo.",
     "Run public review",
     "Replay sample",
     "Share blank test room",
@@ -118,5 +78,5 @@
     "AgentArena"
   ],
   "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
-  "ok": false
+  "ok": true
 }

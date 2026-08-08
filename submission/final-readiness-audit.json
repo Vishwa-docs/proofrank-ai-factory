@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-08-08T11:13:51.147Z",
+  "generatedAt": "2026-08-08T11:39:14.304Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 8,
+  "requiredPassed": 10,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 75,
+  "score": 92,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
-      "status": "needs-action",
-      "proof": "Fallback bundle is deployed but missing refreshed copy: Paste a project to get a judge memo, Receipt verifier.",
+      "status": "passed",
+      "proof": "ProofRank shell is deployed and the runtime bundle contains the refreshed Evidence and Readiness UI.",
       "action": "Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
     },
     {
@@ -44,8 +44,8 @@
       "id": "native-builder",
       "label": "Native.builder primary URL",
       "required": true,
-      "status": "needs-action",
-      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / render check needs attention in submission/native-builder-render-check.json / missing in browser render: GitHub repository, Audit a public AI project, Run public review, Replay sample, Share blank test room, Bright Data flight recorder, Open Bright Data receipt, Readiness, Bright Data evidence attached / forbidden copy visible: Signed proof, Submission-ready",
+      "status": "passed",
+      "proof": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/ / browser render verified in submission/native-builder-render-check.json / bundle /assets/index-Cir4266V.js.",
       "action": "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
     },
     {
@@ -114,9 +114,7 @@
     }
   ],
   "nextActions": [
-    "Deploy the public fallback app and confirm the Bright Data evidence strip is visible.",
-    "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 8/11 required gates checked. Next action: Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
+  "summary": "Not final-ready: 10/11 required gates checked. Next action: Submit from the authenticated team-owner lablab.ai account."
 }

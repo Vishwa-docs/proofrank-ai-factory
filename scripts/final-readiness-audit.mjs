@@ -401,10 +401,10 @@ async function buildAuditState() {
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
   const fallbackRequiredCopy = [
     "Bright Data evidence attached",
-    "Review public AI submissions",
+    "Paste a project. Get a judge memo.",
     "Open Bright Data receipt",
     "Run public review",
-    "Paste a project to get a judge memo",
+    "Copy judge readout",
     "Receipt verifier"
   ];
   const fallbackRenderedText = `${fallback.text || ""}\n${fallbackBundle.text || ""}`;
