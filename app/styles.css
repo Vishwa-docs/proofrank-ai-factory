@@ -115,16 +115,38 @@ a {
   font-weight: 700;
 }
 
+.mark::before,
+.mark::after {
+  content: "";
+  position: absolute;
+  left: 0.68rem;
+  z-index: 2;
+  width: 0.38rem;
+  height: 0.38rem;
+  border: 1px solid var(--color-paper);
+  border-radius: 999px;
+  background: var(--color-paper);
+}
+
+.mark::before {
+  top: 0.64rem;
+}
+
+.mark::after {
+  bottom: 0.64rem;
+  background: var(--color-accent);
+}
+
 .mark span {
   position: relative;
   z-index: 1;
-  transform: translateX(0.18rem);
+  transform: translateX(0.2rem);
 }
 
 .mark i {
   position: absolute;
-  inset: 0.45rem auto 0.45rem 0.45rem;
-  width: 0.34rem;
+  inset: 0.62rem auto 0.62rem 0.72rem;
+  width: 0.18rem;
   border-radius: 0.125rem;
   background: var(--color-accent);
 }
@@ -421,6 +443,68 @@ h1 {
 .quick-starters > span {
   padding-inline: var(--space-2xs);
   white-space: nowrap;
+}
+
+.intake-path {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+  counter-reset: intake;
+}
+
+.intake-path li {
+  position: relative;
+  display: grid;
+  gap: var(--space-3xs);
+  min-width: 0;
+  min-height: 4.1rem;
+  align-content: center;
+  padding: var(--space-xs) var(--space-xs) var(--space-xs) calc(var(--space-lg) + var(--space-2xs));
+  background: var(--color-paper);
+}
+
+.intake-path li::before {
+  counter-increment: intake;
+  content: counter(intake);
+  position: absolute;
+  left: var(--space-xs);
+  top: 50%;
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid var(--color-rule);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  transform: translateY(-50%);
+}
+
+.intake-path strong,
+.intake-path span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+}
+
+.intake-path strong {
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+}
+
+.intake-path span {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
 }
 
 .review-coach {
@@ -5289,6 +5373,7 @@ input::placeholder {
   .review-focus-options,
   .starter-row,
   .quick-starters,
+  .intake-path,
   .outcome-preview ul,
   .rubric-grid,
   .verifier-head,

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ProofRank</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%230d1520'/%3E%3Crect x='12' y='12' width='8' height='40' fill='%232b64ff'/%3E%3Ctext x='40' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%23f7fafc'%3EPR%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%230d1520'/%3E%3Cpath d='M15 17v30' stroke='%232b64ff' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='17' r='4' fill='%23f7fafc'/%3E%3Ccircle cx='15' cy='47' r='4' fill='%232b64ff'/%3E%3Ctext x='40' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='23' font-weight='700' fill='%23f7fafc'%3EPR%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -21,9 +21,10 @@
       </div>
       <div class="topbar-actions" aria-label="Page actions">
         <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Try a project</button>
-        <button id="startTourTop" class="text-button" type="button">Start guided review</button>
-        <button class="text-button nav-jump" data-nav-tab="queue" type="button">Projects</button>
-        <details class="export-menu">
+        <button class="text-button" data-load-sample type="button">Replay sample</button>
+        <button id="startTourTop" class="text-button" type="button">Guide</button>
+        <button id="topbarProjects" class="text-button nav-jump" data-nav-tab="queue" type="button" hidden>Projects</button>
+        <details id="topbarExportMenu" class="export-menu" hidden>
           <summary>Export</summary>
           <div class="export-menu-panel" aria-label="Export actions">
             <button id="exportCsv" class="text-button" type="button">CSV</button>
@@ -61,6 +62,20 @@
               <strong>Audit a public AI project</strong>
               <p>Paste your own GitHub repo and optional demo. Public review runs first; a Bright Data evidence run adds source, search, and discovery evidence.</p>
             </div>
+            <ol class="intake-path" aria-label="First review path">
+              <li>
+                <strong>Paste repo</strong>
+                <span>public GitHub link</span>
+              </li>
+              <li>
+                <strong>Run public check</strong>
+                <span>repo and demo signals</span>
+              </li>
+              <li>
+                <strong>Read memo</strong>
+                <span>decision and next action</span>
+              </li>
+            </ol>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
                 <span class="field-label">GitHub repository <button class="qmark" type="button" aria-label="GitHub repo help" aria-expanded="false" aria-controls="repoTip">?</button><span id="repoTip" class="tip-panel" role="tooltip">Use a public github.com/owner/repo URL. Private repos and docs with secrets should not be pasted.</span></span>
@@ -124,11 +139,6 @@
                 <strong id="outcomePreviewTitle">A plain review memo, not a score wall.</strong>
               </div>
               <ul id="outcomePreviewList" aria-label="Review output checklist"></ul>
-              <div class="receipt-teaser">
-                <span>Bright Data sample receipt</span>
-                <strong>scrape_as_markdown, search_engine, and discover are already attached to the ProofRank sample.</strong>
-                <button id="openIntroReceipt" class="text-button small" type="button">View receipt</button>
-              </div>
             </section>
             <p id="quickReviewHint" class="hint">Public review fetches safe public GitHub and demo evidence without using Bright Data credits.</p>
             <details id="reviewOptions" class="review-options">
@@ -174,6 +184,11 @@
                     <span>Bright Data evidence run</span>
                     <strong>server-side source, search, discovery</strong>
                   </button>
+                </div>
+                <div class="receipt-teaser">
+                  <span>ProofRank sample receipt</span>
+                  <strong>scrape_as_markdown, search_engine, and discover are attached to the sample review.</strong>
+                  <button id="openIntroReceipt" class="text-button small" type="button">View receipt</button>
                 </div>
                 <div class="review-focus" role="radiogroup" aria-label="Review lens">
                   <span>Advanced review lens</span>

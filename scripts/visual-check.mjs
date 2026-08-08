@@ -8,7 +8,7 @@ const playwrightPackage =
 const chromePath =
   process.env.CHROME_EXECUTABLE ||
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4173/";
+let targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4173/";
 const publicReviewEndpoint = "https://proofrank-ai-factory.vercel.app/api/review-project-public";
 
 const require = createRequire(`file://${playwrightPackage}`);
@@ -25,9 +25,25 @@ async function canReach(url) {
   }
 }
 
-async function waitForUrl(url) {
+async function readOkText(url) {
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(1200) });
+    if (!response.ok) return "";
+    return response.text();
+  } catch {
+    return "";
+  }
+}
+
+async function isProofRankApp(url) {
+  const html = await readOkText(url);
+  return /<title>ProofRank<\/title>/i.test(html) && /id="quickRepoUrl"/i.test(html) && /id="scorecard"/i.test(html);
+}
+
+async function waitForProofRank(url, child = null) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (await canReach(url)) return true;
+    if (child?.exitCode !== null) return false;
+    if (await isProofRankApp(url)) return true;
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   return false;
@@ -37,20 +53,33 @@ function stopLocalServer() {
   if (localServer && !localServer.killed) localServer.kill("SIGTERM");
 }
 
-if (!process.env.PROOFRANK_URL && !(await canReach(targetUrl))) {
-  localServer = spawn("python3", ["-m", "http.server", "4173", "--directory", "app"], {
-    cwd: process.cwd(),
-    stdio: "ignore"
-  });
+if (!process.env.PROOFRANK_URL && !(await isProofRankApp(targetUrl))) {
+  const candidatePorts = [4173, 4174, 4175, 4284, 5174];
   process.on("exit", stopLocalServer);
   process.on("SIGINT", () => {
     stopLocalServer();
     process.exit(130);
   });
-  if (!(await waitForUrl(targetUrl))) {
+
+  for (const port of candidatePorts) {
+    targetUrl = `http://127.0.0.1:${port}/`;
+    if ((await canReach(targetUrl)) && !(await isProofRankApp(targetUrl))) continue;
+    localServer = spawn("python3", ["-m", "http.server", String(port), "--bind", "127.0.0.1", "--directory", "app"], {
+      cwd: process.cwd(),
+      stdio: "ignore"
+    });
+    if (await waitForProofRank(targetUrl, localServer)) break;
     stopLocalServer();
-    throw new Error(`Unable to start local ProofRank server at ${targetUrl}`);
+    localServer = null;
   }
+
+  if (!localServer || !(await isProofRankApp(targetUrl))) {
+    throw new Error(`Unable to start local ProofRank server on any visual-check port: ${candidatePorts.join(", ")}`);
+  }
+}
+
+if (!(await isProofRankApp(targetUrl))) {
+  throw new Error(`Visual check target does not look like ProofRank: ${targetUrl}`);
 }
 
 const browser = await chromium.launch({
@@ -247,6 +276,7 @@ for (const spec of [
       ".review-mode-switch",
       ".visitor-mode",
       ".bright-actions",
+      ".receipt-teaser",
       ".review-focus",
       ".starter-projects",
       ".public-room-note",
@@ -262,7 +292,7 @@ for (const spec of [
       promiseCount,
       outcomeRows,
       outcomeTitle,
-      receiptTeaserReady: /Bright Data sample receipt|scrape_as_markdown|search_engine|discover/i.test(receiptTeaser),
+      receiptTeaserReady: /ProofRank sample receipt|scrape_as_markdown|search_engine|discover/i.test(receiptTeaser),
       hiddenGroups,
       pathClosed: document.querySelector(".path-drawer")?.open === false,
       optionsClosed: document.querySelector("#reviewOptions")?.open === false
@@ -828,7 +858,7 @@ for (const spec of [
       outcomePreviewReady: /What you get|Action|Evidence gaps|Bright Data|Memo/i.test(
         document.querySelector(".outcome-preview")?.textContent || ""
       ),
-      receiptTeaserReady: /Bright Data sample receipt|scrape_as_markdown|search_engine|discover/i.test(
+      receiptTeaserReady: /ProofRank sample receipt|scrape_as_markdown|search_engine|discover/i.test(
         document.querySelector(".receipt-teaser")?.textContent || ""
       ),
       receiptVerifierCount: document.querySelectorAll(".receipt-verifier").length,
@@ -917,7 +947,7 @@ const failures = results.flatMap((result) => {
   if (!blankState && !result.metrics.traceBudgetReady) problems.push(`${result.spec.name}: Bright Data route budget copy is missing`);
   if (result.metrics.outcomePreviewCount !== 4) problems.push(`${result.spec.name}: review output preview did not render four outcomes`);
   if (!result.metrics.outcomePreviewReady) problems.push(`${result.spec.name}: review output preview copy is missing`);
-  if (!result.metrics.receiptTeaserReady) problems.push(`${result.spec.name}: first-screen Bright Data receipt teaser is missing`);
+  if (!result.metrics.receiptTeaserReady) problems.push(`${result.spec.name}: advanced sample receipt teaser is missing`);
   if (result.metrics.receiptVerifierCount !== 1) problems.push(`${result.spec.name}: receipt verifier did not render`);
   if (!result.metrics.receiptVerifierReady) problems.push(`${result.spec.name}: receipt verifier copy is missing`);
   if (!blankState && !draftState && result.metrics.rubricMemoCount !== 1) problems.push(`${result.spec.name}: rubric memo did not render`);

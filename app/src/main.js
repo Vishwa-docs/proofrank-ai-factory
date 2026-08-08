@@ -74,6 +74,8 @@ const elements = {
   reviewRoomStats: document.querySelector("#reviewRoomStats"),
   startTour: document.querySelector("#startTour"),
   startTourTop: document.querySelector("#startTourTop"),
+  topbarProjects: document.querySelector("#topbarProjects"),
+  topbarExportMenu: document.querySelector("#topbarExportMenu"),
   guidedTour: document.querySelector("#guidedTour"),
   tourStepLabel: document.querySelector("#tourStepLabel"),
   tourTitle: document.querySelector("#tourTitle"),
@@ -2541,6 +2543,8 @@ function render() {
   renderReviewCoach(project);
   renderOutcomePreview(project);
   if (selectionDrawer) selectionDrawer.hidden = !showHeroEvidence;
+  if (elements.topbarProjects) elements.topbarProjects.hidden = !showHeroEvidence;
+  if (elements.topbarExportMenu) elements.topbarExportMenu.hidden = !showHeroEvidence;
   if (showHeroEvidence) {
     if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = renderFlightRecorder(project, { compact: true });
     renderHeroDecision(project);
