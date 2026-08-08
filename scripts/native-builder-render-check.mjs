@@ -30,10 +30,15 @@ const wantedInPage = [
   "Share blank test room",
   "Bright Data flight recorder",
   "Open Bright Data receipt",
-  "Readiness",
-  "Bright Data evidence attached"
+  "Readiness"
 ].filter(Boolean);
 const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Run public review", "Replay sample"];
+const wantedAfterReplay = [
+  "pr-20260807t200529345z-23568b05"
+];
+const wantedAnyAfterReplay = [
+  ["Bright Data evidence attached", "Bright Data is genuinely load-bearing"]
+];
 const forbiddenStrings = [
   "Signed proof",
   "WIN",
@@ -54,6 +59,13 @@ const forbiddenStrings = [
   "Ranked Queue",
   "Submission Cockpit",
   "AgentArena"
+];
+const forbiddenInFirstViewport = [
+  ...forbiddenStrings,
+  "AI Factory",
+  "Bright Data Challenge",
+  "Native.builder",
+  "DECISION CARD"
 ];
 
 const require = createRequire(`file://${playwrightPackage}`);
@@ -134,14 +146,20 @@ try {
     const screenshotPath = path.join(assetDir, screenshotName(spec.name));
     await page.screenshot({ path: screenshotPath, fullPage: false });
 
+    await page.getByRole("button", { name: /Replay sample/i }).click();
+    await page.waitForTimeout(400);
+    const replayText = await page.locator("body").innerText();
+
     results.push({
       name: spec.name,
       width: spec.width,
       height: spec.height,
       missingInPage: wantedInPage.filter((text) => !bodyText.includes(text)),
       missingInViewport: wantedInViewport.filter((text) => !viewportText.includes(text)),
+      missingAfterReplay: wantedAfterReplay.filter((text) => !replayText.includes(text)),
+      missingAnyAfterReplay: wantedAnyAfterReplay.filter((options) => !options.some((text) => replayText.includes(text))),
       forbiddenInPage: forbiddenStrings.filter((text) => bodyText.includes(text)),
-      forbiddenInViewport: forbiddenStrings.filter((text) => viewportText.includes(text)),
+      forbiddenInViewport: forbiddenInFirstViewport.filter((text) => viewportText.includes(text)),
       scrollWidth: metrics.scrollWidth,
       clientWidth: metrics.clientWidth,
       horizontalOverflow: metrics.scrollWidth > metrics.clientWidth + 1,
@@ -167,7 +185,10 @@ const report = {
   viewports: results,
   wantedInPage,
   wantedInViewport,
+  wantedAfterReplay,
+  wantedAnyAfterReplay,
   forbiddenStrings,
+  forbiddenInFirstViewport,
   cacheNote:
     "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
   ok: results.every(
@@ -175,6 +196,8 @@ const report = {
       !viewport.horizontalOverflow &&
       viewport.missingInPage.length === 0 &&
       viewport.missingInViewport.length === 0 &&
+      viewport.missingAfterReplay.length === 0 &&
+      viewport.missingAnyAfterReplay.length === 0 &&
       viewport.forbiddenInPage.length === 0 &&
       viewport.forbiddenInViewport.length === 0 &&
       viewport.consoleMessages.length === 0

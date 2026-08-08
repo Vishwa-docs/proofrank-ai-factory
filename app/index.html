@@ -46,7 +46,7 @@
           </div>
           <p class="event-date">Paste a project. Get a judge memo.</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Run a public repo/demo check first. Reviewer access upgrades the memo with Bright Data evidence for sponsor review.</p>
+          <p class="hero-subtitle">Run a public repo/demo check first, then review it against a hackathon profile. AI Factory is the sample profile; any event page can become the next rubric.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Try your project</button>
             <button class="secondary-button" data-load-sample type="button">Replay sample</button>
@@ -263,53 +263,71 @@
 
       <section class="product-strip reveal" style="--i: 2" aria-label="ProofRank workflow">
         <article>
-          <span>Start</span>
-          <strong>Paste public links</strong>
-          <p>Start with a GitHub repo, demo app, or event page.</p>
+          <span>Profile</span>
+          <strong>Load event rules</strong>
+          <p>Turn an event page into rubric, artifact, and sponsor-lane checks.</p>
         </article>
         <article>
-          <span>Collect</span>
-          <strong>Check web evidence</strong>
-          <p>Live collection separates fetched facts from project claims.</p>
+          <span>Builder</span>
+          <strong>Find gaps early</strong>
+          <p>Check repo, demo, pitch, required tech, and submission readiness before deadline.</p>
         </article>
         <article>
-          <span>Compare</span>
-          <strong>Compare the field</strong>
-          <p>Saved AI Factory competitors stay beside new public reviews.</p>
+          <span>Judge</span>
+          <strong>Triage the field</strong>
+          <p>Rank evidence-backed projects and separate broken links from sponsor-ready entries.</p>
         </article>
         <article>
-          <span>Export</span>
-          <strong>Export the memo</strong>
-          <p>Reviewer CSV, evidence JSON, and a review memo.</p>
+          <span>Sponsor</span>
+          <strong>Defend prize choices</strong>
+          <p>Show how Bright Data changed the decision with traceable source/search/discovery.</p>
         </article>
       </section>
 
-      <section class="guide-strip reveal" style="--i: 3" aria-label="Quick tips">
+      <section class="hackathon-profile-strip reveal" style="--i: 3" aria-label="Hackathon profile">
+        <div class="profile-copy">
+          <span>Hackathon profile</span>
+          <strong id="profileHeadline">AI Factory: Best Agentic Use of Bright Data</strong>
+          <p id="profileSummary">Default profile loaded. Paste another event URL in Readiness to review projects against a different rubric.</p>
+        </div>
+        <div id="profileStats" class="profile-stats" aria-label="Hackathon profile stats"></div>
+      </section>
+
+      <section class="guide-strip reveal" style="--i: 4" aria-label="Quick tips">
         <div class="guide-copy">
-          <span>New here?</span>
-          <strong>Follow the guided path.</strong>
-          <p>Paste links, read the verdict, compare the queue, inspect evidence, then export or share.</p>
+          <span>Two-sided workflow</span>
+          <strong>Builders improve. Judges verify.</strong>
+          <p>Use the same evidence record before submission, during judging, and after winner selection.</p>
           <button id="startTour" class="secondary-button small" type="button">Start guided review</button>
         </div>
         <details class="qtip">
-          <summary>What can I test now?</summary>
-          <p>Paste a public GitHub repo and optional demo URL. ProofRank adds it to the queue with a browser-safe draft review.</p>
+          <summary>Builder mode</summary>
+          <p>Paste a public GitHub repo and optional demo URL to find missing artifacts, unclear claims, and sponsor-proof gaps.</p>
         </details>
         <details class="qtip">
-          <summary>Can others test it?</summary>
-          <p>Yes. Copy the room link for a blank public workspace, or copy a draft link after entering a repo to preload that project.</p>
+          <summary>Judge mode</summary>
+          <p>Use the queue, rubric memo, evidence receipt, and readout to review a field faster and more consistently.</p>
         </details>
         <details class="qtip">
-          <summary>Where does Bright Data matter?</summary>
-          <p>Live mode upgrades a draft by collecting public source, search, and discovery evidence through Bright Data.</p>
+          <summary>Sponsor mode</summary>
+          <p>Bright Data adds source, search, discovery, and replayable evidence so a prize choice can be defended.</p>
         </details>
       </section>
 
-      <section class="review-room-strip reveal" style="--i: 4" aria-label="Review room summary">
+      <section class="pipeline-strip reveal" style="--i: 5" aria-label="Hackathon lifecycle pipeline">
+        <div class="pipeline-head">
+          <span>Hackathon lifecycle</span>
+          <strong>From rules to winner dossier.</strong>
+          <p>ProofRank is designed to sit beside the whole competition pipeline, not just one submission page.</p>
+        </div>
+        <div id="pipelineGrid" class="pipeline-grid"></div>
+      </section>
+
+      <section class="review-room-strip reveal" style="--i: 6" aria-label="Review room summary">
         <div class="room-copy">
           <span>Current field room</span>
-          <strong>Built for more than one entry.</strong>
-          <p>Share the app, let another builder paste links, then compare that review against saved AI Factory competitors.</p>
+          <strong>Built for more than one event.</strong>
+          <p>Share the app, let another builder paste links, then compare that review against the active hackathon profile.</p>
         </div>
         <div id="reviewRoomStats" class="room-stats" aria-label="Review room statistics"></div>
         <div class="room-actions">
@@ -318,14 +336,14 @@
         </div>
       </section>
 
-      <nav class="section-tabs reveal" style="--i: 5" aria-label="ProofRank sections" role="tablist">
+      <nav class="section-tabs reveal" style="--i: 7" aria-label="ProofRank sections" role="tablist">
         <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Review</button>
         <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Projects</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
         <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Readiness</button>
       </nav>
 
-      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 6" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
+      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 8" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
           <section id="fixList" class="fix-list panel" aria-label="What to fix before ranking">
             <div class="module-head">
@@ -339,7 +357,7 @@
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 6" aria-label="Projects queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 8" aria-label="Projects queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -374,7 +392,7 @@
         </section>
       </section>
 
-      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 6" aria-label="Evidence" role="tabpanel" aria-labelledby="tab-receipt" hidden>
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 8" aria-label="Evidence" role="tabpanel" aria-labelledby="tab-receipt" hidden>
         <aside class="evidence-rail panel" aria-label="Evidence">
           <div class="module-head receipt-head">
             <h2>Evidence</h2>
@@ -384,7 +402,7 @@
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 6" aria-label="Bright Data evidence run and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 8" aria-label="Bright Data evidence run and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">
@@ -434,8 +452,8 @@
 
             <div class="run-profile" aria-label="Run profile">
               <div>
-                <span>Event</span>
-                <strong>AI Factory</strong>
+                <span>Profile</span>
+                <strong id="runProfileName">AI Factory</strong>
               </div>
               <div>
                 <span>Mode</span>

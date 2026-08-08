@@ -4,11 +4,26 @@ ProofRank is a review workspace for hackathon judges, sponsor teams, accelerator
 
 Given a public event or project URL, it gathers evidence about submissions and produces a ranked review queue with reviewer memos for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
+ProofRank is not tied to one contest. AI Factory is the default demo profile, but the product model treats each hackathon as a profile: event URL, platform, required artifacts, judging rubric, sponsor challenge, evidence standard, and post-event follow-up. Builders use the profile before submission to find gaps; judges and sponsors use it after submission to triage, verify, compare, and export decisions.
+
 The dashboard now leads with a Prize brief that turns the score into a judge/sponsor action: whether to shortlist, collect more evidence, open the Bright Data evidence view, or export the memo.
 
 ## Why This Exists
 
 Hackathon judges and sponsor teams need to know which projects are real, accessible, original, and genuinely using partner technology. Manual review is slow and inconsistent. ProofRank turns public web evidence into a source-backed review memo.
+
+## Hackathon Pipeline
+
+ProofRank is designed around the full competition lifecycle:
+
+- Brief and rules: turn event pages into machine-checkable profiles.
+- Builder preflight: check repo, demo, pitch, sponsor usage, and missing artifacts before deadline.
+- Submission readiness: generate form-ready copy and eligibility evidence.
+- Judge triage: separate broken links, link-only drafts, public evidence, and sponsor-ready projects.
+- Sponsor review: prove whether sponsor technology is genuinely load-bearing.
+- Winner audit: export winner dossiers, feedback cards, and sponsor follow-up tasks.
+
+See `research/hackathon-pipeline-product.md` for the product analysis and `app/src/hackathonPipeline.js` for the implemented profile/pipeline model.
 
 ## Bright Data Fit
 

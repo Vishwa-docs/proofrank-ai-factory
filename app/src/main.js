@@ -16,12 +16,18 @@ import { buildPrizeBrief } from "./prizeBrief.js";
 import { buildReviewCoach } from "./reviewCoach.js";
 import { buildFlightRecorder } from "./flightRecorder.js";
 import { verifyReceiptRecord } from "./receiptVerifier.js";
+import { HACKATHON_PIPELINE_STAGES, buildHackathonProfile, summarizeHackathonPipeline } from "./hackathonPipeline.js";
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
   runModeLabel: document.querySelector("#runModeLabel"),
   liveProofStrip: document.querySelector("#liveProofStrip"),
   eventUrl: document.querySelector("#eventUrl"),
+  profileHeadline: document.querySelector("#profileHeadline"),
+  profileSummary: document.querySelector("#profileSummary"),
+  profileStats: document.querySelector("#profileStats"),
+  pipelineGrid: document.querySelector("#pipelineGrid"),
+  runProfileName: document.querySelector("#runProfileName"),
   liveApiUrl: document.querySelector("#liveApiUrl"),
   htmlUpload: document.querySelector("#htmlUpload"),
   runAudit: document.querySelector("#runAudit"),
@@ -230,7 +236,8 @@ const state = {
   reviewStarted: false,
   tourIndex: null,
   receiptVerifierInput: "",
-  receiptVerification: null
+  receiptVerification: null,
+  hackathonProfile: buildHackathonProfile(EVENT_URL)
 };
 
 if (elements.guidedTour && elements.guidedTour.parentElement !== document.body) {
@@ -810,6 +817,8 @@ function hasActiveReview(project = selectedProject()) {
 function readinessContext() {
   return {
     mode: state.mode,
+    hackathonProfile: state.hackathonProfile,
+    eventUrl: state.hackathonProfile?.eventUrl || elements.eventUrl.value.trim(),
     liveApiUrl: elements.liveApiUrl.value.trim(),
     pageOrigin: window.location.origin,
     reviewerProjectCount: state.reviewerProjects.length,
@@ -851,7 +860,58 @@ function currentReviewMode() {
 }
 
 function updateRunProfile() {
+  const profile = state.hackathonProfile || buildHackathonProfile(elements.eventUrl?.value || EVENT_URL);
+  if (elements.runProfileName) elements.runProfileName.textContent = profile.name;
   elements.runModeLabel.textContent = currentReviewMode().runLabel;
+}
+
+function syncHackathonProfile(options = {}) {
+  const eventUrl = elements.eventUrl?.value || EVENT_URL;
+  state.hackathonProfile = buildHackathonProfile(eventUrl);
+  if (!options.silent) {
+    setStatus(`Hackathon profile loaded: ${state.hackathonProfile.name}. Reviews now use this event context.`, "ready");
+  }
+  return state.hackathonProfile;
+}
+
+function renderHackathonProfile() {
+  const profile = state.hackathonProfile || syncHackathonProfile({ silent: true });
+  const summary = summarizeHackathonPipeline(profile);
+  if (elements.profileHeadline) elements.profileHeadline.textContent = summary.headline;
+  if (elements.profileSummary) {
+    elements.profileSummary.textContent = `${profile.platform} profile with ${summary.artifactCount} required artifacts, ${summary.criteriaCount} rubric criteria, and ${summary.sponsorStageCount} Bright Data evidence moments.`;
+  }
+  if (elements.profileStats) {
+    elements.profileStats.innerHTML = [
+      ["Artifacts", summary.artifactCount],
+      ["Rubric", `${summary.criteriaWeight}%`],
+      ["Builder loop", summary.builderLoop.length],
+      ["Judge loop", summary.judgeLoop.length]
+    ]
+      .map(
+        ([label, value]) => `
+          <article>
+            <span>${escapeHtml(label)}</span>
+            <strong>${escapeHtml(value)}</strong>
+          </article>
+        `
+      )
+      .join("");
+  }
+}
+
+function renderHackathonPipeline() {
+  if (!elements.pipelineGrid) return;
+  elements.pipelineGrid.innerHTML = HACKATHON_PIPELINE_STAGES.map(
+    (stage) => `
+      <article>
+        <span>${escapeHtml(stage.actor)}</span>
+        <strong>${escapeHtml(stage.stage)}</strong>
+        <p>${escapeHtml(stage.proofrankFeature)}</p>
+        <small>${escapeHtml(stage.brightDataUse)}</small>
+      </article>
+    `
+  ).join("");
 }
 
 function hasPendingFinalSubmission(project = {}) {
@@ -2727,6 +2787,8 @@ function render() {
   const project = selectedProject();
   const showHeroEvidence = hasActiveReview(project);
   const selectionDrawer = document.querySelector(".selection-drawer");
+  renderHackathonProfile();
+  renderHackathonPipeline();
   updateRunProfile();
   updateLiveProofStrip(project);
   renderReviewCoach(project);
@@ -3247,6 +3309,15 @@ elements.quickModeButtons.forEach((button) => {
 });
 
 elements.liveApiUrl.addEventListener("input", () => renderReadiness(selectedProject()));
+elements.eventUrl.addEventListener("input", () => {
+  syncHackathonProfile({ silent: true });
+  renderHackathonProfile();
+  updateRunProfile();
+});
+elements.eventUrl.addEventListener("change", () => {
+  syncHackathonProfile();
+  render();
+});
 elements.runAudit.addEventListener("click", runAudit);
 elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.target.files[0]));
 elements.addReviewerProject.addEventListener("click", addReviewerProject);

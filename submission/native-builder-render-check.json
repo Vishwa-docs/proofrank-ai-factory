@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-08-08T11:38:49.124Z",
+  "checkedAt": "2026-08-08T12:49:53.996Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786189129124",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786193393996",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-Cir4266V.js",
+  "publishedBundle": "/assets/index-BWJnqaM0.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -15,6 +15,8 @@
       "height": 950,
       "missingInPage": [],
       "missingInViewport": [],
+      "missingAfterReplay": [],
+      "missingAnyAfterReplay": [],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 1440,
@@ -28,6 +30,8 @@
       "height": 740,
       "missingInPage": [],
       "missingInViewport": [],
+      "missingAfterReplay": [],
+      "missingAnyAfterReplay": [],
       "forbiddenInPage": [],
       "forbiddenInViewport": [],
       "scrollWidth": 320,
@@ -46,8 +50,7 @@
     "Share blank test room",
     "Bright Data flight recorder",
     "Open Bright Data receipt",
-    "Readiness",
-    "Bright Data evidence attached"
+    "Readiness"
   ],
   "wantedInViewport": [
     "ProofRank",
@@ -55,6 +58,15 @@
     "GitHub repository",
     "Run public review",
     "Replay sample"
+  ],
+  "wantedAfterReplay": [
+    "pr-20260807t200529345z-23568b05"
+  ],
+  "wantedAnyAfterReplay": [
+    [
+      "Bright Data evidence attached",
+      "Bright Data is genuinely load-bearing"
+    ]
   ],
   "forbiddenStrings": [
     "Signed proof",
@@ -76,6 +88,31 @@
     "Ranked Queue",
     "Submission Cockpit",
     "AgentArena"
+  ],
+  "forbiddenInFirstViewport": [
+    "Signed proof",
+    "WIN",
+    "Strong Pass",
+    "Finalist-ready",
+    "Submission-ready",
+    "Sponsor bundle executed",
+    "pr-20260807t145909828z-553fb028",
+    "Demo Evidence",
+    "Open built-in receipt",
+    "Built-in receipt",
+    "Live setup",
+    "Bright Data receipt present",
+    "Evidence report",
+    "AUDIT CONTROLS",
+    "REVIEWER INTAKE",
+    "Submission URL",
+    "Ranked Queue",
+    "Submission Cockpit",
+    "AgentArena",
+    "AI Factory",
+    "Bright Data Challenge",
+    "Native.builder",
+    "DECISION CARD"
   ],
   "cacheNote": "The verifiedUrl appends a cache-busting query because Safari previously showed a stale pre-publish bundle in an existing tab.",
   "ok": true
