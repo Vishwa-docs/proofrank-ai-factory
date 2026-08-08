@@ -78,14 +78,15 @@ try {
 
   await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
+  await page.route("https://proofrank-ai-factory.vercel.app/api/review-project-public", (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Demo capture uses link-only fallback for deterministic recording." })
+    })
+  );
 
   await capture(page, "01-overview.png", ".workbench");
-  await page.evaluate(() => {
-    const drawer = document.querySelector("#reviewOptions");
-    if (drawer && !drawer.open) drawer.open = true;
-  });
-  await page.waitForTimeout(120);
-  await page.click('[data-quick-mode="demo"]');
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");
   await page.click("#quickAddReviewerProject");

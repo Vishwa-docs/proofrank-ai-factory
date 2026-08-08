@@ -4,6 +4,6 @@ Paste a GitHub repo and demo URL. The draft is honest: it saves the links, stays
 
 Run public review for safe GitHub and demo evidence. A Bright Data evidence run adds source fetch, web search, discovery, and an inspectable saved review.
 
-ProofRank turns that evidence into a Prize brief: shortlist, collect more evidence, or export the memo. It also compares the field and flags pitch claims that still need support.
+ProofRank turns that evidence into a Judge Memo: shortlist, collect more evidence, or export the sponsor review. Bright Data changes the review with source fetch, web search, and similar-project discovery.
 
 Export the trace-backed sponsor memo, evidence JSON, or room report. The result is a defensible shortlist, not another pile of links.

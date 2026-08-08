@@ -239,38 +239,28 @@ if (elements.guidedTour && elements.guidedTour.parentElement !== document.body) 
 
 const TOUR_STEPS = [
   {
-    label: "Step 1 of 5",
+    label: "Step 1 of 4",
     title: "Paste public links",
-    body: "Start with a GitHub repository and a deployed demo. Use sample if you want the shortest replay.",
+    body: "Start with a public GitHub repository. Add a demo URL if the project has one.",
     target: "#quickRepoUrl"
   },
   {
-    label: "Step 2 of 5",
-    title: "Get a judge action",
-    body: "Drafts stay unscored. Public evidence or reviewer-access Bright Data evidence turns the project into a shortlist, escalate, or fix-gaps decision.",
-    section: "overview",
-    target: "#scorecard"
+    label: "Step 2 of 4",
+    title: "Run public review",
+    body: "Use the default button first. It checks public repo and demo signals without asking for keys.",
+    target: "#quickAddReviewerProject"
   },
   {
-    label: "Step 3 of 5",
-    title: "Compare the queue",
-    body: "Projects keeps your project beside the field, so judges can see why it should advance or what is missing.",
-    section: "queue",
-    target: "#rankedList"
+    label: "Step 3 of 4",
+    title: "Read the memo",
+    body: "The result explains what was checked, what is still missing, and the next best click.",
+    target: "#outcomePreview"
   },
   {
-    label: "Step 4 of 5",
-    title: "Inspect the evidence",
-    body: "Evidence separates collected source rows, Bright Data findings, limitations, and the exportable memo.",
-    section: "receipt",
-    target: "#receipt"
-  },
-  {
-    label: "Step 5 of 5",
-    title: "Upgrade to sponsor evidence",
-    body: "Bright Data evidence run holds server-side setup and the final readiness checklist. Public review stays safe for visitors.",
-    section: "setup",
-    target: "#modeSelect"
+    label: "Step 4 of 4",
+    title: "Upgrade to Bright Data",
+    body: "Open Advanced evidence options when you need a Bright Data source, search, and discovery run or an exportable receipt.",
+    target: "#reviewOptions"
   }
 ];
 
@@ -382,7 +372,7 @@ function loadReviewParamsFromUrl() {
     elements.quickDemoUrl.value = params.demoUrl;
     elements.reviewerDemoUrl.value = params.demoUrl;
   }
-  setQuickHint(params.autorun ? "Review link loaded. Building a public-safe review." : "Review link loaded. Click Add my project to test it.", "ready");
+  setQuickHint(params.autorun ? "Review link loaded. Building a public-safe review." : "Review link loaded. Click Run public review to test it.", "ready");
   setCopyReviewLinkState();
   return params.autorun;
 }
@@ -1680,6 +1670,65 @@ function renderActionBoard(project, readiness) {
   `;
 }
 
+function renderJudgeMemoCard(project, readiness) {
+  const draft = isDraftProject(project);
+  const sponsorReady = hasBrightDataSponsorProofBundle(project);
+  const traceState = brightDataTraceState(project);
+  const requiredGapCount = readiness.gates.filter((gate) => gate.required && gate.status !== "passed").length;
+  const decision = draft
+    ? "Collect evidence"
+    : sponsorReady
+      ? "Shortlist for sponsor review"
+      : traceState === "direct"
+        ? "Escalate to Bright Data"
+        : requiredGapCount >= 4
+          ? "Fix gaps before ranking"
+          : displayAction(project);
+  const evidence = draft
+    ? "Links accepted only. Repo content, demo behavior, and Bright Data evidence are not collected yet."
+    : sponsorReady
+      ? "Bright Data source, web search, similar-project discovery, and saved review are attached."
+      : traceState === "direct"
+        ? "Public GitHub and demo evidence is collected. Bright Data still needs to run."
+        : "Public evidence is partial. Source, search, and discovery still need reviewer access.";
+  const nextAction = draft
+    ? "Run public review"
+    : sponsorReady
+      ? "Export memo"
+      : "Bright Data evidence run";
+  const delta = sponsorReady
+    ? "Bright Data turns the review into a sponsor-grade memo by adding source fetch, web search, and discovery rows."
+    : "Bright Data is the upgrade path: source fetch, web search, and discovery explain whether the public claims hold up.";
+
+  return `
+    <section class="judge-memo-card" aria-label="Judge memo summary">
+      <div class="judge-memo-head">
+        <span>Judge memo</span>
+        <h3>${escapeHtml(decision)}</h3>
+        <p>${escapeHtml(compactSentence(project.summary))}</p>
+      </div>
+      <ul class="judge-memo-grid">
+        <li>
+          <span>Decision</span>
+          <strong>${escapeHtml(decision)}</strong>
+        </li>
+        <li>
+          <span>Evidence collected</span>
+          <strong>${escapeHtml(evidence)}</strong>
+        </li>
+        <li>
+          <span>Next action</span>
+          <strong>${escapeHtml(nextAction)}</strong>
+        </li>
+      </ul>
+      <div class="bright-delta">
+        <span>Bright Data changes the review</span>
+        <strong>${escapeHtml(delta)}</strong>
+      </div>
+    </section>
+  `;
+}
+
 function renderPitchReviewPanel() {
   const review = state.pitchReview;
   if (!review) return "";
@@ -1966,6 +2015,8 @@ function renderScorecard(project) {
     <section class="source-links" aria-label="Attached sources">
       ${renderSourceLinks(project)}
     </section>
+
+    ${renderJudgeMemoCard(project, readiness)}
 
     ${renderPrizeBrief(project)}
 
@@ -2290,7 +2341,7 @@ function renderReceiptVerifier(project = selectedProject(), options = {}) {
         <button class="text-button small" data-receipt-action="clear" type="button">Clear</button>
       </div>
       ${result ? `<ul class="verifier-checks">${resultRows}</ul>` : ""}
-      <p class="verifier-note">HMAC signature format can be checked in the browser. Full cryptographic validation stays server-side because the signing secret must not be pasted into a public page.</p>
+      <p class="verifier-note">Saved review format can be checked in the browser. Full validation stays server-side because signing secrets must not be pasted into a public page.</p>
     </section>
   `;
 }

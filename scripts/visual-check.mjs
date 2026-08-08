@@ -348,35 +348,21 @@ for (const spec of [
     }
     await page.click("#tourNext");
     await page.waitForTimeout(750);
-    const tourStepTwo =
-      (await page.evaluate(() => document.querySelector('[data-section-panel="overview"]')?.classList.contains("is-active"))) &&
-      (await tourTargetVisible(page, "#scorecard"));
+    const tourStepTwo = await tourTargetVisible(page, "#quickAddReviewerProject");
     if (!tourStepTwo) {
-      throw new Error("Guided review step 2 did not highlight the scorecard.");
+      throw new Error("Guided review step 2 did not highlight the public review button.");
     }
     await page.click("#tourNext");
     await page.waitForTimeout(750);
-    const tourStepThree =
-      (await page.evaluate(() => document.querySelector('[data-section-panel="queue"]')?.classList.contains("is-active"))) &&
-      (await tourTargetVisible(page, "#rankedList"));
+    const tourStepThree = await tourTargetVisible(page, "#outcomePreview");
     if (!tourStepThree) {
-      throw new Error("Guided review step 3 did not switch to Projects and highlight the ranked list.");
+      throw new Error("Guided review step 3 did not highlight the outcome preview.");
     }
     await page.click("#tourNext");
     await page.waitForTimeout(750);
-    const tourStepFour =
-      (await page.evaluate(() => document.querySelector('[data-section-panel="receipt"]')?.classList.contains("is-active"))) &&
-      (await tourTargetVisible(page, "#receipt"));
+    const tourStepFour = await tourTargetVisible(page, "#reviewOptions");
     if (!tourStepFour) {
-      throw new Error("Guided review step 4 did not switch to Evidence and highlight the receipt.");
-    }
-    await page.click("#tourNext");
-    await page.waitForTimeout(750);
-    const tourStepFive =
-      (await page.evaluate(() => document.querySelector('[data-section-panel="setup"]')?.classList.contains("is-active"))) &&
-      (await tourTargetVisible(page, "#modeSelect"));
-    if (!tourStepFive) {
-      throw new Error("Guided review step 5 did not switch to Readiness and highlight review mode.");
+      throw new Error("Guided review step 4 did not highlight the advanced evidence options.");
     }
     await page.click("#tourClose");
     await page.click("#reviewOptions summary");
@@ -387,6 +373,9 @@ for (const spec of [
     if (!pitchCollapsedByDefault) {
       throw new Error("Presentation check should be collapsed by default and absent from Review until analysis runs.");
     }
+    await page.click('[data-section-tab="setup"]');
+    await page.waitForTimeout(250);
+    await page.locator("#pitchCheckDrawer summary").scrollIntoViewIfNeeded();
     await page.click("#pitchCheckDrawer summary");
     await page.click("#loadPitchSample");
     await page.click("#analyzePitch");
@@ -403,7 +392,6 @@ for (const spec of [
     if (!pitchReviewQueued) {
       throw new Error("Presentation check did not stay queued until a review exists.");
     }
-    await page.click('[data-section-tab="setup"]');
     const firstStepControlsReady = await page.evaluate(() => {
       return {
         reviewCoachChecks: document.querySelectorAll(".review-coach-checks li").length,

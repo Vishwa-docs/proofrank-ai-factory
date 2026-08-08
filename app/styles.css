@@ -2387,6 +2387,99 @@ input::placeholder {
   padding-left: var(--space-sm);
 }
 
+.judge-memo-card {
+  display: grid;
+  gap: var(--space-sm);
+  margin-block: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--color-ink);
+  border-left: 0.25rem solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+}
+
+.judge-memo-head {
+  display: grid;
+  gap: var(--space-2xs);
+  min-width: 0;
+  max-width: 68ch;
+}
+
+.judge-memo-head span,
+.bright-delta span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.judge-memo-head h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: clamp(var(--text-xl), 2.5vw, var(--text-2xl));
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.judge-memo-head p {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.judge-memo-grid {
+  display: grid;
+  grid-template-columns: 0.82fr 1.36fr 0.82fr;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+}
+
+.judge-memo-grid li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-xs);
+  min-width: 0;
+  min-height: 5.75rem;
+  padding: var(--space-sm);
+  background: var(--color-surface-muted);
+}
+
+.judge-memo-grid span {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.judge-memo-grid strong {
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.bright-delta {
+  display: grid;
+  gap: var(--space-2xs);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: var(--color-accent-soft);
+}
+
+.bright-delta strong {
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
 .draft-review-card {
   display: grid;
   gap: var(--space-sm);
@@ -2438,7 +2531,7 @@ input::placeholder {
 
 .draft-review-card ul {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   overflow: hidden;
   border: 1px solid var(--color-rule);
@@ -2542,7 +2635,7 @@ input::placeholder {
 
 .visitor-brief ul {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   overflow: hidden;
   border: 1px solid var(--color-rule);
@@ -4774,6 +4867,11 @@ input::placeholder {
   align-items: start;
 }
 
+.overview-layout > .scorecard,
+.overview-layout > .proof-topology {
+  grid-column: 1 / -1;
+}
+
 .section-panel[data-section-panel="queue"] {
   gap: var(--space-lg);
 }
@@ -5234,6 +5332,7 @@ input::placeholder {
   .pitch-review-rows,
   .prize-brief-head,
   .draft-card-head,
+  .judge-memo-grid,
   .draft-review-card ul,
   .visitor-brief ul {
     grid-template-columns: 1fr;
@@ -5257,6 +5356,7 @@ input::placeholder {
   }
 
   .pitch-review-rows li,
+  .judge-memo-grid li,
   .draft-review-card li,
   .visitor-brief li {
     min-height: auto;
