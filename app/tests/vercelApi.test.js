@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { handleVercelLiveReview } from "../../api/_proofrank.js";
+import { PUBLIC_REVIEW_HOSTS } from "../../api/review-project-public.js";
 
 function createResponse() {
   return {
@@ -57,5 +58,6 @@ assert.equal(reviewResponse.statusCode, 200);
 assert.equal(reviewJson.mode, "live");
 assert.equal(reviewJson.project.title, "Serverless");
 assert.equal(reviewJson.project.githubUrl, "https://github.com/example/project");
+assert.ok(PUBLIC_REVIEW_HOSTS.includes("brightdata.com"));
 
 console.log("vercel API tests passed");

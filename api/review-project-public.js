@@ -1,10 +1,11 @@
 import { handleVercelLiveReview } from "./_proofrank.js";
 import { createDirectFetchText } from "../app/src/liveFetchers.js";
 
-const PUBLIC_REVIEW_HOSTS = [
+export const PUBLIC_REVIEW_HOSTS = [
   "github.com",
   "api.github.com",
   "raw.githubusercontent.com",
+  "brightdata.com",
   "github.io",
   "vercel.app",
   "netlify.app",
