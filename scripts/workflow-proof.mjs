@@ -92,10 +92,10 @@ try {
   await page.click("#runAudit");
   await page.waitForFunction(() => (document.querySelector("#statusLine")?.textContent || "").includes("submissions ranked"));
 
-  await page.click('[data-section-tab="setup"]');
-  await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
-  await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
-  await page.click("#addReviewerProject");
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
+  await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
+  await page.click("#quickAddReviewerProject");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "").includes("ProofRank AI Factory"));
   await page.click('[data-section-tab="queue"]');
   await page.click('#rankedList [data-id="proofrank"]');
@@ -153,7 +153,7 @@ try {
     proof.selectedProject === "ProofRank" &&
     proof.rankedRows >= 8 &&
     proof.reviewerRowPresent === true &&
-    /Bright Data proof passed|executed/i.test(proof.brightProof) &&
+    /Bright Data (proof|evidence) passed|executed/i.test(proof.brightProof) &&
     proof.exportedFiles.length === 2 &&
     messages.length === 0;
 

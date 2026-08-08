@@ -1,9 +1,9 @@
-ProofRank is an evidence command center for AI hackathon review.
+ProofRank reviews public AI hackathon projects from their own links.
 
 Start with public project links, then ProofRank ranks the field, checks the demo and repo, and separates claims from proof.
 
-The Bright Data gate is load-bearing. scrape_as_markdown, search_engine, and discover must execute before the sponsor receipt passes.
+The Bright Data gate is load-bearing. scrape_as_markdown, search_engine, and discover must execute before the sponsor evidence passes.
 
-Judges get a claim ledger, originality radar, adversarial notes, and a signed receipt with trace hashes.
+Judges get a claim check, similarity check, review panel, and evidence receipt with trace hashes.
 
 The final packet exports as CSV, JSON, or Markdown. ProofRank turns a crowded submission page into a defensible winner shortlist.

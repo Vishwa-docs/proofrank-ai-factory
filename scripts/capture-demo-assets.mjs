@@ -80,7 +80,7 @@ try {
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
-  await page.locator(".analysis-drawer summary", { hasText: "Claim ledger" }).click();
+  await page.locator(".analysis-drawer summary", { hasText: "Claim check" }).click();
   await capture(page, "02-claim-ledger.png", ".claim-ledger");
   await page.click('[data-section-tab="receipt"]');
   await capture(page, "03-proof-receipt.png", ".evidence-rail");

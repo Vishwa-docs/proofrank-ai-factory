@@ -6,23 +6,23 @@ Target duration: under 3 minutes. The generated reference video is 2 minutes 20 
 
 "Judges and sponsor teams may have dozens or hundreds of AI submissions. The claims are scattered across project pages, demos, repos, decks, videos, and the live web. ProofRank turns that mess into evidence-backed diligence."
 
-## 0:12-0:30 - Run Review
+## 0:12-0:30 - Paste Links
 
-Show ProofRank open directly on the audit workspace. Keep Signed proof selected, then click Run review.
-
-Say:
-
-"This signed proof path lets judges run the workflow without credentials. The same review maps to Bright Data Remote MCP markdown scraping, MCP search, Web Scraper API, and Web Unlocker in live mode."
-
-## 0:30-0:58 - Tribunal And Originality Radar
-
-Open ProofRank or a strong Bright Data-native project in the ranked queue. Point to the six score tiles, Adversarial Tribunal, Winner Benchmark, Originality Radar, and Claim Ledger.
+Show ProofRank open directly on the review workspace. Use the first-screen GitHub repo and demo app fields, then click Review these links.
 
 Say:
 
-"Instead of asking one model to judge a project, ProofRank runs three lenses: Bright Data sponsor, skeptical hackathon judge, and business buyer. The Winner Benchmark shows whether the project has the same shape as strong Bright Data prize projects: decision output, executed live-web evidence, multiple Bright Data tools, inspectable proof, originality, and public end-to-end delivery. Then the Originality Radar compares against the field and prepares Bright Data prior-art queries."
+"The sample review path lets judges try a public project without credentials. Live Bright Data review runs on the private backend, so API keys stay out of the browser."
 
-## 0:58-1:23 - Proof Receipt
+## 0:30-0:58 - Review Panel And Similarity Check
+
+Open ProofRank or a strong Bright Data-native project in the ranked projects tab. Point to the six score tiles, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
+
+Say:
+
+"Instead of asking one model to judge a project, ProofRank runs three lenses: Bright Data sponsor, skeptical hackathon judge, and business buyer. The Winner Benchmark shows whether the project has the same shape as strong Bright Data prize projects: decision output, executed live-web evidence, multiple Bright Data tools, inspectable evidence, originality, and public end-to-end delivery. Then the Similarity Check compares against the field and prepares Bright Data prior-art queries."
+
+## 0:58-1:23 - Evidence Receipt
 
 Move to the receipt panel.
 
@@ -50,10 +50,10 @@ Say:
 
 - Run audit.
 - Select a project.
-- Show Adversarial Tribunal.
+- Show Review Panel.
 - Show Winner Benchmark.
-- Show Originality Radar.
-- Show Claim Ledger.
+- Show Similarity Check.
+- Show Claim Check.
 - Show the trace table and point out the executed/planned/claimed state.
 - Show a missing evidence risk.
 - Export a packet.

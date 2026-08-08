@@ -44,16 +44,15 @@ for (const spec of [
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   if (spec.name === "desktop") {
-    await page.click('.topbar [data-focus-target="reviewerRepoUrl"]');
+    await page.click('.topbar [data-focus-target="quickRepoUrl"]');
     await page.waitForTimeout(300);
-    const focusedReviewTarget = await page.evaluate(() => document.activeElement?.id === "reviewerRepoUrl");
+    const focusedReviewTarget = await page.evaluate(() => document.activeElement?.id === "quickRepoUrl");
     if (!focusedReviewTarget) {
-      throw new Error("Topbar Review target did not focus the GitHub repository field.");
+      throw new Error("Topbar Review target did not focus the hero GitHub repository field.");
     }
-    await page.click('[data-section-tab="setup"]');
-    await page.fill("#reviewerRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
-    await page.fill("#reviewerDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
-    await page.click("#addReviewerProject");
+    await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
+    await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
+    await page.click("#quickAddReviewerProject");
     await page.waitForTimeout(200);
     await page.click('[data-section-tab="queue"]');
     await page.click('#rankedList [data-id="proofrank"]');

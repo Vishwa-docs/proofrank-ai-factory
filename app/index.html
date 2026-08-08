@@ -16,11 +16,11 @@
         <div class="mark" aria-hidden="true"><span>PR</span><i></i></div>
         <div class="brand-copy">
           <strong class="brand-name">ProofRank</strong>
-          <p>Evidence command center</p>
+          <p>Review public AI projects</p>
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
-        <button class="text-button nav-jump" data-focus-target="reviewerRepoUrl" type="button">Review project</button>
+        <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Review project</button>
         <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
         <details class="export-menu">
           <summary>Export</summary>
@@ -39,23 +39,45 @@
           <div class="event-meta" aria-label="Hackathon context">
             <span><strong id="queueCount">0</strong> projects ranked</span>
             <span>Bright Data MCP</span>
-            <span>Signed receipt</span>
+            <span>Evidence report</span>
           </div>
           <p class="event-date">Native.builder app for the Bright Data sponsor track</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Verify public AI projects with live web evidence, signed traces, originality checks, and an exportable judge packet.</p>
+          <p class="hero-subtitle">Paste a project repo and demo URL. ProofRank checks the public web trail, sponsor usage, originality, and review risk before you spend time judging it by hand.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
-            <button class="primary-button" data-focus-target="reviewerRepoUrl" type="button">Review project</button>
-            <button class="secondary-button" data-nav-tab="receipt" type="button">Proof receipt</button>
+            <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Review project</button>
+            <button class="secondary-button" data-nav-tab="receipt" type="button">View evidence</button>
           </div>
-          <div id="statusLine" class="status-line" role="status">Signed proof receipt ready</div>
+          <div id="statusLine" class="status-line" role="status">Sample review ready. Paste your links to add another project.</div>
         </div>
 
         <aside class="decision-card review-card panel" aria-label="Review project and proof state">
+          <section class="quick-review" aria-label="Try ProofRank with project links">
+            <div class="quick-review-head">
+              <span>Try it now</span>
+              <strong>Review your project links</strong>
+              <p>Sample review works in this browser. Live Bright Data review uses the secure backend.</p>
+            </div>
+            <div class="quick-fields">
+              <label class="field" for="quickRepoUrl">
+                <span>GitHub repo</span>
+                <input id="quickRepoUrl" type="url" placeholder="https://github.com/org/project" autocomplete="url">
+              </label>
+              <label class="field" for="quickDemoUrl">
+                <span>Demo app</span>
+                <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url">
+              </label>
+            </div>
+            <div class="quick-actions">
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Review these links</button>
+              <button id="loadSampleProject" class="text-button" type="button">Use sample</button>
+            </div>
+            <p id="quickReviewHint" class="hint">No account or token is needed for the sample path.</p>
+          </section>
           <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
-            <span>Signed proof receipt</span>
-            <strong>No executed run yet</strong>
-            <small>Live collection required</small>
+            <span>Evidence report</span>
+            <strong>Sample review loaded</strong>
+            <small>Paste links above to create another project review</small>
           </div>
           <details class="selection-drawer" open>
             <summary>
@@ -72,41 +94,61 @@
       <section class="product-strip reveal" style="--i: 2" aria-label="ProofRank workflow">
         <article>
           <span>01</span>
-          <strong>Collect public web</strong>
-          <p>Submission page, demo, repo, deck, and prior-art targets.</p>
+          <strong>Paste public links</strong>
+          <p>Start with a GitHub repo, demo app, or event page.</p>
         </article>
         <article>
           <span>02</span>
-          <strong>Verify sponsor usage</strong>
-          <p>Bright Data source, search, and discover traces must execute.</p>
+          <strong>Check web evidence</strong>
+          <p>Bright Data-backed collection separates proof from claims.</p>
         </article>
         <article>
           <span>03</span>
-          <strong>Rank the field</strong>
-          <p>Eligibility, business value, originality, and presentation stay separate.</p>
+          <strong>Compare the field</strong>
+          <p>Eligibility, value, originality, and presentation stay separate.</p>
         </article>
         <article>
           <span>04</span>
-          <strong>Export proof</strong>
-          <p>Judge CSV, signed JSON receipts, and a submission packet.</p>
+          <strong>Export the packet</strong>
+          <p>Reviewer CSV, evidence JSON, and a submission-ready memo.</p>
         </article>
       </section>
 
-      <nav class="section-tabs reveal" style="--i: 3" aria-label="ProofRank sections" role="tablist">
-        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Overview</button>
-        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Queue</button>
-        <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Proof</button>
-        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Collect</button>
+      <section class="guide-strip reveal" style="--i: 3" aria-label="Quick tips">
+        <div class="guide-copy">
+          <span>New here?</span>
+          <strong>Use the top form first.</strong>
+          <p>Then open Result for the verdict, Ranked for comparison, Evidence for receipts, or Links for live runs.</p>
+        </div>
+        <details class="qtip">
+          <summary>What can I test now?</summary>
+          <p>Paste a public GitHub repo and optional demo URL. ProofRank adds it to the queue with a local sample review.</p>
+        </details>
+        <details class="qtip">
+          <summary>Where does Bright Data matter?</summary>
+          <p>Live mode upgrades the sample review by collecting public web evidence through the secured Bright Data backend.</p>
+        </details>
+        <details class="qtip">
+          <summary>What should I submit?</summary>
+          <p>Submit the app URL, GitHub repo, demo video, and the exported evidence packet from the selected project.</p>
+        </details>
+      </section>
+
+      <nav class="section-tabs reveal" style="--i: 4" aria-label="ProofRank sections" role="tablist">
+        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Result</button>
+        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Ranked</button>
+        <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Links</button>
       </nav>
 
-      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 4" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
+      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 5" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
           <section id="scorecard" class="scorecard panel" aria-label="Selected project scorecard"></section>
           <section id="proofTopology" class="proof-topology panel" aria-label="Evidence route"></section>
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 4" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 5" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -133,30 +175,31 @@
         </section>
       </section>
 
-      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 4" aria-label="Bright Data proof receipt" role="tabpanel" aria-labelledby="tab-receipt" hidden>
-        <aside class="evidence-rail panel" aria-label="Proof receipt">
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 5" aria-label="Bright Data evidence report" role="tabpanel" aria-labelledby="tab-receipt" hidden>
+        <aside class="evidence-rail panel" aria-label="Evidence report">
           <div class="module-head receipt-head">
-            <h2>Proof receipt</h2>
+            <h2>Evidence report</h2>
             <button id="exportSelected" class="text-button small" type="button">Save JSON</button>
           </div>
           <div id="receipt"></div>
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 4" aria-label="Collection and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 5" aria-label="Project links and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">
-              <h2>Review a GitHub project</h2>
-              <span class="hint">Live mode uses a secure backend.</span>
+              <h2>Full review setup</h2>
+              <span class="hint">Use this panel for labels and live runs.</span>
             </div>
             <label class="field compact" for="modeSelect">
-              <span>Collection mode</span>
+              <span>Review mode</span>
               <select id="modeSelect">
-                <option value="demo">Signed proof receipt</option>
-                <option value="live">Bright Data live (secure API)</option>
+                <option value="demo">Demo review (sample data)</option>
+                <option value="live">Live Bright Data review</option>
               </select>
             </label>
+            <p class="mode-explainer hint">Demo review uses sample/local data. Live review runs Bright Data collection on a private server so API keys stay out of the browser.</p>
             <label class="field" for="reviewerRepoUrl">
               <span>GitHub repository</span>
               <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
@@ -180,13 +223,13 @@
                 </label>
               </div>
             </details>
-            <button id="addReviewerProject" class="secondary-button wide" type="button">Add target</button>
-            <p id="reviewerHint" class="hint">Switch to secure live mode to issue a Bright Data receipt.</p>
+            <button id="addReviewerProject" class="secondary-button wide" type="button">Add project</button>
+            <p id="reviewerHint" class="hint">Sample review works without credentials. Live review adds Bright Data evidence.</p>
           </section>
 
           <section class="source-module">
             <div class="module-head">
-              <h2>Evidence run</h2>
+              <h2>Event collection</h2>
             </div>
 
             <div class="run-profile" aria-label="Run profile">
@@ -196,7 +239,7 @@
               </div>
               <div>
                 <span>Mode</span>
-                <strong id="runModeLabel">Signed proof receipt</strong>
+                <strong id="runModeLabel">Sample review</strong>
               </div>
             </div>
 
@@ -206,9 +249,9 @@
             </label>
 
             <details class="backend-drawer">
-              <summary>Secure backend</summary>
+              <summary>Advanced: live review server</summary>
               <label class="field" for="liveApiUrl">
-                <span>Review API</span>
+                <span>Live review API URL</span>
                 <input id="liveApiUrl" type="url" placeholder="https://proofrank-ai-factory.vercel.app/api/review-project">
               </label>
             </details>
@@ -222,7 +265,7 @@
 
           <section class="source-module readiness-module" aria-label="Real data requirements">
             <div class="module-head compact">
-              <h2>Submission gates</h2>
+              <h2>Readiness checklist</h2>
             </div>
             <ul id="readinessList" class="readiness-list"></ul>
           </section>
