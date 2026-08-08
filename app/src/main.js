@@ -671,6 +671,24 @@ function renderScorecard(project) {
       </div>
     </section>
 
+    <section class="market-position" aria-label="Product readout">
+      <article>
+        <span>Buyer</span>
+        <strong>Judges and sponsor teams</strong>
+        <p>Compress public review into a shortlist with reasons, links, and open risks.</p>
+      </article>
+      <article>
+        <span>Wedge</span>
+        <strong>Executed web evidence</strong>
+        <p>Bright Data traces are separated from planned, claimed, direct, and failed rows.</p>
+      </article>
+      <article>
+        <span>Expansion</span>
+        <strong>Public AI diligence</strong>
+        <p>Hackathons are the entry point for accelerator, grant, and procurement review.</p>
+      </article>
+    </section>
+
     <section class="proof-highlights" aria-label="Bright Data proof highlights">
       <article>
         <span>Bright Data gate</span>

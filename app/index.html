@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ProofRank</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230d1520'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%23f7fafc'%3EPR%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%230d1520'/%3E%3Crect x='12' y='12' width='8' height='40' fill='%232b64ff'/%3E%3Ctext x='40' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='%23f7fafc'%3EPR%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -13,10 +13,10 @@
   <body>
     <header class="topbar reveal" style="--i: 0">
       <div class="brand-block">
-        <div class="mark" aria-hidden="true">PR</div>
+        <div class="mark" aria-hidden="true"><span>PR</span><i></i></div>
         <div class="brand-copy">
           <strong class="brand-name">ProofRank</strong>
-          <p>AI Factory reviewer</p>
+          <p>Evidence command center</p>
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
@@ -37,13 +37,13 @@
       <section class="event-hero reveal" style="--i: 1" aria-label="ProofRank overview">
         <div class="hero-copy">
           <div class="event-meta" aria-label="Hackathon context">
-            <span><strong id="queueCount">0</strong> projects</span>
-            <span>Online</span>
-            <span>AI Factory</span>
+            <span><strong id="queueCount">0</strong> projects ranked</span>
+            <span>Bright Data MCP</span>
+            <span>Signed receipt</span>
           </div>
-          <p class="event-date">August 3-10, 2026 / Bright Data sponsor track</p>
+          <p class="event-date">Native.builder app for the Bright Data sponsor track</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Evidence-backed diligence for public AI projects. Rank the field, verify claims, and export a judge-ready proof packet.</p>
+          <p class="hero-subtitle">Verify public AI projects with live web evidence, signed traces, originality checks, and an exportable judge packet.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="reviewerRepoUrl" type="button">Review project</button>
             <button class="secondary-button" data-nav-tab="receipt" type="button">Proof receipt</button>
@@ -69,21 +69,44 @@
         </aside>
       </section>
 
-      <nav class="section-tabs reveal" style="--i: 2" aria-label="ProofRank sections" role="tablist">
+      <section class="product-strip reveal" style="--i: 2" aria-label="ProofRank workflow">
+        <article>
+          <span>01</span>
+          <strong>Collect public web</strong>
+          <p>Submission page, demo, repo, deck, and prior-art targets.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <strong>Verify sponsor usage</strong>
+          <p>Bright Data source, search, and discover traces must execute.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <strong>Rank the field</strong>
+          <p>Eligibility, business value, originality, and presentation stay separate.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <strong>Export proof</strong>
+          <p>Judge CSV, signed JSON receipts, and a submission packet.</p>
+        </article>
+      </section>
+
+      <nav class="section-tabs reveal" style="--i: 3" aria-label="ProofRank sections" role="tablist">
         <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Overview</button>
         <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Queue</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Proof</button>
         <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Collect</button>
       </nav>
 
-      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 3" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
+      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 4" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
           <section id="scorecard" class="scorecard panel" aria-label="Selected project scorecard"></section>
           <section id="proofTopology" class="proof-topology panel" aria-label="Evidence route"></section>
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 3" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 4" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -110,7 +133,7 @@
         </section>
       </section>
 
-      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 3" aria-label="Bright Data proof receipt" role="tabpanel" aria-labelledby="tab-receipt" hidden>
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 4" aria-label="Bright Data proof receipt" role="tabpanel" aria-labelledby="tab-receipt" hidden>
         <aside class="evidence-rail panel" aria-label="Proof receipt">
           <div class="module-head receipt-head">
             <h2>Proof receipt</h2>
@@ -120,7 +143,7 @@
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Collection and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 4" aria-label="Collection and submission gates" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">

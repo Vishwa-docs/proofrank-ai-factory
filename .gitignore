@@ -9,10 +9,12 @@ playwright-report/
 test-results/
 .tmp/
 submission/demo-assets/proofrank-demo-voice.aiff
+submission/demo-assets/proofrank-demo-bed.wav
 submission/demo-assets/slides.txt
 submission/deck-preview/
 submission/proofrank-pitch-deck/
 submission/*.inspect.ndjson
+proofrank-demo.mp4
 AI Factory AI Hackathon | lablab.html
 Live Dashboard.html
 .vercel

@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ASSET_DIR="$ROOT/submission/demo-assets"
 VOICEOVER="$ROOT/submission/demo-voiceover.txt"
 VOICE="$ASSET_DIR/proofrank-demo-voice.aiff"
+MUSIC="$ASSET_DIR/proofrank-demo-bed.wav"
 CONCAT="$ASSET_DIR/slides.txt"
 VIDEO="$ROOT/submission/proofrank-demo.mp4"
 
@@ -76,18 +77,31 @@ add_slide() {
   printf "duration %s\n" "$duration" >> "$CONCAT"
 }
 
-add_slide "01-overview.png" 20
-add_slide "02-claim-ledger.png" 21
-add_slide "03-proof-receipt.png" 21
-add_slide "04-bright-data-live.png" 19
-add_slide "05-field-map.png" 18
-add_slide "06-exports-ready.png" 22
+add_slide "01-overview.png" 8
+add_slide "02-claim-ledger.png" 8
+add_slide "03-proof-receipt.png" 8
+add_slide "04-bright-data-live.png" 8
+add_slide "05-field-map.png" 8
+add_slide "06-exports-ready.png" 8
 printf "file '%s'\n" "$ASSET_DIR/06-exports-ready.png" >> "$CONCAT"
+
+fade_start="$(awk -v duration="$voice_duration" 'BEGIN { value = duration - 2.5; if (value < 0) value = 0; printf "%.3f", value }')"
+
+ffmpeg -y \
+  -f lavfi -i "sine=frequency=146.83:sample_rate=44100:duration=$voice_duration" \
+  -f lavfi -i "sine=frequency=220:sample_rate=44100:duration=$voice_duration" \
+  -filter_complex "[0:a]volume=0.018,afade=t=in:st=0:d=1,afade=t=out:st=$fade_start:d=2.5[a0];[1:a]volume=0.010,afade=t=in:st=0:d=1,afade=t=out:st=$fade_start:d=2.5[a1];[a0][a1]amix=inputs=2:duration=first:normalize=0[m]" \
+  -map "[m]" \
+  "$MUSIC"
 
 ffmpeg -y \
   -f concat -safe 0 -i "$CONCAT" \
   -i "$VOICE" \
+  -i "$MUSIC" \
   -t "$voice_duration" \
+  -filter_complex "[1:a]volume=1.0[voice];[2:a]volume=0.8[music];[voice][music]amix=inputs=2:duration=first:normalize=0[a]" \
+  -map 0:v \
+  -map "[a]" \
   -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,format=yuv420p" \
   -r 30 \
   -c:v libx264 \
@@ -102,6 +116,11 @@ ffmpeg -y \
 video_duration="$(media_duration "$VIDEO")"
 if ! duration_gt "$video_duration" 1; then
   echo "Video generation failed or produced an empty output."
+  exit 1
+fi
+
+if duration_gt "$video_duration" 59.5; then
+  echo "Video is ${video_duration}s, which exceeds the 59.5s submission guard."
   exit 1
 fi
 

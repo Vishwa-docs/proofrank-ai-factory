@@ -1,17 +1,9 @@
-ProofRank is Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and innovation teams.
+ProofRank is an evidence command center for AI hackathon review.
 
-The problem is simple: AI project reviewers have to validate public claims quickly. Demo links may break. Sponsor usage may be superficial. Repositories and decks may not match the pitch. Originality checks are slow when everything is public, scattered, and changing.
+Start with public project links, then ProofRank ranks the field, checks the demo and repo, and separates claims from proof.
 
-ProofRank turns that review into a working audit queue. In Signed proof mode, it loads a signed AI Factory evidence set and ranks projects by eligibility, Bright Data dependency, business value, originality, and presentation.
+The Bright Data gate is load-bearing. scrape_as_markdown, search_engine, and discover must execute before the sponsor receipt passes.
 
-The key difference is the Bright Data dependency score. A project ranks higher only when live-web evidence is load-bearing, agentic, traceable, visible in the proof receipt, and backed by an executed Bright Data run. This makes the sponsor tool part of the product logic, not a badge in the footer.
+Judges get a claim ledger, originality radar, adversarial notes, and a signed receipt with trace hashes.
 
-For each project, reviewers get a Claim Ledger. Instead of making absolute accusations, ProofRank marks claims as verified, weak evidence, not found, or needs proof. That creates a defensible review packet without pretending the system knows more than the evidence supports.
-
-The Originality Radar compares each project against the current field, names the closest overlaps, executes Bright Data MCP search in live mode, and prepares expanded discover queries for prior-art review. It does not accuse. It tells reviewers where to verify.
-
-On the right, every Proof Receipt shows source snippets, confidence, limitations, and trace provenance. The trace table separates executed Bright Data, direct fallback, planned, claimed, pending, and failed evidence. The live plan uses Remote MCP search, markdown scraping, bounded call budgets, Web Scraper API, Web Unlocker, and CLI-compatible collection steps.
-
-When a Bright Data token is missing, ProofRank does not fail silently. It keeps the demo workflow usable and tells the reviewer exactly what credential step is needed. When a public backend is enabled, review tokens, origin checks, and host allowlists protect live collection before Bright Data is called.
-
-The final output is practical: a ranked judge queue CSV, all receipts JSON, selected receipt JSON, and a submission packet. Hackathons are the wedge, but the broader product is public AI diligence for anyone funding, judging, or approving AI software.
+The final packet exports as CSV, JSON, or Markdown. ProofRank turns a crowded submission page into a defensible winner shortlist.
