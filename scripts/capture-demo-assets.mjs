@@ -110,6 +110,7 @@ try {
   await page.click("#loadPitchSample");
   await page.click("#analyzePitch");
   await page.waitForFunction(() => document.querySelectorAll(".pitch-review-rows li").length === 7);
+  await page.locator(".analysis-drawer summary", { hasText: "Review evidence details" }).click();
   await page.waitForTimeout(700);
   await capture(page, "06-pitch-check.png", ".pitch-review-panel");
   await page.click('[data-section-tab="queue"]');

@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import { spawn } from "node:child_process";
 import path from "node:path";
 
 const playwrightPackage =
@@ -7,11 +8,50 @@ const playwrightPackage =
 const chromePath =
   process.env.CHROME_EXECUTABLE ||
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4283/";
+const targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4173/";
 const publicReviewEndpoint = "https://proofrank-ai-factory.vercel.app/api/review-project-public";
 
 const require = createRequire(`file://${playwrightPackage}`);
 const { chromium } = require("playwright");
+
+let localServer = null;
+
+async function canReach(url) {
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(1200) });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function waitForUrl(url) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    if (await canReach(url)) return true;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  return false;
+}
+
+function stopLocalServer() {
+  if (localServer && !localServer.killed) localServer.kill("SIGTERM");
+}
+
+if (!process.env.PROOFRANK_URL && !(await canReach(targetUrl))) {
+  localServer = spawn("python3", ["-m", "http.server", "4173", "--directory", "app"], {
+    cwd: process.cwd(),
+    stdio: "ignore"
+  });
+  process.on("exit", stopLocalServer);
+  process.on("SIGINT", () => {
+    stopLocalServer();
+    process.exit(130);
+  });
+  if (!(await waitForUrl(targetUrl))) {
+    stopLocalServer();
+    throw new Error(`Unable to start local ProofRank server at ${targetUrl}`);
+  }
+}
 
 const browser = await chromium.launch({
   headless: true,
@@ -148,6 +188,7 @@ for (const spec of [
     if (["error", "warning"].includes(message.type())) {
       const text = message.text();
       if (/Failed to load resource: the server responded with a status of 422/i.test(text)) return;
+      if (/Failed to load resource: the server responded with a status of 503/i.test(text)) return;
       messages.push(`${message.type()}: ${text}`);
     }
   });
@@ -155,6 +196,14 @@ for (const spec of [
 
   await page.route(publicReviewEndpoint, async (route) => {
     const payload = JSON.parse(route.request().postData() || "{}");
+    if (/fallback-service-down/i.test(String(payload.repoUrl || ""))) {
+      await route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "simulated public evidence service outage" })
+      });
+      return;
+    }
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -235,6 +284,25 @@ for (const spec of [
     throw new Error(`Initial quick review does not show the right guided path: ${JSON.stringify(initialQuickReviewCalm)}`);
   }
 
+  const initialReviewBlank = await page.evaluate(() => {
+    const scorecard = document.querySelector("#scorecard")?.textContent || "";
+    const receipt = document.querySelector("#receipt")?.textContent || "";
+    return {
+      selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
+      emptyScorecardReady: /No selected project yet|Paste a project to get a judge memo/i.test(scorecard),
+      verifierReady: /Receipt verifier|Check an exported evidence JSON/i.test(receipt),
+      sampleScoreHidden: !/ProofRank sample result|Evidence-based score|Bright Data fit:/i.test(scorecard)
+    };
+  });
+  if (
+    initialReviewBlank.selectedTitle ||
+    !initialReviewBlank.emptyScorecardReady ||
+    !initialReviewBlank.verifierReady ||
+    !initialReviewBlank.sampleScoreHidden
+  ) {
+    throw new Error(`Initial Review panel should start blank: ${JSON.stringify(initialReviewBlank)}`);
+  }
+
   if (spec.name === "desktop") {
     await page.click('.topbar [data-focus-target="quickRepoUrl"]');
     await page.waitForTimeout(300);
@@ -293,19 +361,17 @@ for (const spec of [
     await page.click("#loadPitchSample");
     await page.click("#analyzePitch");
     await page.waitForTimeout(250);
-    const pitchReviewReady = await page.evaluate(() => {
+    const pitchReviewQueued = await page.evaluate(() => {
       const panel = document.querySelector(".pitch-review-panel");
-      const text = panel?.textContent || "";
+      const hint = document.querySelector("#pitchHint")?.textContent || "";
       return Boolean(
-        panel &&
-          /Presentation check/i.test(text) &&
-          /not video verification/i.test(text) &&
-          /Bright Data evidence status stays separate/i.test(text) &&
-          document.querySelectorAll(".pitch-review-rows li").length === 7
+        !panel &&
+          /Pitch score/i.test(hint) &&
+          /Analyze it|Pasted text only|evidence/i.test(hint)
       );
     });
-    if (!pitchReviewReady) {
-      throw new Error("Presentation check did not render an honest evidence-support panel.");
+    if (!pitchReviewQueued) {
+      throw new Error("Presentation check did not stay queued until a review exists.");
     }
     await page.click('[data-section-tab="setup"]');
     const firstStepControlsReady = await page.evaluate(() => {
@@ -374,6 +440,27 @@ for (const spec of [
     });
     if (!invalidDemoRejected) {
       throw new Error("Invalid non-empty demo URL was accepted without a warning.");
+    }
+    await page.fill("#quickRepoUrl", "https://github.com/brightdata/fallback-service-down");
+    await page.fill("#quickDemoUrl", "https://brightdata.com/");
+    await page.click("#quickAddReviewerProject");
+    await page.waitForTimeout(300);
+    const publicFallbackDraftReady = await page.evaluate(() => {
+      const status = document.querySelector("#statusLine")?.textContent || "";
+      const hint = document.querySelector("#quickReviewHint")?.textContent || "";
+      const row = document.querySelector('#rankedList [data-id="review-brightdata-fallback-service-down"]');
+      const card = document.querySelector(".draft-review-card");
+      const cardText = card?.textContent || "";
+      return Boolean(
+        row &&
+          /draft saved/i.test(status) &&
+          /Draft saved|saved a draft/i.test(hint) &&
+          /Draft created/i.test(cardText) &&
+          /content not fetched/i.test(cardText)
+      );
+    });
+    if (!publicFallbackDraftReady) {
+      throw new Error("Public review outage did not save an honest draft fallback.");
     }
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
@@ -546,10 +633,13 @@ for (const spec of [
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
       const text = document.querySelector(".review-room-strip")?.textContent || "";
+      const draftMatch = text.match(/Visitor drafts\s*(\d+)/i);
+      const visitorDrafts = draftMatch ? Number(draftMatch[1]) : 0;
       return Boolean(
         room &&
           room.querySelectorAll("article").length === 4 &&
-          /Visitor drafts\s*1/i.test(text) &&
+          /Visitor drafts/i.test(text) &&
+          visitorDrafts >= 1 &&
           document.querySelector("#exportRoomMemo") &&
           document.querySelector("#exportProgramReport")
       );
@@ -741,6 +831,10 @@ for (const spec of [
       receiptTeaserReady: /Bright Data sample receipt|scrape_as_markdown|search_engine|discover/i.test(
         document.querySelector(".receipt-teaser")?.textContent || ""
       ),
+      receiptVerifierCount: document.querySelectorAll(".receipt-verifier").length,
+      receiptVerifierReady: /Receipt verifier|Trace digest|Bright Data|claim support/i.test(
+        document.querySelector(".receipt-verifier")?.textContent || ""
+      ),
       rubricMemoCount: document.querySelectorAll(".rubric-memo").length,
       rubricMemoRows: document.querySelectorAll(".rubric-grid article").length,
       rubricMemoReady: /Application of Technology|Presentation|Business Value|Originality/i.test(
@@ -778,17 +872,21 @@ for (const spec of [
 }
 
 await browser.close();
+stopLocalServer();
 
 const failures = results.flatMap((result) => {
   const problems = [];
   const draftState = result.metrics.draftReviewCardCount === 1;
+  const blankState = !result.metrics.selectedTitle && result.metrics.routeNodes === 4 && result.metrics.actionBoardCount === 0;
   if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
-  if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: evidence route did not render`);
-  if (!draftState && result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
+  if (blankState) {
+    if (result.metrics.routeNodes !== 4) problems.push(`${result.spec.name}: blank review path did not render`);
+  } else if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: evidence route did not render`);
+  if (!blankState && !draftState && result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.fixListCount !== 1) problems.push(`${result.spec.name}: what-to-fix panel did not render`);
-  if (result.metrics.fixCardCount < 5) problems.push(`${result.spec.name}: what-to-fix cards did not render`);
-  if (result.metrics.fixScoreStripCount !== 2) problems.push(`${result.spec.name}: what-to-fix score strip did not render`);
+  if (!blankState && result.metrics.fixCardCount < 5) problems.push(`${result.spec.name}: what-to-fix cards did not render`);
+  if (!blankState && result.metrics.fixScoreStripCount !== 2) problems.push(`${result.spec.name}: what-to-fix score strip did not render`);
   if (!result.metrics.fixListCopyReady) problems.push(`${result.spec.name}: what-to-fix copy is missing`);
   if (result.metrics.reviewRoomStats !== 4) problems.push(`${result.spec.name}: review room stats did not render`);
   if (result.metrics.sponsorMatrixRows < 1) problems.push(`${result.spec.name}: evidence checklist did not render`);
@@ -799,32 +897,34 @@ const failures = results.flatMap((result) => {
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
   if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
   if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/reviewer-access actions did not render`);
-  if (result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
-  if (result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
-  if (result.metrics.prizeBriefCount !== 1) problems.push(`${result.spec.name}: prize brief did not render`);
-  if (result.metrics.prizeBriefLaneCount !== 3) problems.push(`${result.spec.name}: prize brief lanes did not render`);
-  if (result.metrics.prizeBriefActionCount < 3) problems.push(`${result.spec.name}: prize brief actions did not render`);
-  if (!result.metrics.prizeBriefCopyReady) problems.push(`${result.spec.name}: prize brief copy is missing`);
+  if (!blankState && result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
+  if (!blankState && result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
+  if (!blankState && result.metrics.prizeBriefCount !== 1) problems.push(`${result.spec.name}: prize brief did not render`);
+  if (!blankState && result.metrics.prizeBriefLaneCount !== 3) problems.push(`${result.spec.name}: prize brief lanes did not render`);
+  if (!blankState && result.metrics.prizeBriefActionCount < 3) problems.push(`${result.spec.name}: prize brief actions did not render`);
+  if (!blankState && !result.metrics.prizeBriefCopyReady) problems.push(`${result.spec.name}: prize brief copy is missing`);
   if (result.metrics.reviewCoachCount !== 1) problems.push(`${result.spec.name}: review coach did not render`);
   if (!result.metrics.reviewCoachCopyReady) problems.push(`${result.spec.name}: review coach copy is missing`);
   if (![0, 3].includes(result.metrics.reviewCoachCheckCount)) {
     problems.push(`${result.spec.name}: review coach checks are in an unexpected state`);
   }
-  if (result.metrics.flightRecorderCount < 1) problems.push(`${result.spec.name}: Bright Data flight recorder did not render`);
-  if (result.metrics.flightRecorderStageCount < 4) problems.push(`${result.spec.name}: Bright Data flight recorder stages did not render`);
-  if (result.metrics.flightRecorderFreshnessCount < 1) problems.push(`${result.spec.name}: Bright Data freshness lane did not render`);
-  if (!result.metrics.flightRecorderCopyReady) problems.push(`${result.spec.name}: Bright Data flight recorder copy is missing`);
-  if (!result.metrics.flightRecorderFreshnessReady) problems.push(`${result.spec.name}: Bright Data freshness copy is missing`);
-  if (result.metrics.traceBudgetCount !== 5) problems.push(`${result.spec.name}: Bright Data route budget did not render`);
-  if (!result.metrics.traceBudgetReady) problems.push(`${result.spec.name}: Bright Data route budget copy is missing`);
+  if (!blankState && result.metrics.flightRecorderCount < 1) problems.push(`${result.spec.name}: Bright Data flight recorder did not render`);
+  if (!blankState && result.metrics.flightRecorderStageCount < 4) problems.push(`${result.spec.name}: Bright Data flight recorder stages did not render`);
+  if (!blankState && result.metrics.flightRecorderFreshnessCount < 1) problems.push(`${result.spec.name}: Bright Data freshness lane did not render`);
+  if (!blankState && !result.metrics.flightRecorderCopyReady) problems.push(`${result.spec.name}: Bright Data flight recorder copy is missing`);
+  if (!blankState && !result.metrics.flightRecorderFreshnessReady) problems.push(`${result.spec.name}: Bright Data freshness copy is missing`);
+  if (!blankState && result.metrics.traceBudgetCount !== 5) problems.push(`${result.spec.name}: Bright Data route budget did not render`);
+  if (!blankState && !result.metrics.traceBudgetReady) problems.push(`${result.spec.name}: Bright Data route budget copy is missing`);
   if (result.metrics.outcomePreviewCount !== 4) problems.push(`${result.spec.name}: review output preview did not render four outcomes`);
   if (!result.metrics.outcomePreviewReady) problems.push(`${result.spec.name}: review output preview copy is missing`);
   if (!result.metrics.receiptTeaserReady) problems.push(`${result.spec.name}: first-screen Bright Data receipt teaser is missing`);
-  if (!draftState && result.metrics.rubricMemoCount !== 1) problems.push(`${result.spec.name}: rubric memo did not render`);
-  if (!draftState && result.metrics.rubricMemoRows !== 4) problems.push(`${result.spec.name}: rubric memo did not render four criteria`);
-  if (!draftState && !result.metrics.rubricMemoReady) problems.push(`${result.spec.name}: rubric memo copy is missing`);
-  if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
-  if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
+  if (result.metrics.receiptVerifierCount !== 1) problems.push(`${result.spec.name}: receipt verifier did not render`);
+  if (!result.metrics.receiptVerifierReady) problems.push(`${result.spec.name}: receipt verifier copy is missing`);
+  if (!blankState && !draftState && result.metrics.rubricMemoCount !== 1) problems.push(`${result.spec.name}: rubric memo did not render`);
+  if (!blankState && !draftState && result.metrics.rubricMemoRows !== 4) problems.push(`${result.spec.name}: rubric memo did not render four criteria`);
+  if (!blankState && !draftState && !result.metrics.rubricMemoReady) problems.push(`${result.spec.name}: rubric memo copy is missing`);
+  if (!blankState && result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
+  if (!blankState && result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
   if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {
     problems.push("mobile-320: draft review card did not remain visible after visitor draft");
   }
@@ -834,12 +934,12 @@ const failures = results.flatMap((result) => {
   if (result.spec.name === "desktop" && result.metrics.draftReviewCardCount !== 0) {
     problems.push("desktop: draft review card did not disappear after selecting built-in receipt");
   }
-  if (!draftState && result.metrics.fieldComparisonCount < 5) problems.push(`${result.spec.name}: field comparison panel did not render`);
+  if (!blankState && !draftState && result.metrics.fieldComparisonCount < 5) problems.push(`${result.spec.name}: field comparison panel did not render`);
   if (!result.metrics.pitchDrawerPresent) problems.push(`${result.spec.name}: presentation check drawer did not render`);
   if (result.spec.name === "desktop" && result.metrics.pitchReviewRows !== 7) {
     problems.push("desktop: presentation check rows did not render after analysis");
   }
-  if (result.metrics.traceTimelineSteps !== 4) problems.push(`${result.spec.name}: Bright Data run timeline did not render`);
+  if (!blankState && result.metrics.traceTimelineSteps !== 4) problems.push(`${result.spec.name}: Bright Data run timeline did not render`);
   if (result.metrics.qtipButtonCount < 2) problems.push(`${result.spec.name}: field help buttons did not render`);
   if (!result.metrics.roomLinkReady) problems.push(`${result.spec.name}: room link copy actions did not render`);
   if (!result.metrics.publicRoomNoteReady) problems.push(`${result.spec.name}: public test room note did not render`);

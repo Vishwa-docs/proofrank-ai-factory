@@ -211,7 +211,7 @@ try {
         statusLine: document.querySelector("#statusLine")?.textContent?.trim() || "",
         brightProof: document.querySelector("#liveProofStrip")?.textContent?.replace(/\s+/g, " ").trim() || "",
         scorecardText: document.querySelector("#scorecard")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
-        receiptText: document.querySelector("#receipt")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
+        receiptText: document.querySelector("#receipt")?.textContent?.replace(/\s+/g, " ").slice(0, 1600).trim() || "",
         forbiddenVisible: ["Signed proof", "Submission-ready", "Finalist-ready", "Overall 100", "Sponsor bundle executed"].filter((text) =>
           (document.body.innerText || "").includes(text)
         ),

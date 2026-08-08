@@ -60,12 +60,28 @@
               <span>60-second review</span>
               <strong>Audit a public AI project</strong>
               <p>Paste your own GitHub repo and optional demo. Public review runs first; a Bright Data evidence run adds source, search, and discovery evidence.</p>
-              <ul class="first-run-promise" aria-label="What a first-time visitor can do">
-                <li><strong>No login</strong><span>test any public repo</span></li>
-                <li><strong>No secrets</strong><span>public checks only</span></li>
-                <li><strong>Clear handoff</strong><span>memo after evidence</span></li>
-              </ul>
             </div>
+            <div class="quick-fields">
+              <label class="field" for="quickRepoUrl">
+                <span class="field-label">GitHub repository <button class="qmark" type="button" aria-label="GitHub repo help" aria-expanded="false" aria-controls="repoTip">?</button><span id="repoTip" class="tip-panel" role="tooltip">Use a public github.com/owner/repo URL. Private repos and docs with secrets should not be pasted.</span></span>
+                <input id="quickRepoUrl" type="url" placeholder="https://github.com/org/project" autocomplete="url" aria-describedby="quickRepoHelp">
+                <small id="quickRepoHelp" class="field-help">Public github.com/owner/repo only. Do not paste private repos or secrets.</small>
+              </label>
+              <label class="field" for="quickDemoUrl">
+                <span class="field-label">Demo URL (optional) <button class="qmark" type="button" aria-label="Demo app help" aria-expanded="false" aria-controls="demoTip">?</button><span id="demoTip" class="tip-panel" role="tooltip">Optional. Public review checks common demo hosts; a Bright Data evidence run can use Bright Data for harder pages.</span></span>
+                <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url" aria-describedby="quickDemoHelp">
+                <small id="quickDemoHelp" class="field-help">Optional. A reachable public demo gives stronger evidence than a repo alone.</small>
+              </label>
+            </div>
+            <div class="quick-actions">
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
+              <button id="copyReviewLink" class="text-button" type="button" disabled>Enter repo to copy review link</button>
+            </div>
+            <ul class="first-run-promise" aria-label="What a first-time visitor can do">
+              <li><strong>No login</strong><span>test any public repo</span></li>
+              <li><strong>No secrets</strong><span>public checks only</span></li>
+              <li><strong>Clear handoff</strong><span>memo after evidence</span></li>
+            </ul>
             <div id="reviewCoach" class="review-coach" aria-live="polite"></div>
             <details class="path-drawer">
               <summary>
@@ -96,27 +112,11 @@
               </ol>
               <p class="review-path-line">Anyone can use steps 1-2. Reviewer access unlocks the Bright Data evidence run.</p>
             </details>
-            <div class="quick-fields">
-              <label class="field" for="quickRepoUrl">
-                <span class="field-label">GitHub repository <button class="qmark" type="button" aria-label="GitHub repo help" aria-expanded="false" aria-controls="repoTip">?</button><span id="repoTip" class="tip-panel" role="tooltip">Use a public github.com/owner/repo URL. Private repos and docs with secrets should not be pasted.</span></span>
-                <input id="quickRepoUrl" type="url" placeholder="https://github.com/org/project" autocomplete="url" aria-describedby="quickRepoHelp">
-                <small id="quickRepoHelp" class="field-help">Public github.com/owner/repo only. Do not paste private repos or secrets.</small>
-              </label>
-              <label class="field" for="quickDemoUrl">
-                <span class="field-label">Demo URL (optional) <button class="qmark" type="button" aria-label="Demo app help" aria-expanded="false" aria-controls="demoTip">?</button><span id="demoTip" class="tip-panel" role="tooltip">Optional. Public review checks common demo hosts; a Bright Data evidence run can use Bright Data for harder pages.</span></span>
-                <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url" aria-describedby="quickDemoHelp">
-                <small id="quickDemoHelp" class="field-help">Optional. A reachable public demo gives stronger evidence than a repo alone.</small>
-              </label>
-            </div>
             <div class="quick-starters" aria-label="Try sample projects">
               <span>Try a sample</span>
               <button class="starter-chip" data-starter-project="proofrank" type="button">ProofRank</button>
               <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data MCP</button>
               <button class="starter-chip" data-starter-project="speechmatics-academy" type="button">Speechmatics</button>
-            </div>
-            <div class="quick-actions">
-              <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
-              <button id="copyReviewLink" class="text-button" type="button" disabled>Enter repo to copy review link</button>
             </div>
             <section id="outcomePreview" class="outcome-preview" aria-label="Review output preview" aria-live="polite">
               <div>
@@ -287,6 +287,10 @@
         <details class="qtip">
           <summary>Where does Bright Data matter?</summary>
           <p>Live mode upgrades a draft by collecting public source, search, and discovery evidence through Bright Data.</p>
+        </details>
+        <details class="qtip">
+          <summary>Can I verify an export?</summary>
+          <p>Open Evidence and paste a ProofRank evidence JSON record. The verifier checks Bright Data traces, digest consistency, and claim support.</p>
         </details>
         <details class="qtip">
           <summary>What should I submit?</summary>

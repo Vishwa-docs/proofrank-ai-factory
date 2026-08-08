@@ -6,6 +6,12 @@ The AI Factory Native.builder Hackathon requires a functional, publicly accessib
 
 Prior Bright Data hackathon winners and finalists show a repeated pattern: the strongest projects use live public web data as a load-bearing decision system. They do not stop at scraping and summarizing. They gather evidence, normalize it, score risk or opportunity, show citations, re-check assumptions, and produce an action the user can trust. Strong examples include counterparty due diligence, competitive intelligence, vehicle-risk intelligence, demand validation, trademark monitoring, bid intelligence, and proof-carrying regulatory analysis.
 
+## Competition Refresh, 2026-08-08
+
+Recent lablab.ai app and Bright Data hackathon pages show that the field is crowded with projects that already use search, scraping, and briefing flows. Public examples include trade/logistics intelligence, due-diligence agents, web-data briefing tools, crypto market scrapers, and generic business-opportunity analysis. This makes "we scrape the web" a weak pitch by itself.
+
+The stronger wedge for ProofRank is review operations: Bright Data supplies live source, search, and discovery evidence, while ProofRank turns that evidence into a reviewer-safe decision, a visible gap list, and an exportable memo. The UI should therefore keep the first screen focused on "paste links, run public review, inspect evidence, export memo" and keep trace-heavy details behind disclosure controls. Bright Data should appear as the accountable evidence layer, not as raw infrastructure jargon.
+
 ## Product Thesis
 
 ProofRank is a public AI product diligence engine for hackathons, accelerators, grants, sponsor programs, and procurement teams. The hackathon submission audit is the wedge. Given a public event or project URL, it gathers public evidence about each submission and produces a ranked diligence queue with proof receipts for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.

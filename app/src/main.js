@@ -15,6 +15,7 @@ import { buildVisitorBrief } from "./visitorBrief.js";
 import { buildPrizeBrief } from "./prizeBrief.js";
 import { buildReviewCoach } from "./reviewCoach.js";
 import { buildFlightRecorder } from "./flightRecorder.js";
+import { verifyReceiptRecord } from "./receiptVerifier.js";
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
@@ -225,7 +226,9 @@ const state = {
   reviewerProjects: [],
   pitchReview: null,
   reviewStarted: false,
-  tourIndex: null
+  tourIndex: null,
+  receiptVerifierInput: "",
+  receiptVerification: null
 };
 
 if (elements.guidedTour && elements.guidedTour.parentElement !== document.body) {
@@ -598,6 +601,47 @@ async function copySelectedReviewCard(project = selectedProject()) {
   }
 }
 
+function selectedReceiptJson() {
+  return JSON.stringify(buildReceipt(selectedProject(), state.projects), null, 2);
+}
+
+function loadSelectedReceiptIntoVerifier() {
+  state.receiptVerifierInput = selectedReceiptJson();
+  state.receiptVerification = verifyReceiptRecord(state.receiptVerifierInput);
+  setStatus("Evidence JSON loaded into the receipt verifier.", state.receiptVerification.ok ? "ready" : "warn");
+  render();
+  setActiveSection("receipt", { scroll: true });
+}
+
+function verifyReceiptInput() {
+  const input = document.querySelector("#receiptVerifierInput")?.value.trim() || "";
+  if (!input) {
+    state.receiptVerifierInput = "";
+    state.receiptVerification = verifyReceiptRecord("");
+    setStatus("Paste evidence JSON or load the selected receipt first.", "warn");
+    render();
+    setActiveSection("receipt", { scroll: true });
+    return;
+  }
+
+  state.receiptVerifierInput = input;
+  state.receiptVerification = verifyReceiptRecord(input);
+  setStatus(
+    state.receiptVerification.ok ? "Receipt checks passed. Trace digest and Bright Data coverage are consistent." : "Receipt needs reviewer attention.",
+    state.receiptVerification.ok ? "ready" : "warn"
+  );
+  render();
+  setActiveSection("receipt", { scroll: true });
+}
+
+function clearReceiptVerifier() {
+  state.receiptVerifierInput = "";
+  state.receiptVerification = null;
+  setStatus("Receipt verifier cleared.", "ready");
+  render();
+  setActiveSection("receipt", { scroll: true });
+}
+
 function hasReviewToken() {
   return Boolean(syncReviewTokenFromUrl());
 }
@@ -721,6 +765,10 @@ function sourceProjects() {
 
 function selectedProject() {
   return state.projects.find((project) => project.id === state.selectedId) || state.projects[0];
+}
+
+function hasActiveReview(project = selectedProject()) {
+  return Boolean(project && (state.reviewStarted || project.id !== "proofrank"));
 }
 
 function readinessContext() {
@@ -1129,6 +1177,7 @@ function renderRankedList() {
   elements.rankedList.querySelectorAll(".project-row").forEach((row) => {
     row.addEventListener("click", () => {
       state.selectedId = row.dataset.id;
+      state.reviewStarted = true;
       const selectionDrawer = document.querySelector(".selection-drawer");
       if (selectionDrawer) selectionDrawer.open = true;
       setStatus(`${selectedProject().title} selected.`, "ready");
@@ -1217,6 +1266,7 @@ function renderSponsorMatrix() {
   elements.sponsorMatrix.querySelectorAll("[data-matrix-id]").forEach((button) => {
     button.addEventListener("click", () => {
       state.selectedId = button.dataset.matrixId;
+      state.reviewStarted = true;
       setStatus(`${selectedProject().title} selected from sponsor matrix.`, "ready");
       render();
       setActiveSection("overview", { scroll: true });
@@ -1884,11 +1934,11 @@ function renderScorecard(project) {
   const verdictLabel = displayVerdictLabel(project);
   const actionLabel = displayAction(project, project.verdict.action);
   const scoreLabel = draft ? "Draft review" : hasPendingFinalSubmission(project) ? "Review result" : "Evidence-based score";
-  const scoreValue = draft ? "Not scored" : hasPendingFinalSubmission(project) ? "Attached" : project.scores.overall;
+  const scoreValue = draft ? "Not scored" : hasPendingFinalSubmission(project) ? "Ready" : project.scores.overall;
   const scoreDetail = draft
     ? "Run public review for ranking"
     : hasPendingFinalSubmission(project)
-    ? `Bright Data check complete`
+    ? `Bright Data evidence attached`
     : `Bright Data fit: ${project.scores.brightDataPrize}`;
   const runReceipt = project.runReceipt || {};
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
@@ -1923,47 +1973,46 @@ function renderScorecard(project) {
 
     ${renderVisitorBrief(project)}
 
-    ${draft ? "" : renderRubricMemo(project)}
-
-    ${draft ? "" : `<section class="market-position" aria-label="Product readout">
-      <article>
-        <span>Buyer</span>
-        <strong>Judges and sponsor teams</strong>
-        <p>Compress public review into a shortlist with reasons, links, and open risks.</p>
-      </article>
-      <article>
-        <span>Differentiator</span>
-        <strong>Executed web evidence</strong>
-        <p>Bright Data evidence rows are separated from planned, claimed, direct, and failed rows.</p>
-      </article>
-      <article>
-        <span>Expansion</span>
-        <strong>Public AI diligence</strong>
-        <p>Hackathons are the entry point for accelerator, grant, and procurement review.</p>
-      </article>
-    </section>`}
-
-    ${draft ? "" : `<section class="proof-highlights" aria-label="Bright Data evidence highlights">
-      <article>
-        <span>Bright Data evidence</span>
-        <strong>${escapeHtml(sponsorToolLabel)}</strong>
-        <p>${sponsorProofReady ? "Executed evidence counts; planned or claimed rows do not." : "Needs the complete source, search, and discover run."}</p>
-      </article>
-      <article>
-        <span>Review ID</span>
-        <strong>${escapeHtml(runReceipt.runId || "No saved review yet")}</strong>
-        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Saved review attached" : "Saved review pending"} live run record` : "Live collection has not produced a report yet.")}</p>
-      </article>
-      <article>
-        <span>Live rerun</span>
-        <strong>${escapeHtml(replayState)}</strong>
-        <p>Sponsor review runs server-side so Bright Data secrets stay off the page.</p>
-      </article>
-    </section>`}
-
-    ${draft ? "" : renderPitchReviewPanel()}
-
-    ${draft ? "" : renderFieldComparison()}
+    ${draft ? "" : `<details class="analysis-drawer decision-details">
+      <summary><span>Review evidence details</span><strong>${escapeHtml(sponsorProofReady ? "Bright Data ready" : "Needs evidence")}</strong></summary>
+      ${renderRubricMemo(project)}
+      <section class="market-position" aria-label="Product readout">
+        <article>
+          <span>Buyer</span>
+          <strong>Judges and sponsor teams</strong>
+          <p>Compress public review into a shortlist with reasons, links, and open risks.</p>
+        </article>
+        <article>
+          <span>Differentiator</span>
+          <strong>Executed web evidence</strong>
+          <p>Bright Data evidence rows are separated from planned, claimed, direct, and failed rows.</p>
+        </article>
+        <article>
+          <span>Expansion</span>
+          <strong>Public AI diligence</strong>
+          <p>Hackathons are the entry point for accelerator, grant, and procurement review.</p>
+        </article>
+      </section>
+      <section class="proof-highlights" aria-label="Bright Data evidence highlights">
+        <article>
+          <span>Bright Data evidence</span>
+          <strong>${escapeHtml(sponsorToolLabel)}</strong>
+          <p>${sponsorProofReady ? "Executed evidence counts; planned or claimed rows do not." : "Needs the complete source, search, and discover run."}</p>
+        </article>
+        <article>
+          <span>Review ID</span>
+          <strong>${escapeHtml(runReceipt.runId || "No saved review yet")}</strong>
+          <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Saved review attached" : "Saved review pending"} live run record` : "Live collection has not produced a report yet.")}</p>
+        </article>
+        <article>
+          <span>Live rerun</span>
+          <strong>${escapeHtml(replayState)}</strong>
+          <p>Sponsor review runs server-side so Bright Data secrets stay off the page.</p>
+        </article>
+      </section>
+      ${renderPitchReviewPanel()}
+      ${renderFieldComparison()}
+    </details>`}
 
     ${draft ? "" : `<details class="analysis-drawer score-drawer">
       <summary><span>Score breakdown</span><strong>${project.scores.overall} overall</strong></summary>
@@ -2104,6 +2153,146 @@ function renderBrightDataTimeline(project) {
   `;
 }
 
+function renderReadinessEmpty() {
+  elements.readinessSummary.innerHTML = `
+    <strong>Waiting for a public project</strong>
+    <span>Paste links first. ProofRank will then separate public checks from reviewer-access Bright Data evidence.</span>
+    <small>0/4 first-run gates</small>
+  `;
+  elements.readinessMeter.style.setProperty("--bar-width", "0%");
+  elements.readinessList.innerHTML = [
+    ["GitHub repository", "Paste a public github.com/owner/repo URL."],
+    ["Demo URL", "Optional, but a live app gives the reviewer stronger evidence."],
+    ["Public review", "Fetch public repo and demo signals before ranking."],
+    ["Bright Data evidence", "Upgrade with source, search, and discovery when reviewer access is available."]
+  ]
+    .map(
+      ([label, detail]) => `
+        <li class="pending">
+          <span>Action</span>
+          <strong>${escapeHtml(label)}</strong>
+          <p>${escapeHtml(detail)}</p>
+          <small>Not checked yet.</small>
+        </li>
+      `
+    )
+    .join("");
+}
+
+function renderEmptyReviewState(project = selectedProject()) {
+  if (elements.fixListSummary) elements.fixListSummary.textContent = "Waiting for links";
+  elements.fixListBody.innerHTML = `
+    <section class="empty-review-state" aria-label="First review path">
+      <div>
+        <span>Start with your links</span>
+        <strong>No selected project yet.</strong>
+        <p>Paste a public GitHub repository above. ProofRank will create a memo with a decision, evidence gaps, and the Bright Data upgrade path.</p>
+      </div>
+      <ol>
+        <li><strong>Paste</strong><span>GitHub repo and optional demo URL.</span></li>
+        <li><strong>Review</strong><span>Run the public repo and demo check.</span></li>
+        <li><strong>Verify</strong><span>Inspect evidence JSON in the receipt verifier.</span></li>
+      </ol>
+    </section>
+  `;
+
+  elements.scorecard.innerHTML = `
+    <section class="empty-scorecard" aria-label="No selected review">
+      <div>
+        <span>Public test room</span>
+        <h2>Paste a project to get a judge memo.</h2>
+        <p>The first result is intentionally blank. Samples are available, but visitors should be able to test their own public project first.</p>
+      </div>
+      <div class="empty-action-row">
+        <button class="primary-button small" data-score-action="focus" type="button">Paste links</button>
+        <button class="secondary-button small" data-score-action="sample" type="button">Replay sample</button>
+        <button class="secondary-button small" data-score-action="verify" type="button">Verify receipt</button>
+      </div>
+    </section>
+  `;
+
+  elements.proofTopology.innerHTML = `
+    <div class="module-head proof-head">
+      <div>
+        <h2>Review path</h2>
+        <p class="hint">The selected project path appears after a visitor runs or opens a review.</p>
+      </div>
+      <span class="route-verdict pending">Not started</span>
+    </div>
+    <ol class="route-map empty-route">
+      ${["Paste links", "Public check", "Bright Data evidence", "Export memo"]
+        .map(
+          (label) => `
+            <li class="route-node missing">
+              <span>Action</span>
+              <strong>${escapeHtml(label)}</strong>
+              <p>${label === "Bright Data evidence" ? "Reviewer-access source, search, and discovery." : "Waiting for visitor input."}</p>
+            </li>
+          `
+        )
+        .join("")}
+    </ol>
+  `;
+
+  elements.receipt.innerHTML = `
+    ${renderReceiptVerifier(project, { empty: true })}
+    <section class="empty-receipt" aria-label="No evidence selected">
+      <span>No selected evidence yet</span>
+      <strong>Exported ProofRank JSON can be checked here.</strong>
+      <p>Load the sample receipt or paste an exported evidence record to confirm Bright Data traces, digest consistency, and claim support.</p>
+    </section>
+  `;
+
+  renderReadinessEmpty();
+}
+
+function renderReceiptVerifier(project = selectedProject(), options = {}) {
+  const result = state.receiptVerification;
+  const resultRows = result
+    ? result.checks
+        .map(
+          (item) => `
+            <li class="${escapeAttr(item.status)}">
+              <span>${escapeHtml(item.status === "passed" ? "Checked" : item.status === "notice" ? "Notice" : "Action")}</span>
+              <strong>${escapeHtml(item.label)}</strong>
+              <p>${escapeHtml(item.detail)}</p>
+            </li>
+          `
+        )
+        .join("")
+    : "";
+  const buttonLabel = options.empty ? "Load sample receipt" : "Load selected receipt";
+
+  return `
+    <section class="receipt-verifier" aria-label="Public receipt verifier">
+      <div class="verifier-head">
+        <div>
+          <span>Receipt verifier</span>
+          <h3>${escapeHtml(result?.title || "Check an exported evidence JSON.")}</h3>
+          <p>${escapeHtml(
+            result?.summary ||
+              "Paste a ProofRank evidence record. Browser verification checks trace digest, Bright Data source/search/discovery coverage, and claim support."
+          )}</p>
+        </div>
+        <strong class="${result ? (result.ok ? "passed" : "failed") : "notice"}">${escapeHtml(
+          result ? (result.ok ? "Checks passed" : "Needs review") : "Paste JSON"
+        )}</strong>
+      </div>
+      <label class="field compact" for="receiptVerifierInput">
+        <span>Evidence JSON</span>
+        <textarea id="receiptVerifierInput" rows="6" placeholder="Paste exported proofrank evidence JSON">${escapeHtml(state.receiptVerifierInput)}</textarea>
+      </label>
+      <div class="verifier-actions">
+        <button class="primary-button small" data-receipt-action="verify" type="button">Verify JSON</button>
+        <button class="secondary-button small" data-receipt-action="load-selected" type="button">${escapeHtml(buttonLabel)}</button>
+        <button class="text-button small" data-receipt-action="clear" type="button">Clear</button>
+      </div>
+      ${result ? `<ul class="verifier-checks">${resultRows}</ul>` : ""}
+      <p class="verifier-note">HMAC signature format can be checked in the browser. Full cryptographic validation stays server-side because the signing secret must not be pasted into a public page.</p>
+    </section>
+  `;
+}
+
 function renderReceipt(project) {
   const runReceipt = project.runReceipt;
   const receiptItems = (project.evidenceItems || [])
@@ -2144,6 +2333,8 @@ function renderReceipt(project) {
     .join("");
 
   elements.receipt.innerHTML = `
+    ${renderReceiptVerifier(project)}
+
     ${renderFlightRecorder(project)}
 
     ${renderBrightDataBudget(project)}
@@ -2343,7 +2534,7 @@ function renderFlightRecorder(project = selectedProject(), options = {}) {
 
 function render() {
   const project = selectedProject();
-  const showHeroEvidence = state.reviewStarted || project.id !== "proofrank";
+  const showHeroEvidence = hasActiveReview(project);
   const selectionDrawer = document.querySelector(".selection-drawer");
   updateRunProfile();
   updateLiveProofStrip(project);
@@ -2359,15 +2550,19 @@ function render() {
     if (elements.readinessSummary) elements.readinessSummary.innerHTML = "";
     if (elements.readinessMeter) elements.readinessMeter.style.setProperty("--bar-width", "0%");
   }
-  renderProofTopology(project);
-  renderFixList(project);
+  if (showHeroEvidence) {
+    renderProofTopology(project);
+    renderFixList(project);
+    renderScorecard(project);
+    renderReceipt(project);
+    renderReadiness(project);
+  } else {
+    renderEmptyReviewState(project);
+  }
   renderRankedList();
   renderSponsorMatrix();
-  renderScorecard(project);
-  renderReceipt(project);
   renderFieldMap();
   renderReviewRoom();
-  renderReadiness(project);
 }
 
 function liveEventEndpoint() {
@@ -2418,6 +2613,7 @@ async function runAudit() {
         state.uploadedProjects = [fixtureProjects[0], ...liveProjects];
         state.projects = rankProjects(sourceProjects());
         state.selectedId = result.reviewedProject?.id || state.projects[0]?.id || "proofrank";
+        state.reviewStarted = true;
         if (result.reviewError) {
           setStatus(
             `${liveProjects.length} live submissions collected. Project-level follow-up failed: ${result.reviewError}`,
@@ -2448,6 +2644,7 @@ async function runAudit() {
     if (!state.projects.some((project) => project.id === state.selectedId)) {
       state.selectedId = state.projects[0]?.id || "proofrank";
     }
+    state.reviewStarted = true;
 
     const commandCount = buildCliCommands(eventUrl, selectedProject()).length;
     const liveNote = state.mode === "live" ? "server workflow required next" : "collection steps prepared";
@@ -2469,6 +2666,7 @@ function handleUpload(file) {
     state.uploadedProjects = [fixtureProjects[0], ...parsed];
     state.projects = rankProjects(sourceProjects());
     state.selectedId = state.projects[0].id;
+    state.reviewStarted = true;
     setStatus(`${parsed.length} uploaded submission cards parsed.`, "ready");
     render();
   });
@@ -2638,6 +2836,7 @@ async function addReviewerProject() {
   }
 
   let project;
+  let usedPublicFallback = false;
   elements.addReviewerProject.disabled = true;
   elements.quickAddReviewerProject.disabled = true;
 
@@ -2652,17 +2851,33 @@ async function addReviewerProject() {
       project = reviewerProjectFromInputs();
     }
   } catch (error) {
-    setStatus(error.message, "error");
-    elements.reviewerHint.textContent = "Review failed. Check the endpoint or switch to Draft.";
-    setQuickHint(
-      state.mode === "public"
-        ? "Public review failed. Switch to Draft, or use a common public demo host such as Vercel, GitHub Pages, Hugging Face, or Netlify."
-        : "Bright Data evidence run failed. Switch to Draft/Public review or retry with reviewer access.",
-      "error"
-    );
-    elements.addReviewerProject.disabled = false;
-    elements.quickAddReviewerProject.disabled = false;
-    return;
+    if (state.mode === "public") {
+      project = reviewerProjectFromInputs();
+      if (project) {
+        usedPublicFallback = true;
+        project.summary = `${payload.reviewFocus.label} draft saved after the public evidence service was unavailable. Run public review again to fetch repo and demo evidence.`;
+        project.evidenceItems = [
+          {
+            ...(project.evidenceItems?.[0] || {}),
+            title: "Public review fallback",
+            excerpt: `Public evidence service was unavailable, so ProofRank saved a link-only draft instead. Retry public review when the service is reachable. Last error: ${displayText(
+              error.message
+            )}`,
+            limitations: "No public GitHub, demo, or Bright Data evidence was fetched during the fallback."
+          }
+        ];
+        elements.reviewerHint.textContent = "Public evidence service unavailable; draft saved instead.";
+        setQuickHint("Public evidence service unavailable; saved a draft instead. Retry public review from the result card.", "warn");
+        setStatus("Public evidence service unavailable; saved draft instead.", "warn");
+      }
+    } else {
+      setStatus(error.message, "error");
+      elements.reviewerHint.textContent = "Review failed. Check the endpoint or switch to Draft.";
+      setQuickHint("Bright Data evidence run failed. Switch to Draft/Public review or retry with reviewer access.", "error");
+      elements.addReviewerProject.disabled = false;
+      elements.quickAddReviewerProject.disabled = false;
+      return;
+    }
   }
 
   elements.addReviewerProject.disabled = false;
@@ -2676,20 +2891,24 @@ async function addReviewerProject() {
   const selectionDrawer = document.querySelector(".selection-drawer");
   if (selectionDrawer) selectionDrawer.open = true;
   elements.reviewerHint.textContent =
-    state.mode === "live"
+    usedPublicFallback
+      ? "Draft saved after public evidence service fallback. Retry public review when the service is reachable."
+      : state.mode === "live"
       ? "Project collected with the Bright Data evidence backend. Inspect the evidence and saved review."
       : state.mode === "public"
         ? "Project collected with public repo/demo evidence. Run the Bright Data evidence run later for source, search, and discovery checks."
         : "Project added. Public review or a Bright Data evidence run can deepen this result.";
   setQuickHint(
-    state.mode === "live"
+    usedPublicFallback
+      ? "Draft saved. No repo, demo, or Bright Data evidence was fetched; retry public review from the result card."
+      : state.mode === "live"
       ? "Bright Data evidence collected. Open Bright Data receipt to inspect the saved review."
       : state.mode === "public"
         ? "Public evidence collected. Open Bright Data receipt to inspect the review, or run Bright Data evidence run for source, search, and discovery checks."
         : "Project added. Copy draft link lets another visitor open the same links. Public review collects real evidence.",
-    "ready"
+    usedPublicFallback ? "warn" : "ready"
   );
-  setStatus(`${project.title} added to the review queue.`, "ready");
+  setStatus(usedPublicFallback ? `${project.title} draft saved after public service fallback.` : `${project.title} added to the review queue.`, usedPublicFallback ? "warn" : "ready");
   state.reviewStarted = true;
   render();
   setActiveSection("overview", { scroll: true });
@@ -2893,7 +3112,16 @@ elements.scorecard?.addEventListener("click", async (event) => {
   if (event.target.closest("[data-export-selected]")) exportSubmissionPacket();
   const action = event.target.closest("[data-score-action]")?.dataset.scoreAction;
   if (!action) return;
-  if (action === "evidence") {
+  if (action === "focus") {
+    elements.quickRepoUrl.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => elements.quickRepoUrl.focus(), 160);
+    setStatus("Paste a public GitHub repository to start.", "ready");
+  } else if (action === "sample") {
+    loadSampleReviewLinks();
+  } else if (action === "verify") {
+    setActiveSection("receipt", { scroll: true });
+    setStatus("Receipt verifier opened. Paste evidence JSON or load the sample receipt.", "ready");
+  } else if (action === "evidence") {
     setActiveSection("receipt", { scroll: true });
     setStatus("Evidence opened.", "ready");
   } else if (action === "score-help") {
@@ -2922,6 +3150,18 @@ elements.scorecard?.addEventListener("click", async (event) => {
   } else if (action === "copy-card") {
     await copySelectedReviewCard();
   }
+});
+elements.receipt?.addEventListener("input", (event) => {
+  if (event.target?.id === "receiptVerifierInput") {
+    state.receiptVerifierInput = event.target.value;
+  }
+});
+elements.receipt?.addEventListener("click", (event) => {
+  const action = event.target.closest("[data-receipt-action]")?.dataset.receiptAction;
+  if (!action) return;
+  if (action === "verify") verifyReceiptInput();
+  else if (action === "load-selected") loadSelectedReceiptIntoVerifier();
+  else if (action === "clear") clearReceiptVerifier();
 });
 elements.startTour?.addEventListener("click", startTour);
 elements.startTourTop?.addEventListener("click", startTour);
