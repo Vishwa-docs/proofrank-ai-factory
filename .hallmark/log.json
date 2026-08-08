@@ -3,6 +3,13 @@
     "date": "2026-08-08",
     "macrostructure": "Workbench",
     "theme": "modern-minimal",
+    "enrichment": "draft-live-verified evidence ladder",
+    "brief": "Added review lenses, starter projects, explicit proof ownership, and Bright Data run timeline to reduce first-use ambiguity"
+  },
+  {
+    "date": "2026-08-08",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
     "enrichment": "review room report",
     "brief": "Added ProofRank program-level Review Room stats, room memo export, safer draft review states, and buyer-facing onboarding copy"
   },

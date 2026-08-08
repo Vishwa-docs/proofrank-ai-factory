@@ -1,15 +1,18 @@
 {
-  "generatedAt": "2026-08-08T07:06:37.876Z",
-  "durationMs": 6642,
+  "generatedAt": "2026-08-08T07:13:23.314Z",
+  "durationMs": 7407,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank",
   "rankedRows": 9,
   "reviewerRowPresent": true,
   "shareableReviewReady": true,
+  "reviewFocus": "Bright Data sponsor Prove live-web usage",
+  "traceTimelineSteps": 4,
+  "modeLadderText": "DraftLinks only LiveBright Data fetch VerifiedReceipt export",
   "statusLine": "ProofRank selected.",
-  "brightProof": "Evidence report Bright Data evidence passed source, search, and discovery checked / verified",
-  "scorecardText": "Evidence checks passed ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Evidence Passed Bright Data review verified DemoGitHubExport memo Next action Submit final entry from the lablab team account Evidence depth 2 public links, 4 evidence items, Bright Data executed. Current blocker Final submission not sent. Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open ri",
-  "receiptText": "Review run pr-20260807t200529345z-23568b05 bright-data-mcp / verified / 23568b05 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Verified Bright Data evidence receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. sign",
+  "brightProof": "Current proof: ProofRank Bright Data evidence passed source, search, and discovery checked / verified",
+  "scorecardText": "Evidence checks passed ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk. Sponsor lensnative.builderBright Data Remote MCPBright Data SERP API+2 Evidence Passed Bright Data review verified DemoGitHubExport memo Next action Submit final entry from the lablab team account Review lens Prove source, search, and discovery evidence are actually live-web powered. Evidence depth 2 public links, 4 evidence items, Bright Data executed. Current blocker Final submission not sent. Buy",
+  "receiptText": "Bright Data run timeline What the live-web evidence proves. Bright Data gathers public source, search, and discovery evidence; ProofRank separates verified facts from claims before exporting the review record. 1 Source Fetch public repo/demo/submission evidence 1 result / 15303 bytes 2 Search Find prior-art and public corroboration 1 result / 679 bytes 3 Discovery Rank related public signals 1 result / 2291 bytes 4 Receipt Bind the run into an exportable record signature verified Review run pr-20260807t200529345z-23568b05 bright-data-mcp / verified / 23568b05 Competition-aware design The prod",
   "readinessItems": [
     {
       "status": "Passed",

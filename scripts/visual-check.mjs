@@ -105,6 +105,39 @@ for (const spec of [
       throw new Error("Guided review step 5 did not switch to Live setup and highlight review mode.");
     }
     await page.click("#tourClose");
+    const firstStepControlsReady = await page.evaluate(() => {
+      return (
+        document.querySelectorAll("[data-review-focus]").length === 3 &&
+        document.querySelectorAll("[data-starter-project]").length === 3 &&
+        document.querySelectorAll(".mode-ladder span").length === 3
+      );
+    });
+    if (!firstStepControlsReady) {
+      throw new Error("Hero review lens, starter projects, or mode ladder did not render.");
+    }
+    await page.click('[data-review-focus="buyer"]');
+    await page.waitForTimeout(100);
+    const buyerFocusSelected = await page.evaluate(() => {
+      return (
+        document.querySelector('[data-review-focus="buyer"]')?.classList.contains("is-active") &&
+        /Buyer lens/i.test(document.querySelector("#quickReviewHint")?.textContent || "")
+      );
+    });
+    if (!buyerFocusSelected) {
+      throw new Error("Review lens selector did not activate the buyer lens.");
+    }
+    await page.click('[data-starter-project="brightdata-mcp"]');
+    await page.waitForTimeout(100);
+    const starterLoaded = await page.evaluate(() => {
+      return (
+        document.querySelector("#quickRepoUrl")?.value === "https://github.com/brightdata/brightdata-mcp" &&
+        document.querySelector("#quickDemoUrl")?.value === "" &&
+        document.querySelector('[data-review-focus="sponsor"]')?.classList.contains("is-active")
+      );
+    });
+    if (!starterLoaded) {
+      throw new Error("Starter project did not populate links and focus.");
+    }
     await page.fill("#quickRepoUrl", "https://example.com/github.com/fake/project");
     await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
     await page.click("#quickAddReviewerProject");
@@ -137,7 +170,7 @@ for (const spec of [
     const verifiedSampleSelected = await page.evaluate(() => {
       const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
       const strip = document.querySelector("#liveProofStrip")?.textContent || "";
-      return title === "ProofRank" && /Bright Data evidence passed/i.test(strip);
+      return title === "ProofRank" && /Current proof:\s*ProofRank/i.test(strip) && /Bright Data evidence passed/i.test(strip);
     });
     if (!verifiedSampleSelected) {
       throw new Error("Verified sample did not select the signed Bright Data project.");
@@ -153,7 +186,8 @@ for (const spec of [
         button &&
           !button.disabled &&
           params.get("reviewRepo") === "https://github.com/brightdata/brightdata-mcp" &&
-          params.get("reviewDemo") === "https://brightdata.com/"
+          params.get("reviewDemo") === "https://brightdata.com/" &&
+          params.get("reviewFocus") === "sponsor"
       );
     });
     if (!shareableReviewReady) {
@@ -177,10 +211,10 @@ for (const spec of [
     const quickLiveSwitchWarned = await page.evaluate(() => {
       const status = document.querySelector("#statusLine")?.textContent || "";
       const mode = document.querySelector("#modeSelect")?.value || "";
-      return mode === "demo" && /switched to sample review/i.test(status);
+      return mode === "demo" && /switched to draft review/i.test(status);
     });
     if (!quickLiveSwitchWarned) {
-      throw new Error("Hero quick review did not clearly warn when switching live mode back to sample review.");
+      throw new Error("Hero quick review did not clearly warn when switching live mode back to draft review.");
     }
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
@@ -218,6 +252,10 @@ for (const spec of [
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
       reviewRoomStats: document.querySelectorAll("#reviewRoomStats article").length,
+      reviewFocusCount: document.querySelectorAll("[data-review-focus]").length,
+      starterCount: document.querySelectorAll("[data-starter-project]").length,
+      modeLadderCount: document.querySelectorAll(".mode-ladder span").length,
+      traceTimelineSteps: document.querySelectorAll(".trace-timeline li").length,
       readinessCount: document.querySelectorAll("#readinessList li").length,
       reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
       scrollWidth: html.scrollWidth,
@@ -243,6 +281,10 @@ const failures = results.flatMap((result) => {
   if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: proof route did not render`);
   if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.reviewRoomStats !== 4) problems.push(`${result.spec.name}: review room stats did not render`);
+  if (result.metrics.reviewFocusCount !== 3) problems.push(`${result.spec.name}: review focus controls did not render`);
+  if (result.metrics.starterCount !== 3) problems.push(`${result.spec.name}: starter projects did not render`);
+  if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
+  if (result.metrics.traceTimelineSteps !== 4) problems.push(`${result.spec.name}: Bright Data run timeline did not render`);
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
   if (result.spec.name === "desktop" && !result.metrics.reviewerRowPresent) {

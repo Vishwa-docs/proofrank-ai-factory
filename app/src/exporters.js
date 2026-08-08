@@ -83,6 +83,7 @@ export function buildReceipt(project, fieldProjects = []) {
       github: project.githubUrl,
       presentation: project.presentationUrl
     },
+    reviewFocus: project.reviewFocus || null,
     technologies: project.technologies,
     traceState,
     readiness,
@@ -127,6 +128,8 @@ The competition app should be created and published through native.builder using
 - Bright Data fit: ${receipt.scores.brightDataFit}
 - Bright Data prize score: ${receipt.scores.brightDataPrize}
 - Bright Data evidence state: ${receipt.traceState}
+- Review lens: ${receipt.reviewFocus?.label || "General review"}
+- Review lens priority: ${receipt.reviewFocus?.detail || "Not specified"}
 - Evidence report: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Evidence package readiness: ${readinessSummary(receipt.readiness)}
@@ -195,6 +198,7 @@ export function buildProgramReport(projects = [], options = {}) {
     ? projects.map((project) => ({ ...project, scores: project.scores || calculateScores(project) }))
     : [];
   const selected = options.selectedProject || rankedProjects[0] || null;
+  const roomFocus = selected?.reviewFocus || options.reviewFocus || null;
   const executedBright = countBy(rankedProjects, hasBrightDataSponsorProject);
   const draftReviews = countBy(rankedProjects, (project) => String(project.id || "").startsWith("review-"));
   const withDemo = countBy(rankedProjects, (project) => project.evidence?.hasPublicDemo || project.demoUrl);
@@ -225,12 +229,14 @@ Generated: ${new Date().toISOString()}
 - Projects with public GitHub evidence: ${withGithub}
 - Projects with executed Bright Data evidence: ${executedBright}
 - Projects with review-ready packages: ${ready}
+- Active review lens: ${roomFocus?.label || "Mixed reviewer lenses"}
 
 ## Selected Project
 
 - Project: ${selected?.title || "None selected"}
 - Team: ${selected?.team || "Not available"}
 - Recommendation: ${selected ? buildVerdict(selected, selected.scores || calculateScores(selected)).label : "Not available"}
+- Review lens: ${selected?.reviewFocus?.label || roomFocus?.label || "General review"}
 - Bright Data state: ${selected ? brightDataTraceState(selected) : "not available"}
 - Public demo: ${selected?.demoUrl || "not attached"}
 - GitHub: ${selected?.githubUrl || "not attached"}
@@ -241,7 +247,7 @@ ${topRows || "No projects available yet."}
 
 ## Sponsor Review Notes
 
-ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe sample review, copy a replay link, and export the selected project memo. Live mode upgrades the same flow through the private Bright Data backend when reviewer access is present.
+ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe draft review, copy a replay link, and export the selected project memo. Live mode upgrades the same flow through the private Bright Data backend when reviewer access is present.
 
 Bright Data remains the evidence layer. The room-level view shows which projects have executed source, search, and discovery evidence, and which projects only have sample or pending evidence. This lets sponsor judges separate actual live-web diligence from claims.
 `;

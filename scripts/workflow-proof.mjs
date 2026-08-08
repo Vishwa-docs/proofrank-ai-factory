@@ -140,9 +140,13 @@ try {
           return (
             !document.querySelector("#copyReviewLink")?.disabled &&
             params.get("reviewRepo") === "https://github.com/brightdata/brightdata-mcp" &&
-            params.get("reviewDemo") === "https://brightdata.com/"
+            params.get("reviewDemo") === "https://brightdata.com/" &&
+            params.get("reviewFocus") === "sponsor"
           );
         })(),
+        reviewFocus: document.querySelector("[data-review-focus].is-active")?.textContent?.replace(/\s+/g, " ").trim() || "",
+        traceTimelineSteps: document.querySelectorAll(".trace-timeline li").length,
+        modeLadderText: document.querySelector(".mode-ladder")?.textContent?.replace(/\s+/g, " ").trim() || "",
         statusLine: document.querySelector("#statusLine")?.textContent?.trim() || "",
         brightProof: document.querySelector("#liveProofStrip")?.textContent?.replace(/\s+/g, " ").trim() || "",
         scorecardText: document.querySelector("#scorecard")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
@@ -169,8 +173,11 @@ try {
     proof.rankedRows >= 8 &&
     proof.reviewerRowPresent === true &&
     proof.shareableReviewReady === true &&
+    /Current proof:\s*ProofRank/i.test(proof.brightProof) &&
     /Bright Data evidence passed/i.test(proof.brightProof) &&
-    /Run ID|bright-data-mcp/i.test(proof.receiptText) &&
+    proof.traceTimelineSteps === 4 &&
+    /Bright Data run timeline/i.test(proof.receiptText) &&
+    /Draft.*Live.*Verified/i.test(proof.modeLadderText) &&
     proof.exportedFiles.length === 3 &&
     messages.length === 0;
 

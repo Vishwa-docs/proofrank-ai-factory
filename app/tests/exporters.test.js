@@ -11,6 +11,13 @@ const project = {
   nativeBuilderUrl: "https://proofrank.nativelyai.app/",
   githubUrl: "https://github.com/example/proofrank",
   presentationUrl: "https://example.com/deck",
+  reviewFocus: {
+    id: "sponsor",
+    label: "Bright Data sponsor",
+    shortLabel: "Sponsor lens",
+    detail: "Prove source, search, and discovery evidence are actually live-web powered.",
+    action: "Prioritize executed Bright Data traces and inspect the Evidence view."
+  },
   scores: {
     overall: 88,
     eligibility: 90,
@@ -104,6 +111,7 @@ const adjacentProject = {
 
 const receipt = buildReceipt(project, [project, adjacentProject]);
 assert.equal(receipt.traceState, "executed");
+assert.equal(receipt.reviewFocus.label, "Bright Data sponsor");
 assert.equal(receipt.runReceipt.runId, "pr-20260807t120000000z-1a2b3c4d");
 assert.equal(receipt.runReceipt.traceDigest, "1a2b3c4d");
 assert.equal(receipt.scores.brightDataPrize, 98);
@@ -125,6 +133,8 @@ assert.match(packet, /Review Panel/);
 assert.match(packet, /Similarity Check/);
 assert.match(packet, /Readiness Checklist/);
 assert.match(packet, /Bright Data evidence state: executed/);
+assert.match(packet, /Review lens: Bright Data sponsor/);
+assert.match(packet, /Review lens priority: Prove source, search, and discovery evidence/);
 assert.match(packet, /Bright Data prize score: 98/);
 assert.match(packet, /Evidence report: pr-20260807t120000000z-1a2b3c4d/);
 assert.match(packet, /Replay command: PROOFRANK_FETCH_MODE=mcp npm run live:smoke/);
@@ -155,8 +165,10 @@ assert.match(reviewRoomReport, /ProofRank Review Room Report/);
 assert.match(reviewRoomReport, /Projects reviewed: 2/);
 assert.match(reviewRoomReport, /Visitor-added draft reviews: 1/);
 assert.match(reviewRoomReport, /Projects with executed Bright Data evidence: 1/);
+assert.match(reviewRoomReport, /Active review lens: Bright Data sponsor/);
 assert.match(reviewRoomReport, /Selected Project/);
 assert.match(reviewRoomReport, /ProofRank/);
+assert.match(reviewRoomReport, /Review lens: Bright Data sponsor/);
 assert.match(reviewRoomReport, /Bright Data state: executed/);
 
 console.log("exporter tests passed");

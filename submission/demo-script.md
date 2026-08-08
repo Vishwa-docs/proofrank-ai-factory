@@ -8,11 +8,11 @@ Target duration: under 1 minute. The generated reference video is kept below 59.
 
 ## 0:12-0:30 - Paste Links
 
-Show ProofRank open directly on the review workspace. Use the first-screen GitHub repo and demo app fields, then click Run sample review.
+Show ProofRank open directly on the review workspace. Use the first-screen GitHub repo and demo app fields, then click Create draft review.
 
 Say:
 
-"The sample review path lets judges try a public project without credentials. Live Bright Data review runs on the private backend, so API keys stay out of the browser."
+"The draft review path lets judges try a public project without credentials. Live Bright Data review runs on the private backend, so API keys stay out of the browser."
 
 ## 0:30-0:48 - Review Panel And Similarity Check
 
@@ -32,7 +32,7 @@ Say:
 
 ## Demo Must Show
 
-- Run sample review.
+- Create draft review.
 - Select a project.
 - Show Review Panel.
 - Show Prize Fit.

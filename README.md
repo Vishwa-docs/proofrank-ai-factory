@@ -115,7 +115,7 @@ npm run live:server
 
 Then open the app, switch collection mode to `Bright Data live`, keep the live
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
-GitHub repo plus deployed app URL. `Run sample review` validates public links in the browser; `Run live review` calls the sibling
+GitHub repo plus deployed app URL. `Create draft review` validates public links in the browser; `Run live review` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the

@@ -41,6 +41,8 @@ const elements = {
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
   copyReviewLink: document.querySelector("#copyReviewLink"),
+  reviewFocusButtons: [...document.querySelectorAll("[data-review-focus]")],
+  starterProjectButtons: [...document.querySelectorAll("[data-starter-project]")],
   copyAppLink: document.querySelector("#copyAppLink"),
   quickReviewHint: document.querySelector("#quickReviewHint"),
   reviewRoomStats: document.querySelector("#reviewRoomStats"),
@@ -69,9 +71,53 @@ const SAMPLE_REVIEW_LINKS = {
   repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
   demoUrl: "https://proofrank-ai-factory.vercel.app/"
 };
+const REVIEW_FOCI = {
+  sponsor: {
+    id: "sponsor",
+    label: "Bright Data sponsor",
+    shortLabel: "Sponsor lens",
+    detail: "Prove source, search, and discovery evidence are actually live-web powered.",
+    action: "Prioritize executed Bright Data traces and inspect the Evidence view."
+  },
+  judge: {
+    id: "judge",
+    label: "Hackathon judge",
+    shortLabel: "Judge lens",
+    detail: "Check eligibility, demo reachability, native.builder use, and originality gaps.",
+    action: "Prioritize readiness gates, public demo access, and missing submission proof."
+  },
+  buyer: {
+    id: "buyer",
+    label: "Business buyer",
+    shortLabel: "Buyer lens",
+    detail: "Assess whether the product has a real user, repeatable workflow, and adoption reason.",
+    action: "Prioritize business value, current blocker, and the review panel objections."
+  }
+};
+const STARTER_PROJECTS = {
+  proofrank: {
+    label: "ProofRank",
+    repoUrl: SAMPLE_REVIEW_LINKS.repoUrl,
+    demoUrl: SAMPLE_REVIEW_LINKS.demoUrl,
+    focus: "sponsor"
+  },
+  "brightdata-mcp": {
+    label: "Bright Data MCP",
+    repoUrl: "https://github.com/brightdata/brightdata-mcp",
+    demoUrl: "",
+    focus: "sponsor"
+  },
+  "speechmatics-academy": {
+    label: "Speechmatics Academy",
+    repoUrl: "https://github.com/speechmatics/speechmatics-academy",
+    demoUrl: "",
+    focus: "judge"
+  }
+};
 
 const state = {
   mode: "demo",
+  reviewFocus: "sponsor",
   filter: "all",
   activeSection: "overview",
   selectedId: "proofrank",
@@ -202,14 +248,16 @@ function shareableReviewParams() {
     const url = new URL(window.location.href);
     const repoUrl = url.searchParams.get("reviewRepo") || url.searchParams.get("repo") || "";
     const demoUrl = url.searchParams.get("reviewDemo") || url.searchParams.get("demo") || "";
-    return { repoUrl, demoUrl, autorun: url.searchParams.get("autorun") === "1" };
+    const focus = url.searchParams.get("reviewFocus") || "";
+    return { repoUrl, demoUrl, focus, autorun: url.searchParams.get("autorun") === "1" };
   } catch {
-    return { repoUrl: "", demoUrl: "", autorun: false };
+    return { repoUrl: "", demoUrl: "", focus: "", autorun: false };
   }
 }
 
 function loadReviewParamsFromUrl() {
   const params = shareableReviewParams();
+  if (params.focus && REVIEW_FOCI[params.focus]) setReviewFocus(params.focus, { silent: true });
   if (!params.repoUrl && !params.demoUrl) return false;
 
   if (params.repoUrl) {
@@ -220,7 +268,7 @@ function loadReviewParamsFromUrl() {
     elements.quickDemoUrl.value = params.demoUrl;
     elements.reviewerDemoUrl.value = params.demoUrl;
   }
-  setQuickHint(params.autorun ? "Review link loaded. Building a browser-safe sample review." : "Review link loaded. Click Run sample review to test it.", "ready");
+  setQuickHint(params.autorun ? "Review link loaded. Building a browser-safe draft review." : "Review link loaded. Click Create draft review to test it.", "ready");
   setCopyReviewLinkState();
   return params.autorun;
 }
@@ -232,6 +280,8 @@ function updateShareableReviewUrl(payload) {
     url.searchParams.set("reviewRepo", payload.repoUrl);
     if (payload.demoUrl) url.searchParams.set("reviewDemo", payload.demoUrl);
     else url.searchParams.delete("reviewDemo");
+    if (payload.reviewFocus?.id) url.searchParams.set("reviewFocus", payload.reviewFocus.id);
+    else url.searchParams.set("reviewFocus", state.reviewFocus);
     url.searchParams.delete("repo");
     url.searchParams.delete("demo");
     url.searchParams.delete("autorun");
@@ -253,7 +303,7 @@ function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
   elements.reviewerHint.textContent =
     "Verified sample selected. It includes an executed Bright Data source, search, and discovery run.";
   setQuickHint(
-    "Verified sample loaded: Bright Data source, search, and discovery checks are verified. Paste another project for a draft review.",
+    "Verified sample loaded: Bright Data source, search, and discovery checks are verified. Paste another project to create a draft review.",
     "ready"
   );
   setStatus("Verified sample selected. Open Evidence to inspect the Bright Data review record.", "ready");
@@ -269,6 +319,7 @@ function shareableReviewUrlFromQuick() {
   url.searchParams.set("reviewRepo", githubRepo.canonicalUrl);
   if (isHttpUrl(demoUrl)) url.searchParams.set("reviewDemo", demoUrl);
   else url.searchParams.delete("reviewDemo");
+  url.searchParams.set("reviewFocus", state.reviewFocus);
   url.searchParams.delete("repo");
   url.searchParams.delete("demo");
   url.searchParams.set("autorun", "1");
@@ -300,7 +351,7 @@ async function copyReviewLink() {
 
   try {
     await navigator.clipboard.writeText(reviewUrl);
-    setQuickHint("Review link copied. It preloads these links and runs the sample review.", "ready");
+    setQuickHint("Review link copied. It preloads these links and creates the draft review.", "ready");
     setStatus("Shareable review link copied.", "ready");
   } catch {
     window.prompt("Copy this review link:", reviewUrl);
@@ -324,6 +375,40 @@ async function copyAppLink() {
 
 function hasReviewToken() {
   return Boolean(syncReviewTokenFromUrl());
+}
+
+function selectedReviewFocus() {
+  return REVIEW_FOCI[state.reviewFocus] || REVIEW_FOCI.sponsor;
+}
+
+function setReviewFocus(focusId, options = {}) {
+  if (!REVIEW_FOCI[focusId]) return;
+  state.reviewFocus = focusId;
+  elements.reviewFocusButtons.forEach((button) => {
+    const selected = button.dataset.reviewFocus === focusId;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-checked", selected ? "true" : "false");
+  });
+  setCopyReviewLinkState();
+  if (!options.silent) {
+    const focus = selectedReviewFocus();
+    setQuickHint(`${focus.shortLabel} selected. ${focus.action}`, "ready");
+    setStatus(`${focus.label} selected.`, "ready");
+    render();
+  }
+}
+
+function loadStarterProject(starterId) {
+  const starter = STARTER_PROJECTS[starterId];
+  if (!starter) return;
+  setReviewFocus(starter.focus || state.reviewFocus, { silent: true });
+  elements.quickRepoUrl.value = starter.repoUrl;
+  elements.quickDemoUrl.value = starter.demoUrl || "";
+  syncFullReviewFormFromQuick();
+  setCopyReviewLinkState();
+  setQuickHint(`${starter.label} loaded. Create a draft review to add it, or replace the links with your own.`, "ready");
+  setStatus(`${starter.label} starter loaded.`, "ready");
+  render();
 }
 
 function reviewHeaders() {
@@ -385,7 +470,7 @@ function filteredProjects() {
   return state.projects.filter((project) => {
     const evidence = project.evidence || {};
     if (state.filter === "high-risk") return project.verdict.label === "High risk" || project.verdict.risks.length >= 2;
-    if (state.filter === "bright-strong") return project.scores.brightDataFit >= 75;
+    if (state.filter === "bright-strong") return hasBrightDataSponsorProofBundle(project);
     if (state.filter === "missing-demo") return !evidence.hasPublicDemo;
     if (state.filter === "missing-github") return !evidence.hasGithub;
     if (state.filter === "finalist-ready") return project.verdict.label === "Finalist-ready";
@@ -405,7 +490,7 @@ function setQuickHint(message, tone = "ready") {
 }
 
 function updateRunProfile() {
-  elements.runModeLabel.textContent = state.mode === "live" ? "Live Bright Data review" : "Sample review";
+  elements.runModeLabel.textContent = state.mode === "live" ? "Live Bright Data review" : "Draft review";
 }
 
 function hasPendingFinalSubmission(project = {}) {
@@ -435,7 +520,12 @@ function updateLiveProofStrip(project) {
   const traceState = brightDataTraceState(project);
   const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const receipt = project.runReceipt || {};
-  const proofScope = state.mode === "live" && project.id.startsWith("review-") ? "Live Bright Data review" : "Evidence report";
+  const proofScope =
+    state.mode === "live" && project.id.startsWith("review-")
+      ? `Live proof: ${project.title}`
+      : hasBrightDataSponsorProofBundle(project)
+        ? `Current proof: ${project.title}`
+        : `Draft proof: ${project.title}`;
   const className =
     sponsorBundle || traceState === "executed" ? "is-executed" : traceState === "direct" || traceState === "planned" ? "is-pending" : "is-missing";
   const title =
@@ -447,7 +537,7 @@ function updateLiveProofStrip(project) {
         ? "Direct evidence only"
         : traceState === "planned"
           ? "Live replay prepared"
-          : "Sample review only";
+          : "Draft review only";
   const detail =
     sponsorBundle
       ? `source, search, and discovery checked / ${receipt.signature ? "verified" : "review record pending"}`
@@ -554,6 +644,7 @@ function renderHeroDecision(project) {
   const scoreLabel = hasPendingFinalSubmission(project) ? "Evidence" : "Overall";
   const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
   const bundleStatus = hasBrightDataSponsorProofBundle(project) ? "executed" : traceState;
+  const focus = project.reviewFocus || selectedReviewFocus();
 
   elements.selectionSummaryMini.textContent = hasPendingFinalSubmission(project)
     ? `${displayText(project.title)} / evidence passed`
@@ -580,6 +671,10 @@ function renderHeroDecision(project) {
         <strong>${hasPendingFinalSubmission(project) ? "not sent" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
+    <div class="decision-focus">
+      <span>${escapeHtml(focus.shortLabel || "Review lens")}</span>
+      <strong>${escapeHtml(focus.detail || "Review context attached.")}</strong>
+    </div>
     <div class="decision-blocker">
       <span>Next step</span>
       <strong>${escapeHtml(primaryBlocker)}</strong>
@@ -592,7 +687,7 @@ function rankReason(project, index) {
   const reasons = [];
 
   if (hasBrightDataSponsorProofBundle(project)) reasons.push("executed Bright Data traces");
-  else if (traceState === "pending") reasons.push("Bright Data run pending");
+  else if (traceState === "pending") reasons.push("Bright Data check pending");
   else if (traceState === "direct") reasons.push("direct web evidence only");
   else reasons.push(`${traceState} evidence`);
 
@@ -897,9 +992,11 @@ function renderSourceLinks(project) {
 }
 
 function renderScorecard(project) {
+  const reviewFocus = project.reviewFocus || selectedReviewFocus();
   const visibleTechnologies = project.technologies.slice(0, 3);
   const hiddenTechnologyCount = Math.max(0, project.technologies.length - visibleTechnologies.length);
   const tags = [
+    `<span class="tag focus-tag">${escapeHtml(reviewFocus.shortLabel || reviewFocus.label || "Review lens")}</span>`,
     ...visibleTechnologies.map((technology) => `<span class="tag">${escapeHtml(technology)}</span>`),
     hiddenTechnologyCount
       ? `<span class="tag muted-tag" title="${escapeAttr(project.technologies.slice(visibleTechnologies.length).join(", "))}" aria-label="${escapeAttr(
@@ -945,6 +1042,10 @@ function renderScorecard(project) {
       <div>
         <h3>Next action</h3>
         <p>${escapeHtml(actionLabel)}</p>
+      </div>
+      <div>
+        <h3>Review lens</h3>
+        <p>${escapeHtml(reviewFocus.detail || "General project review.")}</p>
       </div>
       <div>
         <h3>Evidence depth</h3>
@@ -1026,6 +1127,62 @@ function renderScorecard(project) {
   `;
 }
 
+function traceStatusFor(project, matcher) {
+  const trace = (project.brightDataTraces || []).find((item) => matcher(String(item.tool || ""), String(item.queryOrUrl || "")));
+  if (!trace) return { status: "missing", detail: "not collected" };
+  const traceStatus = String(trace.traceStatus || trace.status || "pending").toLowerCase();
+  const passed = traceStatus === "executed";
+  return {
+    status: passed ? "passed" : "pending",
+    detail: passed
+      ? `${trace.resultCount || 0} result${trace.resultCount === 1 ? "" : "s"} / ${trace.byteCount || 0} bytes`
+      : trace.status || traceStatus
+  };
+}
+
+function renderBrightDataTimeline(project) {
+  const runReceipt = project.runReceipt || {};
+  const source = traceStatusFor(project, (tool) => /scrape|source|markdown|scraper/i.test(tool));
+  const search = traceStatusFor(project, (tool) => /search|serp/i.test(tool));
+  const discover = traceStatusFor(project, (tool) => /discover/i.test(tool));
+  const receipt = runReceipt.traceDigest
+    ? {
+        status: runReceipt.signature ? "passed" : "pending",
+        detail: runReceipt.signature ? "signature verified" : "record pending"
+      }
+    : { status: "missing", detail: "not issued" };
+  const steps = [
+    ["Source", "Fetch public repo/demo/submission evidence", source],
+    ["Search", "Find prior-art and public corroboration", search],
+    ["Discovery", "Rank related public signals", discover],
+    ["Receipt", "Bind the run into an exportable record", receipt]
+  ];
+
+  return `
+    <section class="trace-timeline" aria-label="Bright Data run timeline">
+      <div class="module-head compact">
+        <h2>Bright Data run timeline</h2>
+        <span class="hint">What the live-web evidence proves.</span>
+      </div>
+      <p class="judge-meaning">Bright Data gathers public source, search, and discovery evidence; ProofRank separates verified facts from claims before exporting the review record.</p>
+      <ol>
+        ${steps
+          .map(
+            ([label, body, step], index) => `
+              <li class="${escapeAttr(step.status)}">
+                <span>${index + 1}</span>
+                <strong>${escapeHtml(label)}</strong>
+                <p>${escapeHtml(body)}</p>
+                <small>${escapeHtml(step.detail)}</small>
+              </li>
+            `
+          )
+          .join("")}
+      </ol>
+    </section>
+  `;
+}
+
 function renderReceipt(project) {
   const runReceipt = project.runReceipt;
   const receiptItems = (project.evidenceItems || [])
@@ -1066,6 +1223,8 @@ function renderReceipt(project) {
     .join("");
 
   elements.receipt.innerHTML = `
+    ${renderBrightDataTimeline(project)}
+
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
       <span>Review run</span>
       <strong>${escapeHtml(runReceipt?.runId || "Not issued")}</strong>
@@ -1346,7 +1505,8 @@ function reviewerInputPayload() {
     team: elements.reviewerTeam.value.trim(),
     repoOwner: githubRepo.owner,
     repoName: githubRepo.repo,
-    eventUrl: elements.eventUrl.value || EVENT_URL
+    eventUrl: elements.eventUrl.value || EVENT_URL,
+    reviewFocus: selectedReviewFocus()
   };
 }
 
@@ -1369,7 +1529,8 @@ function reviewerProjectFromInputs() {
     title,
     team,
     summary:
-      "Reviewer-supplied hackathon project. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.",
+      `${payload.reviewFocus.label} draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.`,
+    reviewFocus: payload.reviewFocus,
     eventUrl: payload.eventUrl,
     submissionUrl: "",
     demoUrl: hasDemo ? demoUrl : "",
@@ -1377,8 +1538,8 @@ function reviewerProjectFromInputs() {
     presentationUrl: "",
     createdAt: new Date().toISOString().slice(0, 10),
     domain: "Reviewer input",
-    technologies: ["GitHub", "Bright Data collection pending"],
-    trackTags: ["Reviewer supplied"],
+    technologies: ["GitHub", "Bright Data collection pending", payload.reviewFocus.shortLabel],
+    trackTags: ["Reviewer supplied", payload.reviewFocus.label],
     evidence: {
       hasDemo,
       hasPublicDemo: hasDemo,
@@ -1412,9 +1573,9 @@ function reviewerProjectFromInputs() {
         id: `${id}-repo-input`,
         sourceType: "user-input",
         sourceUrl: repoUrl,
-        title: "Reviewer supplied GitHub repository",
+        title: `${payload.reviewFocus.label} GitHub repository`,
         excerpt:
-          "Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals.",
+          `Repository accepted locally. ${payload.reviewFocus.action} Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals.`,
         collectedAt: new Date().toISOString(),
         collector: "ProofRank reviewer intake",
         confidence: 0.72,
@@ -1478,7 +1639,7 @@ async function addReviewerProject() {
   } catch (error) {
     setStatus(error.message, "error");
     elements.reviewerHint.textContent = "Live review failed. Check the backend server and try again.";
-    setQuickHint("Live review failed. Switch to Sample review or retry the secure backend.", "error");
+    setQuickHint("Live review failed. Switch to Draft review or retry the secure backend.", "error");
     elements.addReviewerProject.disabled = false;
     elements.quickAddReviewerProject.disabled = false;
     return;
@@ -1520,8 +1681,8 @@ async function addQuickReviewerProject() {
   }
   await addReviewerProject();
   if (switchedFromLive) {
-    setQuickHint("Quick review switched to sample review so visitors can test links without private live access.", "warn");
-    setStatus("Quick review switched to sample review. Use Live setup for private Bright Data collection.", "warn");
+    setQuickHint("Quick review switched to draft review so visitors can test links without private live access.", "warn");
+    setStatus("Quick review switched to draft review. Use Live setup for private Bright Data collection.", "warn");
   }
 }
 
@@ -1533,7 +1694,7 @@ function updateReviewerModeCopy() {
       : "Use a private reviewer session before collecting live evidence.";
   } else {
     elements.addReviewerProject.textContent = "Add project";
-    elements.reviewerHint.textContent = "Sample review works without credentials. Live review adds Bright Data evidence.";
+    elements.reviewerHint.textContent = "Draft review works without credentials. Live review adds Bright Data evidence.";
   }
 }
 
@@ -1589,7 +1750,7 @@ elements.modeSelect.addEventListener("change", () => {
       ? hasReviewToken()
         ? "Secure live mode selected. Private reviewer access is loaded for this browser session."
         : "Secure live mode selected. Use a private reviewer session before collecting."
-      : "Demo review selected. Sample/local data is available without credentials.",
+      : "Draft review selected. Sample/local data is available without credentials.",
     state.mode === "live" ? "warn" : "ready"
   );
   updateRunProfile();
@@ -1605,6 +1766,12 @@ elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProje
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
 elements.copyReviewLink?.addEventListener("click", copyReviewLink);
 elements.copyAppLink?.addEventListener("click", copyAppLink);
+elements.reviewFocusButtons.forEach((button) => {
+  button.addEventListener("click", () => setReviewFocus(button.dataset.reviewFocus));
+});
+elements.starterProjectButtons.forEach((button) => {
+  button.addEventListener("click", () => loadStarterProject(button.dataset.starterProject));
+});
 elements.scorecard?.addEventListener("click", (event) => {
   if (event.target.closest("[data-export-selected]")) exportSubmissionPacket();
 });
@@ -1644,7 +1811,11 @@ function exportSubmissionPacket() {
 }
 
 function exportProgramReport() {
-  downloadText("proofrank-review-room-report.md", buildProgramReport(state.projects, { selectedProject: selectedProject() }), "text/markdown");
+  downloadText(
+    "proofrank-review-room-report.md",
+    buildProgramReport(state.projects, { selectedProject: selectedProject(), reviewFocus: selectedReviewFocus() }),
+    "text/markdown"
+  );
 }
 
 elements.heroExportPacket?.addEventListener("click", exportSubmissionPacket);
