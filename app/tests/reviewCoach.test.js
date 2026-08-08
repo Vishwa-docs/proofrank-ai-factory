@@ -14,7 +14,7 @@ assert.equal(initialCoach.badge, "Start here");
 assert.equal(initialCoach.title, "Test any public project");
 assert.equal(initialCoach.primary.action, "focusRepo");
 assert.match(initialCoach.body, /No login/i);
-assert.equal(initialCoach.checkpoints.length, 3);
+assert.equal(initialCoach.checkpoints.length, 0);
 
 const draftCoach = buildReviewCoach(
   {

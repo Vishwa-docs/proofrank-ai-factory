@@ -113,9 +113,9 @@ Start the local API used by the browser UI:
 npm run live:server
 ```
 
-Then open the app, switch collection mode to `Bright Data evidence run`, keep the private
+Then open the app, switch collection mode to `Bright Data evidence run`, keep the reviewer-access
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
-GitHub repo plus deployed app URL. `Add my project` creates a link-only draft, `Run public review` uses the public direct endpoint for GitHub/demo evidence, and `Run Bright Data` calls the sibling
+GitHub repo plus deployed app URL. `Add project` creates a link-only draft, `Run public review` uses the public direct endpoint for GitHub/demo evidence, and `Run Bright Data run` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the
@@ -196,7 +196,7 @@ Built and verified:
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 - Machine-readable final readiness audit at `submission/final-readiness-audit.json`
 - Responsive visual check covering 1440, 768, 414, 390, 375, and 320 px viewports
-- Prize brief with Bright Data lane, competition lane, buyer lane, and plain next actions for public drafts, public evidence, and private Bright Data review.
+- Prize brief with Bright Data lane, competition lane, buyer lane, and plain next actions for public drafts, public evidence, and Bright Data evidence runs.
 
 Refresh demo screenshots and video:
 

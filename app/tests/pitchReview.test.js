@@ -15,7 +15,7 @@ const project = {
 
 const strongTranscript = `
 ProofRank is built for hackathon judges and sponsor teams who need to review a crowded field fast.
-Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with private Bright Data collection.
+Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with server-side Bright Data collection.
 Bright Data fetches source pages, runs prior-art search, and discovers adjacent public evidence so every sponsor claim has a trace.
 The judge gets a shortlist decision, evidence gaps, business value, originality checks, and an exportable reviewer memo.
 The final ask is simple: use ProofRank to make Bright Data-powered review operations defensible.

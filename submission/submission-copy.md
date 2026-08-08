@@ -6,7 +6,7 @@ ProofRank
 
 ## Short Description
 
-Bright Data-powered review workspace for AI hackathon judges. ProofRank checks demos, GitHub repos, project claims, and prior art, then exports reviewer memos with confidence scores, evidence gaps, and sponsor-prize actions.
+ProofRank turns any AI project link into a trace-backed sponsor memo: public repo/demo checks first, then Bright Data source, search, and discovery evidence for shortlist decisions.
 
 ## Problem
 

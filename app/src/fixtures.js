@@ -85,7 +85,7 @@ export const fixtureProjects = [
         collector: "Bright Data adapter",
         confidence: 0.86,
         supports: ["Application of technology"],
-        limitations: "Local demo generates integration commands rather than calling private APIs from the browser."
+        limitations: "Local demo generates integration commands rather than calling server-side APIs from the browser."
       },
       {
         id: "proofrank-final-receipt",

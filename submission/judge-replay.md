@@ -2,7 +2,7 @@
 
 ProofRank has two replay modes:
 
-1. Verified receipt mode: no private review token needed. Judges can open the Native.builder app and inspect the Bright Data evidence receipt, exported memo, and evidence path.
+1. Verified receipt mode: no reviewer token needed. Judges can open the Native.builder app and inspect the Bright Data evidence receipt, exported memo, and evidence path.
 2. Live replay mode: optional, token-protected, server-side Bright Data run for a judge-supplied GitHub repo and demo URL.
 
 ## Current State

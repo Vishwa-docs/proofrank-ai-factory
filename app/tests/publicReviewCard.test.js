@@ -62,7 +62,7 @@ assert.match(publicCard, /Decision: Escalate for Bright Data review/);
 assert.match(publicCard, /GitHub: evidence collected/);
 assert.match(publicCard, /Demo: evidence collected/);
 assert.match(publicCard, /Bright Data: not used in public review; direct public evidence collected/);
-assert.match(publicCard, /Run private Bright Data review before prize-track submission/);
+assert.match(publicCard, /Run a Bright Data evidence run before prize-track submission/);
 assert.doesNotMatch(publicCard, /Draft review only/);
 
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");

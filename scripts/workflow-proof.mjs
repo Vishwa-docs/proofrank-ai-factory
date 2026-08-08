@@ -273,8 +273,8 @@ try {
     /not video verification/i.test(proof.pitchReviewText) &&
     /Bright Data evidence status stays separate/i.test(proof.pitchReviewText) &&
     proof.traceTimelineSteps === 4 &&
-    /Evidence checks/i.test(proof.receiptText) &&
-    /Draft.*Public review.*ProofRank sample result/i.test(proof.modeLadderText) &&
+    /Route.*Budget.*Prize calls|Evidence checks/i.test(proof.receiptText) &&
+    /Save draft.*Public review.*ProofRank sample result/i.test(proof.modeLadderText) &&
     proof.exportedFiles.length === 3 &&
     proof.forbiddenVisible.length === 0 &&
     messages.length === 0;

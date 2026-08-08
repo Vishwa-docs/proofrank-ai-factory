@@ -9,13 +9,13 @@ ProofRank
 ## Short Description
 
 ```text
-ProofRank is a Bright Data evidence workspace for AI hackathon judges. It reviews demo links, GitHub repos, claims, and prior art, then exports confidence scores, gaps, and sponsor-fit memos.
+ProofRank turns any AI project link into a trace-backed sponsor memo: public repo/demo checks first, then Bright Data source, search, and discovery evidence for shortlist decisions.
 ```
 
 ## Long Description
 
 ```text
-ProofRank is a Bright Data-powered diligence workspace for AI hackathon judges, sponsor teams, accelerators, and grant reviewers. Reviewers paste a public demo URL and GitHub repository, and ProofRank turns scattered project claims into a structured review queue with confidence scores, evidence gaps, prior-art signals, and exportable sponsor-fit memos.
+ProofRank is a Bright Data-powered diligence workspace for AI hackathon judges, sponsor teams, accelerators, and grant reviewers. Reviewers paste a public demo URL and GitHub repository, and ProofRank turns scattered project claims into a structured review queue with confidence scores, evidence gaps, prior-art signals, and exportable trace-backed sponsor memos.
 
 The product separates browser-safe draft checks from public evidence collection and Bright Data evidence runs. Public visitors can create a link-only draft, run a public repo/demo check, and see what has or has not been fetched. A reviewer with credentials can then upgrade that review with Bright Data source fetch, search, discovery, and a saved receipt. The Evidence view shows whether Bright Data was used as the actual acquisition layer rather than a decorative integration.
 

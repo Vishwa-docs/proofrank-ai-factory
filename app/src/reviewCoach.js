@@ -30,11 +30,7 @@ export function buildReviewCoach(project = {}, context = {}) {
         "No login needed. Paste a public GitHub repo and optional demo, then ProofRank shows what is checked and what still needs sponsor evidence.",
       primary: { action: "focusRepo", label: "Paste links" },
       secondary: { action: "sample", label: "Replay sample" },
-      checkpoints: [
-        checkpoint("Visitor can test links", "ready", "Public checks run without private keys."),
-        checkpoint("Guided path", "ready", "The tour highlights review, projects, evidence, and readiness."),
-        checkpoint("Bright Data sponsor check", "pending", "Private source, search, and discovery evidence stays gated until reviewer access exists.")
-      ]
+      checkpoints: []
     };
   }
 
@@ -64,7 +60,7 @@ export function buildReviewCoach(project = {}, context = {}) {
       secondary: { action: "evidence", label: "Open Bright Data receipt" },
       checkpoints: [
         checkpoint("Public evidence", "ready", "Repo or demo signals are attached."),
-        checkpoint("Bright Data evidence", "pending", "Run private collection for source, search, and discovery."),
+        checkpoint("Bright Data evidence", "pending", "Run reviewer-access collection for source, search, and discovery."),
         checkpoint("Reviewer memo", "pending", "Export after the sponsor layer is visible.")
       ]
     };

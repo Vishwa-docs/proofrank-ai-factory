@@ -59,7 +59,7 @@ function decisionFor(project = {}) {
 function nextActionFor(project = {}) {
   if (hasBrightDataSponsorProofBundle(project)) return "Export memo or inspect Evidence before you submit on lablab.ai";
   if (isDraft(project)) return "Run public review before treating links as evidence";
-  if (brightDataTraceState(project) === "direct") return "Run private Bright Data review before prize-track submission";
+  if (brightDataTraceState(project) === "direct") return "Run a Bright Data evidence run before prize-track submission";
   return "Collect source, search, discovery, and demo evidence";
 }
 

@@ -91,7 +91,7 @@ const receiptProject =
           action: "Submit packet from lablab team account",
           risks: [
             "Final lablab.ai submission is still pending from the team-owner account.",
-            "Fresh public replay requires a private review token and server-side Bright Data secret; the public package includes a server-checked receipt."
+            "Fresh public replay requires reviewer access and a server-side Bright Data secret; the public package includes a server-checked receipt."
           ]
         }
       }

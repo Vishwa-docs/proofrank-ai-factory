@@ -97,7 +97,7 @@ export function buildPrizeBrief(project = {}, context = {}) {
         ? "Tighten the prize case"
         : "Upgrade the evidence story";
   const summary = sponsorBundle
-    ? "Bright Data source, search, and discovery evidence is visible and tied to a reviewer memo. The next job is to defend the sponsor story against similar live-web projects."
+    ? "Bright Data source, search, and discovery evidence is visible and tied to a trace-backed sponsor memo. The next job is to defend the sponsor story against similar live-web projects."
     : "Public evidence is useful, but the Bright Data prize case needs server-side source, search, and discovery evidence before it can stand out.";
 
   return {
@@ -115,7 +115,7 @@ export function buildPrizeBrief(project = {}, context = {}) {
         status: brightStatus,
         detail: sponsorBundle
           ? "Source fetch, search, and discovery are attached to the selected review."
-          : "Run the private Bright Data review so live-web evidence becomes the main story."
+          : "Run the Bright Data evidence run so live-web evidence becomes the main story."
       },
       {
         label: "Competition lane",

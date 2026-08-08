@@ -13,7 +13,7 @@ Create a functional deployed app, not a landing page. The first screen must be a
 1. User pastes a public GitHub repository URL and optional deployed app URL in the first viewport.
 2. User can create a Draft audit (link-only local review) without credentials.
 3. Draft projects show Draft created / Not scored, a Draft Review Card with link-only status, copyable draft summary, copyable draft link, and a primary Run Bright Data action.
-4. User can open Links and choose Live Bright Data review when a private backend tokenized session is available.
+4. User can open Links and choose Live Bright Data review when a reviewer-access backend session is available.
 5. The app adds the project to a ranked queue and can also discover or load event submissions.
 6. The app ranks projects by:
    - Eligibility
@@ -45,7 +45,7 @@ Use a calm lablab-style event layout. The first viewport must explain the projec
 - Review shows What to fix next, selected project summary, score tiles, evidence route, Review Panel, Bright Data prize readiness, Similarity Check, and Claim Check.
 - Projects shows filters, ranked projects, Evidence checklist, and Category map.
 - Evidence shows source snippets, confidence, limitations, source-state table, and live collection plan.
-- Readiness contains Event URL, Review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project-public` as the public review API example and `https://proofrank-ai-factory.vercel.app/api/review-project` as the private sponsor endpoint when the judge has a tokenized replay session.
+- Readiness contains Event URL, Review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project-public` as the public review API example and `https://proofrank-ai-factory.vercel.app/api/review-project` as the reviewer-access sponsor endpoint when the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.

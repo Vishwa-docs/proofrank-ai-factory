@@ -8,7 +8,7 @@ const proofrankBrief = buildPrizeBrief(proofrank, { totalProjects: fixtureProjec
 assert.equal(proofrankBrief.badge, "Bright Data prize case");
 assert.equal(proofrankBrief.title, "Shortlist for sponsor review");
 assert.match(proofrankBrief.summary, /source, search, and discovery/i);
-assert.match(proofrankBrief.summary, /reviewer memo/i);
+assert.match(proofrankBrief.summary, /trace-backed sponsor memo/i);
 assert.equal(proofrankBrief.actions[0].action, "export");
 assert.equal(proofrankBrief.lanes.length, 3);
 assert.deepEqual(

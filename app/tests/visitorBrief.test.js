@@ -85,7 +85,7 @@ const receiptProject = {
   assert.equal(brief.badge, "Public evidence");
   assert.equal(brief.title, "Public review ready");
   assert.match(brief.summary, /real public repo\/demo evidence/i);
-  assert.match(brief.summary, /private Bright Data evidence/i);
+  assert.match(brief.summary, /reviewer-access Bright Data evidence/i);
   assert.equal(brief.actions[0].label, "Open Bright Data receipt");
   assert.equal(brief.actions[1].label, "Bright Data evidence run");
   assert.equal(brief.actions[2].label, "Export memo");

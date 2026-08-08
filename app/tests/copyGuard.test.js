@@ -25,7 +25,12 @@ const forbiddenVisiblePhrases = [
   "server-checked",
   "verified public demos",
   "proof plan",
-  "review packet is defensible"
+  "review packet is defensible",
+  "private bright data review",
+  "private bright data",
+  "private evidence",
+  "private collection",
+  "private review mode"
 ];
 
 for (const file of checkedFiles) {

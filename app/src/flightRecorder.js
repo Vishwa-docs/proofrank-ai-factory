@@ -14,6 +14,71 @@ function findTrace(project = {}, matcher) {
   return (project.brightDataTraces || []).find((trace) => matcher(traceText(trace)));
 }
 
+function parseTimestamp(value) {
+  const date = value ? new Date(value) : null;
+  return date && !Number.isNaN(date.valueOf()) ? date : null;
+}
+
+function latestTimestamp(project = {}) {
+  const dates = [
+    project.runReceipt?.issuedAt,
+    ...(project.brightDataTraces || []).map((trace) => trace.collectedAt),
+    ...(project.evidenceItems || []).map((item) => item.collectedAt)
+  ]
+    .map(parseTimestamp)
+    .filter(Boolean);
+
+  return dates.length ? new Date(Math.max(...dates.map((date) => date.valueOf()))) : null;
+}
+
+function formatShortDate(date) {
+  if (!date) return "No collection time";
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(date);
+}
+
+function buildFreshness(project, { sponsorReady, hasPublicOnly, now = new Date() } = {}) {
+  const collectedAt = latestTimestamp(project);
+
+  if (!sponsorReady) {
+    return {
+      state: hasPublicOnly ? "public-only" : "waiting",
+      label: hasPublicOnly ? "Public evidence only" : "Needs Bright Data timestamp",
+      detail: hasPublicOnly
+        ? "Run Bright Data source, search, and discovery before sponsor shortlisting."
+        : "The review becomes time-boxed once source, search, and discovery execute."
+    };
+  }
+
+  if (!collectedAt) {
+    return {
+      state: "unknown",
+      label: "Collection time missing",
+      detail: "Re-run Bright Data before using this in sponsor review."
+    };
+  }
+
+  const ageHours = Math.max(0, Math.round((now.valueOf() - collectedAt.valueOf()) / 36e5));
+  const state = ageHours <= 24 ? "fresh" : ageHours <= 72 ? "recheck-soon" : "recheck";
+  const detail =
+    state === "fresh"
+      ? "Fresh enough for demo review. Re-run before final sponsor shortlisting."
+      : state === "recheck-soon"
+        ? "Still useful, but re-run if the shortlist decision is today."
+        : "Stale for a live-web claim. Re-run Bright Data before relying on it.";
+
+  return {
+    state,
+    label: `Fresh as of ${formatShortDate(collectedAt)}`,
+    detail,
+    ageHours
+  };
+}
+
 function hasDirectPublicTrace(project = {}) {
   return (project.brightDataTraces || []).some(
     (trace) => trace.provider === "direct" && isExecutedTrace(trace)
@@ -26,7 +91,7 @@ function stageFromTrace({ label, planned, trace }) {
       label,
       state: planned ? "planned" : "missing",
       tool: planned ? "planned" : "not collected",
-      detail: planned ? "Ready for private collection." : "No source row attached.",
+      detail: planned ? "Ready for reviewer-access collection." : "No source row attached.",
       countsForSponsor: false
     };
   }
@@ -43,7 +108,7 @@ function stageFromTrace({ label, planned, trace }) {
   };
 }
 
-export function buildFlightRecorder(project = {}) {
+export function buildFlightRecorder(project = {}, context = {}) {
   const traces = project.brightDataTraces || [];
   const planned = traces.length === 0 || traces.some((trace) => /pending|planned|waiting/i.test(traceState(trace)));
   const source = findTrace(project, (text) => /scrape|source|markdown|scraper/.test(text));
@@ -84,13 +149,14 @@ export function buildFlightRecorder(project = {}) {
   const digest = sponsorReady
     ? "Bright Data source, search, discovery, and saved review are attached."
     : hasPublicOnly
-      ? "Public review is attached; Bright Data sponsor calls still need private collection."
+      ? "Public review is attached; Bright Data sponsor calls still need reviewer access."
       : "No Bright Data calls have run yet. Source, search, and discovery are planned.";
 
   return {
     badge: "Bright Data flight recorder",
     sponsorEvidence,
     digest,
+    freshness: buildFreshness(project, { sponsorReady, hasPublicOnly, now: context.now ? new Date(context.now) : new Date() }),
     stages
   };
 }

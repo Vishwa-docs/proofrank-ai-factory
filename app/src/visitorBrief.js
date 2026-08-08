@@ -75,7 +75,7 @@ export function buildVisitorBrief(project = {}) {
       variant: "review",
       badge: "Public evidence",
       title: "Public review ready",
-      summary: `${title} has real public repo/demo evidence. Add private Bright Data evidence before treating it as prize-track ready.`,
+      summary: `${title} has real public repo/demo evidence. Add reviewer-access Bright Data evidence before treating it as prize-track ready.`,
       rows: [
         {
           label: "What was checked",

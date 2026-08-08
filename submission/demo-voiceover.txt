@@ -6,4 +6,4 @@ Run public review for safe GitHub and demo evidence. A Bright Data evidence run 
 
 ProofRank turns that evidence into a Prize brief: shortlist, collect more evidence, or export the memo. It also compares the field and flags pitch claims that still need support.
 
-Export the review memo, evidence JSON, or room report. The result is a defensible shortlist, not another pile of links.
+Export the trace-backed sponsor memo, evidence JSON, or room report. The result is a defensible shortlist, not another pile of links.

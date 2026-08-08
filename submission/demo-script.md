@@ -4,7 +4,7 @@ Target duration: under 1 minute. The generated reference video is kept below 59.
 
 ## 0:00-0:12 - Pain
 
-"Judges and sponsor teams may have dozens or hundreds of AI submissions. The claims are scattered across project pages, demos, repos, decks, videos, and the live web. ProofRank turns that mess into evidence-backed diligence."
+"Judges and sponsor teams may have dozens or hundreds of AI submissions. The claims are scattered across project pages, demos, repos, decks, videos, and the live web. ProofRank turns that mess into a trace-backed sponsor memo."
 
 ## 0:12-0:30 - Paste Links
 

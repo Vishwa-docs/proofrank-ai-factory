@@ -3,7 +3,7 @@ import { fixtureProjects } from "../src/fixtures.js";
 import { buildFlightRecorder } from "../src/flightRecorder.js";
 
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
-const readyRecorder = buildFlightRecorder(proofrank);
+const readyRecorder = buildFlightRecorder(proofrank, { now: "2026-08-08T09:30:00.000Z" });
 
 assert.equal(readyRecorder.badge, "Bright Data flight recorder");
 assert.equal(readyRecorder.sponsorEvidence, "ready");
@@ -14,6 +14,8 @@ assert.deepEqual(
 );
 assert.ok(readyRecorder.stages.every((stage) => stage.countsForSponsor === true));
 assert.match(readyRecorder.digest, /saved review/i);
+assert.equal(readyRecorder.freshness.state, "fresh");
+assert.match(readyRecorder.freshness.label, /Fresh as of/i);
 
 const publicOnly = buildFlightRecorder({
   ...proofrank,
@@ -40,6 +42,8 @@ const publicOnly = buildFlightRecorder({
 assert.equal(publicOnly.sponsorEvidence, "gated");
 assert.ok(publicOnly.stages.some((stage) => stage.state === "public-only"));
 assert.match(publicOnly.digest, /public review/i);
+assert.equal(publicOnly.freshness.state, "public-only");
+assert.match(publicOnly.freshness.detail, /Run Bright Data/i);
 assert.doesNotMatch(JSON.stringify(publicOnly), /signed proof|certified|submission-ready|proves/i);
 
 const draft = buildFlightRecorder({
@@ -54,5 +58,6 @@ const draft = buildFlightRecorder({
 assert.equal(draft.sponsorEvidence, "not run");
 assert.ok(draft.stages.every((stage) => stage.state === "planned"));
 assert.match(draft.digest, /No Bright Data calls/i);
+assert.equal(draft.freshness.state, "waiting");
 
 console.log("flight recorder tests passed");

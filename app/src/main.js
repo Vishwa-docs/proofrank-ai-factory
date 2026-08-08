@@ -119,14 +119,14 @@ const REVIEW_MODES = {
   live: {
     label: "Bright Data evidence run",
     runLabel: "Bright Data evidence run",
-    button: "Run private review",
-    addButton: "Run private review",
+    button: "Run Bright Data run",
+    addButton: "Run Bright Data run",
     status: "Bright Data evidence run selected. Server-side access is required before collection.",
     hint: "Bright Data evidence run adds source, search, and discovery later. API keys never belong in the browser."
   }
 };
 const PITCH_SAMPLE_TRANSCRIPT = `ProofRank is built for hackathon judges and sponsor teams who need to review a crowded field fast.
-Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with Bright Data collection.
+Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with server-side Bright Data collection.
 Bright Data fetches source pages, runs prior-art search, and discovers adjacent public evidence so every sponsor claim has a source row.
 The judge gets a shortlist decision, evidence gaps, business value, originality checks, and an exportable reviewer memo.
 The final ask is simple: use ProofRank to make Bright Data-powered review operations defensible.`;
@@ -239,7 +239,7 @@ const TOUR_STEPS = [
   {
     label: "Step 2 of 5",
     title: "Get a judge action",
-    body: "Drafts stay unscored. Public or private evidence turns the project into a shortlist, escalate, or fix-gaps decision.",
+    body: "Drafts stay unscored. Public evidence or reviewer-access Bright Data evidence turns the project into a shortlist, escalate, or fix-gaps decision.",
     section: "overview",
     target: "#scorecard"
   },
@@ -259,7 +259,7 @@ const TOUR_STEPS = [
   },
   {
     label: "Step 5 of 5",
-    title: "Upgrade to private evidence",
+    title: "Upgrade to sponsor evidence",
     body: "Bright Data evidence run holds server-side setup and the final readiness checklist. Public review stays safe for visitors.",
     section: "setup",
     target: "#modeSelect"
@@ -455,11 +455,11 @@ function setCopyReviewLinkState() {
   try {
     shareableReviewUrlFromQuick();
     elements.copyReviewLink.disabled = false;
-    elements.copyReviewLink.textContent = "Copy draft link";
-    elements.copyReviewLink.title = "Copy a link that preloads this repo and demo as a draft review.";
+    elements.copyReviewLink.textContent = "Copy public review link";
+    elements.copyReviewLink.title = "Copy a link that preloads this repo and runs the public review path.";
   } catch {
     elements.copyReviewLink.disabled = true;
-    elements.copyReviewLink.textContent = "Enter repo to copy draft link";
+    elements.copyReviewLink.textContent = "Enter repo to copy review link";
     elements.copyReviewLink.title = "Paste a public GitHub repository URL first.";
   }
 }
@@ -477,8 +477,8 @@ async function copyReviewLink() {
 
   try {
     await navigator.clipboard.writeText(reviewUrl);
-    setQuickHint("Draft link copied. It preloads these links and creates the browser-safe review.", "ready");
-    setStatus("Shareable draft link copied.", "ready");
+    setQuickHint("Public review link copied. It preloads these links and runs the browser-safe review path.", "ready");
+    setStatus("Shareable public review link copied.", "ready");
   } catch {
     window.prompt("Copy this review link:", reviewUrl);
     setQuickHint("Copy the review link from the browser prompt.", "ready");
@@ -652,7 +652,7 @@ function setReviewMode(modeName, options = {}) {
     setQuickHint(REVIEW_MODES[modeName].hint, tone);
     setStatus(
       modeName === "live" && !hasReviewToken()
-        ? "Bright Data evidence run selected. Public visitors can run Public review; judges with private access can run Bright Data collection."
+        ? "Bright Data evidence run selected. Public visitors can run Public review; reviewer access unlocks Bright Data collection."
         : REVIEW_MODES[modeName].status,
       tone
     );
@@ -668,7 +668,7 @@ function loadStarterProject(starterId) {
   elements.quickDemoUrl.value = starter.demoUrl || "";
   syncFullReviewFormFromQuick();
   setCopyReviewLinkState();
-  setQuickHint(`${starter.label} loaded. Create a draft review to add it, or replace the links with your own.`, "ready");
+  setQuickHint(`${starter.label} loaded. Run public review to test it, or replace the links with your own.`, "ready");
   setStatus(`${starter.label} starter loaded.`, "ready");
   render();
 }
@@ -844,7 +844,7 @@ function updateLiveProofStrip(project) {
       : traceState === "direct"
         ? "Direct evidence only"
           : traceState === "planned"
-          ? "Private replay prepared"
+          ? "Reviewer-access run prepared"
           : "Draft review only";
   const detail =
     sponsorBundle
@@ -1727,7 +1727,7 @@ function renderScorecard(project) {
   const runReceipt = project.runReceipt || {};
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
   const sponsorToolLabel = sponsorProofReady ? "Source + search + discovery" : "Source, search, and discovery needed";
-  const replayState = state.mode === "live" ? (hasReviewToken() ? "private session ready" : "private token needed") : "Private backend";
+  const replayState = state.mode === "live" ? (hasReviewToken() ? "reviewer access ready" : "reviewer token needed") : "server-side backend";
 
   elements.scorecard.innerHTML = `
     <section class="focus-strip">
@@ -1802,7 +1802,7 @@ function renderScorecard(project) {
       <section class="score-grid" aria-label="Score breakdown">
         ${scoreTile("Eligibility", project.scores.eligibility, "Demo, repo, build evidence")}
         ${scoreTile("Bright fit", project.scores.brightDataFit, "Live web is load-bearing")}
-        ${scoreTile("Bright prize", project.scores.brightDataPrize, "Private review rank")}
+        ${scoreTile("Bright prize", project.scores.brightDataPrize, "Reviewer-access rank")}
         ${scoreTile("Business", project.scores.businessValue, "Clear user and urgency")}
         ${scoreTile("Originality", project.scores.originality, "Distinct angle and evidence")}
         ${scoreTile("Presentation", project.scores.presentation, "Judge-ready explanation")}
@@ -1849,6 +1849,48 @@ function formatBytes(bytes = 0) {
   if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
   if (value >= 1024) return `${(value / 1024).toFixed(1)} KB`;
   return `${value} bytes`;
+}
+
+function renderBrightDataBudget(project = {}) {
+  const traces = project.brightDataTraces || [];
+  const brightTraces = traces.filter((trace) => trace.provider === "bright-data");
+  const sponsorTraces = brightTraces.filter((trace) => trace.countsForSponsorFit !== false);
+  const executedSponsorTraces = sponsorTraces.filter((trace) => trace.traceStatus === "executed");
+  const directTraces = traces.filter((trace) => trace.provider === "direct");
+  const toolList = [...new Set(executedSponsorTraces.map((trace) => trace.tool).filter(Boolean))];
+  const byteTotal = executedSponsorTraces.reduce((sum, trace) => sum + Number(trace.byteCount || 0), 0);
+  const route = project.runReceipt?.collectionMode || (brightTraces.length ? "bright-data planned" : directTraces.length ? "direct public review" : "not run");
+  const cap = 12;
+  const callLabel = brightTraces.length
+    ? `${executedSponsorTraces.length}/${sponsorTraces.length || brightTraces.length} sponsor-counting`
+    : "0 sponsor-counting";
+  const budgetLabel = brightTraces.length ? `${brightTraces.length}/${cap} call cap` : `0/${cap} call cap`;
+  const toolLabel = toolList.length ? toolList.join(", ") : directTraces.length ? "direct public fetch only" : "source, search, discovery planned";
+
+  return `
+    <section class="trace-budget" aria-label="Bright Data route and budget">
+      <div>
+        <span>Route</span>
+        <strong>${escapeHtml(route)}</strong>
+      </div>
+      <div>
+        <span>Budget</span>
+        <strong>${escapeHtml(budgetLabel)}</strong>
+      </div>
+      <div>
+        <span>Prize calls</span>
+        <strong>${escapeHtml(callLabel)}</strong>
+      </div>
+      <div>
+        <span>Tools</span>
+        <strong>${escapeHtml(toolLabel)}</strong>
+      </div>
+      <div>
+        <span>Downloaded</span>
+        <strong>${escapeHtml(formatBytes(byteTotal))}</strong>
+      </div>
+    </section>
+  `;
 }
 
 function renderBrightDataTimeline(project) {
@@ -1936,6 +1978,8 @@ function renderReceipt(project) {
   elements.receipt.innerHTML = `
     ${renderFlightRecorder(project)}
 
+    ${renderBrightDataBudget(project)}
+
     ${renderBrightDataTimeline(project)}
 
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
@@ -1970,7 +2014,7 @@ function renderReceipt(project) {
       <summary>Live collection plan</summary>
       <div class="receipt-item live-plan">
         <h3>Planned collector calls</h3>
-        <p>${state.mode === "live" ? "Sponsor review runs on a private backend; tokens never belong in the browser." : "Public and draft review mirror these collection steps without using Bright Data credentials."}</p>
+        <p>${state.mode === "live" ? "Sponsor review runs on the server-side backend; tokens never belong in the browser." : "Public and draft review mirror these collection steps without using Bright Data credentials."}</p>
         <ul>${livePlan}</ul>
       </div>
     </details>
@@ -2081,6 +2125,7 @@ function renderReviewCoach(project = selectedProject()) {
   const secondary = coach.secondary
     ? `<button class="text-button small" data-coach-action="${escapeAttr(coach.secondary.action)}" type="button">${escapeHtml(coach.secondary.label)}</button>`
     : "";
+  const checkpointList = checkpoints ? `<ul class="review-coach-checks">${checkpoints}</ul>` : "";
 
   elements.reviewCoach.innerHTML = `
     <div class="review-coach-head">
@@ -2089,7 +2134,7 @@ function renderReviewCoach(project = selectedProject()) {
       <p>${escapeHtml(coach.body)}</p>
     </div>
     <div class="review-coach-actions">${primary}${secondary}</div>
-    <ul class="review-coach-checks">${checkpoints}</ul>
+    ${checkpointList}
   `;
 }
 
@@ -2118,6 +2163,11 @@ function renderFlightRecorder(project = selectedProject(), options = {}) {
         </div>
         <strong>${escapeHtml(recorder.sponsorEvidence)}</strong>
       </div>
+      <div class="flight-recorder-freshness ${escapeAttr(recorder.freshness.state)}">
+        <span>Freshness</span>
+        <strong>${escapeHtml(recorder.freshness.label)}</strong>
+        <small>${escapeHtml(recorder.freshness.detail)}</small>
+      </div>
       <ol class="flight-recorder-stages">${stages}</ol>
     </section>
   `;
@@ -2125,11 +2175,21 @@ function renderFlightRecorder(project = selectedProject(), options = {}) {
 
 function render() {
   const project = selectedProject();
+  const showHeroEvidence = state.reviewStarted || project.id !== "proofrank";
+  const selectionDrawer = document.querySelector(".selection-drawer");
   updateRunProfile();
   updateLiveProofStrip(project);
   renderReviewCoach(project);
-  if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = renderFlightRecorder(project, { compact: true });
-  renderHeroDecision(project);
+  if (selectionDrawer) selectionDrawer.hidden = !showHeroEvidence;
+  if (showHeroEvidence) {
+    if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = renderFlightRecorder(project, { compact: true });
+    renderHeroDecision(project);
+  } else {
+    if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = "";
+    if (elements.heroDecision) elements.heroDecision.innerHTML = "";
+    if (elements.readinessSummary) elements.readinessSummary.innerHTML = "";
+    if (elements.readinessMeter) elements.readinessMeter.style.setProperty("--bar-width", "0%");
+  }
   renderProofTopology(project);
   renderFixList(project);
   renderRankedList();
@@ -2312,7 +2372,7 @@ function reviewerProjectFromInputs() {
     title,
     team,
     summary:
-      `${payload.reviewFocus.label} draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once public or private Bright Data collection runs.`,
+      `${payload.reviewFocus.label} draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once a public check or server-side Bright Data evidence run finishes.`,
     reviewFocus: payload.reviewFocus,
     eventUrl: payload.eventUrl,
     submissionUrl: "",
@@ -2358,7 +2418,7 @@ function reviewerProjectFromInputs() {
         sourceUrl: repoUrl,
         title: `${payload.reviewFocus.label} GitHub repository`,
         excerpt:
-          `Repository accepted locally. ${payload.reviewFocus.action} Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals.`,
+          `Repository accepted locally. ${payload.reviewFocus.action} Run server-side collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals.`,
         collectedAt: new Date().toISOString(),
         collector: "ProofRank reviewer intake",
         confidence: 0.72,
@@ -2428,7 +2488,7 @@ async function addReviewerProject() {
     setQuickHint(
       state.mode === "public"
         ? "Public review failed. Switch to Draft, or use a common public demo host such as Vercel, GitHub Pages, Hugging Face, or Netlify."
-        : "Bright Data evidence run failed. Switch to Draft/Public review or retry the private backend.",
+        : "Bright Data evidence run failed. Switch to Draft/Public review or retry with reviewer access.",
       "error"
     );
     elements.addReviewerProject.disabled = false;
@@ -2448,10 +2508,10 @@ async function addReviewerProject() {
   if (selectionDrawer) selectionDrawer.open = true;
   elements.reviewerHint.textContent =
     state.mode === "live"
-      ? "Project collected with the private Bright Data backend. Inspect the evidence and saved review."
+      ? "Project collected with the Bright Data evidence backend. Inspect the evidence and saved review."
       : state.mode === "public"
-        ? "Project collected with public repo/demo evidence. Run the private Bright Data review later for source, search, and discovery checks."
-        : "Project added. Public review or private Bright Data review can deepen this result.";
+        ? "Project collected with public repo/demo evidence. Run the Bright Data evidence run later for source, search, and discovery checks."
+        : "Project added. Public review or a Bright Data evidence run can deepen this result.";
   setQuickHint(
     state.mode === "live"
       ? "Bright Data evidence collected. Open Bright Data receipt to inspect the saved review."
@@ -2475,11 +2535,11 @@ async function addQuickReviewerProject() {
   await addReviewerProject();
   if (switchedFromLockedLive) {
     if (isLocalPreviewHost()) {
-      setQuickHint("Bright Data evidence run needs private access. Local preview created a draft instead.", "warn");
-      setStatus("Bright Data evidence run needs private access. Draft review ran instead.", "warn");
+      setQuickHint("Bright Data evidence run needs reviewer access. Local preview created a draft instead.", "warn");
+      setStatus("Bright Data evidence run needs reviewer access. Draft review ran instead.", "warn");
     } else {
-      setQuickHint("Bright Data evidence run needs private access, so ProofRank ran the public evidence check instead.", "warn");
-      setStatus("Bright Data evidence run needs private access. Public review ran instead.", "warn");
+      setQuickHint("Bright Data evidence run needs reviewer access, so ProofRank ran the public evidence check instead.", "warn");
+      setStatus("Bright Data evidence run needs reviewer access. Public review ran instead.", "warn");
     }
   }
 }
@@ -2531,11 +2591,11 @@ function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = REVIEW_MODES.live.addButton;
     elements.reviewerHint.textContent = hasReviewToken()
-      ? "Private sponsor access loaded for this session; Bright Data tokens stay server-side."
-      : "Public visitors can create drafts or public reviews. Judges with private access can run Bright Data collection.";
+      ? "Reviewer access loaded for this session; Bright Data tokens stay server-side."
+      : "Public visitors can create drafts or public reviews. Reviewer access unlocks Bright Data collection.";
   } else if (state.mode === "public") {
     elements.addReviewerProject.textContent = REVIEW_MODES.public.addButton;
-    elements.reviewerHint.textContent = "Public review fetches public GitHub and common demo-host evidence without private credentials.";
+    elements.reviewerHint.textContent = "Public review fetches public GitHub and common demo-host evidence without reviewer credentials.";
   } else {
     elements.addReviewerProject.textContent = REVIEW_MODES.demo.addButton;
     elements.reviewerHint.textContent = "Draft review works without credentials. Public review can fetch real public evidence next.";
@@ -2683,7 +2743,7 @@ elements.scorecard?.addEventListener("click", async (event) => {
   } else if (action === "live") {
     setActiveSection("setup", { scroll: true });
     window.setTimeout(() => elements.modeSelect?.focus(), 220);
-    setStatus("Readiness opened. Use reviewer access for private Bright Data collection.", "ready");
+    setStatus("Readiness opened. Use reviewer access for the Bright Data evidence run.", "ready");
   } else if (action === "export") {
     exportSubmissionPacket();
     setStatus("Project memo export started.", "ready");

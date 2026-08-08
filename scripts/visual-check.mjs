@@ -8,6 +8,7 @@ const chromePath =
   process.env.CHROME_EXECUTABLE ||
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const targetUrl = process.env.PROOFRANK_URL || "http://127.0.0.1:4283/";
+const publicReviewEndpoint = "https://proofrank-ai-factory.vercel.app/api/review-project-public";
 
 const require = createRequire(`file://${playwrightPackage}`);
 const { chromium } = require("playwright");
@@ -18,6 +19,96 @@ const browser = await chromium.launch({
 });
 
 const results = [];
+
+function mockedPublicReviewProject(payload = {}) {
+  const repoUrl = payload.repoUrl || "https://github.com/brightdata/brightdata-mcp";
+  const demoUrl = payload.demoUrl || "https://brightdata.com/";
+  return {
+    id: "review-brightdata-brightdata-mcp",
+    title: "Brightdata MCP",
+    team: "Brightdata",
+    summary: "Public review target used to prove that first-time visitors can paste their own GitHub repo and demo URL.",
+    eventUrl: "https://lablab.ai/apps",
+    submissionUrl: "",
+    demoUrl,
+    githubUrl: repoUrl,
+    presentationUrl: "",
+    createdAt: "2026-08-08",
+    domain: "Reviewer input",
+    technologies: ["GitHub", "Bright Data MCP", "Public review"],
+    trackTags: ["Reviewer supplied", "Bright Data sponsor"],
+    evidence: {
+      hasDemo: true,
+      hasPublicDemo: true,
+      hasGithub: true,
+      hasPresentation: false,
+      nativeBuilderExplained: false,
+      builtDuringEvent: false,
+      isFunctional: true,
+      notLandingPage: true,
+      demoWorkflow: true,
+      conciseSummary: true,
+      targetUser: true,
+      clearPain: true,
+      repeatableWorkflow: true,
+      buyerExists: true,
+      urgency: true,
+      differentiation: true,
+      lowCrowdOverlap: false,
+      proofReceipt: false,
+      specificWedge: true,
+      nonGenericAgent: true,
+      brightDataRole: "supporting",
+      brightDataTools: ["Bright Data MCP"],
+      agenticLoop: false,
+      brightDataTrace: true,
+      brightDataTraceStatus: "direct",
+      brightDataTraceVisible: true
+    },
+    evidenceItems: [
+      {
+        id: "review-brightdata-mcp-repo",
+        sourceType: "github",
+        sourceUrl: repoUrl,
+        title: "Public GitHub repository",
+        excerpt: "Repository metadata and README signals collected through the public review path.",
+        collectedAt: "2026-08-08T10:00:00.000Z",
+        collector: "ProofRank public reviewer",
+        confidence: 0.84,
+        supports: ["GitHub evidence"],
+        limitations: "Direct public review does not count as Bright Data sponsor evidence."
+      },
+      {
+        id: "review-brightdata-mcp-demo",
+        sourceType: "demo",
+        sourceUrl: demoUrl,
+        title: "Public demo URL",
+        excerpt: "Demo URL accepted and checked by the public review path.",
+        collectedAt: "2026-08-08T10:00:00.000Z",
+        collector: "ProofRank public reviewer",
+        confidence: 0.78,
+        supports: ["Demo evidence"],
+        limitations: "Direct public review does not inspect protected pages."
+      }
+    ],
+    brightDataTraces: [
+      {
+        mode: "public-direct",
+        provider: "direct",
+        traceStatus: "executed",
+        tool: "fetch",
+        queryOrUrl: repoUrl,
+        resultCount: 1,
+        status: "direct public fetch",
+        collectedAt: "2026-08-08T10:00:00.000Z",
+        byteCount: 4200,
+        contentHash: "bdamcp00",
+        countsForSponsorFit: false
+      }
+    ],
+    runReceipt: null
+  };
+}
 
 async function tourTargetVisible(page, targetSelector) {
   return page.evaluate((selector) => {
@@ -62,6 +153,15 @@ for (const spec of [
   });
   page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
 
+  await page.route(publicReviewEndpoint, async (route) => {
+    const payload = JSON.parse(route.request().postData() || "{}");
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ project: mockedPublicReviewProject(payload) })
+    });
+  });
+
   await page.goto(targetUrl, { waitUntil: "networkidle" });
   await page.evaluate(() => {
     window.__proofrankCopiedText = "";
@@ -88,6 +188,8 @@ for (const spec of [
     const visibleInputs = [...quick.querySelectorAll("input")].filter(isVisible);
     const visiblePrimary = [...quick.querySelectorAll("button.primary-button")].filter(isVisible);
     const visibleSecondary = [...quick.querySelectorAll(".quick-actions .text-button, .quick-actions .secondary-button")].filter(isVisible);
+    const quickStarterCount = [...quick.querySelectorAll(".quick-starters .starter-chip")].filter(isVisible).length;
+    const promiseCount = [...quick.querySelectorAll(".first-run-promise li")].filter(isVisible).length;
     const hiddenGroups = [
       ".path-drawer .quick-path",
       ".review-mode-switch",
@@ -104,6 +206,8 @@ for (const spec of [
       visibleInputs: visibleInputs.length,
       visiblePrimary: visiblePrimary.length,
       visibleSecondary: visibleSecondary.length,
+      quickStarterCount,
+      promiseCount,
       hiddenGroups,
       pathClosed: document.querySelector(".path-drawer")?.open === false,
       optionsClosed: document.querySelector("#reviewOptions")?.open === false
@@ -113,11 +217,13 @@ for (const spec of [
     initialQuickReviewCalm.visibleInputs > 2 ||
     initialQuickReviewCalm.visiblePrimary !== 1 ||
     initialQuickReviewCalm.visibleSecondary > 1 ||
+    initialQuickReviewCalm.quickStarterCount !== 3 ||
+    initialQuickReviewCalm.promiseCount !== 3 ||
     !initialQuickReviewCalm.hiddenGroups ||
     !initialQuickReviewCalm.pathClosed ||
     !initialQuickReviewCalm.optionsClosed
   ) {
-    throw new Error(`Initial quick review is still too crowded: ${JSON.stringify(initialQuickReviewCalm)}`);
+    throw new Error(`Initial quick review does not show the right guided path: ${JSON.stringify(initialQuickReviewCalm)}`);
   }
 
   if (spec.name === "desktop") {
@@ -194,17 +300,24 @@ for (const spec of [
     }
     await page.click('[data-section-tab="setup"]');
     const firstStepControlsReady = await page.evaluate(() => {
-      return (
-        document.querySelectorAll(".review-coach-checks li").length === 3 &&
-        document.querySelectorAll("[data-review-focus]").length === 3 &&
-        document.querySelectorAll("[data-starter-project]").length === 3 &&
-        document.querySelectorAll(".mode-ladder span").length === 3 &&
-        Boolean(document.querySelector("#loadExternalSample")) &&
-        Boolean(document.querySelector(".bright-path"))
-      );
+      return {
+        reviewCoachChecks: document.querySelectorAll(".review-coach-checks li").length,
+        reviewFocusControls: document.querySelectorAll("[data-review-focus]").length,
+        starterControls: document.querySelectorAll("[data-starter-project]").length,
+        modeLadder: document.querySelectorAll(".mode-ladder span").length,
+        externalSample: Boolean(document.querySelector("#loadExternalSample")),
+        brightPath: Boolean(document.querySelector(".bright-path"))
+      };
     });
-    if (!firstStepControlsReady) {
-      throw new Error("Hero review lens, starter projects, or mode ladder did not render.");
+    if (
+      firstStepControlsReady.reviewCoachChecks !== 0 ||
+      firstStepControlsReady.reviewFocusControls !== 3 ||
+      firstStepControlsReady.starterControls !== 3 ||
+      firstStepControlsReady.modeLadder !== 3 ||
+      !firstStepControlsReady.externalSample ||
+      !firstStepControlsReady.brightPath
+    ) {
+      throw new Error(`First-run controls did not match the compact guided layout: ${JSON.stringify(firstStepControlsReady)}`);
     }
     await page.click('[data-review-focus="buyer"]');
     await page.waitForTimeout(100);
@@ -250,6 +363,34 @@ for (const spec of [
     });
     if (!invalidDemoRejected) {
       throw new Error("Invalid non-empty demo URL was accepted without a warning.");
+    }
+    await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+    await page.fill("#quickDemoUrl", "https://brightdata.com/");
+    await page.click("#quickAddReviewerProject");
+    await page.waitForFunction(
+      () => {
+        const row = document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
+        const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
+        return Boolean(row && /Brightdata MCP/i.test(title));
+      },
+      null,
+      { timeout: 15000 }
+    );
+    const publicReviewHappyPathReady = await page.evaluate(() => {
+      const row = document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
+      const scorecard = document.querySelector("#scorecard")?.textContent || "";
+      const proofStrip = document.querySelector("#liveProofStrip")?.textContent || "";
+      const hint = document.querySelector("#quickReviewHint")?.textContent || "";
+      return Boolean(
+        row &&
+          /Brightdata MCP/i.test(scorecard) &&
+          /Public review:\s*Brightdata MCP/i.test(proofStrip) &&
+          /Direct evidence only/i.test(proofStrip) &&
+          /Public evidence collected/i.test(hint)
+      );
+    });
+    if (!publicReviewHappyPathReady) {
+      throw new Error("Valid first-time public review did not collect GitHub and demo evidence.");
     }
     const repoDescribed = await page.getAttribute("#quickRepoUrl", "aria-describedby");
     const demoDescribed = await page.getAttribute("#quickDemoUrl", "aria-describedby");
@@ -374,7 +515,7 @@ for (const spec of [
     await page.click("#quickAddReviewerProject");
     await page
       .waitForFunction(
-        () => /Bright Data evidence run needs private access/i.test(document.querySelector("#statusLine")?.textContent || ""),
+        () => /Bright Data evidence run needs reviewer access/i.test(document.querySelector("#statusLine")?.textContent || ""),
         null,
         { timeout: 12000 }
       )
@@ -384,12 +525,12 @@ for (const spec of [
       const mode = document.querySelector("#modeSelect")?.value || "";
       return (
         ["demo", "public"].includes(mode) &&
-        /Bright Data evidence run needs private access/i.test(status) &&
+        /Bright Data evidence run needs reviewer access/i.test(status) &&
         /(Draft review|Public review) ran instead/i.test(status)
       );
     });
     if (!quickLiveSwitchWarned) {
-      throw new Error("Hero quick review did not clearly warn when private Bright Data review fell back to a safe mode.");
+      throw new Error("Hero quick review did not clearly warn when Bright Data evidence run fell back to a safe mode.");
     }
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
@@ -571,8 +712,16 @@ for (const spec of [
       ),
       flightRecorderCount: document.querySelectorAll(".flight-recorder").length,
       flightRecorderStageCount: document.querySelectorAll(".flight-recorder-stages li").length,
+      flightRecorderFreshnessCount: document.querySelectorAll(".flight-recorder-freshness").length,
       flightRecorderCopyReady: /Bright Data flight recorder|Sponsor evidence/i.test(
         document.querySelector(".flight-recorder")?.textContent || ""
+      ),
+      flightRecorderFreshnessReady: /Freshness|Re-run Bright Data|Needs Bright Data timestamp|Public evidence only/i.test(
+        document.querySelector(".flight-recorder-freshness")?.textContent || ""
+      ),
+      traceBudgetCount: document.querySelectorAll(".trace-budget div").length,
+      traceBudgetReady: /Route|Budget|Prize calls|Tools|Downloaded/i.test(
+        document.querySelector(".trace-budget")?.textContent || ""
       ),
       visitorBriefCount: document.querySelectorAll(".visitor-brief").length,
       visitorBriefActions: document.querySelectorAll(".visitor-brief [data-score-action]").length,
@@ -626,7 +775,7 @@ const failures = results.flatMap((result) => {
   if (result.metrics.quickPathCount !== 4) problems.push(`${result.spec.name}: quick path did not render four steps`);
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
   if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
-  if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/private review actions did not render`);
+  if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/reviewer-access actions did not render`);
   if (result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
   if (result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
   if (result.metrics.prizeBriefCount !== 1) problems.push(`${result.spec.name}: prize brief did not render`);
@@ -634,11 +783,17 @@ const failures = results.flatMap((result) => {
   if (result.metrics.prizeBriefActionCount < 3) problems.push(`${result.spec.name}: prize brief actions did not render`);
   if (!result.metrics.prizeBriefCopyReady) problems.push(`${result.spec.name}: prize brief copy is missing`);
   if (result.metrics.reviewCoachCount !== 1) problems.push(`${result.spec.name}: review coach did not render`);
-  if (result.metrics.reviewCoachCheckCount !== 3) problems.push(`${result.spec.name}: review coach checks did not render`);
   if (!result.metrics.reviewCoachCopyReady) problems.push(`${result.spec.name}: review coach copy is missing`);
+  if (![0, 3].includes(result.metrics.reviewCoachCheckCount)) {
+    problems.push(`${result.spec.name}: review coach checks are in an unexpected state`);
+  }
   if (result.metrics.flightRecorderCount < 1) problems.push(`${result.spec.name}: Bright Data flight recorder did not render`);
   if (result.metrics.flightRecorderStageCount < 4) problems.push(`${result.spec.name}: Bright Data flight recorder stages did not render`);
+  if (result.metrics.flightRecorderFreshnessCount < 1) problems.push(`${result.spec.name}: Bright Data freshness lane did not render`);
   if (!result.metrics.flightRecorderCopyReady) problems.push(`${result.spec.name}: Bright Data flight recorder copy is missing`);
+  if (!result.metrics.flightRecorderFreshnessReady) problems.push(`${result.spec.name}: Bright Data freshness copy is missing`);
+  if (result.metrics.traceBudgetCount !== 5) problems.push(`${result.spec.name}: Bright Data route budget did not render`);
+  if (!result.metrics.traceBudgetReady) problems.push(`${result.spec.name}: Bright Data route budget copy is missing`);
   if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
   if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
   if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {
