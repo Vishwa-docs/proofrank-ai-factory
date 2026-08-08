@@ -6,6 +6,7 @@ import { buildTribunal } from "./tribunal.js";
 import { buildOriginalityRadar } from "./originality.js";
 import { buildReadiness, readinessSummary } from "./readiness.js";
 import { buildWinnerBenchmark } from "./winnerBenchmark.js";
+import { buildEvidenceGapPenalty } from "./evidenceGapPenalty.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
 import { buildProgramReport, buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 import { buildPitchReview } from "./pitchReview.js";
@@ -24,6 +25,9 @@ const elements = {
   rankedList: document.querySelector("#rankedList"),
   sponsorMatrix: document.querySelector("#sponsorMatrix"),
   proofTopology: document.querySelector("#proofTopology"),
+  fixList: document.querySelector("#fixList"),
+  fixListSummary: document.querySelector("#fixListSummary"),
+  fixListBody: document.querySelector("#fixListBody"),
   queueCount: document.querySelector("#queueCount"),
   scorecard: document.querySelector("#scorecard"),
   receipt: document.querySelector("#receipt"),
@@ -675,11 +679,13 @@ function visibleVerdictLabel(label = "") {
 }
 
 function displayVerdictLabel(project = {}) {
+  if (isDraftProject(project)) return "Draft created";
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) return "Evidence report ready";
   return visibleVerdictLabel(project.verdict?.label);
 }
 
 function displayAction(project = {}, fallback = "") {
+  if (isDraftProject(project)) return "Run live evidence";
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
     return "Submit final entry from the lablab team account";
   }
@@ -687,6 +693,9 @@ function displayAction(project = {}, fallback = "") {
 }
 
 function displayPrimaryBlocker(project = {}, fallback = "") {
+  if (isDraftProject(project)) {
+    return "Live evidence has not collected repo, demo, or prior-art signals yet.";
+  }
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
     return "Final submission not sent.";
   }
@@ -738,6 +747,7 @@ function updateLiveProofStrip(project) {
 
 function statusClass(project) {
   const label = displayVerdictLabel(project);
+  if (isDraftProject(project)) return "review";
   if (label === "Strong candidate" || label === "Ready to hand off" || label === "Evidence report ready") return "good";
   if (project.verdict.label === "High risk") return "risk";
   return "review";
@@ -820,8 +830,9 @@ function renderHeroDecision(project) {
   const primaryBlocker = displayPrimaryBlocker(project, project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the review memo.");
   const nativeUrl = project.nativeBuilderUrl || (String(project.demoUrl || "").includes("nativelyai.app") ? project.demoUrl : "");
   const verdictLabel = displayVerdictLabel(project);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Evidence" : "Overall";
-  const scoreValue = hasPendingFinalSubmission(project) ? "Attached" : project.scores.overall;
+  const draft = isDraftProject(project);
+  const scoreLabel = draft ? "Review" : hasPendingFinalSubmission(project) ? "Evidence" : "Overall";
+  const scoreValue = draft ? "Draft" : hasPendingFinalSubmission(project) ? "Attached" : project.scores.overall;
   const bundleStatus = hasBrightDataSponsorProofBundle(project) ? "executed" : traceState;
   const focus = project.reviewFocus || selectedReviewFocus();
 
@@ -847,7 +858,7 @@ function renderHeroDecision(project) {
       </div>
       <div>
         <span>Final entry</span>
-        <strong>${hasPendingFinalSubmission(project) ? "not sent" : nativeUrl ? "published" : "missing"}</strong>
+        <strong>${draft ? "not scored" : hasPendingFinalSubmission(project) ? "not sent" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
     <div class="decision-focus">
@@ -1246,6 +1257,60 @@ function renderWinnerBenchmark(project) {
   `;
 }
 
+function fixStatusLabel(status) {
+  if (status === "clear") return "Clear";
+  if (status === "blocker") return "Blocker";
+  return "Gap";
+}
+
+function renderFixList(project) {
+  if (!elements.fixListBody) return;
+  const penalty = buildEvidenceGapPenalty(project);
+  const draft = isDraftProject(project);
+  const openItems = penalty.dimensions.filter((item) => item.status !== "clear");
+  const displayItems = (openItems.length ? openItems : penalty.dimensions).slice(0, 5);
+  const scoreDelta = Math.max(0, penalty.baseScore - penalty.adjustedScore);
+
+  if (elements.fixListSummary) {
+    elements.fixListSummary.textContent = draft
+      ? "Draft only"
+      : penalty.totalPenalty === 0
+        ? "No open blockers"
+        : `${penalty.gaps} open / -${scoreDelta} if judged today`;
+  }
+
+  elements.fixListBody.innerHTML = `
+    <div class="fix-score-strip">
+      <div>
+        <span>Score if judged today</span>
+        <strong>${draft ? "Draft" : penalty.adjustedScore}</strong>
+        <small>${escapeHtml(draft ? "No ranking score until live evidence runs." : `Base score ${penalty.baseScore}; evidence gaps reduce the shortlist rank.`)}</small>
+      </div>
+      <div>
+        <span>Best next click</span>
+        <strong>${escapeHtml(draft ? "Collect live evidence" : penalty.status)}</strong>
+        <small>${escapeHtml(draft ? "Run source, search, and discovery before judging this project." : penalty.topAction)}</small>
+      </div>
+    </div>
+    <div class="fix-card-grid">
+      ${displayItems
+        .map(
+          (item) => `
+            <article class="${escapeAttr(item.status)}">
+              <div>
+                <strong>${escapeHtml(item.label)}</strong>
+                <span>${escapeHtml(fixStatusLabel(item.status))}</span>
+              </div>
+              <p>${escapeHtml(item.reason)}</p>
+              <small>${escapeHtml(item.action)}</small>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderFieldComparison() {
   return `
     <section class="field-comparison" aria-label="Field comparison">
@@ -1286,7 +1351,25 @@ function renderSourceLinks(project) {
 }
 
 function renderActionBoard(project, readiness) {
-  const gaps = readiness.gates.filter((gate) => gate.status !== "passed").slice(0, 3);
+  const draft = isDraftProject(project);
+  const draftGates = [
+    {
+      required: true,
+      label: "Run live evidence",
+      detail: "Fetch repository, demo, and public web signals through the private Bright Data backend."
+    },
+    {
+      required: true,
+      label: "Check demo reachability",
+      detail: "Confirm the deployed app loads and shows a complete workflow."
+    },
+    {
+      required: false,
+      label: "Search prior art",
+      detail: "Use source, search, and discovery to explain whether the project is distinct."
+    }
+  ];
+  const gaps = draft ? draftGates : readiness.gates.filter((gate) => gate.status !== "passed").slice(0, 3);
   const gapRows = gaps.length
     ? gaps
         .map(
@@ -1308,20 +1391,25 @@ function renderActionBoard(project, readiness) {
   `;
   const canCopy = Boolean(project.githubUrl && isHttpUrl(project.githubUrl));
   const requiredGapCount = readiness.gates.filter((gate) => gate.required && gate.status !== "passed").length;
-  const decision = hasBrightDataSponsorProofBundle(project)
+  const decision = draft
+    ? "Collect evidence"
+    : hasBrightDataSponsorProofBundle(project)
     ? "Shortlist"
-    : isDraftProject(project)
-      ? "Request live evidence"
-      : requiredGapCount >= 4 || project.verdict?.label === "High risk"
-        ? "Do not advance yet"
-        : "Escalate for evidence";
+    : requiredGapCount >= 4 || project.verdict?.label === "High risk"
+      ? "Do not advance yet"
+      : "Escalate for evidence";
+  const actionSummary = draft
+    ? "Draft created. Live evidence is required before ranking."
+    : readiness.canSubmit
+      ? "Ready to hand off"
+      : readinessSummary(readiness);
 
   return `
     <section class="action-board" aria-label="Recommended next clicks">
       <div class="action-board-copy">
-        <span>Recommended decision</span>
+        <span>Judge action</span>
         <strong>${escapeHtml(decision)}</strong>
-        <p>${escapeHtml(readiness.canSubmit ? "Ready to hand off" : readinessSummary(readiness))}</p>
+        <p>${escapeHtml(actionSummary)}</p>
       </div>
       <div class="action-buttons">
         <button class="secondary-button small" data-score-action="evidence" type="button">Open evidence</button>
@@ -1444,6 +1532,7 @@ function renderVisitorBrief(project) {
 function renderScorecard(project) {
   const reviewFocus = project.reviewFocus || selectedReviewFocus();
   const readiness = buildReadiness(project, readinessContext());
+  const draft = isDraftProject(project);
   const visibleTechnologies = project.technologies.slice(0, 3);
   const hiddenTechnologyCount = Math.max(0, project.technologies.length - visibleTechnologies.length);
   const tags = [
@@ -1460,9 +1549,11 @@ function renderScorecard(project) {
   const sourceCount = [project.submissionUrl, project.demoUrl, project.githubUrl, project.presentationUrl].filter((url) => url && isHttpUrl(url)).length;
   const verdictLabel = displayVerdictLabel(project);
   const actionLabel = displayAction(project, project.verdict.action);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Review result" : "Review score";
-  const scoreValue = hasPendingFinalSubmission(project) ? "Attached" : project.scores.overall;
-  const scoreDetail = hasPendingFinalSubmission(project)
+  const scoreLabel = draft ? "Draft audit" : hasPendingFinalSubmission(project) ? "Review result" : "Review score";
+  const scoreValue = draft ? "Not scored" : hasPendingFinalSubmission(project) ? "Attached" : project.scores.overall;
+  const scoreDetail = draft
+    ? "Run live evidence for ranking"
+    : hasPendingFinalSubmission(project)
     ? `Bright Data check complete`
     : `Bright ${project.scores.brightDataPrize}`;
   const runReceipt = project.runReceipt || {};
@@ -1478,7 +1569,7 @@ function renderScorecard(project) {
         <p>${escapeHtml(compactSentence(project.summary))}</p>
         <div class="tag-row">${tags}</div>
       </div>
-      <div class="score-block ${hasPendingFinalSubmission(project) ? "is-proof-status" : ""}" aria-label="${escapeAttr(scoreLabel)} ${scoreValue}">
+      <div class="score-block ${draft || hasPendingFinalSubmission(project) ? "is-proof-status" : ""}" aria-label="${escapeAttr(scoreLabel)} ${scoreValue}">
         <span>${escapeHtml(scoreLabel)}</span>
         <strong>${scoreValue}</strong>
         <small>${escapeHtml(scoreDetail)}</small>
@@ -1792,6 +1883,7 @@ function render() {
   updateLiveProofStrip(project);
   renderHeroDecision(project);
   renderProofTopology(project);
+  renderFixList(project);
   renderRankedList();
   renderSponsorMatrix();
   renderScorecard(project);

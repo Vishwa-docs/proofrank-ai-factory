@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="topbar-actions" aria-label="Page actions">
-        <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Review project</button>
+        <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Audit project</button>
         <button id="startTourTop" class="text-button" type="button">Start guided review</button>
         <button class="text-button nav-jump" data-nav-tab="queue" type="button">Projects</button>
         <details class="export-menu">
@@ -41,14 +41,14 @@
           <div class="event-meta" aria-label="Hackathon context">
             <span><strong id="queueCount">0</strong> projects ranked</span>
             <span>No login for drafts</span>
-            <span>Bring your links</span>
+            <span>60-second audit</span>
           </div>
           <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Share the room, paste public links, get a draft review now. Private live review upgrades it with Bright Data evidence.</p>
+          <p class="hero-subtitle">Paste a repo and demo to see what is proven, what is missing, and whether judges should shortlist it.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
-            <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Review project</button>
-            <button class="secondary-button" data-nav-tab="receipt" type="button">Evidence report</button>
+            <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Audit project</button>
+            <button class="secondary-button" data-nav-tab="receipt" type="button">Open evidence</button>
           </div>
           <div id="statusLine" class="status-line" role="status">Draft review ready. Paste your links to add another project.</div>
         </div>
@@ -56,9 +56,9 @@
         <aside class="decision-card review-card panel" aria-label="Review project and evidence state">
           <section class="quick-review" aria-label="Try ProofRank with project links">
             <div class="quick-review-head">
-              <span>First step</span>
-              <strong>Review a public project</strong>
-              <p>Paste links to create a browser-safe draft. Live evidence runs later in a private reviewer session.</p>
+              <span>60-second audit</span>
+              <strong>Audit a public AI project</strong>
+              <p>Paste a GitHub repo and optional demo. The draft is public-safe; live review adds Bright Data evidence privately.</p>
             </div>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
@@ -73,7 +73,7 @@
               </label>
             </div>
             <div class="quick-actions">
-              <button id="quickAddReviewerProject" class="primary-button" type="button">Create draft review</button>
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Create draft audit</button>
               <button id="copyReviewLink" class="text-button" type="button" disabled>Copy draft link</button>
             </div>
             <p class="review-path-line">Draft checks URL format only. It does not fetch code, check the demo, or run Bright Data.</p>
@@ -126,7 +126,7 @@
                   </div>
                 </div>
                 <div class="starter-projects" aria-label="Starter projects">
-                  <span>Try fast</span>
+                  <span>Sample links</span>
                   <div class="starter-row">
                     <button class="starter-chip" data-starter-project="proofrank" type="button">ProofRank</button>
                     <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data MCP</button>
@@ -257,6 +257,13 @@
 
       <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 6" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
+          <section id="fixList" class="fix-list panel" aria-label="What to fix before ranking">
+            <div class="module-head">
+              <h2>What to fix next</h2>
+              <span id="fixListSummary" class="hint"></span>
+            </div>
+            <div id="fixListBody"></div>
+          </section>
           <section id="scorecard" class="scorecard panel" aria-label="Selected project scorecard"></section>
           <section id="proofTopology" class="proof-topology panel" aria-label="Evidence route"></section>
         </div>
@@ -282,8 +289,8 @@
 
         <section class="sponsor-matrix panel" aria-label="Sponsor evidence matrix">
           <div class="module-head">
-            <h2>Sponsor evidence matrix</h2>
-            <span class="hint">Draft links stay pending until Bright Data evidence runs.</span>
+            <h2>Evidence checklist</h2>
+            <span class="hint">Draft links stay pending until live evidence runs.</span>
           </div>
           <div id="sponsorMatrix" class="matrix-grid"></div>
         </section>

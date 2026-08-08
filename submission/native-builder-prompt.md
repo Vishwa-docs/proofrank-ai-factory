@@ -11,8 +11,8 @@ Create a functional deployed app, not a landing page. The first screen must be a
 ## Core Workflow
 
 1. User pastes a public GitHub repository URL and optional deployed app URL in the first viewport.
-2. User can create a Draft review (link-only local review) without credentials.
-3. Draft projects show a Draft Review Card with link-only status, copyable draft summary, copyable draft link, and a primary Run Bright Data action.
+2. User can create a Draft audit (link-only local review) without credentials.
+3. Draft projects show Draft created / Not scored, a Draft Review Card with link-only status, copyable draft summary, copyable draft link, and a primary Run Bright Data action.
 4. User can open Links and choose Live Bright Data review when a private backend tokenized session is available.
 5. The app adds the project to a ranked queue and can also discover or load event submissions.
 6. The app ranks projects by:
@@ -22,7 +22,7 @@ Create a functional deployed app, not a landing page. The first screen must be a
    - Originality
    - Presentation
 7. User selects a project.
-8. Result shows the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
+8. Review shows What to fix next, the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
 9. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
 10. Links tab also includes a collapsed Presentation check. A user can paste a demo transcript or pitch notes, analyze them locally, and see which presentation claims still need evidence.
 11. Evidence tab shows source-backed Evidence Report and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
@@ -32,17 +32,18 @@ Create a functional deployed app, not a landing page. The first screen must be a
 
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
-- Sticky top bar with ProofRank mark, Review project, Start guided review, Projects, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, short value statement, a GitHub repository field, a demo app field, Create draft review button, Copy draft link button, one safety sentence, a collapsed More options drawer, and one compact current-selection card.
+- Sticky top bar with ProofRank mark, Audit project, Start guided review, Projects, and Export actions.
+- First viewport with event metadata, a large ProofRank headline, a 60-second audit value statement, a GitHub repository field, a demo app field, Create draft audit button, Copy draft link button, one safety sentence, a collapsed More options drawer, and one compact current-selection card.
 - The first viewport must not look crowded. Put samples, review lens, starter projects, room link, built-in receipt, external sample, and Bright Data setup actions inside More options.
 - Decision card shows the selected built-in receipt, Bright Data receipt present, evidence record ID `pr-20260807t200529345z-23568b05`, final lablab submission pending, and Native app published. Do not imply the final lablab submission is already complete. Keep detailed numeric scoring inside the score breakdown.
+- Review tab starts with What to fix next before the long scorecard. It shows score if judged today for evidence-backed projects, but for visitor-created drafts it must say Draft / No ranking score until live evidence runs.
 - Result includes a compact Bright Data evidence report above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence record ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
-- Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet.
+- Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet. Draft projects must not show High risk, Review score 10, Submission-ready, or any final verdict before live evidence runs.
 - If the user runs Presentation check, Result shows a compact pitch evidence panel. It must say the source is pasted transcript text, not video verification, and that Bright Data evidence status stays separate.
 - Result includes an Against the field panel with ProofRank beside current AI Factory project patterns such as Half-Life, CivicTwin, Askable, and Querypex. It should show domain, Bright Data role, decision artifact, and evidence visibility so judges understand that ProofRank is the review operations product.
-- Tabs below the first viewport: Result, Ranked, Evidence, Links.
-- Result shows selected project summary, score tiles, evidence route, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
-- Ranked shows filters, ranked projects, and field map.
+- Tabs below the first viewport: Review, Projects, Evidence, Live setup.
+- Review shows What to fix next, selected project summary, score tiles, evidence route, Review Panel, Prize Fit, Similarity Check, and Claim Check.
+- Projects shows filters, ranked projects, Evidence checklist, and Category map.
 - Evidence shows Evidence Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
 - Links contains Event URL, Live review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.

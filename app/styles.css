@@ -913,8 +913,148 @@ input::placeholder {
 .scorecard,
 .field-map,
 .sponsor-matrix,
+.fix-list,
 .evidence-rail {
   padding: var(--space-md);
+}
+
+.fix-list {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.fix-score-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+  overflow: hidden;
+}
+
+.fix-score-strip > div {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  min-height: 6.5rem;
+  padding: var(--space-md);
+  border-left: 1px solid var(--color-rule);
+}
+
+.fix-score-strip > div:first-child {
+  border-left: 0;
+}
+
+.fix-score-strip span,
+.fix-card-grid span {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.fix-score-strip strong {
+  color: var(--color-ink);
+  font-size: var(--text-lg);
+  line-height: 1.1;
+}
+
+.fix-score-strip > div:first-child strong {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+}
+
+.fix-score-strip small,
+.fix-card-grid small {
+  color: var(--color-ink-2);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.fix-card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--color-rule);
+  border-left: 1px solid var(--color-rule);
+  background: var(--color-rule);
+  gap: 0;
+}
+
+.fix-card-grid article {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  min-width: 0;
+  min-height: 11rem;
+  padding: var(--space-sm);
+  border-right: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  background: var(--color-paper);
+}
+
+.fix-card-grid article > div {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.fix-card-grid strong {
+  min-width: 0;
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.fix-card-grid span {
+  flex: 0 0 auto;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  padding: 0.2rem 0.38rem;
+  background: var(--color-surface-muted);
+  text-transform: none;
+}
+
+.fix-card-grid p {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.fix-card-grid article.clear {
+  background: color-mix(in oklch, var(--color-good-soft) 28%, var(--color-paper));
+}
+
+.fix-card-grid article.clear span {
+  border-color: var(--color-good);
+  background: var(--color-good-soft);
+  color: var(--color-good);
+}
+
+.fix-card-grid article.gap {
+  background: color-mix(in oklch, var(--color-warn-soft) 24%, var(--color-paper));
+}
+
+.fix-card-grid article.gap span {
+  border-color: var(--color-warn);
+  background: var(--color-warn-soft);
+  color: var(--color-warn);
+}
+
+.fix-card-grid article.blocker {
+  background: color-mix(in oklch, var(--color-risk-soft) 22%, var(--color-paper));
+}
+
+.fix-card-grid article.blocker span {
+  border-color: var(--color-risk);
+  background: var(--color-risk-soft);
+  color: var(--color-risk);
 }
 
 .ranked-list {
@@ -4066,6 +4206,8 @@ input::placeholder {
   .visitor-mode,
   .bright-actions,
   .action-board ul,
+  .fix-score-strip,
+  .fix-card-grid,
   .field-comparison-grid,
   .mode-ladder,
   .trace-timeline ol {
@@ -4078,6 +4220,15 @@ input::placeholder {
   }
 
   .visitor-mode article:first-child {
+    border-top: 0;
+  }
+
+  .fix-score-strip > div {
+    border-left: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .fix-score-strip > div:first-child {
     border-top: 0;
   }
 

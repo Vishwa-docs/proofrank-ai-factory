@@ -307,6 +307,22 @@ for (const spec of [
     if (!draftCardReady) {
       throw new Error("Draft review card did not render honest link-only status after visitor draft.");
     }
+    const draftVerdictNeutral = await page.evaluate(() => {
+      const scorecard = document.querySelector("#scorecard")?.textContent || "";
+      const heroDecision = document.querySelector("#heroDecision")?.textContent || "";
+      const fixList = document.querySelector("#fixList")?.textContent || "";
+      const combined = `${scorecard} ${heroDecision} ${fixList}`;
+      return (
+        /Draft created/i.test(combined) &&
+        /Collect evidence/i.test(combined) &&
+        /No ranking score until live evidence runs/i.test(combined) &&
+        !/High risk/i.test(combined) &&
+        !/Review score\s*10/i.test(combined)
+      );
+    });
+    if (!draftVerdictNeutral) {
+      throw new Error("Visitor draft still looked like a punitive scored review before live evidence.");
+    }
     const draftBriefReady = await page.evaluate(() => {
       const brief = document.querySelector(".visitor-brief.draft");
       const text = brief?.textContent || "";
@@ -502,6 +518,10 @@ for (const spec of [
       selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
+      fixListCount: document.querySelectorAll(".fix-list").length,
+      fixCardCount: document.querySelectorAll(".fix-card-grid article").length,
+      fixScoreStripCount: document.querySelectorAll(".fix-score-strip > div").length,
+      fixListCopyReady: /What to fix next/i.test(document.querySelector(".fix-list")?.textContent || ""),
       reviewRoomStats: document.querySelectorAll("#reviewRoomStats article").length,
       sponsorMatrixRows: document.querySelectorAll("#sponsorMatrix .matrix-row").length,
       sponsorMatrixCells: document.querySelectorAll("#sponsorMatrix .matrix-cell").length,
@@ -551,9 +571,13 @@ const failures = results.flatMap((result) => {
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
   if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: evidence route did not render`);
   if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
+  if (result.metrics.fixListCount !== 1) problems.push(`${result.spec.name}: what-to-fix panel did not render`);
+  if (result.metrics.fixCardCount < 5) problems.push(`${result.spec.name}: what-to-fix cards did not render`);
+  if (result.metrics.fixScoreStripCount !== 2) problems.push(`${result.spec.name}: what-to-fix score strip did not render`);
+  if (!result.metrics.fixListCopyReady) problems.push(`${result.spec.name}: what-to-fix copy is missing`);
   if (result.metrics.reviewRoomStats !== 4) problems.push(`${result.spec.name}: review room stats did not render`);
-  if (result.metrics.sponsorMatrixRows < 1) problems.push(`${result.spec.name}: sponsor evidence matrix did not render`);
-  if (result.metrics.sponsorMatrixCells < 6) problems.push(`${result.spec.name}: sponsor evidence matrix cells did not render`);
+  if (result.metrics.sponsorMatrixRows < 1) problems.push(`${result.spec.name}: evidence checklist did not render`);
+  if (result.metrics.sponsorMatrixCells < 6) problems.push(`${result.spec.name}: evidence checklist cells did not render`);
   if (result.metrics.reviewFocusCount !== 3) problems.push(`${result.spec.name}: review focus controls did not render`);
   if (result.metrics.starterCount !== 3) problems.push(`${result.spec.name}: starter projects did not render`);
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
