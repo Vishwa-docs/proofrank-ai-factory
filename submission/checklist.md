@@ -9,7 +9,7 @@
 - Task Planner completed a six-task build plan.
 - Native.builder build passes completed through the full MVP surface.
 - Published Native.builder app: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-- Republish Native.builder with the latest `submission/native-builder-prompt.md`, then run `npm run native:render-check` until desktop and 320px mobile pass with the refreshed receipt ID.
+- Native.builder was republished with the latest proof copy and `npm run native:render-check` passes on desktop and 320px mobile with receipt ID `pr-20260807t200529345z-23568b05`.
 - For truly native-builder-hosted Bright Data Live mode, confirm and connect Supabase for secure Edge Function secrets. Otherwise continue with the no-secret external live adapter already selected.
 - Apply Builder Plan promo code `AIFACTORY26`.
 - Use the public `nativelyai.app` URL as the primary app link.

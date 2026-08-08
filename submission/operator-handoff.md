@@ -10,13 +10,13 @@ Date: 2026-08-07
 - Refreshed demo video release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
 - Workflow proof JSON release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 - Workflow proof screenshot release asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
-- Native.builder render check artifact: `submission/native-builder-render-check.json` currently records the republish gap for the latest prompt.
+- Native.builder render check artifact: `submission/native-builder-render-check.json` records the current published bundle and passes on desktop and 320px mobile.
 - Native.builder desktop screenshot: `submission/demo-assets/native-builder-desktop.png`
 - Native.builder 320px screenshot: `submission/demo-assets/native-builder-mobile-320.png`
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder status: published, browser-render-verified before the latest copy pass, and eligible as the primary native.builder URL. The local/fallback first viewport now shows `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, and receipt ID `pr-20260807t200529345z-23568b05`. Republish Native.builder with `submission/native-builder-prompt.md` if its public bundle still shows the older proof copy.
+- Native.builder status: published, browser-render-verified after the latest copy pass, and eligible as the primary native.builder URL. The public first viewport shows `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, `Proof receipt`, `Collect`, and receipt ID `pr-20260807t200529345z-23568b05`.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
@@ -46,9 +46,9 @@ Date: 2026-08-07
 
 2. Native.builder publish
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
-   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted an earlier `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the app. The latest UI/copy prompt now needs one more Native.builder republish.
+   - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the final app.
    - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-   - Current local/fallback probe: browser-render verified on desktop and 320px mobile. It shows `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, and receipt ID `pr-20260807t200529345z-23568b05`. Re-run `npm run native:render-check` after republishing Native.builder with the refreshed prompt.
+   - Current public Native.builder probe: browser-render verified on desktop and 320px mobile. It shows `ProofRank`, `Submission-ready`, `Bright Data proof passed`, `Bright Data`, `Overall audit`, `Proof receipt`, `Collect`, and receipt ID `pr-20260807t200529345z-23568b05`.
    - Cache note: a Safari tab that loaded before republish may still show the older bundle until hard refreshed; the render check uses a cache-busting URL and records the current published bundle.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted later.
@@ -105,4 +105,4 @@ npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https:
 
 ## Current Honest Status
 
-ProofRank has a public fallback app, collateral package, local signed Bright Data sponsor receipt with executed MCP traces, and secured public Vercel live API shell. The final readiness audit is currently 9/11 required gates. Remaining gates: republish/verify Native.builder with `submission/native-builder-prompt.md`, then final lablab.ai submission from the authenticated team-owner account.
+ProofRank has a public Native.builder app, public fallback app, collateral package, signed Bright Data sponsor receipt with executed MCP traces, and secured public Vercel live API shell. The final readiness audit is currently 10/11 required gates. Remaining gate: final lablab.ai submission from the authenticated team-owner account.
