@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-08-08T12:49:53.996Z",
+  "checkedAt": "2026-08-08T18:18:41.108Z",
   "url": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/",
-  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786193393996",
+  "verifiedUrl": "https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/?verify=1786213121108",
   "title": "ProofRank — AI Diligence Engine",
-  "publishedBundle": "/assets/index-BWJnqaM0.js",
+  "publishedBundle": "/assets/index-DMx3p0xW.js",
   "screenshots": {
     "desktop": "submission/demo-assets/native-builder-desktop.png",
     "mobile320": "submission/demo-assets/native-builder-mobile-320.png"
@@ -50,7 +50,13 @@
     "Share blank test room",
     "Bright Data flight recorder",
     "Open Bright Data receipt",
-    "Readiness"
+    "Readiness",
+    "AI Factory: Best Agentic Use of Bright Data",
+    "HACKATHON LIFECYCLE",
+    "Brief and rules",
+    "Build and iterate",
+    "Sponsor review",
+    "Winner audit"
   ],
   "wantedInViewport": [
     "ProofRank",
@@ -109,7 +115,6 @@
     "Ranked Queue",
     "Submission Cockpit",
     "AgentArena",
-    "AI Factory",
     "Bright Data Challenge",
     "Native.builder",
     "DECISION CARD"

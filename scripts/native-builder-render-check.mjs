@@ -30,7 +30,13 @@ const wantedInPage = [
   "Share blank test room",
   "Bright Data flight recorder",
   "Open Bright Data receipt",
-  "Readiness"
+  "Readiness",
+  "AI Factory: Best Agentic Use of Bright Data",
+  "HACKATHON LIFECYCLE",
+  "Brief and rules",
+  "Build and iterate",
+  "Sponsor review",
+  "Winner audit"
 ].filter(Boolean);
 const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Run public review", "Replay sample"];
 const wantedAfterReplay = [
@@ -62,7 +68,6 @@ const forbiddenStrings = [
 ];
 const forbiddenInFirstViewport = [
   ...forbiddenStrings,
-  "AI Factory",
   "Bright Data Challenge",
   "Native.builder",
   "DECISION CARD"
