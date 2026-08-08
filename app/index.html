@@ -91,143 +91,152 @@
             <div class="quick-actions">
               <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
               <button id="copyReviewLink" class="text-button" type="button" disabled>Enter repo to copy review link</button>
+              <button id="openOpsMap" class="text-button" type="button">Hackathon ops map</button>
             </div>
-            <ul class="first-run-promise" aria-label="What a first-time visitor can do">
-              <li><strong>No login</strong><span>test any public repo</span></li>
-              <li><strong>No secrets</strong><span>public checks only</span></li>
-              <li><strong>Clear handoff</strong><span>memo after evidence</span></li>
-            </ul>
             <div id="reviewCoach" class="review-coach" aria-live="polite"></div>
-            <details class="path-drawer">
-              <summary>
-                <span>Guided review path</span>
-                <strong>paste → check → evidence → memo</strong>
-              </summary>
-              <ol class="quick-path" aria-label="What happens next">
-                <li>
-                  <span>1</span>
-                  <strong>Paste links</strong>
-                  <small>Repo and optional demo.</small>
-                </li>
-                <li>
-                  <span>2</span>
-                  <strong>Public check</strong>
-                  <small>Fetch safe repo and demo signals.</small>
-                </li>
-                <li>
-                  <span>3</span>
-                  <strong>Bright Data</strong>
-                  <small>Add source, search, and discovery evidence.</small>
-                </li>
-                <li>
-                  <span>4</span>
-                  <strong>Export memo</strong>
-                  <small>Shareable sponsor review.</small>
-                </li>
-              </ol>
-              <p class="review-path-line">Anyone can use steps 1-2. Reviewer access unlocks the Bright Data evidence run.</p>
-            </details>
-            <div class="quick-starters" aria-label="Try sample projects">
-              <span>Try a sample</span>
-              <button class="starter-chip" data-starter-project="proofrank" type="button">ProofRank</button>
-              <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data MCP</button>
-              <button class="starter-chip" data-starter-project="speechmatics-academy" type="button">Speechmatics</button>
-            </div>
-            <section id="outcomePreview" class="outcome-preview" aria-label="Review output preview" aria-live="polite">
-              <div>
-                <span>What you get</span>
-                <strong id="outcomePreviewTitle">A plain review memo, not a score wall.</strong>
-              </div>
-              <ul id="outcomePreviewList" aria-label="Review output checklist"></ul>
-            </section>
             <p id="quickReviewHint" class="hint">Public review fetches safe public GitHub and demo evidence without using Bright Data credits.</p>
-            <details id="reviewOptions" class="review-options">
+            <details class="review-helper-drawer">
               <summary>
-                <span>Advanced evidence options</span>
-                <strong>drafts, samples, Bright Data run</strong>
+                <span>Review helpers</span>
+                <strong>samples, outputs, Bright Data run</strong>
               </summary>
-              <div class="review-options-body">
-                <div class="review-mode-switch" role="radiogroup" aria-label="Review depth">
-                  <button class="mode-chip is-active" data-quick-mode="public" role="radio" aria-checked="true" type="button">
-                    <strong>Public review</strong>
-                    <small>fetches repo/demo</small>
-                  </button>
-                  <button class="mode-chip" data-quick-mode="demo" role="radio" aria-checked="false" type="button">
-                    <strong>Save draft</strong>
-                    <small>links only</small>
-                  </button>
-                  <button class="mode-chip" data-quick-mode="live" role="radio" aria-checked="false" type="button">
-                    <strong>Bright Data evidence run</strong>
-                    <small>source + search + discovery</small>
-                  </button>
-                </div>
-                <div class="visitor-mode" aria-label="Visitor review path">
-                  <article>
-                    <strong>1</strong>
-                    <span>Paste GitHub</span>
-                  </article>
-                  <article>
-                    <strong>2</strong>
-                    <span>Add demo</span>
-                  </article>
-                  <article>
-                    <strong>3</strong>
-                    <span>Share memo</span>
-                  </article>
-                </div>
-                <div class="bright-actions" aria-label="Bright Data actions">
-                  <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open Bright Data receipt">
-                    <span>Bright Data receipt</span>
-                    <strong>source fetch, search, discovery, memo</strong>
-                  </button>
-                  <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open Bright Data evidence run setup">
-                    <span>Bright Data evidence run</span>
-                    <strong>server-side source, search, discovery</strong>
-                  </button>
-                </div>
-                <div class="receipt-teaser">
-                  <span>ProofRank sample receipt</span>
-                  <strong>scrape_as_markdown, search_engine, and discover are attached to the sample review.</strong>
-                  <button id="openIntroReceipt" class="text-button small" type="button">View receipt</button>
-                </div>
-                <div class="review-focus" role="radiogroup" aria-label="Review lens">
-                  <span>Advanced review lens</span>
-                  <div class="review-focus-options">
-                    <button class="focus-chip is-active" data-review-focus="sponsor" role="radio" aria-checked="true" type="button">
-                      <strong>Bright Data sponsor</strong>
-                      <small>Check live-web usage</small>
-                    </button>
-                    <button class="focus-chip" data-review-focus="judge" role="radio" aria-checked="false" type="button">
-                      <strong>Hackathon judge</strong>
-                      <small>Check eligibility gaps</small>
-                    </button>
-                    <button class="focus-chip" data-review-focus="buyer" role="radio" aria-checked="false" type="button">
-                      <strong>Business buyer</strong>
-                      <small>Find adoption risks</small>
-                    </button>
-                  </div>
-                </div>
-                <div class="public-room-note" aria-label="Public testing note">
-                  <span>Public test room</span>
-                  <strong>No login needed for public checks</strong>
-                  <p>Send the room link so another builder can paste their own repo and demo.</p>
-                </div>
-                <div class="mode-ladder" aria-label="Evidence modes">
-                  <span><strong>Save draft</strong><small>Links only</small></span>
-                  <span><strong>Public review</strong><small>repo + demo check</small></span>
-                  <span><strong>ProofRank sample result</strong><small>finished review</small></span>
-                </div>
-                <div class="quick-actions option-actions">
-                  <button id="loadSampleProject" class="text-button" type="button">Open ProofRank sample</button>
-                  <button id="loadExternalSample" class="text-button" type="button">Open external sample</button>
-                </div>
-                <details class="inline-qtip">
-                  <summary>Draft vs public review</summary>
-                  <p>Draft review only checks links. Public review fetches public GitHub and demo evidence. A Bright Data evidence run adds source, search, and discovery later.</p>
+              <div class="review-helper-body">
+                <ul class="first-run-promise" aria-label="What a first-time visitor can do">
+                  <li><strong>No login</strong><span>test any public repo</span></li>
+                  <li><strong>No secrets</strong><span>public checks only</span></li>
+                  <li><strong>Clear handoff</strong><span>memo after evidence</span></li>
+                </ul>
+                <details class="path-drawer">
+                  <summary>
+                    <span>Guided review path</span>
+                    <strong>paste → check → evidence → memo</strong>
+                  </summary>
+                  <ol class="quick-path" aria-label="What happens next">
+                    <li>
+                      <span>1</span>
+                      <strong>Paste links</strong>
+                      <small>Repo and optional demo.</small>
+                    </li>
+                    <li>
+                      <span>2</span>
+                      <strong>Public check</strong>
+                      <small>Fetch safe repo and demo signals.</small>
+                    </li>
+                    <li>
+                      <span>3</span>
+                      <strong>Bright Data</strong>
+                      <small>Add source, search, and discovery evidence.</small>
+                    </li>
+                    <li>
+                      <span>4</span>
+                      <strong>Export memo</strong>
+                      <small>Shareable sponsor review.</small>
+                    </li>
+                  </ol>
+                  <p class="review-path-line">Anyone can use steps 1-2. Reviewer access unlocks the Bright Data evidence run.</p>
                 </details>
-                <details class="inline-qtip">
-                  <summary>Can someone else test it?</summary>
-                  <p>Yes. Use Share blank test room for a public workspace, or Copy draft link after entering a repo to preload that project.</p>
+                <div class="quick-starters" aria-label="Try sample projects">
+                  <span>Try a sample</span>
+                  <button class="starter-chip" data-starter-project="proofrank" type="button">ProofRank</button>
+                  <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data MCP</button>
+                  <button class="starter-chip" data-starter-project="speechmatics-academy" type="button">Speechmatics</button>
+                </div>
+                <section id="outcomePreview" class="outcome-preview" aria-label="Review output preview" aria-live="polite">
+                  <div>
+                    <span>What you get</span>
+                    <strong id="outcomePreviewTitle">A plain review memo, not a score wall.</strong>
+                  </div>
+                  <ul id="outcomePreviewList" aria-label="Review output checklist"></ul>
+                </section>
+                <details id="reviewOptions" class="review-options">
+                  <summary>
+                    <span>Advanced evidence options</span>
+                    <strong>drafts, samples, Bright Data run</strong>
+                  </summary>
+                  <div class="review-options-body">
+                    <div class="review-mode-switch" role="radiogroup" aria-label="Review depth">
+                      <button class="mode-chip is-active" data-quick-mode="public" role="radio" aria-checked="true" type="button">
+                        <strong>Public review</strong>
+                        <small>fetches repo/demo</small>
+                      </button>
+                      <button class="mode-chip" data-quick-mode="demo" role="radio" aria-checked="false" type="button">
+                        <strong>Save draft</strong>
+                        <small>links only</small>
+                      </button>
+                      <button class="mode-chip" data-quick-mode="live" role="radio" aria-checked="false" type="button">
+                        <strong>Bright Data evidence run</strong>
+                        <small>source + search + discovery</small>
+                      </button>
+                    </div>
+                    <div class="visitor-mode" aria-label="Visitor review path">
+                      <article>
+                        <strong>1</strong>
+                        <span>Paste GitHub</span>
+                      </article>
+                      <article>
+                        <strong>2</strong>
+                        <span>Add demo</span>
+                      </article>
+                      <article>
+                        <strong>3</strong>
+                        <span>Share memo</span>
+                      </article>
+                    </div>
+                    <div class="bright-actions" aria-label="Bright Data actions">
+                      <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open Bright Data receipt">
+                        <span>Bright Data receipt</span>
+                        <strong>source fetch, search, discovery, memo</strong>
+                      </button>
+                      <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open Bright Data evidence run setup">
+                        <span>Bright Data evidence run</span>
+                        <strong>server-side source, search, discovery</strong>
+                      </button>
+                    </div>
+                    <div class="receipt-teaser">
+                      <span>ProofRank sample receipt</span>
+                      <strong>scrape_as_markdown, search_engine, and discover are attached to the sample review.</strong>
+                      <button id="openIntroReceipt" class="text-button small" type="button">View receipt</button>
+                    </div>
+                    <div class="review-focus" role="radiogroup" aria-label="Review lens">
+                      <span>Advanced review lens</span>
+                      <div class="review-focus-options">
+                        <button class="focus-chip is-active" data-review-focus="sponsor" role="radio" aria-checked="true" type="button">
+                          <strong>Bright Data sponsor</strong>
+                          <small>Check live-web usage</small>
+                        </button>
+                        <button class="focus-chip" data-review-focus="judge" role="radio" aria-checked="false" type="button">
+                          <strong>Hackathon judge</strong>
+                          <small>Check eligibility gaps</small>
+                        </button>
+                        <button class="focus-chip" data-review-focus="buyer" role="radio" aria-checked="false" type="button">
+                          <strong>Business buyer</strong>
+                          <small>Find adoption risks</small>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="public-room-note" aria-label="Public testing note">
+                      <span>Public test room</span>
+                      <strong>No login needed for public checks</strong>
+                      <p>Send the room link so another builder can paste their own repo and demo.</p>
+                    </div>
+                    <div class="mode-ladder" aria-label="Evidence modes">
+                      <span><strong>Save draft</strong><small>Links only</small></span>
+                      <span><strong>Public review</strong><small>repo + demo check</small></span>
+                      <span><strong>ProofRank sample result</strong><small>finished review</small></span>
+                    </div>
+                    <div class="quick-actions option-actions">
+                      <button id="loadSampleProject" class="text-button" type="button">Open ProofRank sample</button>
+                      <button id="loadExternalSample" class="text-button" type="button">Open external sample</button>
+                    </div>
+                    <details class="inline-qtip">
+                      <summary>Draft vs public review</summary>
+                      <p>Draft review only checks links. Public review fetches public GitHub and demo evidence. A Bright Data evidence run adds source, search, and discovery later.</p>
+                    </details>
+                    <details class="inline-qtip">
+                      <summary>Can someone else test it?</summary>
+                      <p>Yes. Use Share blank test room for a public workspace, or Copy draft link after entering a repo to preload that project.</p>
+                    </details>
+                  </div>
                 </details>
               </div>
             </details>
@@ -261,89 +270,14 @@
         </aside>
       </section>
 
-      <section class="product-strip reveal" style="--i: 2" aria-label="ProofRank workflow">
-        <article>
-          <span>Profile</span>
-          <strong>Load event rules</strong>
-          <p>Turn an event page into rubric, artifact, and sponsor-lane checks.</p>
-        </article>
-        <article>
-          <span>Builder</span>
-          <strong>Find gaps early</strong>
-          <p>Check repo, demo, pitch, required tech, and submission readiness before deadline.</p>
-        </article>
-        <article>
-          <span>Judge</span>
-          <strong>Triage the field</strong>
-          <p>Rank evidence-backed projects and separate broken links from sponsor-ready entries.</p>
-        </article>
-        <article>
-          <span>Sponsor</span>
-          <strong>Defend prize choices</strong>
-          <p>Show how Bright Data changed the decision with traceable source/search/discovery.</p>
-        </article>
-      </section>
-
-      <section class="hackathon-profile-strip reveal" style="--i: 3" aria-label="Hackathon profile">
-        <div class="profile-copy">
-          <span>Hackathon profile</span>
-          <strong id="profileHeadline">AI Factory: Best Agentic Use of Bright Data</strong>
-          <p id="profileSummary">Default profile loaded. Paste another event URL in Readiness to review projects against a different rubric.</p>
-        </div>
-        <div id="profileStats" class="profile-stats" aria-label="Hackathon profile stats"></div>
-      </section>
-
-      <section class="guide-strip reveal" style="--i: 4" aria-label="Quick tips">
-        <div class="guide-copy">
-          <span>Two-sided workflow</span>
-          <strong>Builders improve. Judges verify.</strong>
-          <p>Use the same evidence record before submission, during judging, and after winner selection.</p>
-          <button id="startTour" class="secondary-button small" type="button">Start guided review</button>
-        </div>
-        <details class="qtip">
-          <summary>Builder mode</summary>
-          <p>Paste a public GitHub repo and optional demo URL to find missing artifacts, unclear claims, and sponsor-proof gaps.</p>
-        </details>
-        <details class="qtip">
-          <summary>Judge mode</summary>
-          <p>Use the queue, rubric memo, evidence receipt, and readout to review a field faster and more consistently.</p>
-        </details>
-        <details class="qtip">
-          <summary>Sponsor mode</summary>
-          <p>Bright Data adds source, search, discovery, and replayable evidence so a prize choice can be defended.</p>
-        </details>
-      </section>
-
-      <section class="pipeline-strip reveal" style="--i: 5" aria-label="Hackathon lifecycle pipeline">
-        <div class="pipeline-head">
-          <span>Hackathon lifecycle</span>
-          <strong>From rules to winner dossier.</strong>
-          <p>ProofRank is designed to sit beside the whole competition pipeline, not just one submission page.</p>
-        </div>
-        <div id="pipelineGrid" class="pipeline-grid"></div>
-      </section>
-
-      <section class="review-room-strip reveal" style="--i: 6" aria-label="Review room summary">
-        <div class="room-copy">
-          <span>Current field room</span>
-          <strong>Built for more than one event.</strong>
-          <p>Share the app, let another builder paste links, then compare that review against the active hackathon profile.</p>
-        </div>
-        <div id="reviewRoomStats" class="room-stats" aria-label="Review room statistics"></div>
-        <div class="room-actions">
-          <button id="copyAppLink" class="text-button" type="button">Share blank test room</button>
-          <button id="exportRoomMemo" class="secondary-button" type="button">Room memo</button>
-        </div>
-      </section>
-
-      <nav class="section-tabs reveal" style="--i: 7" aria-label="ProofRank sections" role="tablist">
+      <nav class="section-tabs reveal" style="--i: 2" aria-label="ProofRank sections" role="tablist">
         <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Review</button>
         <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Projects</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
         <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Readiness</button>
       </nav>
 
-      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 8" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
+      <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 3" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
         <div class="overview-layout">
           <section id="fixList" class="fix-list panel" aria-label="What to fix before ranking">
             <div class="module-head">
@@ -357,7 +291,7 @@
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 8" aria-label="Projects queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 3" aria-label="Projects queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -392,7 +326,7 @@
         </section>
       </section>
 
-      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 8" aria-label="Evidence" role="tabpanel" aria-labelledby="tab-receipt" hidden>
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 3" aria-label="Evidence" role="tabpanel" aria-labelledby="tab-receipt" hidden>
         <aside class="evidence-rail panel" aria-label="Evidence">
           <div class="module-head receipt-head">
             <h2>Evidence</h2>
@@ -402,7 +336,7 @@
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 8" aria-label="Bright Data evidence run and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 3" aria-label="Bright Data evidence run and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">
@@ -513,6 +447,93 @@
           </section>
         </aside>
       </section>
+
+      <details id="opsMap" class="ops-map reveal" style="--i: 4">
+        <summary>
+          <span>
+            <strong>Hackathon ops map</strong>
+            <small>Open only when you need the event profile, lifecycle, or reusable judging workflow.</small>
+          </span>
+          <em>Profile · builder · judge · sponsor</em>
+        </summary>
+
+        <div class="ops-map-body">
+          <section class="hackathon-profile-strip" aria-label="Hackathon profile">
+            <div class="profile-copy">
+              <span>Hackathon profile</span>
+              <strong id="profileHeadline">AI Factory: Best Agentic Use of Bright Data</strong>
+              <p id="profileSummary">Default profile loaded. Paste another event URL in Readiness to review projects against a different rubric.</p>
+            </div>
+            <div id="profileStats" class="profile-stats" aria-label="Hackathon profile stats"></div>
+          </section>
+
+          <section class="review-room-strip" aria-label="Review room summary">
+            <div class="room-copy">
+              <span>Current field room</span>
+              <strong>Built for more than one event.</strong>
+              <p>Share the app, let another builder paste links, then compare that review against the active hackathon profile.</p>
+            </div>
+            <div id="reviewRoomStats" class="room-stats" aria-label="Review room statistics"></div>
+            <div class="room-actions">
+              <button id="copyAppLink" class="text-button" type="button">Share blank test room</button>
+              <button id="exportRoomMemo" class="secondary-button" type="button">Room memo</button>
+            </div>
+          </section>
+
+          <section class="guide-strip" aria-label="Quick tips">
+            <div class="guide-copy">
+              <span>Two-sided workflow</span>
+              <strong>Builders improve. Judges verify.</strong>
+              <p>Use the same evidence record before submission, during judging, and after winner selection.</p>
+              <button id="startTour" class="secondary-button small" type="button">Start guided review</button>
+            </div>
+            <details class="qtip">
+              <summary>Builder mode</summary>
+              <p>Paste a public GitHub repo and optional demo URL to find missing artifacts, unclear claims, and sponsor-proof gaps.</p>
+            </details>
+            <details class="qtip">
+              <summary>Judge mode</summary>
+              <p>Use the queue, rubric memo, evidence receipt, and readout to review a field faster and more consistently.</p>
+            </details>
+            <details class="qtip">
+              <summary>Sponsor mode</summary>
+              <p>Bright Data adds source, search, discovery, and replayable evidence so a prize choice can be defended.</p>
+            </details>
+          </section>
+
+          <section class="pipeline-strip" aria-label="Hackathon lifecycle pipeline">
+            <div class="pipeline-head">
+              <span>Hackathon lifecycle</span>
+              <strong>From rules to winner dossier.</strong>
+              <p>ProofRank is designed to sit beside the whole competition pipeline, not just one submission page.</p>
+            </div>
+            <div id="pipelineGrid" class="pipeline-grid"></div>
+          </section>
+
+          <section class="product-strip" aria-label="ProofRank workflow">
+            <article>
+              <span>Profile</span>
+              <strong>Load event rules</strong>
+              <p>Turn an event page into rubric, artifact, and sponsor-lane checks.</p>
+            </article>
+            <article>
+              <span>Builder</span>
+              <strong>Find gaps early</strong>
+              <p>Check repo, demo, pitch, required tech, and submission readiness before deadline.</p>
+            </article>
+            <article>
+              <span>Judge</span>
+              <strong>Triage the field</strong>
+              <p>Rank evidence-backed projects and separate broken links from sponsor-ready entries.</p>
+            </article>
+            <article>
+              <span>Sponsor</span>
+              <strong>Defend prize choices</strong>
+              <p>Show how Bright Data changed the decision with traceable source/search/discovery.</p>
+            </article>
+          </section>
+        </div>
+      </details>
     </main>
 
     <script type="module" src="./src/main.js"></script>

@@ -62,6 +62,8 @@ const elements = {
   quickRepoUrl: document.querySelector("#quickRepoUrl"),
   quickDemoUrl: document.querySelector("#quickDemoUrl"),
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
+  openOpsMap: document.querySelector("#openOpsMap"),
+  opsMap: document.querySelector("#opsMap"),
   reviewCoach: document.querySelector("#reviewCoach"),
   outcomePreviewTitle: document.querySelector("#outcomePreviewTitle"),
   outcomePreviewList: document.querySelector("#outcomePreviewList"),
@@ -261,13 +263,13 @@ const TOUR_STEPS = [
     label: "Step 3 of 4",
     title: "Read the memo",
     body: "The result explains what was checked, what is still missing, and the next best click.",
-    target: "#outcomePreview"
+    target: "#panel-overview"
   },
   {
     label: "Step 4 of 4",
-    title: "Upgrade to Bright Data",
-    body: "Open Advanced evidence options when you need a Bright Data source, search, and discovery run or an exportable receipt.",
-    target: "#reviewOptions"
+    title: "Open helpers only when needed",
+    body: "Samples, output previews, and Bright Data run options stay collapsed so the review workspace stays high on the page.",
+    target: ".review-helper-drawer"
   }
 ];
 
@@ -1171,6 +1173,13 @@ function closeTour() {
   clearTourTarget();
   if (elements.guidedTour) elements.guidedTour.hidden = true;
   setStatus("Guided review closed. Paste links or inspect the selected result.", "ready");
+}
+
+function openOpsMap() {
+  if (!elements.opsMap) return;
+  elements.opsMap.open = true;
+  elements.opsMap.scrollIntoView({ block: "start", behavior: "smooth" });
+  setStatus("Hackathon ops map opened. The review workspace stays above it for day-to-day use.", "ready");
 }
 
 function renderHeroDecision(project) {
@@ -3431,6 +3440,7 @@ elements.receipt?.addEventListener("click", (event) => {
 });
 elements.startTour?.addEventListener("click", startTour);
 elements.startTourTop?.addEventListener("click", startTour);
+elements.openOpsMap?.addEventListener("click", openOpsMap);
 elements.tourNext?.addEventListener("click", advanceTour);
 elements.tourClose?.addEventListener("click", closeTour);
 elements.quickRepoUrl.addEventListener("keydown", (event) => {

@@ -30,15 +30,18 @@ const wantedInPage = [
   "Share blank test room",
   "Bright Data flight recorder",
   "Open Bright Data receipt",
-  "Readiness",
+  "Hackathon ops map",
+  "Readiness"
+].filter(Boolean);
+const wantedAfterOpsOpen = [
   "AI Factory: Best Agentic Use of Bright Data",
-  "HACKATHON LIFECYCLE",
+  "Hackathon lifecycle",
   "Brief and rules",
   "Build and iterate",
   "Sponsor review",
   "Winner audit"
 ].filter(Boolean);
-const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Run public review", "Replay sample"];
+const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Run public review", "Replay sample", "Review", "Projects"];
 const wantedAfterReplay = [
   "pr-20260807t200529345z-23568b05"
 ];
@@ -104,6 +107,22 @@ async function visibleText(page) {
   });
 }
 
+async function reviewWorkspaceVisible(page) {
+  return page.evaluate(() => {
+    const inViewport = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight && rect.bottom > 0;
+    };
+    return {
+      tabsVisible: inViewport(".section-tabs"),
+      reviewPanelVisible: inViewport("#panel-overview"),
+      opsMapClosed: document.querySelector("#opsMap")?.open === false
+    };
+  });
+}
+
 await mkdir(assetDir, { recursive: true });
 
 const browser = await chromium.launch({
@@ -144,12 +163,18 @@ try {
 
     const bodyText = await page.locator("body").innerText();
     const viewportText = await visibleText(page);
+    const workspace = await reviewWorkspaceVisible(page);
     const metrics = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
       clientWidth: document.documentElement.clientWidth
     }));
     const screenshotPath = path.join(assetDir, screenshotName(spec.name));
     await page.screenshot({ path: screenshotPath, fullPage: false });
+
+    await page.getByRole("button", { name: /Hackathon ops map/i }).click();
+    await page.waitForTimeout(300);
+    const opsText = await page.locator("body").innerText();
+    await page.evaluate(() => window.scrollTo(0, 0));
 
     await page.getByRole("button", { name: /Replay sample/i }).click();
     await page.waitForTimeout(400);
@@ -161,10 +186,15 @@ try {
       height: spec.height,
       missingInPage: wantedInPage.filter((text) => !bodyText.includes(text)),
       missingInViewport: wantedInViewport.filter((text) => !viewportText.includes(text)),
+      opsContentVisibleBeforeOpen: ["HACKATHON PROFILE", "HACKATHON LIFECYCLE", "Hackathon lifecycle"].filter((text) =>
+        bodyText.includes(text)
+      ),
+      missingAfterOpsOpen: wantedAfterOpsOpen.filter((text) => !opsText.toLowerCase().includes(text.toLowerCase())),
       missingAfterReplay: wantedAfterReplay.filter((text) => !replayText.includes(text)),
       missingAnyAfterReplay: wantedAnyAfterReplay.filter((options) => !options.some((text) => replayText.includes(text))),
       forbiddenInPage: forbiddenStrings.filter((text) => bodyText.includes(text)),
       forbiddenInViewport: forbiddenInFirstViewport.filter((text) => viewportText.includes(text)),
+      workspace,
       scrollWidth: metrics.scrollWidth,
       clientWidth: metrics.clientWidth,
       horizontalOverflow: metrics.scrollWidth > metrics.clientWidth + 1,
@@ -190,6 +220,7 @@ const report = {
   viewports: results,
   wantedInPage,
   wantedInViewport,
+  wantedAfterOpsOpen,
   wantedAfterReplay,
   wantedAnyAfterReplay,
   forbiddenStrings,
@@ -199,8 +230,10 @@ const report = {
   ok: results.every(
     (viewport) =>
       !viewport.horizontalOverflow &&
+      (viewport.name !== "desktop" || viewport.missingInViewport.length === 0) &&
       viewport.missingInPage.length === 0 &&
-      viewport.missingInViewport.length === 0 &&
+      viewport.opsContentVisibleBeforeOpen.length === 0 &&
+      viewport.missingAfterOpsOpen.length === 0 &&
       viewport.missingAfterReplay.length === 0 &&
       viewport.missingAnyAfterReplay.length === 0 &&
       viewport.forbiddenInPage.length === 0 &&

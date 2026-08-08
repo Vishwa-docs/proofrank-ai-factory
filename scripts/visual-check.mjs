@@ -294,6 +294,7 @@ for (const spec of [
       outcomeTitle,
       receiptTeaserReady: /ProofRank sample receipt|scrape_as_markdown|search_engine|discover/i.test(receiptTeaser),
       hiddenGroups,
+      helperClosed: document.querySelector(".review-helper-drawer")?.open === false,
       pathClosed: document.querySelector(".path-drawer")?.open === false,
       optionsClosed: document.querySelector("#reviewOptions")?.open === false
     };
@@ -301,13 +302,14 @@ for (const spec of [
   if (
     initialQuickReviewCalm.visibleInputs > 2 ||
     initialQuickReviewCalm.visiblePrimary !== 1 ||
-    initialQuickReviewCalm.visibleSecondary > 1 ||
-    initialQuickReviewCalm.quickStarterCount !== 3 ||
-    initialQuickReviewCalm.promiseCount !== 3 ||
-    initialQuickReviewCalm.outcomeRows !== 4 ||
+    initialQuickReviewCalm.visibleSecondary > 2 ||
+    initialQuickReviewCalm.quickStarterCount !== 0 ||
+    initialQuickReviewCalm.promiseCount !== 0 ||
+    initialQuickReviewCalm.outcomeRows !== 0 ||
     !/plain review memo/i.test(initialQuickReviewCalm.outcomeTitle) ||
     !initialQuickReviewCalm.receiptTeaserReady ||
     !initialQuickReviewCalm.hiddenGroups ||
+    !initialQuickReviewCalm.helperClosed ||
     !initialQuickReviewCalm.pathClosed ||
     !initialQuickReviewCalm.optionsClosed
   ) {
@@ -333,7 +335,57 @@ for (const spec of [
     throw new Error(`Initial Review panel should start blank: ${JSON.stringify(initialReviewBlank)}`);
   }
 
+  const initialWorkspacePriority = await page.evaluate(() => {
+    const inViewport = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight && rect.bottom > 0;
+    };
+    const opsMap = document.querySelector("#opsMap");
+    return {
+      tabsVisible: inViewport(".section-tabs"),
+      reviewPanelVisible: inViewport("#panel-overview"),
+      opsMapClosed: opsMap?.open === false,
+      lifecycleHidden: !inViewport(".pipeline-strip"),
+      tabTop: Math.round(document.querySelector(".section-tabs")?.getBoundingClientRect().top || 9999),
+      panelTop: Math.round(document.querySelector("#panel-overview")?.getBoundingClientRect().top || 9999)
+    };
+  });
+  const requiresImmediateWorkspace = spec.name === "desktop";
+  if (
+    (requiresImmediateWorkspace && (!initialWorkspacePriority.tabsVisible || !initialWorkspacePriority.reviewPanelVisible)) ||
+    !initialWorkspacePriority.opsMapClosed ||
+    !initialWorkspacePriority.lifecycleHidden
+  ) {
+    throw new Error(`${spec.name}: initial viewport should prioritize review workspace over static lifecycle content: ${JSON.stringify(initialWorkspacePriority)}`);
+  }
+
   if (spec.name === "desktop") {
+    await page.click("#openOpsMap");
+    await page.waitForTimeout(500);
+    const opsMapOpens = await page.evaluate(() => {
+      const opsMap = document.querySelector("#opsMap");
+      const text = opsMap?.textContent || "";
+      const rect = document.querySelector(".pipeline-strip")?.getBoundingClientRect();
+      return Boolean(
+        opsMap?.open &&
+          /Hackathon lifecycle/i.test(text) &&
+          /Brief and rules/i.test(text) &&
+          /Winner audit/i.test(text) &&
+          rect &&
+          rect.width > 0 &&
+          rect.height > 0
+      );
+    });
+    if (!opsMapOpens) {
+      throw new Error("Hackathon ops map did not open into the lifecycle/profile workspace.");
+    }
+    await page.evaluate(() => {
+      document.querySelector("#opsMap").open = false;
+      window.scrollTo(0, 0);
+    });
+    await page.waitForTimeout(250);
     await page.click('.topbar [data-focus-target="quickRepoUrl"]');
     await page.waitForTimeout(300);
     const focusedReviewTarget = await page.evaluate(() => document.activeElement?.id === "quickRepoUrl");
@@ -354,18 +406,20 @@ for (const spec of [
     }
     await page.click("#tourNext");
     await page.waitForTimeout(750);
-    const tourStepThree = await tourTargetVisible(page, "#outcomePreview");
+    const tourStepThree = await tourTargetVisible(page, "#panel-overview");
     if (!tourStepThree) {
-      throw new Error("Guided review step 3 did not highlight the outcome preview.");
+      throw new Error("Guided review step 3 did not highlight the review panel.");
     }
     await page.click("#tourNext");
     await page.waitForTimeout(750);
-    const tourStepFour = await tourTargetVisible(page, "#reviewOptions");
+    const tourStepFour = await tourTargetVisible(page, ".review-helper-drawer");
     if (!tourStepFour) {
-      throw new Error("Guided review step 4 did not highlight the advanced evidence options.");
+      throw new Error("Guided review step 4 did not highlight the helper drawer.");
     }
     await page.click("#tourClose");
-    await page.click("#reviewOptions summary");
+    await page.click(".review-helper-drawer > summary");
+    await page.waitForTimeout(100);
+    await page.click("#reviewOptions > summary");
     await page.waitForTimeout(150);
     const pitchCollapsedByDefault = await page.evaluate(() => {
       return document.querySelector("#pitchCheckDrawer")?.open === false && !document.querySelector(".pitch-review-panel");
@@ -652,6 +706,11 @@ for (const spec of [
     if (!quickLiveSwitchWarned) {
       throw new Error("Hero quick review did not clearly warn when Bright Data evidence run fell back to a safe mode.");
     }
+    await page.evaluate(() => {
+      document.querySelector("#opsMap").open = true;
+      document.querySelector("#opsMap").scrollIntoView({ block: "start" });
+    });
+    await page.waitForTimeout(150);
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
       const text = document.querySelector(".review-room-strip")?.textContent || "";
@@ -729,7 +788,9 @@ for (const spec of [
     if (!qtipEscapeClosed) {
       throw new Error("Mobile GitHub help did not close on Escape.");
     }
-    await page.click("#reviewOptions summary");
+    await page.click(".review-helper-drawer > summary");
+    await page.waitForTimeout(100);
+    await page.click("#reviewOptions > summary");
     await page.waitForTimeout(100);
     await page.click('[data-quick-mode="demo"]');
     await page.waitForTimeout(100);
