@@ -41,6 +41,15 @@ const elements = {
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
   quickReviewHint: document.querySelector("#quickReviewHint"),
+  startTour: document.querySelector("#startTour"),
+  startTourTop: document.querySelector("#startTourTop"),
+  startTourHero: document.querySelector("#startTourHero"),
+  guidedTour: document.querySelector("#guidedTour"),
+  tourStepLabel: document.querySelector("#tourStepLabel"),
+  tourTitle: document.querySelector("#tourTitle"),
+  tourBody: document.querySelector("#tourBody"),
+  tourNext: document.querySelector("#tourNext"),
+  tourClose: document.querySelector("#tourClose"),
   exportCsv: document.querySelector("#exportCsv"),
   exportReceipts: document.querySelector("#exportReceipts"),
   exportSelected: document.querySelector("#exportSelected"),
@@ -64,8 +73,46 @@ const state = {
   selectedId: "proofrank",
   projects: rankProjects(fixtureProjects),
   uploadedProjects: [],
-  reviewerProjects: []
+  reviewerProjects: [],
+  tourIndex: null
 };
+
+const TOUR_STEPS = [
+  {
+    label: "Step 1 of 5",
+    title: "Paste public links",
+    body: "Start with a GitHub repository and a deployed demo. Use sample if you want the shortest replay.",
+    target: "#quickRepoUrl"
+  },
+  {
+    label: "Step 2 of 5",
+    title: "Read the result",
+    body: "The Verdict view shows the next action, Bright Data state, and the claim sections worth opening.",
+    section: "overview",
+    target: "#scorecard"
+  },
+  {
+    label: "Step 3 of 5",
+    title: "Compare the queue",
+    body: "Shortlist keeps your project beside the field, so judges can see why it should advance or what is missing.",
+    section: "queue",
+    target: "#rankedList"
+  },
+  {
+    label: "Step 4 of 5",
+    title: "Inspect the evidence",
+    body: "Evidence separates collected source rows, Bright Data traces, limitations, and the exportable receipt.",
+    section: "receipt",
+    target: "#receipt"
+  },
+  {
+    label: "Step 5 of 5",
+    title: "Upgrade to live review",
+    body: "Live run holds Bright Data setup and the final readiness checklist. The public sample path stays safe for visitors.",
+    section: "setup",
+    target: "#modeSelect"
+  }
+];
 
 function displayText(value = "") {
   return String(value)
@@ -143,6 +190,49 @@ function syncReviewTokenFromUrl() {
   } catch {
     // Token support is optional; failed storage should not break demo mode.
     return "";
+  }
+}
+
+function shareableReviewParams() {
+  try {
+    const url = new URL(window.location.href);
+    const repoUrl = url.searchParams.get("reviewRepo") || url.searchParams.get("repo") || "";
+    const demoUrl = url.searchParams.get("reviewDemo") || url.searchParams.get("demo") || "";
+    return { repoUrl, demoUrl, autorun: url.searchParams.get("autorun") === "1" };
+  } catch {
+    return { repoUrl: "", demoUrl: "", autorun: false };
+  }
+}
+
+function loadReviewParamsFromUrl() {
+  const params = shareableReviewParams();
+  if (!params.repoUrl && !params.demoUrl) return false;
+
+  if (params.repoUrl) {
+    elements.quickRepoUrl.value = params.repoUrl;
+    elements.reviewerRepoUrl.value = params.repoUrl;
+  }
+  if (params.demoUrl) {
+    elements.quickDemoUrl.value = params.demoUrl;
+    elements.reviewerDemoUrl.value = params.demoUrl;
+  }
+  setQuickHint(params.autorun ? "Review link loaded. Building a browser-safe sample review." : "Review link loaded. Click Run review to test it.", "ready");
+  return params.autorun;
+}
+
+function updateShareableReviewUrl(payload) {
+  if (!window.history?.replaceState) return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("reviewRepo", payload.repoUrl);
+    if (payload.demoUrl) url.searchParams.set("reviewDemo", payload.demoUrl);
+    else url.searchParams.delete("reviewDemo");
+    url.searchParams.delete("repo");
+    url.searchParams.delete("demo");
+    url.searchParams.delete("autorun");
+    window.history.replaceState(null, "", url);
+  } catch {
+    // Keeping the browser review functional is more important than URL state.
   }
 }
 
@@ -237,20 +327,20 @@ function hasPendingFinalSubmission(project = {}) {
 }
 
 function displayVerdictLabel(project = {}) {
-  if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) return "Submission-ready";
+  if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) return "Evidence checks passed";
   return project.verdict?.label || "Needs review";
 }
 
 function displayAction(project = {}, fallback = "") {
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
-    return "Submit packet from lablab team account";
+    return "Submit final entry from the lablab team account";
   }
   return fallback || project.verdict?.action || "Review evidence";
 }
 
 function displayPrimaryBlocker(project = {}, fallback = "") {
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
-    return "Final lablab submission remains.";
+    return "Final submission not sent.";
   }
   return fallback || "No major audit risk visible in current evidence.";
 }
@@ -274,7 +364,7 @@ function updateLiveProofStrip(project) {
           : "Sample review only";
   const detail =
     sponsorBundle
-      ? `${receipt.runId || "Evidence report issued"} / ${receipt.signature ? "signed" : "unsigned"}`
+      ? `source scrape + search + discovery / ${receipt.signature ? "verified" : "verification pending"}`
       : traceState === "executed"
         ? "Source plus search plus discover required"
       : traceState === "direct"
@@ -293,7 +383,7 @@ function updateLiveProofStrip(project) {
 
 function statusClass(project) {
   const label = displayVerdictLabel(project);
-  if (label === "Finalist-ready" || label === "Submission-ready") return "good";
+  if (label === "Finalist-ready" || label === "Submission-ready" || label === "Evidence checks passed") return "good";
   if (project.verdict.label === "High risk") return "risk";
   return "review";
 }
@@ -316,13 +406,66 @@ function setActiveSection(sectionName, options = {}) {
   }
 }
 
+function clearTourTarget() {
+  document.querySelectorAll(".is-tour-target").forEach((element) => element.classList.remove("is-tour-target"));
+}
+
+function renderTourStep() {
+  if (state.tourIndex === null || !elements.guidedTour) return;
+  const step = TOUR_STEPS[state.tourIndex];
+  if (!step) {
+    closeTour();
+    return;
+  }
+
+  elements.guidedTour.hidden = false;
+  elements.tourStepLabel.textContent = step.label;
+  elements.tourTitle.textContent = step.title;
+  elements.tourBody.textContent = step.body;
+  elements.tourNext.textContent = state.tourIndex === TOUR_STEPS.length - 1 ? "Finish" : "Next";
+
+  if (step.section) setActiveSection(step.section, { scroll: true });
+
+  window.setTimeout(() => {
+    clearTourTarget();
+    const target = document.querySelector(step.target);
+    target?.classList.add("is-tour-target");
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLButtonElement) {
+      target.focus({ preventScroll: true });
+    }
+  }, step.section ? 240 : 80);
+}
+
+function startTour() {
+  state.tourIndex = 0;
+  setStatus("Guided review started. Follow the highlighted area.", "ready");
+  renderTourStep();
+}
+
+function advanceTour() {
+  if (state.tourIndex === null) {
+    startTour();
+    return;
+  }
+  state.tourIndex += 1;
+  renderTourStep();
+}
+
+function closeTour() {
+  state.tourIndex = null;
+  clearTourTarget();
+  if (elements.guidedTour) elements.guidedTour.hidden = true;
+  setStatus("Guided review closed. Paste links or inspect the selected result.", "ready");
+}
+
 function renderHeroDecision(project) {
   const readiness = buildReadiness(project, readinessContext());
   const traceState = hasBrightDataSponsorProofBundle(project) ? "executed" : brightDataTraceState(project);
   const primaryBlocker = displayPrimaryBlocker(project, project.verdict.risks[0] || readiness.nextActions[0] || "Ready to export the judge packet.");
   const nativeUrl = project.nativeBuilderUrl || (String(project.demoUrl || "").includes("nativelyai.app") ? project.demoUrl : "");
   const verdictLabel = displayVerdictLabel(project);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright Data" : "Overall";
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Evidence" : "Overall";
   const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
   const bundleStatus = hasBrightDataSponsorProofBundle(project) ? "executed" : traceState;
 
@@ -347,8 +490,8 @@ function renderHeroDecision(project) {
         <strong>${escapeHtml(traceState)}</strong>
       </div>
       <div>
-        <span>Submit</span>
-        <strong>${hasPendingFinalSubmission(project) ? "pending" : nativeUrl ? "published" : "missing"}</strong>
+        <span>Final entry</span>
+        <strong>${hasPendingFinalSubmission(project) ? "not sent" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
     <div class="decision-blocker">
@@ -356,6 +499,25 @@ function renderHeroDecision(project) {
       <strong>${escapeHtml(primaryBlocker)}</strong>
     </div>
   `;
+}
+
+function rankReason(project, index) {
+  const traceState = hasBrightDataSponsorProofBundle(project) ? "executed" : brightDataTraceState(project);
+  const reasons = [];
+
+  if (hasBrightDataSponsorProofBundle(project)) reasons.push("executed Bright Data traces");
+  else if (traceState === "pending") reasons.push("Bright Data run pending");
+  else if (traceState === "direct") reasons.push("direct web evidence only");
+  else reasons.push(`${traceState} evidence`);
+
+  if (project.evidence?.hasPublicDemo) reasons.push("demo reachable");
+  else reasons.push("demo needs review");
+
+  if (project.evidence?.lowCrowdOverlap) reasons.push("lower prior-art overlap");
+  else if (project.scores?.originality < 70) reasons.push("originality needs search");
+
+  const rank = index + 1;
+  return `Why #${rank}: ${reasons.slice(0, 3).join(", ")}.`;
 }
 
 function renderRankedList() {
@@ -370,13 +532,14 @@ function renderRankedList() {
   elements.rankedList.innerHTML = projects
     .map((project, index) => {
       const selected = project.id === state.selectedId ? " is-selected" : "";
-      const tools = (project.evidence?.brightDataTools || []).slice(0, 2).map(escapeHtml).join(", ") || "No Bright Data proof";
+      const tools = (project.evidence?.brightDataTools || []).slice(0, 2).map(escapeHtml).join(", ") || "No Bright Data evidence";
       return `
         <button class="project-row queue-row${selected}" type="button" data-id="${escapeAttr(project.id)}" role="listitem">
           <span class="rank-number">${index + 1}</span>
           <span class="queue-main">
             <strong>${escapeHtml(project.title)}</strong>
             <span>${escapeHtml(project.team)} / ${escapeHtml(project.domain || "General")}</span>
+            <em>${escapeHtml(rankReason(project, index))}</em>
           </span>
           <span class="queue-proof">${escapeHtml(tools)}</span>
           <span class="row-score ${statusClass(project)}">${project.scores.overall}</span>
@@ -388,6 +551,8 @@ function renderRankedList() {
   elements.rankedList.querySelectorAll(".project-row").forEach((row) => {
     row.addEventListener("click", () => {
       state.selectedId = row.dataset.id;
+      const selectionDrawer = document.querySelector(".selection-drawer");
+      if (selectionDrawer) selectionDrawer.open = true;
       setStatus(`${selectedProject().title} selected.`, "ready");
       render();
       setActiveSection("overview", { scroll: true });
@@ -659,17 +824,15 @@ function renderScorecard(project) {
   const sourceCount = [project.submissionUrl, project.demoUrl, project.githubUrl, project.presentationUrl].filter((url) => url && isHttpUrl(url)).length;
   const verdictLabel = displayVerdictLabel(project);
   const actionLabel = displayAction(project, project.verdict.action);
-  const scoreLabel = hasPendingFinalSubmission(project) ? "Bright Data" : "Evidence score";
+  const scoreLabel = hasPendingFinalSubmission(project) ? "Evidence" : "Evidence score";
   const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
   const scoreDetail = hasPendingFinalSubmission(project)
-    ? `Overall audit ${project.scores.overall}`
+    ? `Bright Data run verified`
     : `Bright ${project.scores.brightDataPrize}`;
   const runReceipt = project.runReceipt || {};
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
-  const sponsorTools = sponsorProofReady
-    ? ["scrape_as_markdown", "search_engine", "discover"]
-    : ["source scrape", "search_engine", "discover"];
-  const replayState = state.mode === "live" ? (hasReviewToken() ? "token loaded" : "token needed") : "token-only replay";
+  const sponsorToolLabel = sponsorProofReady ? "Source scrape + search + discovery" : "Source, search, and discovery needed";
+  const replayState = state.mode === "live" ? (hasReviewToken() ? "private session ready" : "private token needed") : "Private live backend";
 
   elements.scorecard.innerHTML = `
     <section class="focus-strip">
@@ -697,7 +860,7 @@ function renderScorecard(project) {
       </div>
       <div>
         <h3>Evidence depth</h3>
-        <p>${sourceCount} public links, ${(project.evidenceItems || []).length} receipt items, Bright Data ${traceState}.</p>
+        <p>${sourceCount} public links, ${(project.evidenceItems || []).length} evidence items, Bright Data ${traceState}.</p>
       </div>
       <div>
         <h3>Current blocker</h3>
@@ -726,13 +889,13 @@ function renderScorecard(project) {
     <section class="proof-highlights" aria-label="Bright Data evidence highlights">
       <article>
         <span>Bright Data gate</span>
-        <strong>${escapeHtml(sponsorTools.join(" + "))}</strong>
+        <strong>${escapeHtml(sponsorToolLabel)}</strong>
         <p>${sponsorProofReady ? "Executed evidence counts; planned or claimed rows do not." : "Needs the complete source, search, and discover run."}</p>
       </article>
       <article>
-        <span>Evidence receipt</span>
+        <span>Evidence report</span>
         <strong>${escapeHtml(runReceipt.runId || "Not issued")}</strong>
-        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.traceDigest} trace digest / ${runReceipt.signature ? "signed" : "unsigned"}` : "Live collection has not produced a receipt yet.")}</p>
+        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Verified" : "Verification pending"} live run record` : "Live collection has not produced a report yet.")}</p>
       </article>
       <article>
         <span>Fresh replay</span>
@@ -816,9 +979,9 @@ function renderReceipt(project) {
 
   elements.receipt.innerHTML = `
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
-      <span>Run receipt</span>
+      <span>Live run record</span>
       <strong>${escapeHtml(runReceipt?.runId || "Not issued")}</strong>
-      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "signed" : "unsigned"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server receipt.")}</small>
+      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "verified" : "verification pending"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server receipt.")}</small>
     </div>
 
     <div class="receipt-list">
@@ -1034,7 +1197,7 @@ function loadSampleReviewLinks() {
   elements.quickRepoUrl.value = SAMPLE_REVIEW_LINKS.repoUrl;
   elements.quickDemoUrl.value = SAMPLE_REVIEW_LINKS.demoUrl;
   syncFullReviewFormFromQuick();
-  setQuickHint("Sample links loaded. Click Review these links to add them to the queue.", "ready");
+  setQuickHint("Sample links loaded. Click Run review to add them to the queue.", "ready");
   setStatus("Sample project links loaded.", "ready");
 }
 
@@ -1198,14 +1361,17 @@ async function addReviewerProject() {
   state.reviewerProjects = [project, ...state.reviewerProjects.filter((item) => item.id !== project.id)];
   state.projects = rankProjects(sourceProjects());
   state.selectedId = project.id;
+  updateShareableReviewUrl(payload);
+  const selectionDrawer = document.querySelector(".selection-drawer");
+  if (selectionDrawer) selectionDrawer.open = true;
   elements.reviewerHint.textContent =
     state.mode === "live"
       ? "Project collected with the live backend. Inspect the evidence report and replay traces."
-      : "Project added. Live Bright Data review is available from Links when a tokenized session is loaded.";
+      : "Project added. Live Bright Data review is available from Live run when a tokenized session is loaded.";
   setQuickHint(
     state.mode === "live"
       ? "Live evidence collected. Open Evidence to inspect the report."
-      : "Project added. Open Result for the verdict or Ranked to compare it.",
+      : "Project added. The URL now carries this review, so another visitor can open the same links.",
     "ready"
   );
   setStatus(`${project.title} added to the review queue.`, "ready");
@@ -1300,6 +1466,11 @@ elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.tar
 elements.addReviewerProject.addEventListener("click", addReviewerProject);
 elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProject);
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
+elements.startTour?.addEventListener("click", startTour);
+elements.startTourTop?.addEventListener("click", startTour);
+elements.startTourHero?.addEventListener("click", startTour);
+elements.tourNext?.addEventListener("click", advanceTour);
+elements.tourClose?.addEventListener("click", closeTour);
 elements.quickRepoUrl.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
@@ -1334,6 +1505,8 @@ elements.exportPacket.addEventListener("click", exportSubmissionPacket);
 
 syncReviewTokenFromUrl();
 initializeLiveEndpoint();
+const shouldAutorunReview = loadReviewParamsFromUrl();
 updateReviewerModeCopy();
 setActiveSection(state.activeSection);
 render();
+if (shouldAutorunReview) window.setTimeout(addQuickReviewerProject, 120);

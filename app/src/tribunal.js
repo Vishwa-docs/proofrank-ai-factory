@@ -38,7 +38,7 @@ function sponsorJudge(project) {
     ]),
     objections: compactReasons([
       !executedBrightTrace ? `Bright Data trace is ${traceState}, not executed.` : "",
-      executedBrightTrace && !sponsorProofBundle ? "Sponsor bundle is missing search, discovery, or source scrape proof." : "",
+      executedBrightTrace && !sponsorProofBundle ? "Sponsor bundle is missing search, discovery, or source scrape evidence." : "",
       (scores.brightDataFit || 0) < 75 ? "Sponsor-fit score is below shortlist strength." : "",
       evidence.brightDataRole === "none" ? "Bright Data is not described as load-bearing." : ""
     ])
@@ -125,7 +125,7 @@ function disputeLog(project, panel) {
     status: (scores.brightDataFit || 0) >= 75 && hasBrightDataSponsorProofBundle(project) ? "resolved" : "open",
     detail:
       (scores.brightDataFit || 0) >= 75 && hasBrightDataSponsorProofBundle(project)
-        ? "Bright Data usage is executed across source, search, and discovery proof."
+        ? "Bright Data usage is executed across source, search, and discovery evidence."
         : "Need a replayable Bright Data source, search, and discovery bundle before claiming sponsor-prize strength."
   });
 

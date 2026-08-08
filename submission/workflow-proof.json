@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-08T06:25:29.711Z",
-  "durationMs": 6182,
+  "generatedAt": "2026-08-08T06:38:21.020Z",
+  "durationMs": 5547,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank AI Factory",
   "rankedRows": 9,
   "reviewerRowPresent": true,
   "statusLine": "ProofRank AI Factory selected.",
   "brightProof": "Evidence report Sample review only Run live collection when a tokenized backend session is available",
-  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. GitHubBright Data collection pending Evidence score 25 Bright 19 DemoGitHub Next action Manual review required Evidence depth 2 public links, 1 receipt items, Bright Data pending. Current blocker Add native.builder usage explanation Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Differentiator Executed web evidence Bright Data evidence rows are separated from planned, claimed, direct, and failed rows. Expansion Public AI diligence Hackathons are the entry point for",
-  "receiptText": "Run receipt Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Bright Data trace table Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Planned collector calls Demo review mirrors these collection steps without using live",
+  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. GitHubBright Data collection pending Evidence score 25 Bright 19 DemoGitHub Next action Manual review required Evidence depth 2 public links, 1 evidence items, Bright Data pending. Current blocker Add native.builder usage explanation Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Differentiator Executed web evidence Bright Data evidence rows are separated from planned, claimed, direct, and failed rows. Expansion Public AI diligence Hackathons are the entry point for",
+  "receiptText": "Live run record Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Bright Data trace table Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Planned collector calls Demo review mirrors these collection steps without using",
   "readinessItems": [
     {
       "status": "Action",
@@ -17,8 +17,8 @@
     },
     {
       "status": "Action",
-      "label": "Bright Data sponsor proof bundle",
-      "detail": "Current trace state is pending; sponsor proof needs executed source, search_engine, and discover traces."
+      "label": "Bright Data evidence bundle",
+      "detail": "Current trace state is pending; evidence bundle needs executed source scrape, search, and discovery traces."
     },
     {
       "status": "Action",

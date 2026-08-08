@@ -21,6 +21,7 @@
       </div>
       <div class="topbar-actions" aria-label="Page actions">
         <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Review project</button>
+        <button id="startTourTop" class="text-button" type="button">Start guided review</button>
         <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
         <details class="export-menu">
           <summary>Export</summary>
@@ -38,25 +39,25 @@
         <div class="hero-copy">
           <div class="event-meta" aria-label="Hackathon context">
             <span><strong id="queueCount">0</strong> projects ranked</span>
-            <span>Bright Data MCP</span>
-            <span>Evidence report</span>
+            <span>Verified web evidence</span>
+            <span>Public review</span>
           </div>
-          <p class="event-date">Native.builder app for the Bright Data sponsor track</p>
+          <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Paste a project repo and demo URL. ProofRank checks the public web trail, sponsor usage, originality, and review risk before you spend time judging it by hand.</p>
+          <p class="hero-subtitle">Paste a GitHub repo and demo. ProofRank turns public evidence into a ranked review with gaps, prior-art checks, and Bright Data trace status.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Review project</button>
-            <button class="secondary-button" data-nav-tab="receipt" type="button">View evidence</button>
+            <button class="secondary-button" data-nav-tab="receipt" type="button">Evidence report</button>
           </div>
           <div id="statusLine" class="status-line" role="status">Sample review ready. Paste your links to add another project.</div>
         </div>
 
-        <aside class="decision-card review-card panel" aria-label="Review project and proof state">
+        <aside class="decision-card review-card panel" aria-label="Review project and evidence state">
           <section class="quick-review" aria-label="Try ProofRank with project links">
             <div class="quick-review-head">
-              <span>Try it now</span>
+              <span>First step</span>
               <strong>Review your project links</strong>
-              <p>Sample review works in this browser. Live Bright Data review uses the secure backend.</p>
+              <p>Anyone can paste links here. The sample path works without accounts; live Bright Data review uses a private backend session.</p>
             </div>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
@@ -69,17 +70,29 @@
               </label>
             </div>
             <div class="quick-actions">
-              <button id="quickAddReviewerProject" class="primary-button" type="button">Review these links</button>
-              <button id="loadSampleProject" class="text-button" type="button">Use sample</button>
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Run review</button>
+              <button id="loadSampleProject" class="text-button" type="button">Use sample project</button>
+              <button id="startTourHero" class="text-button" type="button">Start guided review</button>
             </div>
             <p id="quickReviewHint" class="hint">No account or token is needed for the sample path.</p>
+          </section>
+          <section id="guidedTour" class="guided-tour" aria-label="Guided ProofRank tour" aria-live="polite" hidden>
+            <div>
+              <span id="tourStepLabel">Step 1 of 5</span>
+              <strong id="tourTitle">Paste public links</strong>
+              <p id="tourBody">Start with a GitHub repository and a deployed demo. Use sample if you want the shortest replay.</p>
+            </div>
+            <div class="tour-actions">
+              <button id="tourNext" class="primary-button small" type="button">Next</button>
+              <button id="tourClose" class="text-button small" type="button">Close</button>
+            </div>
           </section>
           <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
             <span>Evidence report</span>
             <strong>Sample review loaded</strong>
             <small>Paste links above to create another project review</small>
           </div>
-          <details class="selection-drawer" open>
+          <details class="selection-drawer">
             <summary>
               <span>Current selection</span>
               <strong id="selectionSummaryMini">ProofRank</strong>
@@ -93,22 +106,22 @@
 
       <section class="product-strip reveal" style="--i: 2" aria-label="ProofRank workflow">
         <article>
-          <span>01</span>
+          <span>Start</span>
           <strong>Paste public links</strong>
           <p>Start with a GitHub repo, demo app, or event page.</p>
         </article>
         <article>
-          <span>02</span>
+          <span>Collect</span>
           <strong>Check web evidence</strong>
-          <p>Bright Data-backed collection separates proof from claims.</p>
+          <p>Bright Data-backed collection separates evidence from claims.</p>
         </article>
         <article>
-          <span>03</span>
+          <span>Compare</span>
           <strong>Compare the field</strong>
           <p>Eligibility, value, originality, and presentation stay separate.</p>
         </article>
         <article>
-          <span>04</span>
+          <span>Export</span>
           <strong>Export the packet</strong>
           <p>Reviewer CSV, evidence JSON, and a submission-ready memo.</p>
         </article>
@@ -117,12 +130,13 @@
       <section class="guide-strip reveal" style="--i: 3" aria-label="Quick tips">
         <div class="guide-copy">
           <span>New here?</span>
-          <strong>Use the top form first.</strong>
-          <p>Then open Result for the verdict, Ranked for comparison, Evidence for receipts, or Links for live runs.</p>
+          <strong>Follow the guided path.</strong>
+          <p>Paste links, read the verdict, compare the queue, inspect evidence, then export.</p>
+          <button id="startTour" class="secondary-button small" type="button">Start guided review</button>
         </div>
         <details class="qtip">
           <summary>What can I test now?</summary>
-          <p>Paste a public GitHub repo and optional demo URL. ProofRank adds it to the queue with a local sample review.</p>
+          <p>Paste a public GitHub repo and optional demo URL. ProofRank adds it to the queue with a browser-safe sample review.</p>
         </details>
         <details class="qtip">
           <summary>Where does Bright Data matter?</summary>
@@ -133,12 +147,11 @@
           <p>Submit the app URL, GitHub repo, demo video, and the exported evidence packet from the selected project.</p>
         </details>
       </section>
-
       <nav class="section-tabs reveal" style="--i: 4" aria-label="ProofRank sections" role="tablist">
-        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Result</button>
-        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Ranked</button>
+        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Verdict</button>
+        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Shortlist</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
-        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Links</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Live run</button>
       </nav>
 
       <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 5" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
@@ -148,19 +161,19 @@
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 5" aria-label="Ranked queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 5" aria-label="Shortlist queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
-          <button class="filter-chip" data-filter="bright-strong" type="button">Bright strong</button>
+          <button class="filter-chip" data-filter="bright-strong" type="button">Executed Bright Data</button>
           <button class="filter-chip" data-filter="missing-demo" type="button">No demo</button>
           <button class="filter-chip" data-filter="missing-github" type="button">No GitHub</button>
           <button class="filter-chip" data-filter="finalist-ready" type="button">Ready</button>
         </section>
 
-        <section class="queue-section panel" aria-label="Ranked queue">
+        <section class="queue-section panel" aria-label="Shortlist queue">
           <div class="module-head">
-            <h2>Ranked queue</h2>
+            <h2>Shortlist</h2>
             <span class="hint">Select one project to inspect.</span>
           </div>
           <div id="rankedList" class="ranked-list" role="list"></div>

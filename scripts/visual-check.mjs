@@ -50,6 +50,17 @@ for (const spec of [
     if (!focusedReviewTarget) {
       throw new Error("Topbar Review target did not focus the hero GitHub repository field.");
     }
+    await page.click("#startTourTop");
+    await page.waitForTimeout(250);
+    const tourVisible = await page.evaluate(() => {
+      const tour = document.querySelector("#guidedTour");
+      const repo = document.querySelector("#quickRepoUrl");
+      return Boolean(tour && !tour.hidden && repo?.classList.contains("is-tour-target"));
+    });
+    if (!tourVisible) {
+      throw new Error("Guided review did not open beside the repo field with a visible highlight.");
+    }
+    await page.click("#tourClose");
     await page.fill("#quickRepoUrl", "https://example.com/github.com/fake/project");
     await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
     await page.click("#quickAddReviewerProject");

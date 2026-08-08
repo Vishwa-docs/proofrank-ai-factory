@@ -91,7 +91,7 @@ export const fixtureProjects = [
         id: "proofrank-final-receipt",
         sourceType: "signed-receipt",
         sourceUrl: "submission/final-brightdata-receipt.json",
-        title: "Signed Bright Data sponsor receipt",
+        title: "Verified Bright Data evidence receipt",
         excerpt:
           "Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification.",
         collectedAt: "2026-08-07T20:05:29.345Z",

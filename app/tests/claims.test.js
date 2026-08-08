@@ -59,6 +59,6 @@ const riskySourceClaims = buildClaimLedger(
   })
 );
 
-assert.equal(riskySourceClaims.find((claim) => claim.claim === "Repository evidence is reproducible").status, "Needs Proof");
+assert.equal(riskySourceClaims.find((claim) => claim.claim === "Repository evidence is reproducible").status, "Needs Evidence");
 
 console.log("claims tests passed");

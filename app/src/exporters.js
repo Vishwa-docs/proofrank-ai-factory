@@ -172,7 +172,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste a public GitHub repo and demo app URL, add the project, inspect Result and Ranked, open Claim Check, review the evidence receipt, and export the sponsor-ready diligence packet.
+Paste a public GitHub repo and demo app URL, add the project, inspect Verdict and Shortlist, open Claim Check, review the evidence receipt, and export the sponsor-ready diligence packet.
 
 ## External Tools
 

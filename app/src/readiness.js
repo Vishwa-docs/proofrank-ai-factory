@@ -109,15 +109,15 @@ export function buildReadiness(project = {}, context = {}) {
     }),
     gate({
       id: "bright-data",
-      label: "Bright Data sponsor proof bundle",
+      label: "Bright Data evidence bundle",
       passed: sponsorProofReady,
       detail: sponsorProofReady
-        ? "Receipt contains executed Bright Data source, search_engine, and discover traces."
-        : `Current trace state is ${traceState}; sponsor proof needs executed source, search_engine, and discover traces.`,
+        ? "Evidence report contains executed Bright Data source scrape, search, and discovery traces."
+        : `Current trace state is ${traceState}; evidence bundle needs executed source scrape, search, and discovery traces.`,
       proof: sponsorProofReady
-        ? "provider=bright-data with executed source scrape, search_engine, and discover traces"
+        ? "provider=bright-data with executed source scrape, search, and discovery traces"
         : "Single, planned, claimed, direct, pending, and failed traces do not pass this gate.",
-      action: "Fix the Bright Data token, rerun live collection, and export the full sponsor proof bundle."
+      action: "Fix the Bright Data token, rerun live collection, and export the full sponsor evidence bundle."
     }),
     gate({
       id: "actual-review-target",
@@ -125,7 +125,7 @@ export function buildReadiness(project = {}, context = {}) {
       passed: selectedProjectReviewed,
       detail:
         selectedProjectHasRunReceipt
-          ? "Selected project has a signed executed Bright Data evidence receipt."
+          ? "Selected project has a verified executed Bright Data evidence receipt."
           : selectedProjectHasLiveEvidence
             ? "Selected project has fetched repository or demo evidence."
             : reviewerProjectCount > 0
@@ -146,7 +146,7 @@ export function buildReadiness(project = {}, context = {}) {
       label: "Live collection backend",
       passed: liveBackendSatisfied,
       detail: selectedProjectHasRunReceipt
-        ? "A signed server-side Bright Data run receipt is attached for this project."
+        ? "A verified server-side Bright Data run receipt is attached for this project."
         : liveApiConfigured
           ? "The UI is pointed at a live server-side review endpoint."
         : localhostBlocked
@@ -194,7 +194,7 @@ export function buildReadiness(project = {}, context = {}) {
       required: false,
       passed: Boolean(evidence.proofReceipt),
       detail: "A judge packet should include scores, claim checks, evidence rows, review panel, and similarity findings.",
-      proof: evidence.proofReceipt ? "Evidence receipt surface available." : "Receipt export not available.",
+      proof: evidence.proofReceipt ? "Evidence report surface available." : "Evidence export not available.",
       action: "Export the selected receipt and Markdown packet after the live run."
     })
   ];

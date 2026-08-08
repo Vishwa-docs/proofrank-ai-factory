@@ -49,7 +49,7 @@ const BENCHMARKS = [
     points: 20,
     test: hasBrightDataSponsorProofBundle,
     proof: "Bright Data source scrape, search_engine, and discover traces are executed and useful.",
-    action: "Run Bright Data source, search, and discovery traces, then export the signed receipt."
+    action: "Run Bright Data source, search, and discovery traces, then export the verified evidence receipt."
   },
   {
     id: "multi-tool-bright-data",

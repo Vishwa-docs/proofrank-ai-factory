@@ -167,7 +167,7 @@ export function buildVerdict(project, scores = calculateScores(project)) {
   if (!evidence.nativeBuilderExplained) risks.push("Add native.builder usage explanation");
   if (!evidence.hasGithub) risks.push("Add public source or implementation evidence");
   if (!sponsorProofBundle) {
-    risks.push(executedBrightTrace ? "Complete the Bright Data sponsor proof bundle" : "Run the Bright Data sponsor proof bundle");
+    risks.push(executedBrightTrace ? "Complete the Bright Data sponsor evidence bundle" : "Run the Bright Data sponsor evidence bundle");
   }
   if (evidence.secretRiskVisible) risks.push("Remove visible secrets or sensitive files from public repo");
   if (scores.brightDataFit < 55) risks.push("Bright Data usage is not load-bearing enough");

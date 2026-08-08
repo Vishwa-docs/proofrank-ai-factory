@@ -1,9 +1,9 @@
 ProofRank reviews public AI hackathon projects from their own links.
 
-Start with public project links, then ProofRank ranks the field, checks the demo and repo, and separates claims from proof.
+Start with a GitHub repo and demo URL. ProofRank ranks the field, checks the demo and repo, and separates claims from evidence.
 
-The Bright Data gate is load-bearing. scrape_as_markdown, search_engine, and discover must execute before the sponsor evidence passes.
+The Bright Data gate is load-bearing. Source scrape, search, and discovery must run before the evidence checks pass.
 
-Judges get a claim check, similarity check, review panel, and evidence receipt with trace hashes.
+Judges get a verdict, shortlist, claim check, similarity check, review panel, and evidence report.
 
 The final packet exports as CSV, JSON, or Markdown. ProofRank turns a crowded submission page into a defensible winner shortlist.
