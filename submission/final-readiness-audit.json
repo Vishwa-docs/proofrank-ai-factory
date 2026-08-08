@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-08-08T09:42:18.588Z",
+  "generatedAt": "2026-08-08T09:56:22.173Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 9,
+  "requiredPassed": 8,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 83,
+  "score": 75,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
-      "status": "passed",
-      "proof": "ProofRank shell is deployed and the runtime bundle contains the refreshed Evidence and Readiness UI.",
+      "status": "needs-action",
+      "proof": "Fallback bundle is deployed but missing refreshed copy: Open Bright Data receipt.",
       "action": "Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
     },
     {
@@ -114,8 +114,9 @@
     }
   ],
   "nextActions": [
+    "Deploy the public fallback app and confirm the Bright Data evidence strip is visible.",
     "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/11 required gates checked. Next action: Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
+  "summary": "Not final-ready: 8/11 required gates checked. Next action: Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
 }

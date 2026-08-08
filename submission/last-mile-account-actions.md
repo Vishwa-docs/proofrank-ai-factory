@@ -26,7 +26,7 @@ Current Native.builder state:
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
 - Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
-- Current local/fallback first viewport shows public project links, `Add my project`, `View evidence`, and `Bright Data evidence attached`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
+- Current local/fallback first viewport shows public project links, `Run public review`, `Share blank test room`, the review coach, and the Bright Data flight recorder. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the render check uses a cache-busting URL and must be rerun after republish.
 - Use the Native.builder URL above as the primary submission URL.
 

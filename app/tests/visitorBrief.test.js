@@ -53,7 +53,7 @@ const receiptProject = {
   assert.match(brief.rows[2].detail, /web search/);
   assert.match(brief.rows[2].detail, /discover/);
   assert.match(brief.rows[2].detail, /planned, not run yet/i);
-  assert.equal(brief.actions[0].label, "Copy draft link");
+  assert.equal(brief.actions[0].label, "Copy replay link");
   assert.equal(brief.actions[1].label, "Run public review");
   assert.equal(brief.actions[2].label, "Export draft memo");
 
@@ -86,8 +86,8 @@ const receiptProject = {
   assert.equal(brief.title, "Public review ready");
   assert.match(brief.summary, /real public repo\/demo evidence/i);
   assert.match(brief.summary, /private Bright Data evidence/i);
-  assert.equal(brief.actions[0].label, "Open evidence");
-  assert.equal(brief.actions[1].label, "Private review");
+  assert.equal(brief.actions[0].label, "Open Bright Data receipt");
+  assert.equal(brief.actions[1].label, "Bright Data evidence run");
   assert.equal(brief.actions[2].label, "Export memo");
 }
 
@@ -99,7 +99,7 @@ const receiptProject = {
   assert.match(brief.title, /Evidence-backed review/i);
   assert.match(brief.rows[0].detail, /source fetch, search, and discovery/i);
   assert.match(brief.rows[1].detail, /Saved review/i);
-  assert.equal(brief.actions[0].label, "Open evidence");
+  assert.equal(brief.actions[0].label, "Open Bright Data receipt");
   assert.equal(brief.actions[1].label, "Export memo");
   assert.equal(brief.actions[2].label, "Final submission");
 }

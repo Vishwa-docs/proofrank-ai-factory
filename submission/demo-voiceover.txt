@@ -2,7 +2,7 @@ ProofRank lets anyone test an AI hackathon project from public links.
 
 Paste a GitHub repo and demo URL. The draft is honest: it saves the links, stays unscored, and shows what has not been checked yet.
 
-Run public review for safe GitHub and demo evidence. Private Bright Data review adds source fetch, web search, discovery, and an inspectable saved review.
+Run public review for safe GitHub and demo evidence. A Bright Data evidence run adds source fetch, web search, discovery, and an inspectable saved review.
 
 ProofRank turns that evidence into a Prize brief: shortlist, collect more evidence, or export the memo. It also compares the field and flags pitch claims that still need support.
 

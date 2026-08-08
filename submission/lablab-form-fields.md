@@ -17,7 +17,7 @@ ProofRank is a Bright Data evidence workspace for AI hackathon judges. It review
 ```text
 ProofRank is a Bright Data-powered diligence workspace for AI hackathon judges, sponsor teams, accelerators, and grant reviewers. Reviewers paste a public demo URL and GitHub repository, and ProofRank turns scattered project claims into a structured review queue with confidence scores, evidence gaps, prior-art signals, and exportable sponsor-fit memos.
 
-The product separates browser-safe draft checks from public evidence collection and private sponsor review. Public visitors can create a link-only draft, run a public repo/demo check, and see what has or has not been fetched. A reviewer with credentials can then upgrade that review with Bright Data source fetch, search, and discovery evidence. The Evidence view shows whether Bright Data was used as the actual acquisition layer rather than a decorative integration.
+The product separates browser-safe draft checks from public evidence collection and Bright Data evidence runs. Public visitors can create a link-only draft, run a public repo/demo check, and see what has or has not been fetched. A reviewer with credentials can then upgrade that review with Bright Data source fetch, search, discovery, and a saved receipt. The Evidence view shows whether Bright Data was used as the actual acquisition layer rather than a decorative integration.
 
 ProofRank was built and published through native.builder as a practical review-operations tool, not a static landing page. It includes a Prize brief, claim ledger, similarity check, winner benchmark, review brief, presentation check, exportable reviewer memos, and a workflow designed for human judges who need faster shortlisting without giving up judgment.
 ```
@@ -94,7 +94,7 @@ https://github.com/Vishwa-docs/proofrank-ai-factory
 ```text
 Primary build is published through native.builder. Fallback/live API: https://proofrank-ai-factory.vercel.app/
 
-ProofRank uses Bright Data as the evidence layer for source fetch, web search, discovery, and sponsor-fit reviewer memos. Public visitors can create a browser-safe draft from links; private reviewer sessions upgrade that draft with server-side Bright Data evidence.
+ProofRank uses Bright Data as the evidence layer for source fetch, web search, discovery, and sponsor-fit reviewer memos. Public visitors can create a browser-safe draft from links; Bright Data evidence runs upgrade that draft with server-side evidence and an inspectable receipt.
 
 The Prize brief and Draft Review Card let visitors copy a link-only summary that clearly says repo/demo contents were not fetched and Bright Data evidence is still pending. The Bright Data plan lists the intended evidence path: scrape_as_markdown, search_engine, and discover.
 

@@ -90,6 +90,7 @@ for (const spec of [
     const visibleSecondary = [...quick.querySelectorAll(".quick-actions .text-button, .quick-actions .secondary-button")].filter(isVisible);
     const hiddenGroups = [
       ".path-drawer .quick-path",
+      ".review-mode-switch",
       ".visitor-mode",
       ".bright-actions",
       ".review-focus",
@@ -194,6 +195,7 @@ for (const spec of [
     await page.click('[data-section-tab="setup"]');
     const firstStepControlsReady = await page.evaluate(() => {
       return (
+        document.querySelectorAll(".review-coach-checks li").length === 3 &&
         document.querySelectorAll("[data-review-focus]").length === 3 &&
         document.querySelectorAll("[data-starter-project]").length === 3 &&
         document.querySelectorAll(".mode-ladder span").length === 3 &&
@@ -372,7 +374,7 @@ for (const spec of [
     await page.click("#quickAddReviewerProject");
     await page
       .waitForFunction(
-        () => /Private Bright Data review needs private access/i.test(document.querySelector("#statusLine")?.textContent || ""),
+        () => /Bright Data evidence run needs private access/i.test(document.querySelector("#statusLine")?.textContent || ""),
         null,
         { timeout: 12000 }
       )
@@ -382,7 +384,7 @@ for (const spec of [
       const mode = document.querySelector("#modeSelect")?.value || "";
       return (
         ["demo", "public"].includes(mode) &&
-        /Private Bright Data review needs private access/i.test(status) &&
+        /Bright Data evidence run needs private access/i.test(status) &&
         /(Draft review|Public review) ran instead/i.test(status)
       );
     });
@@ -463,6 +465,8 @@ for (const spec of [
     if (!qtipEscapeClosed) {
       throw new Error("Mobile GitHub help did not close on Escape.");
     }
+    await page.click("#reviewOptions summary");
+    await page.waitForTimeout(100);
     await page.click('[data-quick-mode="demo"]');
     await page.waitForTimeout(100);
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
@@ -560,6 +564,16 @@ for (const spec of [
       prizeBriefCopyReady: /Bright Data prize case|Prize case gated|Link-only draft/i.test(
         document.querySelector(".prize-brief")?.textContent || ""
       ),
+      reviewCoachCount: document.querySelectorAll(".review-coach").length,
+      reviewCoachCheckCount: document.querySelectorAll(".review-coach-checks li").length,
+      reviewCoachCopyReady: /Test any public project|Run public review next|Add the sponsor layer|Export the reviewer memo/i.test(
+        document.querySelector(".review-coach")?.textContent || ""
+      ),
+      flightRecorderCount: document.querySelectorAll(".flight-recorder").length,
+      flightRecorderStageCount: document.querySelectorAll(".flight-recorder-stages li").length,
+      flightRecorderCopyReady: /Bright Data flight recorder|Sponsor evidence/i.test(
+        document.querySelector(".flight-recorder")?.textContent || ""
+      ),
       visitorBriefCount: document.querySelectorAll(".visitor-brief").length,
       visitorBriefActions: document.querySelectorAll(".visitor-brief [data-score-action]").length,
       draftReviewCardCount: document.querySelectorAll(".draft-review-card").length,
@@ -619,6 +633,12 @@ const failures = results.flatMap((result) => {
   if (result.metrics.prizeBriefLaneCount !== 3) problems.push(`${result.spec.name}: prize brief lanes did not render`);
   if (result.metrics.prizeBriefActionCount < 3) problems.push(`${result.spec.name}: prize brief actions did not render`);
   if (!result.metrics.prizeBriefCopyReady) problems.push(`${result.spec.name}: prize brief copy is missing`);
+  if (result.metrics.reviewCoachCount !== 1) problems.push(`${result.spec.name}: review coach did not render`);
+  if (result.metrics.reviewCoachCheckCount !== 3) problems.push(`${result.spec.name}: review coach checks did not render`);
+  if (!result.metrics.reviewCoachCopyReady) problems.push(`${result.spec.name}: review coach copy is missing`);
+  if (result.metrics.flightRecorderCount < 1) problems.push(`${result.spec.name}: Bright Data flight recorder did not render`);
+  if (result.metrics.flightRecorderStageCount < 4) problems.push(`${result.spec.name}: Bright Data flight recorder stages did not render`);
+  if (!result.metrics.flightRecorderCopyReady) problems.push(`${result.spec.name}: Bright Data flight recorder copy is missing`);
   if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
   if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
   if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {

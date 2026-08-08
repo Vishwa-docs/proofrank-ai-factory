@@ -45,11 +45,11 @@
           </div>
           <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Paste a GitHub repo and demo to collect public evidence, see the gaps, and export a reviewer memo.</p>
+          <p class="hero-subtitle">Paste a public GitHub repo. Add a demo link if you have one. ProofRank returns a judge memo and marks what still needs Bright Data evidence.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Run review</button>
-            <button class="secondary-button" data-nav-tab="receipt" type="button">Open evidence</button>
             <button class="secondary-button" data-load-sample type="button">Replay sample</button>
+            <button id="copyAppLinkHero" class="secondary-button" type="button">Share blank test room</button>
           </div>
           <div id="statusLine" class="status-line" role="status">Paste any public GitHub repo to run a review. No login needed.</div>
         </div>
@@ -61,20 +61,7 @@
               <strong>Audit a public AI project</strong>
               <p>Paste a GitHub repo and optional demo. ProofRank checks public evidence first; private Bright Data review adds source, search, and discovery evidence.</p>
             </div>
-            <div class="review-mode-switch" role="radiogroup" aria-label="Review depth">
-              <button class="mode-chip is-active" data-quick-mode="public" role="radio" aria-checked="true" type="button">
-                <strong>Public review</strong>
-                <small>fetches repo/demo</small>
-              </button>
-              <button class="mode-chip" data-quick-mode="demo" role="radio" aria-checked="false" type="button">
-                <strong>Save draft</strong>
-                <small>links only</small>
-              </button>
-              <button class="mode-chip" data-quick-mode="live" role="radio" aria-checked="false" type="button">
-                <strong>Private Bright Data</strong>
-                <small>server-side evidence</small>
-              </button>
-            </div>
+            <div id="reviewCoach" class="review-coach" aria-live="polite"></div>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
                 <span class="field-label">GitHub repository <button class="qmark" type="button" aria-label="GitHub repo help" aria-expanded="false" aria-controls="repoTip">?</button><span id="repoTip" class="tip-panel" role="tooltip">Use a public github.com/owner/repo URL. Private repos and docs with secrets should not be pasted.</span></span>
@@ -89,7 +76,7 @@
             </div>
             <div class="quick-actions">
               <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
-              <button id="copyReviewLink" class="text-button" type="button" disabled>Copy draft link</button>
+              <button id="copyReviewLink" class="text-button" type="button" disabled>Enter repo to copy draft link</button>
             </div>
             <details class="path-drawer">
               <summary>
@@ -123,10 +110,24 @@
             <p id="quickReviewHint" class="hint">Public review fetches safe public GitHub and demo evidence without using Bright Data credits.</p>
             <details id="reviewOptions" class="review-options">
               <summary>
-                <span>Samples and sharing</span>
-                <strong>Examples, evidence, room links</strong>
+                <span>Advanced evidence options</span>
+                <strong>drafts, samples, Bright Data run</strong>
               </summary>
               <div class="review-options-body">
+                <div class="review-mode-switch" role="radiogroup" aria-label="Review depth">
+                  <button class="mode-chip is-active" data-quick-mode="public" role="radio" aria-checked="true" type="button">
+                    <strong>Public review</strong>
+                    <small>fetches repo/demo</small>
+                  </button>
+                  <button class="mode-chip" data-quick-mode="demo" role="radio" aria-checked="false" type="button">
+                    <strong>Save draft</strong>
+                    <small>links only</small>
+                  </button>
+                  <button class="mode-chip" data-quick-mode="live" role="radio" aria-checked="false" type="button">
+                    <strong>Bright Data evidence run</strong>
+                    <small>source + search + discovery</small>
+                  </button>
+                </div>
                 <div class="visitor-mode" aria-label="Visitor review path">
                   <article>
                     <strong>1</strong>
@@ -142,12 +143,12 @@
                   </article>
                 </div>
                 <div class="bright-actions" aria-label="Bright Data actions">
-                  <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open evidence">
-                    <span>View evidence</span>
+                  <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open Bright Data receipt">
+                    <span>Bright Data receipt</span>
                     <strong>source fetch, search, discovery, memo</strong>
                   </button>
-                  <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open private Bright Data setup">
-                    <span>Private Bright Data review</span>
+                  <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open Bright Data evidence run setup">
+                    <span>Bright Data evidence run</span>
                     <strong>private Bright Data collection</strong>
                   </button>
                 </div>
@@ -189,11 +190,10 @@
                 <div class="quick-actions option-actions">
                   <button id="loadSampleProject" class="text-button" type="button">Open ProofRank sample</button>
                   <button id="loadExternalSample" class="text-button" type="button">Open external sample</button>
-                  <button id="copyAppLinkHero" class="text-button" type="button">Share blank test room</button>
                 </div>
                 <details class="inline-qtip">
                   <summary>Draft vs public review</summary>
-                  <p>Draft review only checks links. Public review fetches public GitHub and demo evidence. Private Bright Data review adds source, search, and discovery evidence later.</p>
+                  <p>Draft review only checks links. Public review fetches public GitHub and demo evidence. A Bright Data evidence run adds source, search, and discovery later.</p>
                 </details>
                 <details class="inline-qtip">
                   <summary>Can someone else test it?</summary>
@@ -218,6 +218,7 @@
             <strong>Paste links to start</strong>
             <small>Run a public review first. Replay the ProofRank sample only if you want to inspect a finished review.</small>
           </div>
+          <div id="flightRecorderHero"></div>
           <details class="selection-drawer">
             <summary>
               <span>Current selection</span>
@@ -357,7 +358,7 @@
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 6" aria-label="Private Bright Data review and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 6" aria-label="Bright Data evidence run and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">
@@ -369,10 +370,10 @@
               <select id="modeSelect">
                 <option value="demo">Draft (links only)</option>
                 <option value="public">Public review (GitHub/demo evidence)</option>
-                <option value="live">Private Bright Data review</option>
+                <option value="live">Bright Data evidence run</option>
               </select>
             </label>
-            <p class="mode-explainer hint">Public review fetches public evidence without secrets. Private Bright Data review uses a server-side backend so API keys stay out of the browser.</p>
+            <p class="mode-explainer hint">Public review fetches public evidence without secrets. The Bright Data evidence run uses a server-side backend so API keys stay out of the browser.</p>
             <label class="field" for="reviewerRepoUrl">
               <span>GitHub repository</span>
               <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
@@ -397,7 +398,7 @@
               </div>
             </details>
             <button id="addReviewerProject" class="secondary-button wide" type="button">Add project</button>
-            <p id="reviewerHint" class="hint">Draft works without credentials. Public review fetches public evidence. Private Bright Data review adds server-side source, search, and discovery checks.</p>
+            <p id="reviewerHint" class="hint">Draft works without credentials. Public review fetches public evidence. The Bright Data evidence run adds server-side source, search, and discovery checks.</p>
           </section>
 
           <section class="source-module">

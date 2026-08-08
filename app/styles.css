@@ -366,6 +366,240 @@ h1 {
   background: var(--color-accent-soft);
 }
 
+.review-coach {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-rule);
+  border-left: 0.25rem solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+}
+
+.review-coach-head {
+  display: grid;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.review-coach-head span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.review-coach-head strong {
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: 1.2;
+}
+
+.review-coach-head p {
+  color: var(--color-ink-2);
+  font-size: var(--text-xs);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.review-coach-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.review-coach-actions .secondary-button,
+.review-coach-actions .text-button {
+  flex: 1 1 9rem;
+}
+
+.review-coach-checks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+}
+
+.review-coach-checks li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  min-height: 4.6rem;
+  padding: var(--space-xs);
+  background: var(--color-surface-muted);
+}
+
+.review-coach-checks li.ready {
+  background: color-mix(in oklch, var(--color-good-soft) 42%, var(--color-paper));
+}
+
+.review-coach-checks span {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.review-coach-checks li.ready span {
+  color: var(--color-good);
+}
+
+.review-coach-checks strong,
+.review-coach-checks small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.review-coach-checks strong {
+  color: var(--color-ink);
+  font-size: 0.72rem;
+}
+
+.review-coach-checks small {
+  color: var(--color-muted);
+  font-size: 0.66rem;
+  font-weight: 650;
+}
+
+.flight-recorder {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+}
+
+.flight-recorder.compact {
+  margin-bottom: 0;
+  padding: var(--space-sm);
+}
+
+.flight-recorder-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-sm);
+  align-items: start;
+}
+
+.flight-recorder-head > div {
+  display: grid;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.flight-recorder-head span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.flight-recorder-head h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: 1.2;
+}
+
+.flight-recorder-head p {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.flight-recorder.compact .flight-recorder-head p {
+  font-size: var(--text-xs);
+}
+
+.flight-recorder-head > strong {
+  display: inline-flex;
+  min-height: 1.65rem;
+  align-items: center;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  padding-inline: var(--space-xs);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.flight-recorder-stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+}
+
+.flight-recorder-stages li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  min-height: 5rem;
+  padding: var(--space-sm);
+  background: var(--color-surface-muted);
+}
+
+.flight-recorder.compact .flight-recorder-stages li {
+  min-height: 3.75rem;
+  padding: var(--space-xs);
+}
+
+.flight-recorder-stages li.executed,
+.flight-recorder-stages li.saved {
+  background: color-mix(in oklch, var(--color-good-soft) 44%, var(--color-paper));
+}
+
+.flight-recorder-stages li.public-only,
+.flight-recorder-stages li.planned,
+.flight-recorder-stages li.pending {
+  background: color-mix(in oklch, var(--color-warn-soft) 46%, var(--color-paper));
+}
+
+.flight-recorder-stages span,
+.flight-recorder-stages strong,
+.flight-recorder-stages small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.flight-recorder-stages span {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.flight-recorder-stages strong {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.flight-recorder-stages small {
+  color: var(--color-muted);
+  font-size: 0.66rem;
+  font-weight: 650;
+}
+
 .review-focus-options {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -4511,6 +4745,8 @@ input::placeholder {
   .visitor-mode,
   .bright-actions,
   .action-board ul,
+  .review-coach-checks,
+  .flight-recorder-stages,
   .prize-lanes,
   .prize-pressure,
   .fix-score-strip,

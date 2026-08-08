@@ -288,8 +288,8 @@ async function nativeBuilder() {
     "ProofRank",
     "Bright Data",
     "Review public AI submissions",
-    "Add my project",
-    "View evidence",
+    "Run public review",
+    "Open Bright Data receipt",
     "Readiness",
     "Bright Data evidence attached"
   ].filter(Boolean);
@@ -399,7 +399,7 @@ async function liveReceipt() {
 async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
-  const fallbackRequiredCopy = ["Bright Data evidence attached", "Review public AI submissions", "View evidence", "Add my project"];
+  const fallbackRequiredCopy = ["Bright Data evidence attached", "Review public AI submissions", "Open Bright Data receipt", "Run public review"];
   const fallbackRenderedText = `${fallback.text || ""}\n${fallbackBundle.text || ""}`;
   const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !fallbackRenderedText.includes(item));
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");

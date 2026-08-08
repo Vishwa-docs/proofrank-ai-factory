@@ -111,6 +111,8 @@ try {
   await page.click("[data-load-sample]");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
   await page.waitForFunction(() => /Bright Data evidence attached/i.test(document.querySelector("#liveProofStrip")?.textContent || ""));
+  await page.click("#reviewOptions summary");
+  await page.waitForTimeout(120);
   await page.click('[data-quick-mode="demo"]');
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");

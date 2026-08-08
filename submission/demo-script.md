@@ -12,11 +12,11 @@ Show ProofRank open directly on the review workspace. Use the first-screen GitHu
 
 Say:
 
-"Public review lets judges try a project without credentials and still collect real GitHub and demo evidence. Private Bright Data review adds server-side source, search, and discovery evidence, so API keys stay out of the browser."
+"Public review lets judges try a project without credentials and still collect real GitHub and demo evidence. A Bright Data evidence run adds source fetch, search, discovery, and a saved receipt, so API keys stay out of the browser."
 
 Show the Draft Review Card and say:
 
-"The product is honest about evidence depth: drafts are link-only, public reviews fetch safe public evidence, and private Bright Data review adds sponsor evidence."
+"The product is honest about evidence depth: drafts are link-only, public reviews fetch safe public evidence, and a Bright Data evidence run adds sponsor evidence."
 
 ## 0:30-0:48 - Prize Brief And Similarity Check
 

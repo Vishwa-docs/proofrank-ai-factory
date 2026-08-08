@@ -54,7 +54,7 @@ export function buildPrizeBrief(project = {}, context = {}) {
       actions: [
         action,
         { action: "copy", label: "Copy replay link" },
-        { action: "live", label: "Private Bright Data" }
+        { action: "live", label: "Bright Data evidence run" }
       ],
       lanes: [
         {
@@ -106,7 +106,7 @@ export function buildPrizeBrief(project = {}, context = {}) {
     summary,
     actions: [
       action,
-      { action: "evidence", label: "Open evidence" },
+      { action: "evidence", label: "Open Bright Data receipt" },
       { action: "copy", label: "Copy replay link" }
     ],
     lanes: [

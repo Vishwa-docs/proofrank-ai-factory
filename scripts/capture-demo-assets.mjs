@@ -80,13 +80,21 @@ try {
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
+  await page.evaluate(() => {
+    const drawer = document.querySelector("#reviewOptions");
+    if (drawer && !drawer.open) drawer.open = true;
+  });
+  await page.waitForTimeout(120);
   await page.click('[data-quick-mode="demo"]');
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");
   await page.click("#quickAddReviewerProject");
   await page.waitForSelector(".draft-review-card", { state: "attached", timeout: 5000 });
   await capture(page, "02-draft-card.png", ".draft-review-card");
-  await page.click("#reviewOptions summary");
+  await page.evaluate(() => {
+    const drawer = document.querySelector("#reviewOptions");
+    if (drawer && !drawer.open) drawer.open = true;
+  });
   await page.waitForTimeout(120);
   await page.click("#loadSampleProject");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");

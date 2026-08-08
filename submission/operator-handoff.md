@@ -16,7 +16,7 @@ Date: 2026-08-07
 - Public live API shell: https://proofrank-ai-factory.vercel.app/api/review-project
 - Public live API health check: https://proofrank-ai-factory.vercel.app/api/health
 - Published Native.builder app: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
-- Native.builder status: published, but republish is required to sync the latest local UI. The target first viewport should show public project links, Run public review as the default action, View evidence, guided review, and final lablab.ai submission pending.
+- Native.builder status: published, but republish is required to sync the latest local UI. The target first viewport should show public project links, Run public review as the default action, Share blank test room, the review coach, the Bright Data flight recorder, and final lablab.ai submission pending.
 - Native.builder prompt: `submission/native-builder-prompt.md`
 - Native.builder project workspace: https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd
 - Submission copy: `submission/submission-copy.md`, `submission/checklist.md`, and `submission/project-description.md`
@@ -48,7 +48,7 @@ Date: 2026-08-07
    - Open the Native.builder project workspace: `https://builder.nativelyai.com/projects/878e0701-19ff-4ff3-9624-4513d891d1dd`.
    - Current Native.builder status: you logged in, created `JackB's Workspace`, pasted `submission/native-builder-prompt.md`, completed Product Architect and Task Planner passes, built the MVP surface, verified the preview, and published the final app.
    - Public app URL: `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`.
-   - Current public Native.builder probe is stale after the latest local UI pass. Republish and rerun `npm run native:render-check`; the target copy is `Add my project`, `View evidence`, `What to fix next`, `Readiness`, and `Bright Data evidence attached`.
+   - Current public Native.builder probe is stale after the latest local UI pass. Republish and rerun `npm run native:render-check`; the target copy is `Run public review`, `Share blank test room`, `What to fix next`, `Readiness`, `Bright Data flight recorder`, and `Open Bright Data receipt`.
    - Cache note: a Safari tab that loaded before republish may still show the older bundle until hard refreshed; the render check uses a cache-busting URL and records the current published bundle.
    - Secure-live note: Native.builder reported that fully native Bright Data Live mode requires Supabase Edge Functions for secret storage. That remains the preferred non-demo Native.builder path, but connecting it may create persistent access, so it needs action-time confirmation before clicking.
    - Apply promo code `AIFACTORY26` if prompted later.

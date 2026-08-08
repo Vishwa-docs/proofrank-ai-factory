@@ -83,5 +83,5 @@ ${demoLine(project)}
 ${brightDataLine(project)}${proofPlanLine(project)}${receiptId}
 Next: ${nextActionFor(project)}${reviewLink}
 
-Note: Draft cards only describe supplied links. Public review is required before repo contents or demo behavior are treated as collected. Private Bright Data review is required before Bright Data evidence is treated as collected.`;
+Note: Draft cards only describe supplied links. Public review is required before repo contents or demo behavior are treated as collected. A Bright Data evidence run is required before Bright Data evidence is treated as collected.`;
 }

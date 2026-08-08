@@ -13,6 +13,8 @@ import { buildPitchReview } from "./pitchReview.js";
 import { buildPublicReviewCard } from "./publicReviewCard.js";
 import { buildVisitorBrief } from "./visitorBrief.js";
 import { buildPrizeBrief } from "./prizeBrief.js";
+import { buildReviewCoach } from "./reviewCoach.js";
+import { buildFlightRecorder } from "./flightRecorder.js";
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
@@ -53,6 +55,8 @@ const elements = {
   quickRepoUrl: document.querySelector("#quickRepoUrl"),
   quickDemoUrl: document.querySelector("#quickDemoUrl"),
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
+  reviewCoach: document.querySelector("#reviewCoach"),
+  flightRecorderHero: document.querySelector("#flightRecorderHero"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
   loadExternalSample: document.querySelector("#loadExternalSample"),
   sampleReplayButtons: [...document.querySelectorAll("[data-load-sample]")],
@@ -110,19 +114,19 @@ const REVIEW_MODES = {
     button: "Run public review",
     addButton: "Run public review",
     status: "Public review selected. ProofRank will fetch public GitHub and demo evidence without Bright Data spend.",
-    hint: "Public review collects real public evidence. Private Bright Data review can add source, search, and discovery evidence later."
+    hint: "Public review collects real public evidence. A Bright Data evidence run can add source, search, and discovery later."
   },
   live: {
-    label: "Private Bright Data review",
-    runLabel: "Private Bright Data review",
+    label: "Bright Data evidence run",
+    runLabel: "Bright Data evidence run",
     button: "Run private review",
     addButton: "Run private review",
-    status: "Private Bright Data review selected. Server-side access is required before collection.",
-    hint: "Private Bright Data review adds source, search, and discovery evidence later. API keys never belong in the browser."
+    status: "Bright Data evidence run selected. Server-side access is required before collection.",
+    hint: "Bright Data evidence run adds source, search, and discovery later. API keys never belong in the browser."
   }
 };
 const PITCH_SAMPLE_TRANSCRIPT = `ProofRank is built for hackathon judges and sponsor teams who need to review a crowded field fast.
-Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with private Bright Data collection.
+Paste a GitHub repository and demo link, create a browser-safe draft, then upgrade the project with Bright Data collection.
 Bright Data fetches source pages, runs prior-art search, and discovers adjacent public evidence so every sponsor claim has a source row.
 The judge gets a shortlist decision, evidence gaps, business value, originality checks, and an exportable reviewer memo.
 The final ask is simple: use ProofRank to make Bright Data-powered review operations defensible.`;
@@ -256,7 +260,7 @@ const TOUR_STEPS = [
   {
     label: "Step 5 of 5",
     title: "Upgrade to private evidence",
-    body: "Private Bright Data review holds server-side setup and the final readiness checklist. Public review stays safe for visitors.",
+    body: "Bright Data evidence run holds server-side setup and the final readiness checklist. Public review stays safe for visitors.",
     section: "setup",
     target: "#modeSelect"
   }
@@ -409,7 +413,7 @@ function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
     "ProofRank sample result loaded. Bright Data evidence is attached; submit on lablab.ai from the team account.",
     "ready"
   );
-  setStatus("ProofRank sample selected. Open Evidence to inspect the Bright Data review.", "ready");
+  setStatus("ProofRank sample selected. Open Bright Data receipt to inspect the review.", "ready");
   render();
   setActiveSection("overview", { scroll: true });
 }
@@ -451,9 +455,11 @@ function setCopyReviewLinkState() {
   try {
     shareableReviewUrlFromQuick();
     elements.copyReviewLink.disabled = false;
+    elements.copyReviewLink.textContent = "Copy draft link";
     elements.copyReviewLink.title = "Copy a link that preloads this repo and demo as a draft review.";
   } catch {
     elements.copyReviewLink.disabled = true;
+    elements.copyReviewLink.textContent = "Enter repo to copy draft link";
     elements.copyReviewLink.title = "Paste a public GitHub repository URL first.";
   }
 }
@@ -646,7 +652,7 @@ function setReviewMode(modeName, options = {}) {
     setQuickHint(REVIEW_MODES[modeName].hint, tone);
     setStatus(
       modeName === "live" && !hasReviewToken()
-        ? "Private Bright Data review selected. Public visitors can run Public review; judges with private access can run Bright Data collection."
+        ? "Bright Data evidence run selected. Public visitors can run Public review; judges with private access can run Bright Data collection."
         : REVIEW_MODES[modeName].status,
       tone
     );
@@ -820,7 +826,7 @@ function updateLiveProofStrip(project) {
   const receipt = project.runReceipt || {};
   const evidenceScope =
     state.mode === "live" && project.id.startsWith("review-")
-      ? `Private Bright Data review: ${project.title}`
+      ? `Bright Data evidence run: ${project.title}`
       : hasBrightDataSponsorProofBundle(project)
         ? `${project.id === "proofrank" ? "ProofRank sample result" : "Saved review"}: ${project.title}`
         : isPublicReviewProject(project)
@@ -846,10 +852,10 @@ function updateLiveProofStrip(project) {
       : traceState === "executed"
         ? "Sources, web search, and similar-project checks still need the saved review"
       : traceState === "direct"
-        ? "Private Bright Data review can strengthen this result"
+        ? "Bright Data evidence run can strengthen this result"
         : traceState === "planned"
           ? "Bright Data checks prepared"
-          : "Run Public review for real GitHub/demo evidence, or Private Bright Data review for server-side collection.";
+          : "Run Public review for real GitHub/demo evidence, or Bright Data evidence run for server-side collection.";
 
   elements.liveProofStrip.className = `live-proof-strip ${className}`;
   elements.liveProofStrip.innerHTML = `
@@ -1500,7 +1506,7 @@ function renderActionBoard(project, readiness) {
       <li class="is-clear">
         <span>Ready</span>
         <strong>Core review package is closed</strong>
-        <p>Open Evidence or export the memo for sponsor review.</p>
+        <p>Open Bright Data receipt or export the memo for sponsor review.</p>
       </li>
   `;
   const canCopy = Boolean(project.githubUrl && isHttpUrl(project.githubUrl));
@@ -1526,9 +1532,9 @@ function renderActionBoard(project, readiness) {
         <p>${escapeHtml(actionSummary)}</p>
       </div>
       <div class="action-buttons">
-        <button class="secondary-button small" data-score-action="evidence" type="button">Open evidence</button>
+        <button class="secondary-button small" data-score-action="evidence" type="button">Open Bright Data receipt</button>
         ${draft ? '<button class="primary-button small" data-score-action="public" type="button">Run public review</button>' : ""}
-        <button class="secondary-button small" data-score-action="live" type="button">Private Bright Data</button>
+        <button class="secondary-button small" data-score-action="live" type="button">Bright Data evidence run</button>
         <button class="secondary-button small" data-score-action="export" type="button">Export memo</button>
         <button class="secondary-button small" data-score-action="copy" type="button" ${canCopy ? "" : "disabled"}>Copy replay link</button>
       </div>
@@ -1604,7 +1610,7 @@ function renderDraftReviewCard(project) {
       <ul>${rows}</ul>
       <div class="draft-card-actions">
         <button class="primary-button small" data-score-action="public" type="button">Run public review</button>
-        <button class="secondary-button small" data-score-action="live" type="button">Private Bright Data</button>
+        <button class="secondary-button small" data-score-action="live" type="button">Bright Data evidence run</button>
         <button class="secondary-button small" data-score-action="copy-card" type="button">Copy draft summary</button>
         <button class="text-button small" data-score-action="copy" type="button">Copy draft link</button>
       </div>
@@ -1928,6 +1934,8 @@ function renderReceipt(project) {
     .join("");
 
   elements.receipt.innerHTML = `
+    ${renderFlightRecorder(project)}
+
     ${renderBrightDataTimeline(project)}
 
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
@@ -2049,10 +2057,78 @@ function renderReadiness(project = selectedProject()) {
     .join("");
 }
 
+function renderReviewCoach(project = selectedProject()) {
+  if (!elements.reviewCoach) return;
+  const coach = buildReviewCoach(project, {
+    reviewStarted: state.reviewStarted,
+    currentMode: state.mode,
+    reviewFocus: selectedReviewFocus()
+  });
+  const checkpoints = coach.checkpoints
+    .map(
+      (item) => `
+        <li class="${escapeAttr(item.state)}">
+          <span>${escapeHtml(item.state === "ready" ? "Ready" : "Pending")}</span>
+          <strong>${escapeHtml(item.label)}</strong>
+          <small>${escapeHtml(item.detail)}</small>
+        </li>
+      `
+    )
+    .join("");
+  const primary = coach.primary
+    ? `<button class="secondary-button small" data-coach-action="${escapeAttr(coach.primary.action)}" type="button">${escapeHtml(coach.primary.label)}</button>`
+    : "";
+  const secondary = coach.secondary
+    ? `<button class="text-button small" data-coach-action="${escapeAttr(coach.secondary.action)}" type="button">${escapeHtml(coach.secondary.label)}</button>`
+    : "";
+
+  elements.reviewCoach.innerHTML = `
+    <div class="review-coach-head">
+      <span>${escapeHtml(coach.badge)}</span>
+      <strong>${escapeHtml(coach.title)}</strong>
+      <p>${escapeHtml(coach.body)}</p>
+    </div>
+    <div class="review-coach-actions">${primary}${secondary}</div>
+    <ul class="review-coach-checks">${checkpoints}</ul>
+  `;
+}
+
+function renderFlightRecorder(project = selectedProject(), options = {}) {
+  const recorder = buildFlightRecorder(project);
+  const compact = options.compact === true;
+  const stages = recorder.stages
+    .map(
+      (stage) => `
+        <li class="${escapeAttr(stage.state)}">
+          <span>${escapeHtml(stage.label)}</span>
+          <strong>${escapeHtml(stage.state)}</strong>
+          <small>${escapeHtml(compact ? stage.tool : `${stage.tool}: ${stage.detail}`)}</small>
+        </li>
+      `
+    )
+    .join("");
+
+  return `
+    <section class="flight-recorder ${compact ? "compact" : ""}" aria-label="Bright Data flight recorder">
+      <div class="flight-recorder-head">
+        <div>
+          <span>${escapeHtml(recorder.badge)}</span>
+          <h3>${escapeHtml(recorder.sponsorEvidence === "ready" ? "Sponsor evidence attached" : recorder.sponsorEvidence === "gated" ? "Sponsor evidence gated" : "Sponsor evidence not run")}</h3>
+          <p>${escapeHtml(recorder.digest)}</p>
+        </div>
+        <strong>${escapeHtml(recorder.sponsorEvidence)}</strong>
+      </div>
+      <ol class="flight-recorder-stages">${stages}</ol>
+    </section>
+  `;
+}
+
 function render() {
   const project = selectedProject();
   updateRunProfile();
   updateLiveProofStrip(project);
+  renderReviewCoach(project);
+  if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = renderFlightRecorder(project, { compact: true });
   renderHeroDecision(project);
   renderProofTopology(project);
   renderFixList(project);
@@ -2352,7 +2428,7 @@ async function addReviewerProject() {
     setQuickHint(
       state.mode === "public"
         ? "Public review failed. Switch to Draft, or use a common public demo host such as Vercel, GitHub Pages, Hugging Face, or Netlify."
-        : "Private Bright Data review failed. Switch to Draft/Public review or retry the private backend.",
+        : "Bright Data evidence run failed. Switch to Draft/Public review or retry the private backend.",
       "error"
     );
     elements.addReviewerProject.disabled = false;
@@ -2378,9 +2454,9 @@ async function addReviewerProject() {
         : "Project added. Public review or private Bright Data review can deepen this result.";
   setQuickHint(
     state.mode === "live"
-      ? "Bright Data evidence collected. Open Evidence to inspect the saved review."
+      ? "Bright Data evidence collected. Open Bright Data receipt to inspect the saved review."
       : state.mode === "public"
-        ? "Public evidence collected. Open Evidence to inspect the review, or run Private Bright Data for source, search, and discovery checks."
+        ? "Public evidence collected. Open Bright Data receipt to inspect the review, or run Bright Data evidence run for source, search, and discovery checks."
         : "Project added. Copy draft link lets another visitor open the same links. Public review collects real evidence.",
     "ready"
   );
@@ -2399,12 +2475,55 @@ async function addQuickReviewerProject() {
   await addReviewerProject();
   if (switchedFromLockedLive) {
     if (isLocalPreviewHost()) {
-      setQuickHint("Private Bright Data review needs private access. Local preview created a draft instead.", "warn");
-      setStatus("Private Bright Data review needs private access. Draft review ran instead.", "warn");
+      setQuickHint("Bright Data evidence run needs private access. Local preview created a draft instead.", "warn");
+      setStatus("Bright Data evidence run needs private access. Draft review ran instead.", "warn");
     } else {
-      setQuickHint("Private Bright Data review needs private access, so ProofRank ran the public evidence check instead.", "warn");
-      setStatus("Private Bright Data review needs private access. Public review ran instead.", "warn");
+      setQuickHint("Bright Data evidence run needs private access, so ProofRank ran the public evidence check instead.", "warn");
+      setStatus("Bright Data evidence run needs private access. Public review ran instead.", "warn");
     }
+  }
+}
+
+async function handleCoachAction(action) {
+  if (action === "focusRepo") {
+    elements.quickRepoUrl.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => elements.quickRepoUrl.focus(), 160);
+    setStatus("Paste a public GitHub repository to start.", "ready");
+    return;
+  }
+  if (action === "sample") {
+    loadSampleReviewLinks();
+    return;
+  }
+  if (action === "public") {
+    const project = selectedProject();
+    if (project.githubUrl) {
+      elements.quickRepoUrl.value = project.githubUrl;
+      elements.quickDemoUrl.value = project.demoUrl || "";
+    }
+    setReviewMode("public", { silent: true });
+    await addQuickReviewerProject();
+    return;
+  }
+  if (action === "live") {
+    setActiveSection("setup", { scroll: true });
+    setReviewMode("live");
+    window.setTimeout(() => elements.modeSelect?.focus(), 220);
+    return;
+  }
+  if (action === "evidence") {
+    setActiveSection("receipt", { scroll: true });
+    setStatus("Evidence opened.", "ready");
+    return;
+  }
+  if (action === "export") {
+    exportSubmissionPacket();
+    setStatus("Project memo export started.", "ready");
+    return;
+  }
+  if (action === "copy") {
+    if (selectedProject().githubUrl) await copySelectedProjectLink();
+    else await copyReviewLink();
   }
 }
 
@@ -2493,6 +2612,10 @@ elements.addReviewerProject.addEventListener("click", addReviewerProject);
 elements.loadPitchSample?.addEventListener("click", loadPitchSample);
 elements.analyzePitch?.addEventListener("click", analyzePitchTranscript);
 elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProject);
+elements.reviewCoach?.addEventListener("click", async (event) => {
+  const action = event.target.closest("[data-coach-action]")?.dataset.coachAction;
+  if (action) await handleCoachAction(action);
+});
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
 elements.sampleReplayButtons.forEach((button) => {
   button.addEventListener("click", loadSampleReviewLinks);

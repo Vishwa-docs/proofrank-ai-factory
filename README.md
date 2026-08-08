@@ -113,7 +113,7 @@ Start the local API used by the browser UI:
 npm run live:server
 ```
 
-Then open the app, switch collection mode to `Private Bright Data review`, keep the private
+Then open the app, switch collection mode to `Bright Data evidence run`, keep the private
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
 GitHub repo plus deployed app URL. `Add my project` creates a link-only draft, `Run public review` uses the public direct endpoint for GitHub/demo evidence, and `Run Bright Data` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the

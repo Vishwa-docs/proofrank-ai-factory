@@ -254,7 +254,7 @@ ${topRows || "No projects available yet."}
 
 ## Sponsor Review Notes
 
-ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe draft review, run a public repo/demo check, copy a replay link, and export the selected project memo. Private Bright Data review upgrades the same flow through the server-side backend when reviewer access is present.
+ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe draft review, run a public repo/demo check, copy a replay link, and export the selected project memo. A Bright Data evidence run upgrades the same flow through the server-side backend when reviewer access is present.
 
 Bright Data remains the evidence layer. The room-level view shows which projects have executed source, search, and discovery evidence, and which projects only have sample or pending evidence. This lets sponsor judges separate actual live-web diligence from claims.
 `;

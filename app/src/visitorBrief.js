@@ -59,11 +59,11 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "Best next click",
-          detail: "Share the draft link, then run public review or private Bright Data source, search, and discovery collection."
+          detail: "Share the draft link, then run public review or the Bright Data source, search, and discovery collection."
         }
       ],
       actions: [
-        { label: "Copy draft link", action: "copy" },
+        { label: "Copy replay link", action: "copy" },
         { label: "Run public review", action: "public" },
         { label: "Export draft memo", action: "export" }
       ]
@@ -87,12 +87,12 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "Best next click",
-          detail: "Open Evidence, then run the private Bright Data review when reviewer access is available."
+          detail: "Open Bright Data receipt, then run the Bright Data evidence collection when reviewer access is available."
         }
       ],
       actions: [
-        { label: "Open evidence", action: "evidence" },
-        { label: "Private review", action: "live" },
+        { label: "Open Bright Data receipt", action: "evidence" },
+        { label: "Bright Data evidence run", action: "live" },
         { label: "Export memo", action: "export" }
       ]
     };
@@ -119,7 +119,7 @@ export function buildVisitorBrief(project = {}) {
         }
       ],
       actions: [
-        { label: "Open evidence", action: "evidence" },
+        { label: "Open Bright Data receipt", action: "evidence" },
         { label: "Export memo", action: "export" },
         { label: "Final submission", action: "live" }
       ]
@@ -146,7 +146,7 @@ export function buildVisitorBrief(project = {}) {
       }
     ],
     actions: [
-      { label: "Open evidence", action: "evidence" },
+      { label: "Open Bright Data receipt", action: "evidence" },
       { label: "Run public review", action: "public" },
       { label: "Export memo", action: "export" }
     ]

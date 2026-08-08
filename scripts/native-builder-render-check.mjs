@@ -25,14 +25,15 @@ const wantedInPage = [
   "Bright Data",
   "GitHub repository",
   "Audit a public AI project",
-  "Add my project",
+  "Run public review",
   "Replay sample",
-  "Copy draft link",
-  "View evidence",
+  "Share blank test room",
+  "Bright Data flight recorder",
+  "Open Bright Data receipt",
   "Readiness",
   "Bright Data evidence attached"
 ].filter(Boolean);
-const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Add my project", "Replay sample"];
+const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Run public review", "Replay sample"];
 const forbiddenStrings = [
   "Signed proof",
   "WIN",
