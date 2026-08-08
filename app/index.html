@@ -45,7 +45,7 @@
           </div>
           <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Paste your repo and demo. ProofRank returns a trace-backed sponsor memo and marks what still needs Bright Data evidence.</p>
+          <p class="hero-subtitle">Paste public links for a public evidence memo. Reviewer access upgrades it with Bright Data source, search, and discovery.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Try your project</button>
             <button class="secondary-button" data-load-sample type="button">Replay sample</button>
@@ -118,6 +118,18 @@
               <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
               <button id="copyReviewLink" class="text-button" type="button" disabled>Enter repo to copy review link</button>
             </div>
+            <section id="outcomePreview" class="outcome-preview" aria-label="Review output preview" aria-live="polite">
+              <div>
+                <span>What you get</span>
+                <strong id="outcomePreviewTitle">A plain review memo, not a score wall.</strong>
+              </div>
+              <ul id="outcomePreviewList" aria-label="Review output checklist"></ul>
+              <div class="receipt-teaser">
+                <span>Bright Data sample receipt</span>
+                <strong>scrape_as_markdown, search_engine, and discover are already attached to the ProofRank sample.</strong>
+                <button id="openIntroReceipt" class="text-button small" type="button">View receipt</button>
+              </div>
+            </section>
             <p id="quickReviewHint" class="hint">Public review fetches safe public GitHub and demo evidence without using Bright Data credits.</p>
             <details id="reviewOptions" class="review-options">
               <summary>

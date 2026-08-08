@@ -190,6 +190,9 @@ for (const spec of [
     const visibleSecondary = [...quick.querySelectorAll(".quick-actions .text-button, .quick-actions .secondary-button")].filter(isVisible);
     const quickStarterCount = [...quick.querySelectorAll(".quick-starters .starter-chip")].filter(isVisible).length;
     const promiseCount = [...quick.querySelectorAll(".first-run-promise li")].filter(isVisible).length;
+    const outcomeRows = [...quick.querySelectorAll(".outcome-preview li")].filter(isVisible).length;
+    const outcomeTitle = quick.querySelector("#outcomePreviewTitle")?.textContent || "";
+    const receiptTeaser = quick.querySelector(".receipt-teaser")?.textContent || "";
     const hiddenGroups = [
       ".path-drawer .quick-path",
       ".review-mode-switch",
@@ -208,6 +211,9 @@ for (const spec of [
       visibleSecondary: visibleSecondary.length,
       quickStarterCount,
       promiseCount,
+      outcomeRows,
+      outcomeTitle,
+      receiptTeaserReady: /Bright Data sample receipt|scrape_as_markdown|search_engine|discover/i.test(receiptTeaser),
       hiddenGroups,
       pathClosed: document.querySelector(".path-drawer")?.open === false,
       optionsClosed: document.querySelector("#reviewOptions")?.open === false
@@ -219,6 +225,9 @@ for (const spec of [
     initialQuickReviewCalm.visibleSecondary > 1 ||
     initialQuickReviewCalm.quickStarterCount !== 3 ||
     initialQuickReviewCalm.promiseCount !== 3 ||
+    initialQuickReviewCalm.outcomeRows !== 4 ||
+    !/plain review memo/i.test(initialQuickReviewCalm.outcomeTitle) ||
+    !initialQuickReviewCalm.receiptTeaserReady ||
     !initialQuickReviewCalm.hiddenGroups ||
     !initialQuickReviewCalm.pathClosed ||
     !initialQuickReviewCalm.optionsClosed
@@ -333,10 +342,12 @@ for (const spec of [
     await page.click('[data-starter-project="brightdata-mcp"]');
     await page.waitForTimeout(100);
     const starterLoaded = await page.evaluate(() => {
+      const previewTitle = document.querySelector("#outcomePreviewTitle")?.textContent || "";
       return (
         document.querySelector("#quickRepoUrl")?.value === "https://github.com/brightdata/brightdata-mcp" &&
         document.querySelector("#quickDemoUrl")?.value === "" &&
-        document.querySelector('[data-review-focus="sponsor"]')?.classList.contains("is-active")
+        document.querySelector('[data-review-focus="sponsor"]')?.classList.contains("is-active") &&
+        /Ready to review brightdata\/brightdata-mcp/i.test(previewTitle)
       );
     });
     if (!starterLoaded) {
@@ -723,6 +734,18 @@ for (const spec of [
       traceBudgetReady: /Route|Budget|Prize calls|Tools|Downloaded/i.test(
         document.querySelector(".trace-budget")?.textContent || ""
       ),
+      outcomePreviewCount: document.querySelectorAll(".outcome-preview li").length,
+      outcomePreviewReady: /What you get|Action|Evidence gaps|Bright Data|Memo/i.test(
+        document.querySelector(".outcome-preview")?.textContent || ""
+      ),
+      receiptTeaserReady: /Bright Data sample receipt|scrape_as_markdown|search_engine|discover/i.test(
+        document.querySelector(".receipt-teaser")?.textContent || ""
+      ),
+      rubricMemoCount: document.querySelectorAll(".rubric-memo").length,
+      rubricMemoRows: document.querySelectorAll(".rubric-grid article").length,
+      rubricMemoReady: /Application of Technology|Presentation|Business Value|Originality/i.test(
+        document.querySelector(".rubric-memo")?.textContent || ""
+      ),
       visitorBriefCount: document.querySelectorAll(".visitor-brief").length,
       visitorBriefActions: document.querySelectorAll(".visitor-brief [data-score-action]").length,
       draftReviewCardCount: document.querySelectorAll(".draft-review-card").length,
@@ -794,6 +817,12 @@ const failures = results.flatMap((result) => {
   if (!result.metrics.flightRecorderFreshnessReady) problems.push(`${result.spec.name}: Bright Data freshness copy is missing`);
   if (result.metrics.traceBudgetCount !== 5) problems.push(`${result.spec.name}: Bright Data route budget did not render`);
   if (!result.metrics.traceBudgetReady) problems.push(`${result.spec.name}: Bright Data route budget copy is missing`);
+  if (result.metrics.outcomePreviewCount !== 4) problems.push(`${result.spec.name}: review output preview did not render four outcomes`);
+  if (!result.metrics.outcomePreviewReady) problems.push(`${result.spec.name}: review output preview copy is missing`);
+  if (!result.metrics.receiptTeaserReady) problems.push(`${result.spec.name}: first-screen Bright Data receipt teaser is missing`);
+  if (!draftState && result.metrics.rubricMemoCount !== 1) problems.push(`${result.spec.name}: rubric memo did not render`);
+  if (!draftState && result.metrics.rubricMemoRows !== 4) problems.push(`${result.spec.name}: rubric memo did not render four criteria`);
+  if (!draftState && !result.metrics.rubricMemoReady) problems.push(`${result.spec.name}: rubric memo copy is missing`);
   if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
   if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
   if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {

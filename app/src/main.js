@@ -56,6 +56,9 @@ const elements = {
   quickDemoUrl: document.querySelector("#quickDemoUrl"),
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
   reviewCoach: document.querySelector("#reviewCoach"),
+  outcomePreviewTitle: document.querySelector("#outcomePreviewTitle"),
+  outcomePreviewList: document.querySelector("#outcomePreviewList"),
+  openIntroReceipt: document.querySelector("#openIntroReceipt"),
   flightRecorderHero: document.querySelector("#flightRecorderHero"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
   loadExternalSample: document.querySelector("#loadExternalSample"),
@@ -416,6 +419,12 @@ function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
   setStatus("ProofRank sample selected. Open Bright Data receipt to inspect the review.", "ready");
   render();
   setActiveSection("overview", { scroll: true });
+}
+
+function openIntroReceipt() {
+  selectVerifiedSampleReview();
+  setActiveSection("receipt", { scroll: true });
+  setQuickHint("ProofRank sample receipt opened. It shows the executed Bright Data source, search, and discovery path.", "ready");
 }
 
 function selectExternalSampleReview() {
@@ -808,6 +817,82 @@ function displayPrimaryBlocker(project = {}, fallback = "") {
     return "Submit this entry from the team lablab.ai account.";
   }
   return fallback || "No major audit risk visible in current evidence.";
+}
+
+function reviewTargetLabelFromQuick() {
+  const repoUrl = elements.quickRepoUrl?.value.trim() || "";
+  if (!repoUrl) return "";
+  try {
+    const repo = parsePublicGithubRepoUrl(repoUrl);
+    return `${repo.owner}/${repo.repo}`;
+  } catch {
+    return "";
+  }
+}
+
+function outcomePreviewRows(project = selectedProject()) {
+  const targetLabel = reviewTargetLabelFromQuick();
+  if (!state.reviewStarted && project.id === "proofrank") {
+    return {
+      title: targetLabel ? `Ready to review ${targetLabel}.` : "A plain review memo, not a score wall.",
+      rows: [
+        ["Action", "shortlist or fix gaps"],
+        ["Evidence gaps", "what is still missing"],
+        ["Bright Data lane", "source, search, discovery"],
+        ["Shareable memo", "copy link or export"]
+      ]
+    };
+  }
+
+  if (isDraftProject(project)) {
+    return {
+      title: `${project.title} is saved as a link-only draft.`,
+      rows: [
+        ["Next click", "run public review"],
+        ["Repo", "not fetched yet"],
+        ["Demo", "not checked yet"],
+        ["Bright Data", "waiting for reviewer access"]
+      ]
+    };
+  }
+
+  if (isPublicReviewProject(project)) {
+    return {
+      title: `${project.title} has a public review result.`,
+      rows: [
+        ["Action", displayAction(project)],
+        ["Public evidence", "repo and demo signals"],
+        ["Bright Data", "upgrade available"],
+        ["Memo", "copy or export"]
+      ]
+    };
+  }
+
+  return {
+    title: `${project.title} has reviewer evidence attached.`,
+    rows: [
+      ["Action", displayAction(project)],
+      ["Sources", "collected rows"],
+      ["Field check", "competition compared"],
+      ["Memo", "ready to export"]
+    ]
+  };
+}
+
+function renderOutcomePreview(project = selectedProject()) {
+  if (!elements.outcomePreviewTitle || !elements.outcomePreviewList) return;
+  const preview = outcomePreviewRows(project);
+  elements.outcomePreviewTitle.textContent = preview.title;
+  elements.outcomePreviewList.innerHTML = preview.rows
+    .map(
+      ([label, value]) => `
+        <li>
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </li>
+      `
+    )
+    .join("");
 }
 
 function updateLiveProofStrip(project) {
@@ -1651,6 +1736,87 @@ function renderVisitorBrief(project) {
   `;
 }
 
+function rubricStatus(score = 0, blocked = false) {
+  if (blocked) return "gap";
+  if (score >= 85) return "strong";
+  if (score >= 70) return "partial";
+  return "gap";
+}
+
+function rubricLabel(status = "partial") {
+  if (status === "strong") return "Strong";
+  if (status === "gap") return "Needs evidence";
+  return "Partial";
+}
+
+function buildRubricMemoRows(project) {
+  const traceState = brightDataTraceState(project);
+  const sponsorReady = hasBrightDataSponsorProofBundle(project);
+  const pitchReady = state.pitchReview?.score >= 80;
+  const hasFieldEvidence = project.evidence?.lowCrowdOverlap === true || project.scores.originality >= 80;
+  return [
+    {
+      criterion: "Application of Technology",
+      score: project.scores.brightDataPrize,
+      status: rubricStatus(project.scores.brightDataPrize, !sponsorReady),
+      evidence: sponsorReady
+        ? "Bright Data source, search, discovery, and saved review are attached."
+        : traceState === "direct"
+          ? "Public repo/demo evidence is collected; Bright Data sponsor evidence is still missing."
+          : "Show the Bright Data source, search, and discovery path before judging."
+    },
+    {
+      criterion: "Presentation",
+      score: project.scores.presentation,
+      status: rubricStatus(project.scores.presentation, !pitchReady && project.scores.presentation < 85),
+      evidence: pitchReady
+        ? "Pitch text covers problem, workflow, evidence, business value, and final ask."
+        : "Use Presentation Check to confirm the demo explains the workflow and evidence."
+    },
+    {
+      criterion: "Business Value",
+      score: project.scores.businessValue,
+      status: rubricStatus(project.scores.businessValue),
+      evidence: "Buyer, urgency, repeatable workflow, and adoption risk are summarized for the reviewer."
+    },
+    {
+      criterion: "Originality",
+      score: project.scores.originality,
+      status: rubricStatus(project.scores.originality, !hasFieldEvidence && project.scores.originality < 85),
+      evidence: hasFieldEvidence
+        ? "The field comparison shows a distinct product wedge."
+        : "Inspect Similarity check and prior-art queries before awarding originality."
+    }
+  ];
+}
+
+function renderRubricMemo(project) {
+  const rows = buildRubricMemoRows(project)
+    .map(
+      (row) => `
+        <article class="${escapeAttr(row.status)}">
+          <div>
+            <span>${escapeHtml(row.criterion)}</span>
+            <strong>${escapeHtml(rubricLabel(row.status))}</strong>
+          </div>
+          <p>${escapeHtml(row.evidence)}</p>
+          <small>${row.score}/100</small>
+        </article>
+      `
+    )
+    .join("");
+
+  return `
+    <section class="rubric-memo" aria-label="lablab judging rubric memo">
+      <div class="module-head compact">
+        <h3>Rubric memo</h3>
+        <span class="hint">Application, presentation, business value, originality.</span>
+      </div>
+      <div class="rubric-grid">${rows}</div>
+    </section>
+  `;
+}
+
 function renderPrizeBrief(project) {
   const brief = buildPrizeBrief(project, { totalProjects: state.projects.length });
   const lanes = brief.lanes
@@ -1756,6 +1922,8 @@ function renderScorecard(project) {
     ${renderDraftReviewCard(project)}
 
     ${renderVisitorBrief(project)}
+
+    ${draft ? "" : renderRubricMemo(project)}
 
     ${draft ? "" : `<section class="market-position" aria-label="Product readout">
       <article>
@@ -2180,6 +2348,7 @@ function render() {
   updateRunProfile();
   updateLiveProofStrip(project);
   renderReviewCoach(project);
+  renderOutcomePreview(project);
   if (selectionDrawer) selectionDrawer.hidden = !showHeroEvidence;
   if (showHeroEvidence) {
     if (elements.flightRecorderHero) elements.flightRecorderHero.innerHTML = renderFlightRecorder(project, { compact: true });
@@ -2684,6 +2853,7 @@ elements.loadExternalSample?.addEventListener("click", selectExternalSampleRevie
 elements.copyReviewLink?.addEventListener("click", copyReviewLink);
 elements.copyAppLink?.addEventListener("click", copyAppLink);
 elements.copyAppLinkHero?.addEventListener("click", copyAppLink);
+elements.openIntroReceipt?.addEventListener("click", openIntroReceipt);
 elements.reviewFocusButtons.forEach((button) => {
   button.addEventListener("click", () => setReviewFocus(button.dataset.reviewFocus));
 });
@@ -2769,8 +2939,14 @@ elements.quickDemoUrl.addEventListener("keydown", (event) => {
     addQuickReviewerProject();
   }
 });
-elements.quickRepoUrl.addEventListener("input", setCopyReviewLinkState);
-elements.quickDemoUrl.addEventListener("input", setCopyReviewLinkState);
+elements.quickRepoUrl.addEventListener("input", () => {
+  setCopyReviewLinkState();
+  renderOutcomePreview(selectedProject());
+});
+elements.quickDemoUrl.addEventListener("input", () => {
+  setCopyReviewLinkState();
+  renderOutcomePreview(selectedProject());
+});
 
 elements.exportCsv.addEventListener("click", () => {
   downloadText("proofrank-judge-queue.csv", toCsv(state.projects), "text/csv");
