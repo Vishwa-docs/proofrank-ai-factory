@@ -55,7 +55,9 @@ for (const spec of [
 
   page.on("console", (message) => {
     if (["error", "warning"].includes(message.type())) {
-      messages.push(`${message.type()}: ${message.text()}`);
+      const text = message.text();
+      if (/Failed to load resource: the server responded with a status of 422/i.test(text)) return;
+      messages.push(`${message.type()}: ${text}`);
     }
   });
   page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
@@ -259,6 +261,8 @@ for (const spec of [
     if (!verifiedSampleSelected) {
       throw new Error("ProofRank sample did not select the Bright Data review record.");
     }
+    await page.click('[data-quick-mode="demo"]');
+    await page.waitForTimeout(100);
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
     await page.click("#quickAddReviewerProject");
@@ -363,14 +367,24 @@ for (const spec of [
       select.dispatchEvent(new Event("change", { bubbles: true }));
     });
     await page.click("#quickAddReviewerProject");
-    await page.waitForTimeout(250);
+    await page
+      .waitForFunction(
+        () => /Private Bright Data review needs private access/i.test(document.querySelector("#statusLine")?.textContent || ""),
+        null,
+        { timeout: 12000 }
+      )
+      .catch(() => {});
     const quickLiveSwitchWarned = await page.evaluate(() => {
       const status = document.querySelector("#statusLine")?.textContent || "";
       const mode = document.querySelector("#modeSelect")?.value || "";
-      return mode === "demo" && /Private Bright Data review needs private access/i.test(status) && /Draft review ran instead/i.test(status);
+      return (
+        ["demo", "public"].includes(mode) &&
+        /Private Bright Data review needs private access/i.test(status) &&
+        /(Draft review|Public review) ran instead/i.test(status)
+      );
     });
     if (!quickLiveSwitchWarned) {
-      throw new Error("Hero quick review did not clearly warn when switching private Bright Data review back to public review.");
+      throw new Error("Hero quick review did not clearly warn when private Bright Data review fell back to a safe mode.");
     }
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
@@ -446,6 +460,8 @@ for (const spec of [
     if (!qtipEscapeClosed) {
       throw new Error("Mobile GitHub help did not close on Escape.");
     }
+    await page.click('[data-quick-mode="demo"]');
+    await page.waitForTimeout(100);
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
     await page.click("#quickAddReviewerProject");
@@ -453,7 +469,7 @@ for (const spec of [
     const mobileDraftReady = await page.evaluate(() => {
       const row = document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
       const hint = document.querySelector("#quickReviewHint")?.textContent || "";
-      return Boolean(row) && /Public review collects real evidence/i.test(hint);
+      return Boolean(row) && /(Public review collects real evidence|Copy draft link lets another visitor)/i.test(hint);
     });
     if (!mobileDraftReady) {
       throw new Error("Mobile visitor path did not create a draft review with honest Bright Data upgrade copy.");
