@@ -394,7 +394,8 @@ async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
   const fallbackRequiredCopy = ["Bright Data receipt present", "Review a public project", "Evidence report", "Create draft review"];
-  const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !String(fallbackBundle.text || "").includes(item));
+  const fallbackRenderedText = `${fallback.text || ""}\n${fallbackBundle.text || ""}`;
+  const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !fallbackRenderedText.includes(item));
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");
   const videoReachable = await fetchReachable(releaseVideoUrl);
   const targetRepoUrl = envValue("PROOFRANK_REVIEW_REPO_URL") || defaultReviewRepoUrl;
