@@ -116,11 +116,11 @@ Hackathon judges, sponsor partner teams, accelerator reviewers, grant reviewers,
 
 ## Solution
 
-ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence records with source-backed findings, review risks, claim verdicts, and recommended diligence actions.
+ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits reviewer memos with source-backed findings, review risks, claim verdicts, and recommended diligence actions.
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP source collection, search, and discovery, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery run in the evidence record.
+Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP source collection, search, and discovery, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery run in the saved review.
 
 ## Native.builder Usage
 
@@ -135,7 +135,7 @@ The competition app should be created and published through native.builder using
 - Bright Data evidence state: ${receipt.traceState}
 - Review lens: ${receipt.reviewFocus?.label || "General review"}
 - Review lens priority: ${receipt.reviewFocus?.detail || "Not specified"}
-- Evidence record: ${receipt.runReceipt?.runId || "Not issued"}
+- Review ID: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Evidence package readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.displayVerdict}
@@ -180,7 +180,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence record, and export the sponsor-ready review memo.
+Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence checks, and export the sponsor-ready reviewer memo.
 
 ## External Tools
 

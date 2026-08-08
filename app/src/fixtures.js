@@ -8,7 +8,7 @@ export const fixtureProjects = [
     title: "ProofRank",
     team: "SilverSpoon",
     summary:
-      "Agentic submission truth auditor that ranks hackathon projects with source-backed evidence records for accessibility, originality, sponsor usage, and review risk.",
+      "Agentic submission reviewer that ranks hackathon projects with source-backed findings for accessibility, originality, sponsor usage, and review risk.",
     eventUrl: EVENT_URL,
     submissionUrl: "",
     demoUrl: "https://proofrank-ai-factory.vercel.app/",
@@ -89,16 +89,16 @@ export const fixtureProjects = [
       },
       {
         id: "proofrank-final-receipt",
-        sourceType: "signed-record",
+        sourceType: "saved-review",
         sourceUrl: "submission/final-brightdata-receipt.json",
-        title: "Bright Data evidence record",
+        title: "Bright Data review",
         excerpt:
-          "Final evidence record includes Bright Data source, search_engine, and discover traces with server record confirmation.",
+          "Saved review includes Bright Data source, search_engine, and discover checks for the final sponsor walkthrough.",
         collectedAt: "2026-08-07T20:05:29.345Z",
         collector: "ProofRank live reviewer",
         confidence: 0.95,
         supports: ["Bright Data usage", "Application of technology"],
-        limitations: "Final lablab.ai submission still needs to be sent from the team-owner account."
+        limitations: "The project still needs to be submitted on lablab.ai from the team-owner account."
       },
       {
         id: "proofrank-final-prior-art",

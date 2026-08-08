@@ -108,11 +108,10 @@ try {
   await page.waitForFunction(() => document.querySelectorAll(".pitch-review-rows li").length === 7);
 
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
-  await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
-  await page.click("#quickAddReviewerProject");
+  await page.click("[data-load-sample]");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
   await page.waitForFunction(() => /Bright Data evidence attached/i.test(document.querySelector("#liveProofStrip")?.textContent || ""));
+  await page.click('[data-quick-mode="demo"]');
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");
   await page.click("#quickAddReviewerProject");
@@ -250,7 +249,7 @@ try {
     !/verified|reachable|passed|certified|signed proof/i.test(proof.copiedDraftCard) &&
     proof.draftReviewCardGoneForReceipt === true &&
     proof.evidenceVisitorBriefReady === true &&
-    /Sample evidence record:\s*ProofRank/i.test(proof.brightProof) &&
+    /ProofRank sample result:\s*ProofRank/i.test(proof.brightProof) &&
     /Bright Data evidence attached/i.test(proof.brightProof) &&
     proof.externalSampleReady === true &&
     proof.brightPathReady === true &&
@@ -265,7 +264,7 @@ try {
     /Bright Data evidence status stays separate/i.test(proof.pitchReviewText) &&
     proof.traceTimelineSteps === 4 &&
     /Evidence checks/i.test(proof.receiptText) &&
-    /Draft.*Public review.*Sample evidence record/i.test(proof.modeLadderText) &&
+    /Draft.*Public review.*ProofRank sample result/i.test(proof.modeLadderText) &&
     proof.exportedFiles.length === 3 &&
     proof.forbiddenVisible.length === 0 &&
     messages.length === 0;

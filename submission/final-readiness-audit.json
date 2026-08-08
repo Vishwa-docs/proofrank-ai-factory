@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T09:17:52.387Z",
+  "generatedAt": "2026-08-08T09:31:46.172Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 9,
@@ -82,11 +82,11 @@
     },
     {
       "id": "live-receipt",
-      "label": "Signed executed Bright Data evidence record",
+      "label": "Executed Bright Data saved review",
       "required": true,
       "status": "passed",
       "proof": "pr-20260808t082734693z-a91a849a / bright-data / executed / source trace / search_engine / discover / signature verified",
-      "action": "Run the actual project through MCP mode and export a signature-verified evidence record with executed Bright Data source, search, and discover traces."
+      "action": "Run the actual project through MCP mode and export a saved review with executed Bright Data source, search, and discover traces."
     },
     {
       "id": "lablab-submission",

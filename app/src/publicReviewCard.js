@@ -51,15 +51,15 @@ function proofPlanLine(project = {}) {
 function decisionFor(project = {}) {
   if (hasBrightDataSponsorProofBundle(project)) return "Shortlist";
   if (isDraft(project)) return "Request public review";
-  if (brightDataTraceState(project) === "direct") return "Escalate for sponsor evidence";
+  if (brightDataTraceState(project) === "direct") return "Escalate for Bright Data review";
   if ((project.verdict?.label || "").toLowerCase() === "high risk") return "Do not advance yet";
   return "Escalate for evidence";
 }
 
 function nextActionFor(project = {}) {
-  if (hasBrightDataSponsorProofBundle(project)) return "Export memo or inspect Evidence before final submission";
+  if (hasBrightDataSponsorProofBundle(project)) return "Export memo or inspect Evidence before you submit on lablab.ai";
   if (isDraft(project)) return "Run public review before treating links as evidence";
-  if (brightDataTraceState(project) === "direct") return "Run private Bright Data sponsor review before prize-track submission";
+  if (brightDataTraceState(project) === "direct") return "Run private Bright Data review before prize-track submission";
   return "Collect source, search, discovery, and demo evidence";
 }
 
@@ -67,7 +67,7 @@ export function buildPublicReviewCard(project = {}, options = {}) {
   const title = clean(project.title || "Untitled project");
   const team = clean(project.team || "Unknown team");
   const summary = clean(project.summary || "No summary supplied.");
-  const receiptId = project.runReceipt?.runId ? `\nEvidence record: ${clean(project.runReceipt.runId)}` : "";
+  const receiptId = project.runReceipt?.runId ? `\nReview ID: ${clean(project.runReceipt.runId)}` : "";
   const reviewUrl = hasUrl(options.reviewUrl) ? options.reviewUrl : hasUrl(options.roomUrl) ? options.roomUrl : "";
   const reviewLink = reviewUrl ? `\nReview link: ${reviewUrl}` : "";
   const draftNotice = isDraft(project)

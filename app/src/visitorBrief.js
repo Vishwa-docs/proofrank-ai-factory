@@ -83,7 +83,7 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "What still is not checked",
-          detail: "Bright Data source, search, discovery, and final sponsor evidence record are still incomplete."
+          detail: "Bright Data source, search, discovery, and saved Bright Data review are still incomplete."
         },
         {
           label: "Best next click",
@@ -111,11 +111,11 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "Review record",
-          detail: project.runReceipt?.signature ? "Server record is attached to the evidence record." : "Evidence exists; server record still needs final confirmation."
+          detail: project.runReceipt?.signature ? "Saved review is attached to the evidence view." : "Evidence exists; the saved review still needs final confirmation."
         },
         {
           label: "Best next click",
-          detail: "Open the evidence view, export the memo, then complete final submission from the team account."
+          detail: "Open the evidence view, export the memo, then submit on lablab.ai from the team account."
         }
       ],
       actions: [
@@ -138,7 +138,7 @@ export function buildVisitorBrief(project = {}) {
       },
       {
         label: "What still is not checked",
-          detail: "Bright Data source, search, discovery, and final evidence record are still incomplete."
+          detail: "Bright Data source, search, discovery, and saved review are still incomplete."
       },
       {
         label: "Best next click",

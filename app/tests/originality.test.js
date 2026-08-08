@@ -9,7 +9,7 @@ assert.equal(radar.riskLabel, "Distinct angle");
 assert.ok(radar.score >= 75);
 assert.ok(radar.similarProjects.length >= 3);
 assert.ok(radar.similarProjects.every((project) => project.id !== "proofrank"));
-assert.ok(radar.differentiators.some((item) => item.includes("evidence records") || item.includes("review panel")));
+assert.ok(radar.differentiators.some((item) => item.includes("reviewer memos") || item.includes("review panel")));
 assert.ok(radar.brightDataQueries.some((query) => query.tool === "search_engine" && query.query.includes("ProofRank")));
 assert.ok(radar.brightDataQueries.some((query) => query.tool === "discover"));
 

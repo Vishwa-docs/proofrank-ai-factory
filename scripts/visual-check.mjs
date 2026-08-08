@@ -256,7 +256,7 @@ for (const spec of [
     const verifiedSampleSelected = await page.evaluate(() => {
       const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
       const strip = document.querySelector("#liveProofStrip")?.textContent || "";
-      return title === "ProofRank" && /Sample evidence record:\s*ProofRank/i.test(strip) && /Bright Data evidence attached/i.test(strip);
+      return title === "ProofRank" && /ProofRank sample result:\s*ProofRank/i.test(strip) && /Bright Data evidence attached/i.test(strip);
     });
     if (!verifiedSampleSelected) {
       throw new Error("ProofRank sample did not select the Bright Data review record.");
@@ -319,7 +319,7 @@ for (const spec of [
       return (
         /Draft created/i.test(combined) &&
         /Collect evidence/i.test(combined) &&
-        /No ranking score until public or sponsor evidence runs/i.test(combined) &&
+        /No ranking score until public or Bright Data evidence runs/i.test(combined) &&
         !/High risk/i.test(combined) &&
         !/Review score\s*10/i.test(combined) &&
         !/Score breakdown/i.test(scorecard) &&
@@ -327,7 +327,7 @@ for (const spec of [
       );
     });
     if (!draftVerdictNeutral) {
-      throw new Error("Visitor draft still looked like a punitive scored review before public or sponsor evidence.");
+      throw new Error("Visitor draft still looked like a punitive scored review before public or Bright Data evidence.");
     }
     const draftBriefReady = await page.evaluate(() => {
       const brief = document.querySelector(".visitor-brief.draft");
@@ -404,7 +404,7 @@ for (const spec of [
     await page.click('#rankedList [data-id="proofrank"]');
     const draftCardGoneForReceipt = await page.evaluate(() => !document.querySelector(".draft-review-card"));
     if (!draftCardGoneForReceipt) {
-      throw new Error("Draft review card stayed visible after selecting the ProofRank sample evidence record.");
+      throw new Error("Draft review card stayed visible after selecting the ProofRank sample result.");
     }
     const receiptBriefReady = await page.evaluate(() => {
       const brief = document.querySelector(".visitor-brief.evidence");

@@ -56,7 +56,7 @@ function rowGuidance(row) {
     "target-user": "Say who uses it: judges, sponsor teams, or reviewers.",
     "workflow-shown": "Show the repo/demo intake and the review output as one end-to-end path.",
     "bright-data-evidence": "Tie the pitch claim to Bright Data source, search, and discovery evidence.",
-    "decision-artifact": "End with the artifact a reviewer receives: memo, evidence record, report, or shortlist.",
+    "decision-artifact": "End with the artifact a reviewer receives: memo, report, shortlist, or saved review.",
     "business-value": "Explain why this matters outside the hackathon.",
     "final-ask": "Close with the exact action judges should take."
   };
@@ -93,7 +93,7 @@ export function buildPitchReview(transcript = "", project = {}) {
     evidenceActions: [
       "Compare every pitch claim with Bright Data source/search/discovery evidence.",
       "Keep repo and demo reachability separate from pasted transcript analysis.",
-      `Export the reviewer memo for ${title} after public or sponsor evidence is collected.`
+      `Export the reviewer memo for ${title} after public or Bright Data evidence is collected.`
     ],
     suggestedOneMinuteFlow: [
       "Name the overloaded reviewer and the verification problem.",

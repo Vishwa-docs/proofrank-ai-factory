@@ -58,11 +58,11 @@ const publicCard = buildPublicReviewCard(publicProject, {
   roomUrl: "https://proofrank.example/"
 });
 
-assert.match(publicCard, /Decision: Escalate for sponsor evidence/);
+assert.match(publicCard, /Decision: Escalate for Bright Data review/);
 assert.match(publicCard, /GitHub: evidence collected/);
 assert.match(publicCard, /Demo: evidence collected/);
 assert.match(publicCard, /Bright Data: not used in public review; direct public evidence collected/);
-assert.match(publicCard, /Run private Bright Data sponsor review before prize-track submission/);
+assert.match(publicCard, /Run private Bright Data review before prize-track submission/);
 assert.doesNotMatch(publicCard, /Draft review only/);
 
 const proofrank = fixtureProjects.find((project) => project.id === "proofrank");
@@ -73,7 +73,7 @@ const evidenceCard = buildPublicReviewCard(proofrank, {
 
 assert.match(evidenceCard, /Decision: Shortlist/);
 assert.match(evidenceCard, /Bright Data: executed source \+ search \+ discovery/);
-assert.match(evidenceCard, /Evidence record: pr-20260807t200529345z-23568b05/);
-assert.match(evidenceCard, /Next: Export memo or inspect Evidence before final submission/);
+assert.match(evidenceCard, /Review ID: pr-20260807t200529345z-23568b05/);
+assert.match(evidenceCard, /Next: Export memo or inspect Evidence before you submit on lablab\.ai/);
 
 console.log("public review card tests passed");

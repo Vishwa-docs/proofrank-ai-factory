@@ -80,6 +80,7 @@ try {
   await page.waitForSelector("#rankedList .project-row", { state: "attached", timeout: 5000 });
 
   await capture(page, "01-overview.png", ".workbench");
+  await page.click('[data-quick-mode="demo"]');
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");
   await page.click("#quickAddReviewerProject");

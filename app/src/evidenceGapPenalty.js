@@ -52,13 +52,13 @@ export function buildEvidenceGapPenalty(project = {}) {
       : executedBright
         ? status("Bright Data depth", 10, "Bright Data ran, but the complete source/search/discovery bundle is missing.", "Run the full Bright Data bundle.")
         : traceState === "planned" || traceState === "pending" || (evidence.brightDataTools || []).length
-          ? status("Bright Data depth", 16, `Bright Data state is ${traceState}; sponsor evidence is not complete.`, "Run source fetch, search_engine, and discover.")
+          ? status("Bright Data depth", 16, `Bright Data state is ${traceState}; the source/search/discovery run is not complete.`, "Run source fetch, search_engine, and discover.")
           : status("Bright Data depth", 20, "No Bright Data evidence path is visible.", "Make Bright Data the evidence acquisition layer."),
     businessCount >= 4
-      ? status("Business value proof", 0, "Target user, pain, repeatability, and buyer signal are visible.", "Keep the decision artifact tied to the buyer.")
+      ? status("Business value evidence", 0, "Target user, pain, repeatability, and buyer signal are visible.", "Keep the decision artifact tied to the buyer.")
       : businessCount >= 2
-        ? status("Business value proof", 8, "Some buyer signals are present, but the adoption story is thin.", "Clarify target user, repeatable workflow, and buyer value.")
-        : status("Business value proof", 14, "Business value evidence is not yet defensible.", "Name the buyer, pain, and repeated workflow.")
+        ? status("Business value evidence", 8, "Some buyer signals are present, but the adoption story is thin.", "Clarify target user, repeatable workflow, and buyer value.")
+        : status("Business value evidence", 14, "Business value evidence is not yet defensible.", "Name the buyer, pain, and repeated workflow.")
   ];
 
   const totalPenalty = dimensions.reduce((sum, item) => sum + item.penalty, 0);

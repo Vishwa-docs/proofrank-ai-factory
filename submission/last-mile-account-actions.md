@@ -58,7 +58,7 @@ Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://proofrank-ai-factory.vercel.app/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
-Final Bright Data evidence record URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Final Bright Data saved review JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
 ```
 
@@ -71,7 +71,7 @@ ProofRank is a Bright Data evidence workspace for AI hackathon judges. It review
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor evidence record uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery evidence run. Evidence records show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
+Bright Data is the evidence acquisition layer. ProofRank uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover for the executed source, search, and discovery checks behind its saved review. The app shows trace state, provider, byte count, content hash, trace digest, and saved-review status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 ```
 
 How native.builder was used:
@@ -82,7 +82,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 
 ## 4. After Submission
 
-Put the final lablab submission URL in `.env.local`:
+Put the final lablab.ai submission URL in `.env.local`:
 
 ```text
 PROOFRANK_LABLAB_SUBMISSION_URL=https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/YOUR_TEAM/YOUR_PROJECT

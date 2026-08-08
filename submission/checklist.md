@@ -18,7 +18,7 @@
 
 - Create or open Bright Data account.
 - Apply promo code `aiaccess50` if prompted.
-- Current local Bright Data evidence run is complete; final lablab submission is still pending.
+- Current local Bright Data evidence run is complete; lablab.ai submission is still pending.
 - `npm run brightdata:mcp-smoke` has verified `search_engine`, `scrape_as_markdown`, and `discover`.
 - `submission/final-brightdata-receipt.json` shows `finalBrightDataGate.ok: true`.
 - The public release includes `final-brightdata-receipt.json`.
@@ -53,7 +53,7 @@ Pitch deck asset: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/d
 Workflow replay artifact: submission/workflow-proof.json
 Workflow replay URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json
 Workflow replay screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.png
-Final Bright Data evidence record: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Final Bright Data saved review JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 Native.builder render check: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-render-check.json
 Native.builder desktop screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-desktop.png
 Native.builder 320px screenshot: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/native-builder-mobile-320.png
@@ -79,7 +79,7 @@ ProofRank
 Short description:
 
 ```text
-Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and grant reviewers. ProofRank audits project pages, demos, repos, decks, and technology claims, then exports ranked evidence records with claim confidence, evidence gaps, and review actions.
+Bright Data-powered public AI product diligence for hackathon judges, sponsors, accelerators, and grant reviewers. ProofRank audits project pages, demos, repos, decks, and technology claims, then exports ranked reviewer memos with claim confidence, evidence gaps, and review actions.
 ```
 
 Problem:
@@ -103,7 +103,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor evidence record uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as an executed source/search/discovery evidence run, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. Evidence records show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review.
+Bright Data is the evidence acquisition layer. ProofRank uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` for executed source, search, and discovery checks, with Web Scraper API, Web Unlocker, and CLI-compatible collection steps prepared for the native.builder live workflow. The interface shows trace state, provider, byte count, content hash, trace digest, and saved-review status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review.
 ```
 
 External tools:
@@ -119,5 +119,5 @@ Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://proofrank-ai-factory.vercel.app/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
-Final Bright Data evidence record URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Final Bright Data review JSON: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 ```

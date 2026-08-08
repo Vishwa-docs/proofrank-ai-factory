@@ -136,7 +136,7 @@ assert.match(packet, /Bright Data evidence state: executed/);
 assert.match(packet, /Review lens: Bright Data sponsor/);
 assert.match(packet, /Review lens priority: Prove source, search, and discovery evidence/);
 assert.match(packet, /Bright Data prize score: 98/);
-assert.match(packet, /Evidence record: pr-20260807t120000000z-1a2b3c4d/);
+assert.match(packet, /Review ID: pr-20260807t120000000z-1a2b3c4d/);
 assert.match(packet, /Replay command: PROOFRANK_FETCH_MODE=mcp npm run live:smoke/);
 assert.match(packet, /Evidence package readiness: Evidence package ready/);
 assert.doesNotMatch(packet, /Submission readiness:/);

@@ -112,12 +112,12 @@ export function buildReadiness(project = {}, context = {}) {
       label: "Bright Data evidence bundle",
       passed: sponsorProofReady,
       detail: sponsorProofReady
-        ? "Evidence view contains executed Bright Data source scrape, search, and discovery traces."
+        ? "Evidence view contains executed Bright Data source, search, and discovery checks."
         : `Current trace state is ${traceState}; evidence bundle needs executed source scrape, search, and discovery traces.`,
       proof: sponsorProofReady
-        ? "provider=bright-data with executed source scrape, search, and discovery traces"
+        ? "Bright Data ran the source, search, and discovery checks."
         : "Single, planned, claimed, direct, pending, and failed traces do not pass this gate.",
-      action: "Fix the Bright Data token, rerun live collection, and export the full sponsor evidence bundle."
+      action: "Fix the Bright Data token, rerun live collection, and export the saved review."
     }),
     gate({
       id: "actual-review-target",
@@ -184,7 +184,7 @@ export function buildReadiness(project = {}, context = {}) {
       label: "No visible secret risk",
       required: false,
       passed: evidence.secretRiskVisible !== true,
-      detail: "Public repos and evidence records should not expose API keys, tokens, or private account state.",
+      detail: "Public repos and reviewer memos should not expose API keys, tokens, or private account state.",
       proof: evidence.secretRiskVisible ? "Potential secret exposure flagged." : "No visible secret-risk signal in current evidence.",
       action: "Remove any visible secrets before final judging."
     }),
@@ -195,7 +195,7 @@ export function buildReadiness(project = {}, context = {}) {
       passed: Boolean(evidence.proofReceipt),
       detail: "A review package should include scores, claim checks, evidence rows, review panel, and similarity findings.",
       proof: evidence.proofReceipt ? "Evidence view available." : "Evidence export not available.",
-      action: "Export the selected evidence record and Markdown memo after the live run."
+      action: "Export the selected reviewer memo after the live run."
     })
   ];
 
@@ -228,10 +228,10 @@ export function buildReadiness(project = {}, context = {}) {
 export function readinessSummary(readiness) {
   const proofPackageReady = readiness.proofPackageReady ?? readiness.canSubmit;
   if (proofPackageReady) {
-    return `Evidence package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates checked. Final lablab submission is tracked separately.`;
+    return `Evidence package ready: ${readiness.requiredPassed}/${readiness.requiredTotal} required evidence checks complete. Final lablab submission is tracked separately.`;
   }
 
-  return `Evidence package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} internal evidence gates checked. Next action: ${
-    readiness.nextActions[0] || "Review missing proof."
+  return `Evidence package not ready: ${readiness.requiredPassed}/${readiness.requiredTotal} required evidence checks complete. Next action: ${
+    readiness.nextActions[0] || "Review missing evidence."
   }`;
 }

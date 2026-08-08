@@ -43,7 +43,7 @@ export function buildClaimLedger(project) {
         brightTools.length > 0 && sponsorProofBundle
           ? `${brightTools.join(", ")} completed source, search, and discovery evidence with dependency score ${brightDependency}.`
           : brightTools.length > 0 && executedBrightTrace
-            ? `${brightTools.join(", ")} executed partially with dependency score ${brightDependency}; sponsor bundle is incomplete.`
+            ? `${brightTools.join(", ")} executed partially with dependency score ${brightDependency}; the Bright Data review is incomplete.`
           : brightTools.length > 0
             ? `${brightTools.join(", ")} referenced with dependency score ${brightDependency}; trace state is ${traceState}.`
           : "No visible Bright Data tool usage in public evidence."
@@ -62,7 +62,7 @@ export function buildClaimLedger(project) {
       status: evidence.proofReceipt && sponsorProofBundle ? "Supported" : evidence.proofReceipt ? "Weak Evidence" : "Needs Evidence",
       evidence: evidenceText(
         evidence.proofReceipt && sponsorProofBundle,
-        "Evidence record includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
+        "Review memo includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
         "Add timestamped Bright Data source, search, and discovery traces with confidence labels."
       )
     },

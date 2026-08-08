@@ -98,7 +98,7 @@ const receiptProject = {
   assert.equal(brief.badge, "Bright Data ready");
   assert.match(brief.title, /Evidence-backed review/i);
   assert.match(brief.rows[0].detail, /source fetch, search, and discovery/i);
-  assert.match(brief.rows[1].detail, /server record/i);
+  assert.match(brief.rows[1].detail, /Saved review/i);
   assert.equal(brief.actions[0].label, "Open evidence");
   assert.equal(brief.actions[1].label, "Export memo");
   assert.equal(brief.actions[2].label, "Final submission");

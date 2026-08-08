@@ -59,7 +59,7 @@ function mcpToolsProof(mcpTools = {}) {
 }
 
 function liveReceiptProof(liveReceipt = {}) {
-  if (!liveReceipt.ok) return "No signed executed Bright Data project evidence record attached.";
+  if (!liveReceipt.ok) return "No executed Bright Data saved review attached.";
   return [
     liveReceipt.runId || "run record",
     liveReceipt.provider || "unknown-provider",
@@ -160,7 +160,7 @@ export function buildFinalReadinessReport(state = {}) {
     }),
     gate({
       id: "live-receipt",
-      label: "Signed executed Bright Data evidence record",
+      label: "Executed Bright Data saved review",
       passed:
         bool(state.liveReceipt?.ok) &&
         state.liveReceipt?.provider === "bright-data" &&
@@ -171,7 +171,7 @@ export function buildFinalReadinessReport(state = {}) {
         bool(state.liveReceipt?.signed) &&
         bool(state.liveReceipt?.signatureVerified),
       proof: liveReceiptProof(state.liveReceipt),
-      action: "Run the actual project through MCP mode and export a signature-verified evidence record with executed Bright Data source, search, and discover traces."
+      action: "Run the actual project through MCP mode and export a saved review with executed Bright Data source, search, and discover traces."
     }),
     gate({
       id: "lablab-submission",

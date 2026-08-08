@@ -96,11 +96,11 @@ const EXTERNAL_SAMPLE_LINKS = {
 };
 const REVIEW_MODES = {
   demo: {
-    label: "Draft review",
-    runLabel: "Draft review",
-    button: "Add my project",
-    addButton: "Add project",
-    status: "Draft selected. ProofRank will create a shareable link-only review.",
+    label: "Save draft",
+    runLabel: "Save draft",
+    button: "Save draft only",
+    addButton: "Save draft",
+    status: "Draft selected. ProofRank will save a shareable link-only review.",
     hint: "Draft review is link-only. Public review fetches safe public evidence without using Bright Data credits."
   },
   public: {
@@ -207,7 +207,7 @@ const FIELD_COMPARISON = [
 ];
 
 const state = {
-  mode: "demo",
+  mode: "public",
   reviewFocus: "sponsor",
   filter: "all",
   activeSection: "overview",
@@ -216,6 +216,7 @@ const state = {
   uploadedProjects: [],
   reviewerProjects: [],
   pitchReview: null,
+  reviewStarted: false,
   tourIndex: null
 };
 
@@ -397,21 +398,23 @@ function isVerifiedSamplePayload(payload = {}) {
 
 function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
   updateShareableReviewUrl(payload);
+  state.reviewStarted = true;
   state.selectedId = "proofrank";
   const selectionDrawer = document.querySelector(".selection-drawer");
   if (selectionDrawer) selectionDrawer.open = true;
   elements.reviewerHint.textContent =
     "ProofRank sample selected. It includes executed Bright Data source, search, and discovery evidence.";
   setQuickHint(
-    "Sample evidence record loaded. Bright Data evidence is attached; final lablab submission is still pending.",
+    "ProofRank sample result loaded. Bright Data evidence is attached; submit on lablab.ai from the team account.",
     "ready"
   );
-  setStatus("ProofRank sample selected. Open Evidence to inspect the Bright Data review record.", "ready");
+  setStatus("ProofRank sample selected. Open Evidence to inspect the Bright Data review.", "ready");
   render();
   setActiveSection("overview", { scroll: true });
 }
 
 function selectExternalSampleReview() {
+  state.reviewStarted = true;
   elements.quickRepoUrl.value = EXTERNAL_SAMPLE_LINKS.repoUrl;
   elements.quickDemoUrl.value = EXTERNAL_SAMPLE_LINKS.demoUrl;
   syncFullReviewFormFromQuick();
@@ -515,7 +518,7 @@ function analyzePitchTranscript() {
 
   state.pitchReview = buildPitchReview(transcript, selectedProject());
   setPitchHint(
-    `Pitch score ${state.pitchReview.score}. Pasted text only; public and sponsor evidence remain separate.`,
+    `Pitch score ${state.pitchReview.score}. Pasted text only; public and Bright Data evidence remain separate.`,
     state.pitchReview.score >= 85 ? "ready" : "warn"
   );
   setStatus("Presentation check added to the Review panel. Bright Data evidence status was not changed.", "ready");
@@ -789,18 +792,28 @@ function displayAction(project = {}, fallback = "") {
 
 function displayPrimaryBlocker(project = {}, fallback = "") {
   if (isDraftProject(project)) {
-    return "Public or sponsor evidence has not collected repo, demo, or prior-art signals yet.";
+    return "Public or Bright Data evidence has not collected repo, demo, or prior-art signals yet.";
   }
   if (isPublicReviewProject(project)) {
     return "Public repo/demo evidence is collected; Bright Data source, search, and discovery evidence is not attached yet.";
   }
   if (hasPendingFinalSubmission(project) && hasBrightDataSponsorProofBundle(project)) {
-    return "Final submission not sent.";
+    return "Submit this entry from the team lablab.ai account.";
   }
   return fallback || "No major audit risk visible in current evidence.";
 }
 
 function updateLiveProofStrip(project) {
+  if (!state.reviewStarted && project.id === "proofrank") {
+    elements.liveProofStrip.className = "live-proof-strip is-missing";
+    elements.liveProofStrip.innerHTML = `
+      <span>No project reviewed yet</span>
+      <strong>Paste links to start</strong>
+      <small>Run a public review first. Replay the ProofRank sample only if you want to inspect a finished review.</small>
+    `;
+    return;
+  }
+
   const traceState = brightDataTraceState(project);
   const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const receipt = project.runReceipt || {};
@@ -808,7 +821,7 @@ function updateLiveProofStrip(project) {
     state.mode === "live" && project.id.startsWith("review-")
       ? `Private Bright Data review: ${project.title}`
       : hasBrightDataSponsorProofBundle(project)
-        ? `${project.id === "proofrank" ? "Sample evidence record" : "Selected review record"}: ${project.title}`
+        ? `${project.id === "proofrank" ? "ProofRank sample result" : "Saved review"}: ${project.title}`
         : isPublicReviewProject(project)
           ? `Public review: ${project.title}`
           : `Draft review: ${project.title}`;
@@ -820,7 +833,7 @@ function updateLiveProofStrip(project) {
         ? "Bright Data evidence attached"
         : "Bright Data evidence ready"
       : traceState === "executed"
-        ? "Partial sponsor evidence"
+        ? "Bright Data check incomplete"
       : traceState === "direct"
         ? "Direct evidence only"
           : traceState === "planned"
@@ -828,9 +841,9 @@ function updateLiveProofStrip(project) {
           : "Draft review only";
   const detail =
     sponsorBundle
-      ? `${hasPendingFinalSubmission(project) ? "final lablab submission pending / " : ""}source fetch, prior-art search, and discovery checked / ${receipt.signature ? "server record attached" : "review record pending"}`
+      ? `${hasPendingFinalSubmission(project) ? "Still needs to be submitted on lablab.ai. " : ""}Sources, web search, and similar projects checked; ${receipt.signature ? "saved review attached" : "saved review pending"}.`
       : traceState === "executed"
-        ? "Source, search, and discovery checks still need the complete review record"
+        ? "Sources, web search, and similar-project checks still need the saved review"
       : traceState === "direct"
         ? "Private Bright Data review can strengthen this result"
         : traceState === "planned"
@@ -949,7 +962,7 @@ function renderHeroDecision(project) {
     <p>${escapeHtml(compactSentence(project.summary))}</p>
     <div class="decision-metrics" aria-label="Selected project evidence metrics">
       <div>
-        <span>Bright run</span>
+        <span>Bright Data</span>
         <strong>${escapeHtml(bundleStatus)}</strong>
       </div>
       <div>
@@ -958,7 +971,7 @@ function renderHeroDecision(project) {
       </div>
       <div>
         <span>Final entry</span>
-        <strong>${draft ? "not scored" : hasPendingFinalSubmission(project) ? "not sent" : nativeUrl ? "published" : "missing"}</strong>
+        <strong>${draft ? "not scored" : hasPendingFinalSubmission(project) ? "not submitted" : nativeUrl ? "published" : "missing"}</strong>
       </div>
     </div>
     <div class="decision-focus">
@@ -1062,9 +1075,9 @@ function sponsorMatrixStatus(project, key) {
   if (key === "discover") return traceStatusFor(project, (tool, query) => /discover/i.test(`${tool} ${query}`));
   if (key === "receipt") {
     const runReceipt = project.runReceipt || {};
-    if (runReceipt.signature) return { status: "passed", detail: "Server record attached" };
-    if (runReceipt.traceDigest) return { status: "pending", detail: "Run record needs final server confirmation" };
-    return { status: "missing", detail: "No run record issued" };
+    if (runReceipt.signature) return { status: "passed", detail: "Saved review attached" };
+    if (runReceipt.traceDigest) return { status: "pending", detail: "Saved review needs final confirmation" };
+    return { status: "missing", detail: "No saved review yet" };
   }
   return { status: "missing", detail: "Not checked" };
 }
@@ -1167,7 +1180,7 @@ function renderProofTopology(project) {
     },
     {
       label: "Bright Data check",
-      detail: sponsorBundle ? "Source fetch, search, and discovery checked" : executedBright ? "Partial sponsor evidence" : `Current state: ${traceState}`,
+      detail: sponsorBundle ? "Sources, web search, and similar projects checked" : executedBright ? "Bright Data check incomplete" : `Current state: ${traceState}`,
       status: routeStatus(sponsorBundle, executedBright || ["planned", "claimed", "pending", "direct"].includes(traceState))
     },
     {
@@ -1177,7 +1190,7 @@ function renderProofTopology(project) {
     },
     {
       label: "Review memo",
-      detail: isDraftReview ? "Draft memo ready; evidence record missing" : hasPacket ? "Memo and exports ready" : "Review memo missing",
+      detail: isDraftReview ? "Draft memo ready; evidence export not ready yet" : hasPacket ? "Memo and exports ready" : "Review memo missing",
       status: routeStatus(hasPacket && !isDraftReview, isDraftReview || hasPacket)
     }
   ];
@@ -1384,12 +1397,12 @@ function renderFixList(project) {
       <div>
         <span>Score if judged today</span>
         <strong>${draft ? "Draft" : penalty.adjustedScore}</strong>
-        <small>${escapeHtml(draft ? "No ranking score until public or sponsor evidence runs." : `Base score ${penalty.baseScore}; evidence gaps reduce the shortlist rank.`)}</small>
+        <small>${escapeHtml(draft ? "No ranking score until public or Bright Data evidence runs." : `Base score ${penalty.baseScore}; evidence gaps reduce the shortlist rank.`)}</small>
       </div>
       <div>
         <span>Best next click</span>
         <strong>${escapeHtml(draft ? "Collect public evidence" : penalty.status)}</strong>
-        <small>${escapeHtml(draft ? "Run the public repo/demo check first; add Bright Data sponsor evidence for final judging." : penalty.topAction)}</small>
+        <small>${escapeHtml(draft ? "Run the public repo/demo check first; add Bright Data source/search/discovery checks for final judging." : penalty.topAction)}</small>
       </div>
     </div>
     <div class="fix-card-grid">
@@ -1714,9 +1727,9 @@ function renderScorecard(project) {
         <p>${sponsorProofReady ? "Executed evidence counts; planned or claimed rows do not." : "Needs the complete source, search, and discover run."}</p>
       </article>
       <article>
-        <span>Evidence record</span>
-        <strong>${escapeHtml(runReceipt.runId || "No live record")}</strong>
-        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Server record attached" : "Review record pending"} live run record` : "Live collection has not produced a report yet.")}</p>
+        <span>Review ID</span>
+        <strong>${escapeHtml(runReceipt.runId || "No saved review yet")}</strong>
+        <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Saved review attached" : "Saved review pending"} live run record` : "Live collection has not produced a report yet.")}</p>
       </article>
       <article>
         <span>Live rerun</span>
@@ -1771,9 +1784,16 @@ function traceStatusFor(project, matcher) {
   return {
     status: passed ? "passed" : "pending",
     detail: passed
-      ? `${trace.resultCount || 0} result${trace.resultCount === 1 ? "" : "s"} / ${trace.byteCount || 0} bytes`
+      ? `${trace.resultCount || 0} result${trace.resultCount === 1 ? "" : "s"} / downloaded ${formatBytes(trace.byteCount || 0)}`
       : trace.status || traceStatus
   };
+}
+
+function formatBytes(bytes = 0) {
+  const value = Number(bytes) || 0;
+  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  if (value >= 1024) return `${(value / 1024).toFixed(1)} KB`;
+  return `${value} bytes`;
 }
 
 function renderBrightDataTimeline(project) {
@@ -1784,14 +1804,14 @@ function renderBrightDataTimeline(project) {
   const receipt = runReceipt.traceDigest
     ? {
         status: runReceipt.signature ? "passed" : "pending",
-        detail: runReceipt.signature ? "server record attached" : "record pending"
+        detail: runReceipt.signature ? "saved review attached" : "saved review pending"
       }
-    : { status: "missing", detail: "not issued" };
+    : { status: "missing", detail: "not saved yet" };
   const steps = [
     ["Source fetch", "Fetch public repo, demo, and submission evidence", source],
-    ["Prior-art search", "Find public overlap and corroboration", search],
-    ["Signal discovery", "Rank adjacent public signals", discover],
-    ["Review record", "Package the run into an exportable memo", receipt]
+    ["Web search", "Find public overlap and corroboration", search],
+    ["Similar-project discovery", "Rank adjacent public signals", discover],
+    ["Saved review", "Package the run into an exportable memo", receipt]
   ];
 
   return `
@@ -1800,7 +1820,7 @@ function renderBrightDataTimeline(project) {
         <h2>Evidence checks</h2>
         <span class="hint">What ProofRank fetched and what is still missing.</span>
       </div>
-      <p class="judge-meaning">Bright Data gathers public source, search, and discovery evidence. ProofRank separates collected facts from project claims before exporting the review record.</p>
+      <p class="judge-meaning">Bright Data gathers public source, search, and discovery evidence. ProofRank separates collected facts from project claims before exporting the reviewer memo.</p>
       <ol>
         ${steps
           .map(
@@ -1848,7 +1868,7 @@ function renderReceipt(project) {
         </td>
         <td data-label="Query or URL">${escapeHtml(trace.queryOrUrl)}</td>
         <td data-label="Rows">${trace.resultCount}</td>
-        <td data-label="Status">${escapeHtml(`${trace.status}${trace.byteCount ? ` / ${trace.byteCount}b / ${trace.contentHash}` : ""}`)}</td>
+        <td data-label="Status">${escapeHtml(`${trace.status}${trace.byteCount ? ` / downloaded ${formatBytes(trace.byteCount)} / hash ${trace.contentHash}` : ""}`)}</td>
       </tr>
     `
     )
@@ -1863,8 +1883,8 @@ function renderReceipt(project) {
 
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
       <span>Review run</span>
-      <strong>${escapeHtml(runReceipt?.runId || "No live record")}</strong>
-      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "server record attached" : "review record pending"}` : "Live project collection has not issued a server record.")}</small>
+      <strong>${escapeHtml(runReceipt?.runId || "No saved review yet")}</strong>
+      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "saved review attached" : "saved review pending"}` : "No saved review has been created for this project yet.")}</small>
     </div>
 
     <div class="receipt-list">
@@ -2056,7 +2076,7 @@ async function runAudit() {
         setStatus(
           result.reviewedProject
           ? `${liveProjects.length} live submissions collected and one project-level review completed. Check the selected Evidence view for Bright Data status.`
-            : `${liveProjects.length} live submissions collected. Event intake is not sponsor evidence; review a GitHub project next for the Bright Data evidence run.`,
+            : `${liveProjects.length} live submissions collected. Event intake is not a project review; review a GitHub project next for the Bright Data evidence run.`,
           result.reviewedProject ? "ready" : "warn"
         );
       }
@@ -2303,19 +2323,20 @@ async function addReviewerProject() {
   if (selectionDrawer) selectionDrawer.open = true;
   elements.reviewerHint.textContent =
     state.mode === "live"
-      ? "Project collected with the private Bright Data backend. Inspect the evidence and replay record."
+      ? "Project collected with the private Bright Data backend. Inspect the evidence and saved review."
       : state.mode === "public"
-        ? "Project collected with public repo/demo evidence. Run the sponsor check later for Bright Data evidence."
+        ? "Project collected with public repo/demo evidence. Run the private Bright Data review later for source, search, and discovery checks."
         : "Project added. Public review or private Bright Data review can deepen this result.";
   setQuickHint(
     state.mode === "live"
-      ? "Bright Data evidence collected. Open Evidence to inspect the review record."
+      ? "Bright Data evidence collected. Open Evidence to inspect the saved review."
       : state.mode === "public"
-        ? "Public evidence collected. Open Evidence to inspect the review record, or run Private Bright Data for sponsor evidence."
+        ? "Public evidence collected. Open Evidence to inspect the review, or run Private Bright Data for source, search, and discovery checks."
         : "Project added. Copy draft link lets another visitor open the same links. Public review collects real evidence.",
     "ready"
   );
   setStatus(`${project.title} added to the review queue.`, "ready");
+  state.reviewStarted = true;
   render();
   setActiveSection("overview", { scroll: true });
 }
@@ -2371,10 +2392,8 @@ function initializeLiveEndpoint() {
 function initializeReviewMode() {
   if (hasReviewToken()) {
     setReviewMode("live", { silent: true });
-  } else if (!isLocalPreviewHost()) {
-    setReviewMode("public", { silent: true });
   } else {
-    setReviewMode("demo", { silent: true });
+    setReviewMode("public", { silent: true });
   }
 }
 

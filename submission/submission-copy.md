@@ -6,7 +6,7 @@ ProofRank
 
 ## Short Description
 
-Bright Data-powered diligence for AI hackathon judges. ProofRank checks demos, GitHub repos, project claims, and prior art, then exports source-backed review packets with confidence scores, evidence gaps, and sponsor-prize readiness.
+Bright Data-powered diligence for AI hackathon judges. ProofRank checks demos, GitHub repos, project claims, and prior art, then exports source-backed reviewer memos with confidence scores, evidence gaps, and sponsor-prize readiness.
 
 ## Problem
 
@@ -22,7 +22,7 @@ native.builder generated and refined the ProofRank application structure, dashbo
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor evidence record uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` as the executed source/search/discovery evidence run. Evidence records show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
+Bright Data is the evidence acquisition layer. ProofRank uses Bright Data Remote MCP `scrape_as_markdown`, `search_engine`, and `discover` for the executed source, search, and discovery checks behind its saved review. The interface shows whether those checks really ran, which provider was used, and which public claims still need support. Sponsor-fit credit requires executed Bright Data checks, not merely planned or claimed rows. The Evidence view exposes that gate, while the Similarity Check uses Bright Data search and `discover` for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 
 ProofRank does not replace judges. It gives judges and sponsors a Bright Data-backed evidence queue so they can verify accessibility, originality, sponsor usage, and demo claims faster.
 
@@ -44,7 +44,7 @@ Fallback app URL: `https://proofrank-ai-factory.vercel.app/`
 
 Demo video URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4`
 
-Final Bright Data evidence record URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json`
+Final Bright Data review JSON: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json`
 
 Workflow replay URL: `https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/workflow-proof.json`
 

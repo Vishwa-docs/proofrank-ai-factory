@@ -33,12 +33,12 @@ function sponsorJudge(project) {
     reasons: compactReasons([
       evidence.brightDataRole === "agentic" ? "Agentic Bright Data role is visible." : "",
       tools.length ? `${tools.join(", ")} are referenced.` : "",
-      sponsorProofBundle ? "Evidence record includes executed source, search, and discovery traces." : executedBrightTrace ? "Evidence record includes partial executed Bright Data traces." : "",
-      evidence.proofReceipt ? "Output is framed as an evidence record rather than a generic summary." : ""
+      sponsorProofBundle ? "Saved review includes executed source, search, and discovery traces." : executedBrightTrace ? "Saved review includes partial executed Bright Data traces." : "",
+      evidence.proofReceipt ? "Output is framed as a reviewer memo rather than a generic summary." : ""
     ]),
     objections: compactReasons([
       !executedBrightTrace ? `Bright Data trace is ${traceState}, not executed.` : "",
-      executedBrightTrace && !sponsorProofBundle ? "Sponsor bundle is missing search, discovery, or source scrape evidence." : "",
+      executedBrightTrace && !sponsorProofBundle ? "Bright Data review is missing search, discovery, or source scrape evidence." : "",
       (scores.brightDataFit || 0) < 75 ? "Sponsor-fit score is below shortlist strength." : "",
       evidence.brightDataRole === "none" ? "Bright Data is not described as load-bearing." : ""
     ])
