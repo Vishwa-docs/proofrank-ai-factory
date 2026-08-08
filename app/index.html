@@ -45,12 +45,13 @@
           </div>
           <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Paste a repo and demo to see what is proven, what is missing, and whether judges should shortlist it.</p>
+          <p class="hero-subtitle">Paste a GitHub repo and demo to see what was checked, what is missing, and whether it is ready for judging.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Audit project</button>
             <button class="secondary-button" data-nav-tab="receipt" type="button">Open evidence</button>
+            <button class="secondary-button" data-load-sample type="button">Replay sample</button>
           </div>
-          <div id="statusLine" class="status-line" role="status">Draft review ready. Paste your links to add another project.</div>
+          <div id="statusLine" class="status-line" role="status">Paste any public GitHub repo to create a review. No login needed.</div>
         </div>
 
         <aside class="decision-card review-card panel" aria-label="Review project and evidence state">
@@ -58,7 +59,21 @@
             <div class="quick-review-head">
               <span>60-second audit</span>
               <strong>Audit a public AI project</strong>
-              <p>Paste a GitHub repo and optional demo. The draft is public-safe; live review adds Bright Data evidence privately.</p>
+              <p>Paste a GitHub repo and optional demo. Public review checks real links; private Bright Data review adds sponsor evidence.</p>
+            </div>
+            <div class="review-mode-switch" role="radiogroup" aria-label="Review depth">
+              <button class="mode-chip is-active" data-quick-mode="demo" role="radio" aria-checked="true" type="button">
+                <strong>Draft</strong>
+                <small>saves links</small>
+              </button>
+              <button class="mode-chip" data-quick-mode="public" role="radio" aria-checked="false" type="button">
+                <strong>Public review</strong>
+                <small>fetches repo/demo</small>
+              </button>
+              <button class="mode-chip" data-quick-mode="live" role="radio" aria-checked="false" type="button">
+                <strong>Private Bright Data</strong>
+                <small>server-side evidence</small>
+              </button>
             </div>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
@@ -67,21 +82,21 @@
                 <small id="quickRepoHelp" class="field-help">Public github.com/owner/repo only. Do not paste private repos or secrets.</small>
               </label>
               <label class="field" for="quickDemoUrl">
-                <span class="field-label">Demo URL (optional) <button class="qmark" type="button" aria-label="Demo app help" aria-expanded="false" aria-controls="demoTip">?</button><span id="demoTip" class="tip-panel" role="tooltip">Optional. Live review, not the browser draft, checks whether the demo is actually reachable.</span></span>
+                <span class="field-label">Demo URL (optional) <button class="qmark" type="button" aria-label="Demo app help" aria-expanded="false" aria-controls="demoTip">?</button><span id="demoTip" class="tip-panel" role="tooltip">Optional. Public review checks common demo hosts; private Bright Data review can use Bright Data for harder pages.</span></span>
                 <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url" aria-describedby="quickDemoHelp">
                 <small id="quickDemoHelp" class="field-help">Optional. A reachable public demo gives stronger evidence than a repo alone.</small>
               </label>
             </div>
             <div class="quick-actions">
-              <button id="quickAddReviewerProject" class="primary-button" type="button">Create draft audit</button>
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Add my project</button>
               <button id="copyReviewLink" class="text-button" type="button" disabled>Copy draft link</button>
             </div>
-            <p class="review-path-line">Draft checks URL format only. It does not fetch code, check the demo, or run Bright Data.</p>
-            <p id="quickReviewHint" class="hint">Draft review is link-only. Use Live setup for Bright Data evidence.</p>
+            <p class="review-path-line">Draft saves the links. Public review fetches GitHub/demo evidence. Private Bright Data review adds server-side evidence.</p>
+            <p id="quickReviewHint" class="hint">Draft review is link-only. Public review fetches safe public evidence without using Bright Data credits.</p>
             <details id="reviewOptions" class="review-options">
               <summary>
-                <span>More options</span>
-                <strong>Samples, evidence, sharing</strong>
+                <span>Samples and sharing</span>
+                <strong>Examples, evidence, room links</strong>
               </summary>
               <div class="review-options-body">
                 <div class="visitor-mode" aria-label="Visitor review path">
@@ -99,17 +114,17 @@
                   </article>
                 </div>
                 <div class="bright-actions" aria-label="Bright Data actions">
-                  <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open Bright Data evidence report">
-                    <span>Evidence report</span>
+                  <button class="bright-path" data-nav-tab="receipt" type="button" aria-label="Open evidence">
+                    <span>View evidence</span>
                     <strong>source fetch, search, discovery, memo</strong>
                   </button>
-                  <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open live Bright Data setup">
-                    <span>Live setup</span>
+                  <button class="bright-path is-secondary" data-nav-tab="setup" type="button" aria-label="Open private Bright Data setup">
+                    <span>Private Bright Data review</span>
                     <strong>private Bright Data collection</strong>
                   </button>
                 </div>
                 <div class="review-focus" role="radiogroup" aria-label="Review lens">
-                  <span>Review lens</span>
+                  <span>Advanced review lens</span>
                   <div class="review-focus-options">
                     <button class="focus-chip is-active" data-review-focus="sponsor" role="radio" aria-checked="true" type="button">
                       <strong>Bright Data sponsor</strong>
@@ -129,7 +144,7 @@
                   <span>Sample links</span>
                   <div class="starter-row">
                     <button class="starter-chip" data-starter-project="proofrank" type="button">ProofRank</button>
-                    <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data MCP</button>
+                    <button class="starter-chip" data-starter-project="brightdata-mcp" type="button">Bright Data sample repo</button>
                     <button class="starter-chip" data-starter-project="speechmatics-academy" type="button">Speechmatics Academy</button>
                   </div>
                 </div>
@@ -140,21 +155,21 @@
                 </div>
                 <div class="mode-ladder" aria-label="Evidence modes">
                   <span><strong>Draft</strong><small>Links only</small></span>
-                  <span><strong>Live evidence</strong><small>Bright Data fetch</small></span>
-                  <span><strong>Built-in receipt</strong><small>Evidence record</small></span>
+                  <span><strong>Public review</strong><small>repo + demo check</small></span>
+                  <span><strong>Sample evidence record</strong><small>ProofRank sample</small></span>
                 </div>
                 <div class="quick-actions option-actions">
-                  <button id="loadSampleProject" class="text-button" type="button">Open built-in receipt</button>
+                  <button id="loadSampleProject" class="text-button" type="button">Open ProofRank sample</button>
                   <button id="loadExternalSample" class="text-button" type="button">Open external sample</button>
-                  <button id="copyAppLinkHero" class="text-button" type="button">Copy room link</button>
+                  <button id="copyAppLinkHero" class="text-button" type="button">Share blank test room</button>
                 </div>
                 <details class="inline-qtip">
-                  <summary>Demo vs live review</summary>
-                  <p>Demo review is browser-safe and link-only. Live review fetches repo and demo evidence through the private Bright Data backend.</p>
+                  <summary>Draft vs public review</summary>
+                  <p>Draft review only checks links. Public review fetches public GitHub and demo evidence. Private Bright Data review adds source, search, and discovery evidence later.</p>
                 </details>
                 <details class="inline-qtip">
                   <summary>Can someone else test it?</summary>
-                  <p>Yes. Use Copy room link for a blank public room, or Copy draft link after entering a repo to preload that project.</p>
+                  <p>Yes. Use Share blank test room for a public workspace, or Copy draft link after entering a repo to preload that project.</p>
                 </details>
               </div>
             </details>
@@ -171,9 +186,9 @@
             </div>
           </section>
           <div id="liveProofStrip" class="live-proof-strip is-missing" aria-live="polite">
-            <span>Evidence report</span>
-            <strong>Built-in receipt loaded</strong>
-            <small>Bright Data receipt present; final lablab submission pending</small>
+            <span>Sample evidence record</span>
+            <strong>Bright Data evidence attached</strong>
+            <small>Source fetch, prior-art search, and discovery are present; final lablab submission pending</small>
           </div>
           <details class="selection-drawer">
             <summary>
@@ -243,7 +258,7 @@
         </div>
         <div id="reviewRoomStats" class="room-stats" aria-label="Review room statistics"></div>
         <div class="room-actions">
-          <button id="copyAppLink" class="text-button" type="button">Copy app link</button>
+          <button id="copyAppLink" class="text-button" type="button">Share blank test room</button>
           <button id="exportRoomMemo" class="secondary-button" type="button">Room memo</button>
         </div>
       </section>
@@ -252,7 +267,7 @@
         <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Review</button>
         <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Projects</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
-        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Live setup</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Readiness</button>
       </nav>
 
       <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 6" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
@@ -290,7 +305,7 @@
         <section class="sponsor-matrix panel" aria-label="Sponsor evidence matrix">
           <div class="module-head">
             <h2>Evidence checklist</h2>
-            <span class="hint">Draft links stay pending until live evidence runs.</span>
+            <span class="hint">Draft links stay pending until public or sponsor evidence runs.</span>
           </div>
           <div id="sponsorMatrix" class="matrix-grid"></div>
         </section>
@@ -304,31 +319,32 @@
         </section>
       </section>
 
-      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 6" aria-label="Bright Data evidence report" role="tabpanel" aria-labelledby="tab-receipt" hidden>
-        <aside class="evidence-rail panel" aria-label="Evidence report">
+      <section id="panel-receipt" class="section-panel reveal" data-section-panel="receipt" style="--i: 6" aria-label="Evidence" role="tabpanel" aria-labelledby="tab-receipt" hidden>
+        <aside class="evidence-rail panel" aria-label="Evidence">
           <div class="module-head receipt-head">
-            <h2>Evidence report</h2>
-            <button id="exportSelected" class="text-button small" type="button">Save JSON</button>
+            <h2>Evidence</h2>
+            <button id="exportSelected" class="text-button small" type="button">Download evidence JSON</button>
           </div>
           <div id="receipt"></div>
         </aside>
       </section>
 
-      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 6" aria-label="Project links and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
+      <section id="panel-setup" class="section-panel reveal" data-section-panel="setup" style="--i: 6" aria-label="Private Bright Data review and readiness" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <aside class="source-rail panel" aria-label="Sources and setup">
           <section class="source-module reviewer-intake" aria-label="Review a GitHub project">
             <div class="module-head compact">
-              <h2>Full review setup</h2>
-              <span class="hint">Use this panel for labels and live runs.</span>
+              <h2>Run a deeper review</h2>
+              <span class="hint">Use this panel for public collection, private Bright Data runs, and labels.</span>
             </div>
             <label class="field compact" for="modeSelect">
               <span>Review mode</span>
               <select id="modeSelect">
-                <option value="demo">Demo review (sample data)</option>
-                <option value="live">Live Bright Data review</option>
+                <option value="demo">Draft (links only)</option>
+                <option value="public">Public review (GitHub/demo evidence)</option>
+                <option value="live">Private Bright Data review</option>
               </select>
             </label>
-            <p class="mode-explainer hint">Demo review uses sample/local data. Live review runs Bright Data collection on a private server so API keys stay out of the browser.</p>
+            <p class="mode-explainer hint">Public review fetches public evidence without secrets. Private Bright Data review uses a server-side backend so API keys stay out of the browser.</p>
             <label class="field" for="reviewerRepoUrl">
               <span>GitHub repository</span>
               <input id="reviewerRepoUrl" type="url" placeholder="https://github.com/org/project">
@@ -353,7 +369,7 @@
               </div>
             </details>
             <button id="addReviewerProject" class="secondary-button wide" type="button">Add project</button>
-            <p id="reviewerHint" class="hint">Draft review works without credentials. Live review fetches Bright Data evidence.</p>
+            <p id="reviewerHint" class="hint">Draft works without credentials. Public review fetches public evidence. Private Bright Data review fetches sponsor evidence.</p>
           </section>
 
           <section class="source-module">
@@ -380,8 +396,8 @@
             <details class="backend-drawer">
               <summary>Advanced: live review server</summary>
               <label class="field" for="liveApiUrl">
-                <span>Live review API URL</span>
-                <input id="liveApiUrl" type="url" placeholder="https://proofrank-ai-factory.vercel.app/api/review-project">
+                <span>Review API URL</span>
+                <input id="liveApiUrl" type="url" placeholder="https://proofrank-ai-factory.vercel.app/api/review-project-public">
               </label>
             </details>
 
@@ -406,7 +422,7 @@
                   <span>Demo transcript or pitch notes</span>
                   <textarea id="pitchTranscript" rows="7" placeholder="Paste the 45-60 second demo script here"></textarea>
                 </label>
-                <p class="hint">Browser-safe text analysis only. Speechmatics transcription belongs in private live mode.</p>
+                <p class="hint">Browser-safe text analysis only. Speechmatics transcription belongs in private review mode.</p>
                 <div class="pitch-actions">
                   <button id="loadPitchSample" class="text-button small" type="button">Use demo script</button>
                   <button id="analyzePitch" class="secondary-button small" type="button">Analyze pitch</button>

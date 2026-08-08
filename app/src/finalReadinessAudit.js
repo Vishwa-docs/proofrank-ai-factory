@@ -59,9 +59,9 @@ function mcpToolsProof(mcpTools = {}) {
 }
 
 function liveReceiptProof(liveReceipt = {}) {
-  if (!liveReceipt.ok) return "No signed executed Bright Data project receipt attached.";
+  if (!liveReceipt.ok) return "No signed executed Bright Data project evidence record attached.";
   return [
-    liveReceipt.runId || "run receipt",
+    liveReceipt.runId || "run record",
     liveReceipt.provider || "unknown-provider",
     liveReceipt.traceStatus || "unknown-trace",
     liveReceipt.hasSourceTrace ? "source trace" : "missing source trace",
@@ -97,7 +97,7 @@ export function buildFinalReadinessReport(state = {}) {
       label: "Public fallback app",
       passed: bool(state.publicFallback?.ok),
       proof: state.publicFallback?.evidence || state.publicFallback?.url || "Fallback app was not verified.",
-      action: "Deploy the public fallback app and confirm the Bright Data receipt strip is visible."
+      action: "Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
     }),
     gate({
       id: "release-video",
@@ -160,7 +160,7 @@ export function buildFinalReadinessReport(state = {}) {
     }),
     gate({
       id: "live-receipt",
-      label: "Signed executed Bright Data receipt",
+      label: "Signed executed Bright Data evidence record",
       passed:
         bool(state.liveReceipt?.ok) &&
         state.liveReceipt?.provider === "bright-data" &&
@@ -171,7 +171,7 @@ export function buildFinalReadinessReport(state = {}) {
         bool(state.liveReceipt?.signed) &&
         bool(state.liveReceipt?.signatureVerified),
       proof: liveReceiptProof(state.liveReceipt),
-      action: "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
+      action: "Run the actual project through MCP mode and export a signature-verified evidence record with executed Bright Data source, search, and discover traces."
     }),
     gate({
       id: "lablab-submission",

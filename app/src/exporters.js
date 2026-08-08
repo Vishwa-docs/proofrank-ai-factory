@@ -116,11 +116,11 @@ Hackathon judges, sponsor partner teams, accelerator reviewers, grant reviewers,
 
 ## Solution
 
-ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence reports with source-backed evidence, review risks, claim verdicts, and recommended diligence actions.
+ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence records with source-backed findings, review risks, claim verdicts, and recommended diligence actions.
 
 ## Bright Data Usage
 
-Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP scrape_as_markdown, search_engine, and discover, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery run in the receipt.
+Bright Data is the evidence acquisition layer. The fallback app implements server-side collection through Bright Data's Request API plus Remote MCP source collection, search, and discovery, with Web Scraper API, Web Unlocker, and CLI workflows prepared for native.builder live mode. Sponsor-fit credit requires an executed Bright Data source, search, and discovery run in the evidence record.
 
 ## Native.builder Usage
 
@@ -135,7 +135,7 @@ The competition app should be created and published through native.builder using
 - Bright Data evidence state: ${receipt.traceState}
 - Review lens: ${receipt.reviewFocus?.label || "General review"}
 - Review lens priority: ${receipt.reviewFocus?.detail || "Not specified"}
-- Evidence report: ${receipt.runReceipt?.runId || "Not issued"}
+- Evidence record: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Evidence package readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.displayVerdict}
@@ -180,7 +180,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence report, and export the sponsor-ready review memo.
+Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence record, and export the sponsor-ready review memo.
 
 ## External Tools
 
@@ -254,7 +254,7 @@ ${topRows || "No projects available yet."}
 
 ## Sponsor Review Notes
 
-ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe draft review, copy a replay link, and export the selected project memo. Live mode upgrades the same flow through the private Bright Data backend when reviewer access is present.
+ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe draft review, run a public repo/demo check, copy a replay link, and export the selected project memo. Private Bright Data review upgrades the same flow through the server-side backend when reviewer access is present.
 
 Bright Data remains the evidence layer. The room-level view shows which projects have executed source, search, and discovery evidence, and which projects only have sample or pending evidence. This lets sponsor judges separate actual live-web diligence from claims.
 `;

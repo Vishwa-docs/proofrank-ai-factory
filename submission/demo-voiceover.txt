@@ -2,7 +2,7 @@ ProofRank reviews public AI hackathon projects from their own links.
 
 Paste a GitHub repo and demo URL. Visitors get a browser-safe draft and copyable draft card immediately; private review sessions upgrade it with Bright Data evidence.
 
-The Bright Data evidence report is the centerpiece: source fetch, prior-art search, signal discovery, and a server-issued review record.
+The Bright Data evidence record is the centerpiece: source fetch, prior-art search, signal discovery, and a server-issued review record.
 
 ProofRank compares the field, separates claims from evidence, and can check a pasted demo script for pitch claims that still need Bright Data support.
 

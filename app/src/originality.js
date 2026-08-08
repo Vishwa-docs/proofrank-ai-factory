@@ -116,7 +116,7 @@ function buildDifferentiators(project = {}) {
   const differentiators = [];
 
   if (evidence.proofReceipt || text.includes("proof receipt") || text.includes("evidence receipt")) {
-    differentiators.push("Turns judging into evidence receipts instead of one-shot summaries.");
+    differentiators.push("Turns judging into evidence records instead of one-shot summaries.");
   }
 
   if (text.includes("tribunal") || (evidence.proofReceipt && evidence.lowCrowdOverlap)) {

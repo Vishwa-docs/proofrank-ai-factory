@@ -8,7 +8,7 @@ export const fixtureProjects = [
     title: "ProofRank",
     team: "SilverSpoon",
     summary:
-      "Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk.",
+      "Agentic submission truth auditor that ranks hackathon projects with source-backed evidence records for accessibility, originality, sponsor usage, and review risk.",
     eventUrl: EVENT_URL,
     submissionUrl: "",
     demoUrl: "https://proofrank-ai-factory.vercel.app/",
@@ -89,11 +89,11 @@ export const fixtureProjects = [
       },
       {
         id: "proofrank-final-receipt",
-        sourceType: "signed-receipt",
+        sourceType: "signed-record",
         sourceUrl: "submission/final-brightdata-receipt.json",
-        title: "Bright Data evidence receipt",
+        title: "Bright Data evidence record",
         excerpt:
-          "Final receipt includes Bright Data source, search_engine, and discover traces with server record confirmation.",
+          "Final evidence record includes Bright Data source, search_engine, and discover traces with server record confirmation.",
         collectedAt: "2026-08-07T20:05:29.345Z",
         collector: "ProofRank live reviewer",
         confidence: 0.95,
@@ -576,7 +576,7 @@ export const fixtureProjects = [
     title: "CivicTwin - Proof-Carrying Rule Twin",
     team: "Purrwolf",
     summary:
-      "Compiles official rules into evidence receipts so a multilingual small-business founder can see what changes when one operating choice changes.",
+      "Compiles official rules into evidence records so a multilingual small-business founder can see what changes when one operating choice changes.",
     eventUrl: EVENT_URL,
     submissionUrl:
       "https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits/purrwolf/civictwin-proof-carrying-rule-twin",

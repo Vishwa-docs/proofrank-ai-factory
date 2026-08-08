@@ -287,17 +287,23 @@ async function nativeBuilder() {
   const requiredCopy = [
     "ProofRank",
     "Bright Data",
-    "Review a public project",
-    "Evidence report",
-    "Live setup",
-    "Bright Data receipt present"
+    "Review public AI submissions",
+    "Add my project",
+    "View evidence",
+    "Readiness",
+    "Bright Data evidence attached"
   ].filter(Boolean);
   const staleCopy = [
     "pr-20260807t145909828z-553fb028",
     "Sponsor bundle executed",
     "Finalist-ready",
     "Submission-ready",
-    "Strong Pass"
+    "Strong Pass",
+    "Open built-in receipt",
+    "Built-in receipt",
+    "Live setup",
+    "Bright Data receipt present",
+    "Evidence report"
   ];
   const missingCopy = requiredCopy.filter((item) => !text.includes(item));
   const staleCopyFound = staleCopy.filter((item) => text.includes(item));
@@ -393,7 +399,7 @@ async function liveReceipt() {
 async function buildAuditState() {
   const fallback = await fetchText(fallbackUrl);
   const fallbackBundle = await fetchText(new URL("src/main.js", fallbackUrl).toString());
-  const fallbackRequiredCopy = ["Bright Data receipt present", "Review a public project", "Evidence report", "Create draft review"];
+  const fallbackRequiredCopy = ["Bright Data evidence attached", "Review public AI submissions", "View evidence", "Add my project"];
   const fallbackRenderedText = `${fallback.text || ""}\n${fallbackBundle.text || ""}`;
   const fallbackMissingCopy = fallbackRequiredCopy.filter((item) => !fallbackRenderedText.includes(item));
   const videoPath = path.join(root, "submission", "proofrank-demo.mp4");
@@ -424,7 +430,7 @@ async function buildAuditState() {
       missingCopy: fallbackMissingCopy,
       evidence:
         fallback.ok && fallbackBundle.ok && fallbackMissingCopy.length === 0
-          ? "ProofRank shell is deployed and the runtime bundle contains the refreshed Bright Data receipt UI."
+          ? "ProofRank shell is deployed and the runtime bundle contains the refreshed Evidence and Readiness UI."
           : fallback.ok && fallbackBundle.ok && fallbackMissingCopy.length > 0
             ? `Fallback bundle is deployed but missing refreshed copy: ${fallbackMissingCopy.join(", ")}.`
           : `root HTTP ${fallback.status || 0}; bundle HTTP ${fallbackBundle.status || 0}`

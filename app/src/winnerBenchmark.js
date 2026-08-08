@@ -41,15 +41,15 @@ const BENCHMARKS = [
     points: 16,
     test: hasDecisionOutput,
     proof: "Transforms public evidence into a ranked review action, not a generic summary.",
-    action: "Frame the result as a decision, score, audit receipt, or workflow artifact."
+    action: "Frame the result as a decision, score, evidence record, or workflow artifact."
   },
   {
     id: "executed-live-web",
     label: "Executed live-web bundle",
     points: 20,
     test: hasBrightDataSponsorProofBundle,
-    proof: "Bright Data source scrape, search_engine, and discover traces are executed and useful.",
-    action: "Run Bright Data source, search, and discovery traces, then export the evidence receipt."
+    proof: "Bright Data source collection, search, and discovery evidence are executed and useful.",
+    action: "Run Bright Data source, search, and discovery checks, then export the evidence record."
   },
   {
     id: "multi-tool-bright-data",
@@ -64,8 +64,8 @@ const BENCHMARKS = [
     label: "Judge-visible evidence trail",
     points: 16,
     test: hasVisibleProof,
-    proof: "Evidence items, claim checks, and receipt surfaces make verification inspectable.",
-    action: "Expose evidence snippets, trace provenance, limitations, and exportable receipts."
+    proof: "Evidence items, claim checks, and source details make verification inspectable.",
+    action: "Expose evidence snippets, source provenance, limitations, and exportable evidence records."
   },
   {
     id: "defensible-originality",

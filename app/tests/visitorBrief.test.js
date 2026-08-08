@@ -49,16 +49,46 @@ const receiptProject = {
   );
   assert.match(brief.rows[0].detail, /URL format accepted/i);
   assert.match(brief.rows[1].detail, /repo content, demo reachability, functionality, and Bright Data evidence/i);
-  assert.match(brief.rows[2].detail, /scrape_as_markdown/);
-  assert.match(brief.rows[2].detail, /search_engine/);
+  assert.match(brief.rows[2].detail, /Source fetch/);
+  assert.match(brief.rows[2].detail, /web search/);
   assert.match(brief.rows[2].detail, /discover/);
-  assert.match(brief.rows[2].detail, /planned, not executed/i);
+  assert.match(brief.rows[2].detail, /planned, not run yet/i);
   assert.equal(brief.actions[0].label, "Copy draft link");
-  assert.equal(brief.actions[1].label, "Run live evidence");
+  assert.equal(brief.actions[1].label, "Run public review");
   assert.equal(brief.actions[2].label, "Export draft memo");
 
   const fullText = JSON.stringify(brief);
   assert.doesNotMatch(fullText, /verified|reachable|passed|certified|signed proof|submission-ready|finalist-ready/i);
+}
+
+{
+  const brief = buildVisitorBrief({
+    ...draftProject,
+    evidence: {
+      ...draftProject.evidence,
+      hasGithub: true,
+      hasPublicDemo: true,
+      repoMetadataCollected: true,
+      brightDataTraceStatus: ""
+    },
+    brightDataTraces: [
+      {
+        provider: "direct",
+        traceStatus: "executed",
+        tool: "direct-fetch",
+        queryOrUrl: "https://github.com/brightdata/brightdata-mcp"
+      }
+    ]
+  });
+
+  assert.equal(brief.variant, "review");
+  assert.equal(brief.badge, "Public evidence");
+  assert.equal(brief.title, "Public review ready");
+  assert.match(brief.summary, /real public repo\/demo evidence/i);
+  assert.match(brief.summary, /private Bright Data evidence/i);
+  assert.equal(brief.actions[0].label, "Open evidence");
+  assert.equal(brief.actions[1].label, "Private review");
+  assert.equal(brief.actions[2].label, "Export memo");
 }
 
 {

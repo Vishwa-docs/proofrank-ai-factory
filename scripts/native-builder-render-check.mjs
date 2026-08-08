@@ -24,13 +24,15 @@ const wantedInPage = [
   "ProofRank",
   "Bright Data",
   "GitHub repository",
-  "Review a public project",
-  "Create draft review",
+  "Audit a public AI project",
+  "Add my project",
+  "Replay sample",
   "Copy draft link",
-  "Evidence report",
-  "Bright Data receipt present"
+  "View evidence",
+  "Readiness",
+  "Bright Data evidence attached"
 ].filter(Boolean);
-const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Create draft review", "Evidence report"];
+const wantedInViewport = ["ProofRank", "Bright Data", "GitHub repository", "Add my project", "Replay sample"];
 const forbiddenStrings = [
   "Signed proof",
   "WIN",
@@ -40,6 +42,11 @@ const forbiddenStrings = [
   "Sponsor bundle executed",
   "pr-20260807t145909828z-553fb028",
   "Demo Evidence",
+  "Open built-in receipt",
+  "Built-in receipt",
+  "Live setup",
+  "Bright Data receipt present",
+  "Evidence report",
   "AUDIT CONTROLS",
   "REVIEWER INTAKE",
   "Submission URL",

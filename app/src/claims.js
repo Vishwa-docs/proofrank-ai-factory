@@ -62,7 +62,7 @@ export function buildClaimLedger(project) {
       status: evidence.proofReceipt && sponsorProofBundle ? "Supported" : evidence.proofReceipt ? "Weak Evidence" : "Needs Evidence",
       evidence: evidenceText(
         evidence.proofReceipt && sponsorProofBundle,
-        "Receipt includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
+        "Evidence record includes source-backed evidence plus executed Bright Data source, search, and discovery traces.",
         "Add timestamped Bright Data source, search, and discovery traces with confidence labels."
       )
     },

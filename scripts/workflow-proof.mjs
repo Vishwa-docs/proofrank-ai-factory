@@ -112,7 +112,7 @@ try {
   await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
   await page.click("#quickAddReviewerProject");
   await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
-  await page.waitForFunction(() => /Bright Data receipt present/i.test(document.querySelector("#liveProofStrip")?.textContent || ""));
+  await page.waitForFunction(() => /Bright Data evidence attached/i.test(document.querySelector("#liveProofStrip")?.textContent || ""));
   await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
   await page.fill("#quickDemoUrl", "https://brightdata.com/");
   await page.click("#quickAddReviewerProject");
@@ -126,8 +126,8 @@ try {
       briefReady: Boolean(
         brief &&
           /Draft review created/i.test(brief.textContent || "") &&
-          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(brief.textContent || "") &&
-          /Run live evidence/i.test(brief.textContent || "")
+          /Source fetch, web search, and discovery are planned, not run yet/i.test(brief.textContent || "") &&
+          /Run public review/i.test(brief.textContent || "")
       ),
       briefText: brief?.textContent?.replace(/\s+/g, " ").trim() || ""
     };
@@ -240,17 +240,17 @@ try {
     proof.draftVisitorBriefReadyBeforeReceipt === true &&
     /Link-only draft/i.test(proof.draftVisitorBriefText) &&
     /repo content, demo reachability, functionality, and Bright Data evidence/i.test(proof.draftVisitorBriefText) &&
-    /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(proof.draftVisitorBriefText) &&
+    /Source fetch, web search, and discovery are planned, not run yet/i.test(proof.draftVisitorBriefText) &&
     /Link-only/i.test(proof.draftReviewCardText) &&
-    /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(proof.draftReviewCardText) &&
+    /Source fetch, web search, and discovery are planned, not run yet/i.test(proof.draftReviewCardText) &&
     /Draft review only/i.test(proof.copiedDraftCard) &&
     /no repo\/demo fetch|not fetched/i.test(proof.copiedDraftCard) &&
     /Bright Data evidence pending|no Bright Data evidence yet/i.test(proof.copiedDraftCard) &&
     !/verified|reachable|passed|certified|signed proof/i.test(proof.copiedDraftCard) &&
     proof.draftReviewCardGoneForReceipt === true &&
     proof.evidenceVisitorBriefReady === true &&
-    /Built-in receipt:\s*ProofRank/i.test(proof.brightProof) &&
-    /Bright Data receipt present/i.test(proof.brightProof) &&
+    /Sample evidence record:\s*ProofRank/i.test(proof.brightProof) &&
+    /Bright Data evidence attached/i.test(proof.brightProof) &&
     proof.externalSampleReady === true &&
     proof.brightPathReady === true &&
     proof.sponsorMatrixRows >= 1 &&
@@ -263,8 +263,8 @@ try {
     /not video verification/i.test(proof.pitchReviewText) &&
     /Bright Data evidence status stays separate/i.test(proof.pitchReviewText) &&
     proof.traceTimelineSteps === 4 &&
-    /Bright Data evidence path/i.test(proof.receiptText) &&
-    /Draft.*Live evidence.*Built-in receipt/i.test(proof.modeLadderText) &&
+    /Evidence checks/i.test(proof.receiptText) &&
+    /Draft.*Public review.*Sample evidence record/i.test(proof.modeLadderText) &&
     proof.exportedFiles.length === 3 &&
     proof.forbiddenVisible.length === 0 &&
     messages.length === 0;

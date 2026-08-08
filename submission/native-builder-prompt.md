@@ -25,7 +25,7 @@ Create a functional deployed app, not a landing page. The first screen must be a
 8. Review shows What to fix next, the scorecard, field comparison, Review Panel, Winner Benchmark, Similarity Check, and Claim Check.
 9. Links tab shows full project intake, event collection, advanced live review API, and readiness checklist.
 10. Links tab also includes a collapsed Presentation check. A user can paste a demo transcript or pitch notes, analyze them locally, and see which presentation claims still need evidence.
-11. Evidence tab shows source-backed Evidence Report and a trace table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
+11. Evidence tab shows source-backed evidence records and a source table that distinguishes executed Bright Data, direct fallback, planned, claimed, pending, and failed collection.
 12. User exports CSV, all evidence records JSON, selected evidence record JSON, and review memo Markdown.
 
 ## Required UI
@@ -33,24 +33,24 @@ Create a functional deployed app, not a landing page. The first screen must be a
 Use a calm lablab-style event layout. The first viewport must explain the project before exposing operational controls.
 
 - Sticky top bar with ProofRank mark, Audit project, Start guided review, Projects, and Export actions.
-- First viewport with event metadata, a large ProofRank headline, a 60-second audit value statement, a GitHub repository field, a demo app field, Create draft audit button, Copy draft link button, one safety sentence, a collapsed More options drawer, and one compact current-selection card.
-- The first viewport must not look crowded. Put samples, review lens, starter projects, room link, built-in receipt, external sample, and Bright Data setup actions inside More options.
-- Decision card shows the selected built-in receipt, Bright Data receipt present, evidence record ID `pr-20260807t200529345z-23568b05`, final lablab submission pending, and Native app published. Do not imply the final lablab submission is already complete. Keep detailed numeric scoring inside the score breakdown.
-- Review tab starts with What to fix next before the long scorecard. It shows score if judged today for evidence-backed projects, but for visitor-created drafts it must say Draft / No ranking score until live evidence runs.
-- Result includes a compact Bright Data evidence report above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence record ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
-- Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet. Draft projects must not show High risk, Review score 10, Submission-ready, or any final verdict before live evidence runs.
+- First viewport with event metadata, a large ProofRank headline, a 60-second audit value statement, a GitHub repository field, a demo app field, a three-choice review-depth control (Draft, Public review, Private Bright Data review), Add my project button, Replay sample button, Copy draft link button, one safety sentence, a collapsed Samples and sharing drawer, and one compact current-selection card.
+- The first viewport must not look crowded. Put samples, review lens, starter projects, blank test room link, ProofRank sample evidence record, external sample, and Bright Data setup actions inside More options.
+- Decision card shows the selected ProofRank sample evidence record, Bright Data evidence attached, evidence record ID `pr-20260807t200529345z-23568b05`, final lablab submission pending, and Native app published. Do not imply the final lablab submission is already complete. Keep detailed numeric scoring inside the score breakdown.
+- Review tab starts with What to fix next before the long scorecard. It shows score if judged today for evidence-backed projects, but for visitor-created drafts it must say Draft / No ranking score until public or sponsor evidence runs.
+- Result includes a compact Bright Data evidence panel above the collapsible analysis drawers. It must show the exact sponsor evidence run (`scrape_as_markdown`, `search_engine`, `discover`), the evidence record ID, and the judge-safe replay state. This strip should explain that planned, claimed, direct, failed, pending, or event-intake-only traces do not count.
+- Result includes a Draft Review Card only for visitor-created draft projects. It must say Link-only, GitHub URL accepted/content not fetched, demo URL supplied/reachability not checked, and Bright Data evidence pending. Its copied summary must include the limitation that no repo/demo fetch, functionality check, or Bright Data evidence has run yet. Draft projects must not show High risk, Review score 10, Submission-ready, or any final verdict before public or sponsor evidence runs.
 - If the user runs Presentation check, Result shows a compact pitch evidence panel. It must say the source is pasted transcript text, not video verification, and that Bright Data evidence status stays separate.
 - Result includes an Against the field panel with ProofRank beside current AI Factory project patterns such as Half-Life, CivicTwin, Askable, and Querypex. It should show domain, Bright Data role, decision artifact, and evidence visibility so judges understand that ProofRank is the review operations product.
-- Tabs below the first viewport: Review, Projects, Evidence, Live setup.
-- Review shows What to fix next, selected project summary, score tiles, evidence route, Review Panel, Prize Fit, Similarity Check, and Claim Check.
+- Tabs below the first viewport: Review, Projects, Evidence, Readiness.
+- Review shows What to fix next, selected project summary, score tiles, evidence route, Review Panel, Bright Data prize readiness, Similarity Check, and Claim Check.
 - Projects shows filters, ranked projects, Evidence checklist, and Category map.
-- Evidence shows Evidence Receipt source snippets, confidence, limitations, trace-state table, and live collection plan.
-- Links contains Event URL, Live review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project` as the public live-review API example; do not prefill it on a Native.builder page unless the judge has a tokenized replay session.
+- Evidence shows source snippets, confidence, limitations, source-state table, and live collection plan.
+- Readiness contains Event URL, Review API URL in an Advanced drawer, keyboard-accessible HTML upload, GitHub/deployed-app intake, collapsed Presentation check, and readiness checklist. Use `https://proofrank-ai-factory.vercel.app/api/review-project-public` as the public review API example and `https://proofrank-ai-factory.vercel.app/api/review-project` as the private sponsor endpoint when the judge has a tokenized replay session.
 - Responsive mobile layout that stacks panels without overlapping text.
 - Cards should have 8px radius or less.
 - Use a varied palette: white, charcoal, teal, blue, amber, red, and green.
 
-Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links. Advanced live settings belong in Links. Use ProofRank as the selected built-in Bright Data receipt, but do not present it as a self-awarded win. Use Bright Data receipt present and final submission pending copy instead of old finalist/winner/sponsor-bundle finality labels or claims that draft reviews fetch repository contents.
+Do not expose old audit controls, target URL forms, live settings, reviewer intake, or the old cockpit layout above the tabs. The first screen must start with public project links and make it unmistakable that other builders can test their own repo/demo. Advanced live settings belong in Readiness. Use ProofRank as the selected sample evidence record, but do not present it as a self-awarded win. Use Bright Data evidence attached and final submission pending copy instead of old finalist/winner/sponsor-bundle finality labels or claims that draft reviews fetch repository contents.
 
 ## Claim Check
 
@@ -231,7 +231,7 @@ Each server-issued project review should also include `runReceipt` with:
 Implement:
 
 - Judge queue CSV
-- All evidence receipts JSON
+- All evidence records JSON
 - Selected receipt JSON
 - ProofRank review memo Markdown
 

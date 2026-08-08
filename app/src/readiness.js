@@ -112,7 +112,7 @@ export function buildReadiness(project = {}, context = {}) {
       label: "Bright Data evidence bundle",
       passed: sponsorProofReady,
       detail: sponsorProofReady
-        ? "Evidence report contains executed Bright Data source scrape, search, and discovery traces."
+        ? "Evidence view contains executed Bright Data source scrape, search, and discovery traces."
         : `Current trace state is ${traceState}; evidence bundle needs executed source scrape, search, and discovery traces.`,
       proof: sponsorProofReady
         ? "provider=bright-data with executed source scrape, search, and discovery traces"
@@ -184,7 +184,7 @@ export function buildReadiness(project = {}, context = {}) {
       label: "No visible secret risk",
       required: false,
       passed: evidence.secretRiskVisible !== true,
-      detail: "Public repos and receipts should not expose API keys, tokens, or private account state.",
+      detail: "Public repos and evidence records should not expose API keys, tokens, or private account state.",
       proof: evidence.secretRiskVisible ? "Potential secret exposure flagged." : "No visible secret-risk signal in current evidence.",
       action: "Remove any visible secrets before final judging."
     }),
@@ -194,8 +194,8 @@ export function buildReadiness(project = {}, context = {}) {
       required: false,
       passed: Boolean(evidence.proofReceipt),
       detail: "A review package should include scores, claim checks, evidence rows, review panel, and similarity findings.",
-      proof: evidence.proofReceipt ? "Evidence report surface available." : "Evidence export not available.",
-      action: "Export the selected receipt and Markdown memo after the live run."
+      proof: evidence.proofReceipt ? "Evidence view available." : "Evidence export not available.",
+      action: "Export the selected evidence record and Markdown memo after the live run."
     })
   ];
 

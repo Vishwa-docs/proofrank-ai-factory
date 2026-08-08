@@ -7,7 +7,7 @@ const baseState = {
   publicFallback: {
     ok: true,
     url: "https://vishwa-docs.github.io/proofrank-ai-factory/",
-    evidence: "ProofRank with Bright Data receipt strip is live."
+    evidence: "ProofRank with Bright Data evidence strip is live."
   },
   releaseVideo: {
     ok: true,

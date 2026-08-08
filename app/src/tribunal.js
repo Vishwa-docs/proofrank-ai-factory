@@ -33,8 +33,8 @@ function sponsorJudge(project) {
     reasons: compactReasons([
       evidence.brightDataRole === "agentic" ? "Agentic Bright Data role is visible." : "",
       tools.length ? `${tools.join(", ")} are referenced.` : "",
-      sponsorProofBundle ? "Receipt includes executed source, search, and discovery traces." : executedBrightTrace ? "Receipt includes partial executed Bright Data traces." : "",
-      evidence.proofReceipt ? "Output is framed as an evidence receipt rather than a generic summary." : ""
+      sponsorProofBundle ? "Evidence record includes executed source, search, and discovery traces." : executedBrightTrace ? "Evidence record includes partial executed Bright Data traces." : "",
+      evidence.proofReceipt ? "Output is framed as an evidence record rather than a generic summary." : ""
     ]),
     objections: compactReasons([
       !executedBrightTrace ? `Bright Data trace is ${traceState}, not executed.` : "",

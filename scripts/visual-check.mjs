@@ -157,7 +157,7 @@ for (const spec of [
       (await page.evaluate(() => document.querySelector('[data-section-panel="setup"]')?.classList.contains("is-active"))) &&
       (await tourTargetVisible(page, "#modeSelect"));
     if (!tourStepFive) {
-      throw new Error("Guided review step 5 did not switch to Live setup and highlight review mode.");
+      throw new Error("Guided review step 5 did not switch to Readiness and highlight review mode.");
     }
     await page.click("#tourClose");
     await page.click("#reviewOptions summary");
@@ -247,17 +247,17 @@ for (const spec of [
     const repoDescribed = await page.getAttribute("#quickRepoUrl", "aria-describedby");
     const demoDescribed = await page.getAttribute("#quickDemoUrl", "aria-describedby");
     if (repoDescribed !== "quickRepoHelp" || demoDescribed !== "quickDemoHelp") {
-      throw new Error("Hero review inputs are missing persistent QTip descriptions.");
+      throw new Error("Hero review inputs are missing persistent field help.");
     }
     await page.click("#loadSampleProject");
     await page.waitForTimeout(200);
     const verifiedSampleSelected = await page.evaluate(() => {
       const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
       const strip = document.querySelector("#liveProofStrip")?.textContent || "";
-      return title === "ProofRank" && /Built-in receipt:\s*ProofRank/i.test(strip) && /Bright Data receipt present/i.test(strip);
+      return title === "ProofRank" && /Sample evidence record:\s*ProofRank/i.test(strip) && /Bright Data evidence attached/i.test(strip);
     });
     if (!verifiedSampleSelected) {
-      throw new Error("Built-in receipt did not select the Bright Data review record.");
+      throw new Error("ProofRank sample did not select the Bright Data review record.");
     }
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
@@ -301,7 +301,7 @@ for (const spec of [
           /Link-only/i.test(text) &&
           /URL accepted, content not fetched/i.test(text) &&
           /Bright Data\s*Evidence pending/i.test(text) &&
-          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text)
+          /Source fetch, web search, and discovery are planned, not run yet/i.test(text)
       );
     });
     if (!draftCardReady) {
@@ -315,13 +315,13 @@ for (const spec of [
       return (
         /Draft created/i.test(combined) &&
         /Collect evidence/i.test(combined) &&
-        /No ranking score until live evidence runs/i.test(combined) &&
+        /No ranking score until public or sponsor evidence runs/i.test(combined) &&
         !/High risk/i.test(combined) &&
         !/Review score\s*10/i.test(combined)
       );
     });
     if (!draftVerdictNeutral) {
-      throw new Error("Visitor draft still looked like a punitive scored review before live evidence.");
+      throw new Error("Visitor draft still looked like a punitive scored review before public or sponsor evidence.");
     }
     const draftBriefReady = await page.evaluate(() => {
       const brief = document.querySelector(".visitor-brief.draft");
@@ -332,8 +332,8 @@ for (const spec of [
           /Link-only draft/i.test(text) &&
           /Draft review created/i.test(text) &&
           /repo content, demo reachability, functionality, and Bright Data evidence/i.test(text) &&
-          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text) &&
-          /Run live evidence/i.test(text) &&
+          /Source fetch, web search, and discovery are planned, not run yet/i.test(text) &&
+          /Run public review/i.test(text) &&
           !forbidden
       );
     });
@@ -365,10 +365,10 @@ for (const spec of [
     const quickLiveSwitchWarned = await page.evaluate(() => {
       const status = document.querySelector("#statusLine")?.textContent || "";
       const mode = document.querySelector("#modeSelect")?.value || "";
-      return mode === "demo" && /switched to draft review/i.test(status);
+      return mode === "demo" && /Private Bright Data review needs private access/i.test(status) && /Draft review ran instead/i.test(status);
     });
     if (!quickLiveSwitchWarned) {
-      throw new Error("Hero quick review did not clearly warn when switching live mode back to draft review.");
+      throw new Error("Hero quick review did not clearly warn when switching private Bright Data review back to public review.");
     }
     const reviewRoomReady = await page.evaluate(() => {
       const room = document.querySelector("#reviewRoomStats");
@@ -388,7 +388,7 @@ for (const spec of [
     await page.click('#rankedList [data-id="proofrank"]');
     const draftCardGoneForReceipt = await page.evaluate(() => !document.querySelector(".draft-review-card"));
     if (!draftCardGoneForReceipt) {
-      throw new Error("Draft review card stayed visible after selecting the built-in Bright Data receipt.");
+      throw new Error("Draft review card stayed visible after selecting the ProofRank sample evidence record.");
     }
     const receiptBriefReady = await page.evaluate(() => {
       const brief = document.querySelector(".visitor-brief.evidence");
@@ -423,7 +423,7 @@ for (const spec of [
       return button?.getAttribute("aria-expanded") === "true" && panel && getComputedStyle(panel).display !== "none";
     });
     if (!qtipVisible) {
-      throw new Error("Mobile GitHub QTip did not open from the keyboard/clickable help control.");
+      throw new Error("Mobile GitHub help did not open from the keyboard/clickable help control.");
     }
     await page.click(".qmark[aria-label='GitHub repo help']");
     await page.waitForTimeout(100);
@@ -432,7 +432,7 @@ for (const spec of [
       return button?.getAttribute("aria-expanded") === "false";
     });
     if (!qtipClosed) {
-      throw new Error("Mobile GitHub QTip did not toggle closed.");
+      throw new Error("Mobile GitHub help did not toggle closed.");
     }
     await page.click(".qmark[aria-label='GitHub repo help']");
     await page.keyboard.press("Escape");
@@ -442,7 +442,7 @@ for (const spec of [
       return button?.getAttribute("aria-expanded") === "false";
     });
     if (!qtipEscapeClosed) {
-      throw new Error("Mobile GitHub QTip did not close on Escape.");
+      throw new Error("Mobile GitHub help did not close on Escape.");
     }
     await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
     await page.fill("#quickDemoUrl", "https://brightdata.com/");
@@ -451,7 +451,7 @@ for (const spec of [
     const mobileDraftReady = await page.evaluate(() => {
       const row = document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
       const hint = document.querySelector("#quickReviewHint")?.textContent || "";
-      return Boolean(row) && /Live setup collects Bright Data evidence/i.test(hint);
+      return Boolean(row) && /Public review collects real evidence/i.test(hint);
     });
     if (!mobileDraftReady) {
       throw new Error("Mobile visitor path did not create a draft review with honest Bright Data upgrade copy.");
@@ -471,8 +471,8 @@ for (const spec of [
         brief &&
           /Link-only draft/i.test(text) &&
           /Draft review created/i.test(text) &&
-          /scrape_as_markdown \+ search_engine \+ discover planned, not executed/i.test(text) &&
-          /Run live evidence/i.test(text)
+          /Source fetch, web search, and discovery are planned, not run yet/i.test(text) &&
+          /Run public review/i.test(text)
       );
     });
     if (!mobileBriefReady) {
@@ -582,7 +582,7 @@ const failures = results.flatMap((result) => {
   if (result.metrics.starterCount !== 3) problems.push(`${result.spec.name}: starter projects did not render`);
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
   if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
-  if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence report/live setup actions did not render`);
+  if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/private review actions did not render`);
   if (result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
   if (result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
   if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
@@ -602,7 +602,7 @@ const failures = results.flatMap((result) => {
     problems.push("desktop: presentation check rows did not render after analysis");
   }
   if (result.metrics.traceTimelineSteps !== 4) problems.push(`${result.spec.name}: Bright Data run timeline did not render`);
-  if (result.metrics.qtipButtonCount < 2) problems.push(`${result.spec.name}: QTip help buttons did not render`);
+  if (result.metrics.qtipButtonCount < 2) problems.push(`${result.spec.name}: field help buttons did not render`);
   if (!result.metrics.roomLinkReady) problems.push(`${result.spec.name}: room link copy actions did not render`);
   if (!result.metrics.publicRoomNoteReady) problems.push(`${result.spec.name}: public test room note did not render`);
   if (result.metrics.forbiddenVisible.length) {

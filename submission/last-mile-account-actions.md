@@ -26,7 +26,7 @@ Current Native.builder state:
 - ProofRank MVP surface generated.
 - Public Native.builder app is published.
 - Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
-- Current local/fallback first viewport shows public project links, `Review a public project`, `Evidence report`, and `Bright Data receipt present`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
+- Current local/fallback first viewport shows public project links, `Add my project`, `View evidence`, and `Bright Data evidence attached`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
 - If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the render check uses a cache-busting URL and must be rerun after republish.
 - Use the Native.builder URL above as the primary submission URL.
 
@@ -58,7 +58,7 @@ Native.builder app URL: https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/
 GitHub URL: https://github.com/Vishwa-docs/proofrank-ai-factory
 Fallback app URL: https://proofrank-ai-factory.vercel.app/
 Demo video URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4
-Final Bright Data receipt URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
+Final Bright Data evidence record URL: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/final-brightdata-receipt.json
 Release assets: https://github.com/Vishwa-docs/proofrank-ai-factory/releases/tag/proofrank-submission-v1
 ```
 
@@ -71,13 +71,13 @@ ProofRank is a Bright Data evidence workspace for AI hackathon judges. It review
 Bright Data usage:
 
 ```text
-Bright Data is the evidence acquisition layer. ProofRank's verified sponsor receipt uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery evidence run. Evidence receipts show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
+Bright Data is the evidence acquisition layer. ProofRank's verified sponsor evidence record uses Bright Data Remote MCP scrape_as_markdown, search_engine, and discover as the executed source/search/discovery evidence run. Evidence records show trace state, provider, byte count, content hash, trace digest, and server-record status; sponsor-fit credit requires executed Bright Data traces, not merely planned or claimed rows. The Evidence Route exposes whether that gate has actually passed, while the Similarity Check uses Bright Data search and discover for field-overlap and prior-art review. Web Scraper API, Web Unlocker, and CLI-compatible collectors are prepared expansion paths for the native.builder live workflow.
 ```
 
 How native.builder was used:
 
 ```text
-native.builder generated and refined the ProofRank application structure, dashboard UI, stateful review workflow, Claim Check, Evidence Receipt panel, export actions, responsive layout, and public deployment from the prepared product brief.
+native.builder generated and refined the ProofRank application structure, dashboard UI, stateful review workflow, Claim Check, Evidence panel, export actions, responsive layout, and public deployment from the prepared product brief.
 ```
 
 ## 4. After Submission

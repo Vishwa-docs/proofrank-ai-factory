@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-08-08T08:28:56.103Z",
+  "generatedAt": "2026-08-08T09:02:24.096Z",
   "gitHead": "",
   "canSubmit": false,
-  "requiredPassed": 9,
+  "requiredPassed": 8,
   "requiredTotal": 11,
   "optionalPassed": 2,
   "optionalTotal": 2,
-  "score": 83,
+  "score": 75,
   "gates": [
     {
       "id": "public-fallback",
       "label": "Public fallback app",
       "required": true,
-      "status": "passed",
-      "proof": "ProofRank shell is deployed and the runtime bundle contains the refreshed Bright Data receipt UI.",
-      "action": "Deploy the public fallback app and confirm the Bright Data receipt strip is visible."
+      "status": "needs-action",
+      "proof": "Fallback bundle is deployed but missing refreshed copy: Bright Data evidence attached, View evidence, Add my project.",
+      "action": "Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
     },
     {
       "id": "release-video",
@@ -82,11 +82,11 @@
     },
     {
       "id": "live-receipt",
-      "label": "Signed executed Bright Data receipt",
+      "label": "Signed executed Bright Data evidence record",
       "required": true,
       "status": "passed",
       "proof": "pr-20260808t082734693z-a91a849a / bright-data / executed / source trace / search_engine / discover / signature verified",
-      "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
+      "action": "Run the actual project through MCP mode and export a signature-verified evidence record with executed Bright Data source, search, and discover traces."
     },
     {
       "id": "lablab-submission",
@@ -114,8 +114,9 @@
     }
   ],
   "nextActions": [
+    "Deploy the public fallback app and confirm the Bright Data evidence strip is visible.",
     "Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL.",
     "Submit from the authenticated team-owner lablab.ai account."
   ],
-  "summary": "Not final-ready: 9/11 required gates checked. Next action: Republish and verify the Native.builder app with the current prompt, then use its public nativelyai.app URL."
+  "summary": "Not final-ready: 8/11 required gates checked. Next action: Deploy the public fallback app and confirm the Bright Data evidence strip is visible."
 }

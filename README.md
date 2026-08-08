@@ -2,9 +2,9 @@
 
 ProofRank is an agentic submission truth auditor for hackathons, accelerators, grant programs, and sponsor reviews.
 
-Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with evidence reports for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
+Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with evidence records for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
-The dashboard now includes a Prize Fit panel that makes the Bright Data sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible evidence, defensible originality, public workflow, and native.builder primary deployment.
+The dashboard now includes a Bright Data prize readiness panel that makes the sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible evidence, defensible originality, public workflow, and native.builder primary deployment.
 
 ## Why This Exists
 
@@ -21,8 +21,8 @@ Bright Data is the load-bearing evidence layer in the intended live workflow:
 - SERP checks title, team, and problem-statement similarity.
 - Server-side live runs enforce `PROOFRANK_MAX_BRIGHTDATA_CALLS` so credentialed demos stay bounded under the user-confirmed spend cap.
 - Public live backends can require `PROOFRANK_REVIEW_TOKEN`, restrict `PROOFRANK_ALLOWED_ORIGINS`, and reject URLs outside `PROOFRANK_ALLOWED_HOSTS` before Bright Data is called.
-- Every receipt stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
-- Live project reviews issue a run receipt with replay command, trace digest, and optional HMAC signature via `PROOFRANK_RECEIPT_SIGNING_SECRET`.
+- Every evidence record stores trace state, provider, byte count, and content hash so sponsor reviewers can separate executed Bright Data evidence from planned, claimed, direct, or failed collection.
+- Live project reviews issue a server run record with replay command, trace digest, and optional HMAC signature via `PROOFRANK_RECEIPT_SIGNING_SECRET`.
 - Winner Benchmark gaps tell the team exactly which Bright Data prize signals still need work before submission.
 
 The local app also includes demo fixtures for reliable judging if credentials are not available.
@@ -86,7 +86,7 @@ npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 ```
 
-Generate the signed final Bright Data evidence report after the MCP smoke passes:
+Generate the final Bright Data evidence record after the MCP smoke passes:
 
 ```bash
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -95,7 +95,7 @@ PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt 
 `final:receipt` forces MCP collection by default and fails unless the selected
 project has an executed Bright Data source scrape trace, an executed
 `search_engine` trace, an executed `discover` trace, a trace digest that matches
-the receipt contents, and a signature verified with
+the evidence record contents, and a signature verified with
 `PROOFRANK_RECEIPT_SIGNING_SECRET`.
 
 Direct debugging is available with `--allow-direct`; it writes to a `/tmp`
@@ -113,13 +113,13 @@ Start the local API used by the browser UI:
 npm run live:server
 ```
 
-Then open the app, switch collection mode to `Bright Data live`, keep the live
+Then open the app, switch collection mode to `Private Bright Data review`, keep the private
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
-GitHub repo plus deployed app URL. `Create draft audit` validates public links in the browser; `Run live review` calls the sibling
+GitHub repo plus deployed app URL. `Add my project` creates a link-only draft, `Run public review` uses the public direct endpoint for GitHub/demo evidence, and `Run Bright Data` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the
-project receipt still needs the full Bright Data sponsor evidence bundle: source
+project record still needs the full Bright Data sponsor evidence bundle: source
 scrape, `search_engine`, and `discover`.
 
 The full verifier also starts a temporary static server and runs a smoke test:
@@ -185,14 +185,14 @@ Built and verified:
 - Similarity Check with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`
-- Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`; republish it with `submission/native-builder-prompt.md` to sync the latest polished UI and receipt ID before final submission.
+- Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`; republish it with `submission/native-builder-prompt.md` to sync the latest polished UI and evidence record ID before final submission.
 - Bright Data setup and submission copy in `submission/`
 - Live API deployment handoff in `submission/deploy-live-api.md`
 - Demo video source assets can be generated with `scripts/create_demo_video.sh`
 - Operator handoff for account-gated final steps in `submission/operator-handoff.md`
 - Redacted Bright Data account authentication check with `npm run brightdata:auth-check`
-- Server-issued run receipts with optional HMAC signatures for live project reviews
-- One-command final Bright Data receipt writer at `npm run final:receipt`
+- Server-issued run records with optional HMAC signatures for live project reviews
+- One-command final Bright Data evidence record writer at `npm run final:receipt`
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 - Machine-readable final readiness audit at `submission/final-readiness-audit.json`
 - Responsive visual check covering 1440, 768, 414, 390, 375, and 320 px viewports
@@ -216,5 +216,5 @@ Account-gated work still requiring the team owner:
 
 - Submit the final project from the authenticated lablab.ai team-owner account.
 - Apply the `AIFACTORY26` Builder Plan promo code if Native.builder prompts for plan access later.
-- Keep the Bright Data evidence receipt in the final submission materials.
+- Keep the Bright Data evidence record in the final submission materials.
 - Paste the Native.builder URL into the lablab.ai submission as the primary app URL.

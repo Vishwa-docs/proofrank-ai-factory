@@ -4,7 +4,7 @@
 
 Bright Data-powered public AI product diligence.
 
-Hackathon wedge: verify and rank AI Factory submissions with evidence receipts.
+Hackathon wedge: verify and rank AI Factory submissions with evidence records.
 
 ## Slide 2 - Problem
 

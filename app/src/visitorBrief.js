@@ -21,8 +21,17 @@ function hasBrightDataBundle(project = {}) {
   return source && search && discover;
 }
 
+function hasDirectEvidence(project = {}) {
+  return (
+    project.evidence?.repoMetadataCollected === true ||
+    project.evidence?.hasGithub === true ||
+    project.evidence?.hasPublicDemo === true ||
+    (project.brightDataTraces || []).some((trace) => trace.provider === "direct" && String(trace.traceStatus || "").toLowerCase() === "executed")
+  );
+}
+
 function isDraft(project = {}) {
-  return String(project.id || "").startsWith("review-") && !hasBrightDataBundle(project);
+  return String(project.id || "").startsWith("review-") && !hasBrightDataBundle(project) && !hasDirectEvidence(project);
 }
 
 export function buildVisitorBrief(project = {}) {
@@ -34,7 +43,7 @@ export function buildVisitorBrief(project = {}) {
       variant: "draft",
       badge: "Link-only draft",
       title: "Draft review created",
-      summary: `${title} is in the review queue. It is useful for sharing and triage, but it is not live evidence yet.`,
+      summary: `${title} is in the review queue. It is useful for sharing and triage, but it is not collected evidence yet.`,
       rows: [
         {
           label: "What was checked",
@@ -46,17 +55,45 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "Bright Data plan",
-          detail: "scrape_as_markdown + search_engine + discover planned, not executed."
+          detail: "Source fetch, web search, and discovery are planned, not run yet."
         },
         {
           label: "Best next click",
-          detail: "Share the draft link, then run private Bright Data source, search, and discovery collection."
+          detail: "Share the draft link, then run public review or private Bright Data source, search, and discovery collection."
         }
       ],
       actions: [
         { label: "Copy draft link", action: "copy" },
-        { label: "Run live evidence", action: "live" },
+        { label: "Run public review", action: "public" },
         { label: "Export draft memo", action: "export" }
+      ]
+    };
+  }
+
+  if (String(project.id || "").startsWith("review-") && hasDirectEvidence(project) && !hasBrightDataBundle(project)) {
+    return {
+      variant: "review",
+      badge: "Public evidence",
+      title: "Public review ready",
+      summary: `${title} has real public repo/demo evidence. Add private Bright Data evidence before treating it as prize-track ready.`,
+      rows: [
+        {
+          label: "What was checked",
+          detail: "Public repository metadata, README/package evidence, and any supported demo URL that could be fetched."
+        },
+        {
+          label: "What still is not checked",
+          detail: "Bright Data source, search, discovery, and final sponsor evidence record are still incomplete."
+        },
+        {
+          label: "Best next click",
+          detail: "Open Evidence, then run the private Bright Data review when reviewer access is available."
+        }
+      ],
+      actions: [
+        { label: "Open evidence", action: "evidence" },
+        { label: "Private review", action: "live" },
+        { label: "Export memo", action: "export" }
       ]
     };
   }
@@ -74,7 +111,7 @@ export function buildVisitorBrief(project = {}) {
         },
         {
           label: "Review record",
-          detail: project.runReceipt?.signature ? "Server record is attached to the evidence receipt." : "Evidence exists; server record still needs final confirmation."
+          detail: project.runReceipt?.signature ? "Server record is attached to the evidence record." : "Evidence exists; server record still needs final confirmation."
         },
         {
           label: "Best next click",
@@ -92,8 +129,8 @@ export function buildVisitorBrief(project = {}) {
   return {
     variant: "review",
     badge: "Needs evidence",
-    title: "Review needs live evidence",
-    summary: `${title} has project context, but the evidence path still needs a live collection run.`,
+    title: "Review needs evidence",
+    summary: `${title} has project context, but the evidence path still needs public or sponsor collection.`,
     rows: [
       {
         label: "What was checked",
@@ -101,16 +138,16 @@ export function buildVisitorBrief(project = {}) {
       },
       {
         label: "What still is not checked",
-        detail: "Bright Data source, search, discovery, and final evidence receipt are still incomplete."
+          detail: "Bright Data source, search, discovery, and final evidence record are still incomplete."
       },
       {
         label: "Best next click",
-        detail: "Run live evidence or open the evidence view to see which traces are missing."
+        detail: "Run public review or open the evidence view to see which source checks are missing."
       }
     ],
     actions: [
       { label: "Open evidence", action: "evidence" },
-      { label: "Run live evidence", action: "live" },
+      { label: "Run public review", action: "public" },
       { label: "Export memo", action: "export" }
     ]
   };
