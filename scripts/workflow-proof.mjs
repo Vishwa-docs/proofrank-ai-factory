@@ -121,7 +121,7 @@ try {
     const card = document.querySelector(".draft-review-card");
     const brief = document.querySelector(".visitor-brief.draft");
     return {
-      ready: Boolean(card && /Draft review card/i.test(card.textContent || "")),
+      ready: Boolean(card && /Draft created/i.test(card.textContent || "") && /Not scored yet/i.test(card.textContent || "")),
       text: card?.textContent?.replace(/\s+/g, " ").trim() || "",
       briefReady: Boolean(
         brief &&
@@ -241,7 +241,8 @@ try {
     /Link-only draft/i.test(proof.draftVisitorBriefText) &&
     /repo content, demo reachability, functionality, and Bright Data evidence/i.test(proof.draftVisitorBriefText) &&
     /Source fetch, web search, and discovery are planned, not run yet/i.test(proof.draftVisitorBriefText) &&
-    /Link-only/i.test(proof.draftReviewCardText) &&
+    /Draft created/i.test(proof.draftReviewCardText) &&
+    /Not scored yet/i.test(proof.draftReviewCardText) &&
     /Source fetch, web search, and discovery are planned, not run yet/i.test(proof.draftReviewCardText) &&
     /Draft review only/i.test(proof.copiedDraftCard) &&
     /no repo\/demo fetch|not fetched/i.test(proof.copiedDraftCard) &&

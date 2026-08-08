@@ -461,6 +461,60 @@ h1 {
   font-weight: 700;
 }
 
+.quick-path {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+  list-style: none;
+}
+
+.quick-path li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2xs) var(--space-xs);
+  align-content: start;
+  min-width: 0;
+  min-height: 6.6rem;
+  padding: var(--space-sm);
+  background: var(--color-paper);
+}
+
+.quick-path span {
+  display: inline-grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid var(--color-rule);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.quick-path strong,
+.quick-path small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.quick-path strong {
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+}
+
+.quick-path small {
+  grid-column: 1 / -1;
+  color: var(--color-muted);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
 .field > span,
 .field-label {
   color: var(--color-ink-2);
@@ -4165,6 +4219,10 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 
+  .quick-path {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .pitch-review-rows li,
   .draft-review-card li,
   .visitor-brief li {
@@ -4287,6 +4345,7 @@ input::placeholder {
   .fix-score-strip,
   .fix-card-grid,
   .field-comparison-grid,
+  .quick-path,
   .mode-ladder,
   .trace-timeline ol {
     grid-template-columns: 1fr;

@@ -297,8 +297,8 @@ for (const spec of [
       const text = card?.textContent || "";
       return Boolean(
         card &&
-          /Draft review card/i.test(text) &&
-          /Link-only/i.test(text) &&
+          /Draft created/i.test(text) &&
+          /Not scored yet/i.test(text) &&
           /URL accepted, content not fetched/i.test(text) &&
           /Bright Data\s*Evidence pending/i.test(text) &&
           /Source fetch, web search, and discovery are planned, not run yet/i.test(text)
@@ -317,7 +317,9 @@ for (const spec of [
         /Collect evidence/i.test(combined) &&
         /No ranking score until public or sponsor evidence runs/i.test(combined) &&
         !/High risk/i.test(combined) &&
-        !/Review score\s*10/i.test(combined)
+        !/Review score\s*10/i.test(combined) &&
+        !/Score breakdown/i.test(scorecard) &&
+        !/Against the field/i.test(scorecard)
       );
     });
     if (!draftVerdictNeutral) {
@@ -459,7 +461,7 @@ for (const spec of [
     const mobileDraftCardReady = await page.evaluate(() => {
       const card = document.querySelector(".draft-review-card");
       const text = card?.textContent || "";
-      return Boolean(card && /Draft review card/i.test(text) && /Link-only/i.test(text) && /Bright Data\s*Evidence pending/i.test(text));
+      return Boolean(card && /Draft created/i.test(text) && /Not scored yet/i.test(text) && /Bright Data\s*Evidence pending/i.test(text));
     });
     if (!mobileDraftCardReady) {
       throw new Error("Mobile visitor draft did not show the draft review card.");
@@ -527,6 +529,7 @@ for (const spec of [
       sponsorMatrixCells: document.querySelectorAll("#sponsorMatrix .matrix-cell").length,
       reviewFocusCount: document.querySelectorAll("[data-review-focus]").length,
       starterCount: document.querySelectorAll("[data-starter-project]").length,
+      quickPathCount: document.querySelectorAll(".quick-path li").length,
       modeLadderCount: document.querySelectorAll(".mode-ladder span").length,
       externalSampleReady: Boolean(document.querySelector("#loadExternalSample")),
       brightPathReady: document.querySelectorAll(".bright-path").length >= 2,
@@ -567,10 +570,11 @@ await browser.close();
 
 const failures = results.flatMap((result) => {
   const problems = [];
+  const draftState = result.metrics.draftReviewCardCount === 1;
   if (result.messages.length) problems.push(`${result.spec.name}: console/page messages`);
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
   if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: evidence route did not render`);
-  if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
+  if (!draftState && result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
   if (result.metrics.fixListCount !== 1) problems.push(`${result.spec.name}: what-to-fix panel did not render`);
   if (result.metrics.fixCardCount < 5) problems.push(`${result.spec.name}: what-to-fix cards did not render`);
   if (result.metrics.fixScoreStripCount !== 2) problems.push(`${result.spec.name}: what-to-fix score strip did not render`);
@@ -580,6 +584,7 @@ const failures = results.flatMap((result) => {
   if (result.metrics.sponsorMatrixCells < 6) problems.push(`${result.spec.name}: evidence checklist cells did not render`);
   if (result.metrics.reviewFocusCount !== 3) problems.push(`${result.spec.name}: review focus controls did not render`);
   if (result.metrics.starterCount !== 3) problems.push(`${result.spec.name}: starter projects did not render`);
+  if (result.metrics.quickPathCount !== 4) problems.push(`${result.spec.name}: quick path did not render four steps`);
   if (result.metrics.modeLadderCount !== 3) problems.push(`${result.spec.name}: evidence mode ladder did not render`);
   if (!result.metrics.externalSampleReady) problems.push(`${result.spec.name}: external sample action did not render`);
   if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/private review actions did not render`);
@@ -596,7 +601,7 @@ const failures = results.flatMap((result) => {
   if (result.spec.name === "desktop" && result.metrics.draftReviewCardCount !== 0) {
     problems.push("desktop: draft review card did not disappear after selecting built-in receipt");
   }
-  if (result.metrics.fieldComparisonCount < 5) problems.push(`${result.spec.name}: field comparison panel did not render`);
+  if (!draftState && result.metrics.fieldComparisonCount < 5) problems.push(`${result.spec.name}: field comparison panel did not render`);
   if (!result.metrics.pitchDrawerPresent) problems.push(`${result.spec.name}: presentation check drawer did not render`);
   if (result.spec.name === "desktop" && result.metrics.pitchReviewRows !== 7) {
     problems.push("desktop: presentation check rows did not render after analysis");

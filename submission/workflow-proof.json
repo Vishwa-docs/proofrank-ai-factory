@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-08T09:01:01.996Z",
-  "durationMs": 7693,
+  "generatedAt": "2026-08-08T09:10:44.622Z",
+  "durationMs": 7768,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank",
   "rankedRows": 10,
@@ -10,10 +10,10 @@
   "shareableReviewReady": true,
   "reviewFocus": "Bright Data sponsor Check live-web usage",
   "draftReviewCardReadyBeforeReceipt": true,
-  "draftReviewCardText": "Draft review card Link-only Draft review only. ProofRank accepted public URL formats in this browser; no repo/demo fetch, functionality check, or Bright Data evidence has run yet. GitHub URL accepted, content not fetched Demo URL supplied, reachability not checked Bright Data Evidence pending Bright Data plan Source fetch, web search, and discovery are planned, not run yet Run public review Sponsor check Copy draft summary Copy draft link",
+  "draftReviewCardText": "Draft created Not scored yet ProofRank accepted the public link formats in this browser. It has not fetched repo content, checked demo behavior, or collected Bright Data evidence yet. GitHub URL accepted, content not fetched Demo URL supplied, reachability not checked Bright Data Evidence pending Bright Data plan Source fetch, web search, and discovery are planned, not run yet Run public review Private Bright Data Copy draft summary Copy draft link",
   "draftVisitorBriefReadyBeforeReceipt": true,
   "draftVisitorBriefText": "Link-only draft Draft review created Brightdata MCP is in the review queue. It is useful for sharing and triage, but it is not collected evidence yet. What was checked GitHub URL format accepted; demo URL format accepted. What still is not checked Repo content, demo reachability, functionality, and Bright Data evidence remain pending. Bright Data plan Source fetch, web search, and discovery are planned, not run yet. Best next click Share the draft link, then run public review or private Bright Data source, search, and discovery collection. Copy draft linkRun public reviewExport draft memo",
-  "copiedDraftCard": "ProofRank draft for Brightdata MCP\nTeam: Brightdata\nDraft review only. URL format accepted, no repo/demo fetch, no functionality check, no Bright Data evidence yet.\nDecision: Request public review\nSummary: Bright Data sponsor draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.\nGitHub: URL accepted, content not fetched (https://github.com/brightdata/brightdata-mcp)\nDemo: URL supplied, reachability not checked (https://brightdata.com/)\nBright Data evidence pending\nBright Data plan: source fetch, web search, and discovery are planned, not run yet\nNext: Run public review before treating links as evidence\nReview link: http://127.0.0.1:63428/?reviewRepo=https%3A%2F%2Fgithub.com%2Fbrightdata%2Fbrightdata-mcp&reviewDemo=https%3A%2F%2Fbrightdata.com%2F&reviewFocus=sponsor&autorun=1\n\nNote: Draft cards only describe supplied links. Public review is required before repo contents or demo behavior are treated as collected. Private Bright Data review is required before Bright Data evidence is treated as collected.",
+  "copiedDraftCard": "ProofRank draft for Brightdata MCP\nTeam: Brightdata\nDraft review only. URL format accepted, no repo/demo fetch, no functionality check, no Bright Data evidence yet.\nDecision: Request public review\nSummary: Bright Data sponsor draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once public or private Bright Data collection runs.\nGitHub: URL accepted, content not fetched (https://github.com/brightdata/brightdata-mcp)\nDemo: URL supplied, reachability not checked (https://brightdata.com/)\nBright Data evidence pending\nBright Data plan: source fetch, web search, and discovery are planned, not run yet\nNext: Run public review before treating links as evidence\nReview link: http://127.0.0.1:64188/?reviewRepo=https%3A%2F%2Fgithub.com%2Fbrightdata%2Fbrightdata-mcp&reviewDemo=https%3A%2F%2Fbrightdata.com%2F&reviewFocus=sponsor&autorun=1\n\nNote: Draft cards only describe supplied links. Public review is required before repo contents or demo behavior are treated as collected. Private Bright Data review is required before Bright Data evidence is treated as collected.",
   "draftReviewCardGoneForReceipt": true,
   "evidenceVisitorBriefReady": true,
   "externalSampleReady": true,
@@ -72,7 +72,7 @@
     {
       "status": "Checked",
       "label": "No visible secret risk",
-      "detail": "Public repos and receipts should not expose API keys, tokens, or private account state."
+      "detail": "Public repos and evidence records should not expose API keys, tokens, or private account state."
     },
     {
       "status": "Checked",

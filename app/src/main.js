@@ -114,8 +114,8 @@ const REVIEW_MODES = {
   live: {
     label: "Private Bright Data review",
     runLabel: "Private Bright Data review",
-    button: "Run Bright Data",
-    addButton: "Run Bright Data",
+    button: "Run private review",
+    addButton: "Run private review",
     status: "Private Bright Data review selected. Server-side access is required before collection.",
     hint: "Private Bright Data review adds source, search, and discovery evidence later. API keys never belong in the browser."
   }
@@ -232,8 +232,8 @@ const TOUR_STEPS = [
   },
   {
     label: "Step 2 of 5",
-    title: "Read the result",
-    body: "The Review view shows the next action, Bright Data state, and the claim sections worth opening.",
+    title: "Get a judge action",
+    body: "Drafts stay unscored. Public or private evidence turns the project into a shortlist, escalate, or fix-gaps decision.",
     section: "overview",
     target: "#scorecard"
   },
@@ -1582,15 +1582,15 @@ function renderDraftReviewCard(project) {
     <section class="draft-review-card" aria-label="Draft review card">
       <div class="draft-card-head">
         <div>
-          <span>Draft review card</span>
-          <strong>Link-only</strong>
+          <span>Draft created</span>
+          <strong>Not scored yet</strong>
         </div>
-        <p>Draft review only. ProofRank accepted public URL formats in this browser; no repo/demo fetch, functionality check, or Bright Data evidence has run yet.</p>
+        <p>ProofRank accepted the public link formats in this browser. It has not fetched repo content, checked demo behavior, or collected Bright Data evidence yet.</p>
       </div>
       <ul>${rows}</ul>
       <div class="draft-card-actions">
         <button class="primary-button small" data-score-action="public" type="button">Run public review</button>
-        <button class="secondary-button small" data-score-action="live" type="button">Sponsor check</button>
+        <button class="secondary-button small" data-score-action="live" type="button">Private Bright Data</button>
         <button class="secondary-button small" data-score-action="copy-card" type="button">Copy draft summary</button>
         <button class="text-button small" data-score-action="copy" type="button">Copy draft link</button>
       </div>
@@ -1689,7 +1689,7 @@ function renderScorecard(project) {
 
     ${renderVisitorBrief(project)}
 
-    <section class="market-position" aria-label="Product readout">
+    ${draft ? "" : `<section class="market-position" aria-label="Product readout">
       <article>
         <span>Buyer</span>
         <strong>Judges and sponsor teams</strong>
@@ -1705,9 +1705,9 @@ function renderScorecard(project) {
         <strong>Public AI diligence</strong>
         <p>Hackathons are the entry point for accelerator, grant, and procurement review.</p>
       </article>
-    </section>
+    </section>`}
 
-    <section class="proof-highlights" aria-label="Bright Data evidence highlights">
+    ${draft ? "" : `<section class="proof-highlights" aria-label="Bright Data evidence highlights">
       <article>
         <span>Bright Data evidence</span>
         <strong>${escapeHtml(sponsorToolLabel)}</strong>
@@ -1723,13 +1723,13 @@ function renderScorecard(project) {
         <strong>${escapeHtml(replayState)}</strong>
         <p>Sponsor review runs server-side so Bright Data secrets stay off the page.</p>
       </article>
-    </section>
+    </section>`}
 
-    ${renderPitchReviewPanel()}
+    ${draft ? "" : renderPitchReviewPanel()}
 
-    ${renderFieldComparison()}
+    ${draft ? "" : renderFieldComparison()}
 
-    <details class="analysis-drawer score-drawer">
+    ${draft ? "" : `<details class="analysis-drawer score-drawer">
       <summary><span>Score breakdown</span><strong>${project.scores.overall} overall</strong></summary>
       <section class="score-grid" aria-label="Score breakdown">
         ${scoreTile("Eligibility", project.scores.eligibility, "Demo, repo, build evidence")}
@@ -1739,27 +1739,27 @@ function renderScorecard(project) {
         ${scoreTile("Originality", project.scores.originality, "Distinct angle and evidence")}
         ${scoreTile("Presentation", project.scores.presentation, "Judge-ready explanation")}
       </section>
-    </details>
+    </details>`}
 
-    <details class="analysis-drawer">
+    ${draft ? "" : `<details class="analysis-drawer">
       <summary><span>Bright Data prize</span><strong>${project.scores.brightDataPrize}</strong></summary>
       ${renderWinnerBenchmark(project)}
-    </details>
+    </details>`}
 
-    <details class="analysis-drawer">
+    ${draft ? "" : `<details class="analysis-drawer">
       <summary><span>Review panel</span><strong>${escapeHtml(verdictLabel)}</strong></summary>
       ${renderTribunal(project)}
-    </details>
+    </details>`}
 
-    <details class="analysis-drawer">
+    ${draft ? "" : `<details class="analysis-drawer">
       <summary><span>Similarity check</span><strong>${project.scores.originality}</strong></summary>
       ${renderOriginalityRadar(project)}
-    </details>
+    </details>`}
 
-    <details class="analysis-drawer">
+    ${draft ? "" : `<details class="analysis-drawer">
       <summary><span>Claim check</span><strong>${(project.evidenceItems || []).length} items</strong></summary>
       ${renderClaimLedger(project)}
-    </details>
+    </details>`}
   `;
 }
 
@@ -2167,7 +2167,7 @@ function reviewerProjectFromInputs() {
     title,
     team,
     summary:
-      `${payload.reviewFocus.label} draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once live Bright Data collection is connected.`,
+      `${payload.reviewFocus.label} draft review. ProofRank can inspect the repository, deployed app, submission copy, and public web evidence once public or private Bright Data collection runs.`,
     reviewFocus: payload.reviewFocus,
     eventUrl: payload.eventUrl,
     submissionUrl: "",
