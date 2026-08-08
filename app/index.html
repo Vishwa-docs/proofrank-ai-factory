@@ -22,7 +22,7 @@
       <div class="topbar-actions" aria-label="Page actions">
         <button class="text-button nav-jump" data-focus-target="quickRepoUrl" type="button">Review project</button>
         <button id="startTourTop" class="text-button" type="button">Start guided review</button>
-        <button class="text-button nav-jump" data-nav-tab="queue" type="button">Queue</button>
+        <button class="text-button nav-jump" data-nav-tab="queue" type="button">Projects</button>
         <details class="export-menu">
           <summary>Export</summary>
           <div class="export-menu-panel" aria-label="Export actions">
@@ -40,11 +40,11 @@
           <div class="event-meta" aria-label="Hackathon context">
             <span><strong id="queueCount">0</strong> projects ranked</span>
             <span>Verified web evidence</span>
-            <span>Public review</span>
+            <span>Bring your links</span>
           </div>
           <p class="event-date">Review public AI submissions</p>
           <h1>ProofRank</h1>
-          <p class="hero-subtitle">Paste a GitHub repo and demo. ProofRank turns public evidence into a ranked review with gaps, prior-art checks, and Bright Data trace status.</p>
+          <p class="hero-subtitle">Paste any public GitHub repo and demo URL. ProofRank turns public evidence into a ranked review with gaps, prior-art checks, and Bright Data trace status.</p>
           <div class="hero-controls hero-links" aria-label="Review navigation">
             <button class="primary-button" data-focus-target="quickRepoUrl" type="button">Review project</button>
             <button class="secondary-button" data-nav-tab="receipt" type="button">Evidence report</button>
@@ -56,25 +56,32 @@
           <section class="quick-review" aria-label="Try ProofRank with project links">
             <div class="quick-review-head">
               <span>First step</span>
-              <strong>Review your project links</strong>
-              <p>Anyone can paste links here. The sample path works without accounts; live Bright Data review uses a private backend session.</p>
+              <strong>Test a public project</strong>
+              <p>Browser mode validates your public GitHub link and creates a sample review. Live evidence collection requires a judge token.</p>
             </div>
             <div class="quick-fields">
               <label class="field" for="quickRepoUrl">
-                <span>GitHub repo</span>
-                <input id="quickRepoUrl" type="url" placeholder="https://github.com/org/project" autocomplete="url">
+                <span class="field-label">GitHub repo <span class="qmark" aria-hidden="true">?</span><span class="tip-panel" role="tooltip">Use a public github.com/owner/repo URL. Private repos and docs with secrets should not be pasted.</span></span>
+                <input id="quickRepoUrl" type="url" placeholder="https://github.com/org/project" autocomplete="url" aria-describedby="quickRepoHelp">
+                <small id="quickRepoHelp" class="field-help">Public github.com/owner/repo only. Do not paste private repos or secrets.</small>
               </label>
               <label class="field" for="quickDemoUrl">
-                <span>Demo app</span>
-                <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url">
+                <span class="field-label">Demo app <span class="qmark" aria-hidden="true">?</span><span class="tip-panel" role="tooltip">Optional, but a reachable public demo gives reviewers stronger evidence than a repository alone.</span></span>
+                <input id="quickDemoUrl" type="url" placeholder="https://project.example" autocomplete="url" aria-describedby="quickDemoHelp">
+                <small id="quickDemoHelp" class="field-help">Optional. A reachable public demo gives stronger evidence than a repo alone.</small>
               </label>
             </div>
+            <p class="review-path-line">After running: review summary, evidence state, shareable packet.</p>
             <div class="quick-actions">
-              <button id="quickAddReviewerProject" class="primary-button" type="button">Run review</button>
-              <button id="loadSampleProject" class="text-button" type="button">Use sample project</button>
-              <button id="startTourHero" class="text-button" type="button">Start guided review</button>
+              <button id="quickAddReviewerProject" class="primary-button" type="button">Run sample review</button>
+              <button id="loadSampleProject" class="text-button" type="button">Use verified sample</button>
+              <button id="copyReviewLink" class="text-button" type="button" disabled>Copy review link</button>
             </div>
-            <p id="quickReviewHint" class="hint">No account or token is needed for the sample path.</p>
+            <p id="quickReviewHint" class="hint">Sample review does not fetch repo contents. Use Live setup for Bright Data evidence.</p>
+            <details class="inline-qtip">
+              <summary>Demo vs live review</summary>
+              <p>Demo review is browser-safe and lets anyone test links. Live review creates stronger Bright Data evidence from the private backend when a judge token is loaded.</p>
+            </details>
           </section>
           <section id="guidedTour" class="guided-tour" aria-label="Guided ProofRank tour" aria-live="polite" hidden>
             <div>
@@ -148,10 +155,10 @@
         </details>
       </section>
       <nav class="section-tabs reveal" style="--i: 4" aria-label="ProofRank sections" role="tablist">
-        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Verdict</button>
-        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Shortlist</button>
+        <button id="tab-overview" class="section-tab is-active" data-section-tab="overview" type="button" role="tab" aria-controls="panel-overview" aria-selected="true">Review</button>
+        <button id="tab-queue" class="section-tab" data-section-tab="queue" type="button" role="tab" aria-controls="panel-queue" aria-selected="false">Projects</button>
         <button id="tab-receipt" class="section-tab" data-section-tab="receipt" type="button" role="tab" aria-controls="panel-receipt" aria-selected="false">Evidence</button>
-        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Live run</button>
+        <button id="tab-setup" class="section-tab" data-section-tab="setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false">Live setup</button>
       </nav>
 
       <section id="panel-overview" class="section-panel is-active reveal" data-section-panel="overview" style="--i: 5" aria-label="Selected project overview" role="tabpanel" aria-labelledby="tab-overview">
@@ -161,7 +168,7 @@
         </div>
       </section>
 
-      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 5" aria-label="Shortlist queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
+      <section id="panel-queue" class="section-panel reveal" data-section-panel="queue" style="--i: 5" aria-label="Projects queue" role="tabpanel" aria-labelledby="tab-queue" hidden>
         <section class="filter-bar" aria-label="Filters">
           <button class="filter-chip is-active" data-filter="all" type="button">All</button>
           <button class="filter-chip" data-filter="high-risk" type="button">Risk</button>
@@ -171,9 +178,9 @@
           <button class="filter-chip" data-filter="finalist-ready" type="button">Ready</button>
         </section>
 
-        <section class="queue-section panel" aria-label="Shortlist queue">
+        <section class="queue-section panel" aria-label="Projects queue">
           <div class="module-head">
-            <h2>Shortlist</h2>
+            <h2>Ranked projects</h2>
             <span class="hint">Select one project to inspect.</span>
           </div>
           <div id="rankedList" class="ranked-list" role="list"></div>
@@ -181,7 +188,7 @@
 
         <section class="field-map panel" aria-label="Field map">
           <div class="module-head">
-            <h2>Field map</h2>
+            <h2>Category map</h2>
             <span id="fieldSummary" class="hint"></span>
           </div>
           <div id="fieldMap"></div>

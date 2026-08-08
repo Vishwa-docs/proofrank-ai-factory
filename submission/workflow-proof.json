@@ -1,34 +1,35 @@
 {
-  "generatedAt": "2026-08-08T06:38:21.020Z",
-  "durationMs": 5547,
+  "generatedAt": "2026-08-08T06:51:57.091Z",
+  "durationMs": 6786,
   "appTitle": "ProofRank",
-  "selectedProject": "ProofRank AI Factory",
+  "selectedProject": "ProofRank",
   "rankedRows": 9,
   "reviewerRowPresent": true,
-  "statusLine": "ProofRank AI Factory selected.",
-  "brightProof": "Evidence report Sample review only Run live collection when a tokenized backend session is available",
-  "scorecardText": "High risk ProofRank AI Factory Reviewer-supplied hackathon project. GitHubBright Data collection pending Evidence score 25 Bright 19 DemoGitHub Next action Manual review required Evidence depth 2 public links, 1 evidence items, Bright Data pending. Current blocker Add native.builder usage explanation Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Differentiator Executed web evidence Bright Data evidence rows are separated from planned, claimed, direct, and failed rows. Expansion Public AI diligence Hackathons are the entry point for",
-  "receiptText": "Live run record Not issued Live project collection has not issued a server receipt. Reviewer supplied GitHub repository Repository accepted locally. Run live collection to fetch README, recent commits, demo links, dependency evidence, and public originality signals. user-input 72% confidence ProofRank reviewer intake Bright Data trace table Tool Run Query or URL Rows Status Remote MCP pending bright-data https://github.com/Vishwa-docs/proofrank-ai-factory 0 waiting for server-side collection Live collection plan Planned collector calls Demo review mirrors these collection steps without using",
+  "shareableReviewReady": true,
+  "statusLine": "ProofRank selected.",
+  "brightProof": "Evidence report Bright Data evidence passed source scrape + search + discovery / verified",
+  "scorecardText": "Evidence checks passed ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Evidence Passed Bright Data run verified DemoGitHub Next action Submit final entry from the lablab team account Evidence depth 2 public links, 4 evidence items, Bright Data executed. Current blocker Final submission not sent. Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Different",
+  "receiptText": "Run ID pr-20260807t200529345z-23568b05 bright-data-mcp / verified / 23568b05 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Verified Bright Data evidence receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. signed-r",
   "readinessItems": [
     {
-      "status": "Action",
+      "status": "Passed",
       "label": "Native.builder primary URL",
-      "detail": "Publish the primary app from native.builder; the GitHub Pages build is only fallback evidence."
+      "detail": "Primary application URL points to a native.builder deployment."
     },
     {
-      "status": "Action",
+      "status": "Passed",
       "label": "Bright Data evidence bundle",
-      "detail": "Current trace state is pending; evidence bundle needs executed source scrape, search, and discovery traces."
+      "detail": "Evidence report contains executed Bright Data source scrape, search, and discovery traces."
     },
     {
-      "status": "Action",
+      "status": "Passed",
       "label": "Actual project reviewed",
-      "detail": "A reviewer project is present, but the selected project only has pending/manual evidence."
+      "detail": "Selected project has a verified executed Bright Data evidence receipt."
     },
     {
-      "status": "Action",
+      "status": "Passed",
       "label": "Live collection backend",
-      "detail": "Demo mode can rank fixtures, but real use needs the backend running in live mode."
+      "detail": "A verified server-side Bright Data run receipt is attached for this project."
     },
     {
       "status": "Passed",
@@ -57,8 +58,8 @@
     }
   ],
   "exportedFiles": [
-    "review-vishwa-docs-proofrank-ai-factory-evidence-receipt.json",
-    "review-vishwa-docs-proofrank-ai-factory-submission-packet.md"
+    "proofrank-evidence-receipt.json",
+    "proofrank-submission-packet.md"
   ],
   "screenshotPath": "/Users/daver/Desktop/LabLabAI AI Factory NativeBuilder Hackathon/submission/demo-assets/workflow-proof.png",
   "consoleMessages": [],

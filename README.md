@@ -2,9 +2,9 @@
 
 ProofRank is an agentic submission truth auditor for hackathons, accelerators, grant programs, and sponsor reviews.
 
-Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with proof receipts for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
+Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with evidence reports for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
-The dashboard now includes a Winner Benchmark panel that makes the Bright Data sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible proof, defensible originality, public workflow, and native.builder primary deployment.
+The dashboard now includes a Prize Fit panel that makes the Bright Data sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible evidence, defensible originality, public workflow, and native.builder primary deployment.
 
 ## Why This Exists
 
@@ -86,7 +86,7 @@ npm run live:smoke -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
 npm run live:event-smoke -- https://lablab.ai/ai-hackathons/nativebuilder-build-without-limits
 ```
 
-Generate the signed final Bright Data proof receipt after the MCP smoke passes:
+Generate the signed final Bright Data evidence report after the MCP smoke passes:
 
 ```bash
 PROOFRANK_RECEIPT_SIGNING_SECRET=generate_a_private_value npm run final:receipt -- https://github.com/OWNER/REPO https://DEPLOYED_APP_URL
@@ -115,7 +115,7 @@ npm run live:server
 
 Then open the app, switch collection mode to `Bright Data live`, keep the live
 API endpoint as `http://127.0.0.1:8787/api/review-project`, and add the real
-GitHub repo plus deployed app URL. `Run review` calls the sibling
+GitHub repo plus deployed app URL. `Run sample review` validates public links in the browser; `Run live review` calls the sibling
 `/api/review-event` endpoint to collect live event submission cards and asks the
 backend for one bounded project-level follow-up when the top parsed project has
 a real GitHub URL. Event intake traces remain `countsForSponsorFit: false`; the
@@ -174,15 +174,15 @@ fallback/live app link, and keep GitHub Pages as a backup proof-of-work link.
 Built and verified:
 
 - Dependency-free dashboard app in `app/`
-- Deterministic scoring, parser, claim ledger, trace provenance, and export tests
+- Deterministic scoring, parser, checked-statement, trace provenance, and export tests
 - Executed-vs-planned trace scoring so sponsor fit is capped below "Bright strong" until the selected project has a full Bright Data sponsor proof bundle
 - Bright Data Remote MCP client with initialize, tools/list, tools/call, SSE parsing, redacted auth errors, `scrape_as_markdown`, `search_engine`, `discover`, and `PROOFRANK_FETCH_MODE=mcp`
 - Per-run Bright Data call budget guard with `PROOFRANK_MAX_BRIGHTDATA_CALLS`
 - Live API token, CORS, and URL-host allowlist controls for public deployments
 - GitHub project reviewer lane with metadata, README, tree, package, commits, releases, issues, license, demo, prior-art, and secret-risk evidence
-- Evidence Route map that shows event source, repository, deployed app, Bright bundle, claim ledger, and judge packet state for the selected project
+- Data Path map that shows event source, repository, deployed app, Bright bundle, checked statements, and review packet state for the selected project
 - Collect gates that separate required final-submission gates from competitive polish checks
-- Originality Radar with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
+- Similarity Check with similar-project overlap, Bright Data prior-art search, and Bright Data `discover` queries
 - Hallmark design system files in `design.md`, `tokens.css`, and `app/tokens.css`
 - Native.builder build prompt in `submission/native-builder-prompt.md`
 - Published Native.builder app at `https://80wmf4jpjww3g4j6wcymx9m8t.nativelyai.app/`; republish it with `submission/native-builder-prompt.md` to sync the latest polished UI and receipt ID before final submission.

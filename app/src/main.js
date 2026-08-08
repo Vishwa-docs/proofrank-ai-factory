@@ -40,6 +40,7 @@ const elements = {
   quickDemoUrl: document.querySelector("#quickDemoUrl"),
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
+  copyReviewLink: document.querySelector("#copyReviewLink"),
   quickReviewHint: document.querySelector("#quickReviewHint"),
   startTour: document.querySelector("#startTour"),
   startTourTop: document.querySelector("#startTourTop"),
@@ -87,14 +88,14 @@ const TOUR_STEPS = [
   {
     label: "Step 2 of 5",
     title: "Read the result",
-    body: "The Verdict view shows the next action, Bright Data state, and the claim sections worth opening.",
+    body: "The Review view shows the next action, Bright Data state, and the claim sections worth opening.",
     section: "overview",
     target: "#scorecard"
   },
   {
     label: "Step 3 of 5",
     title: "Compare the queue",
-    body: "Shortlist keeps your project beside the field, so judges can see why it should advance or what is missing.",
+    body: "Projects keeps your project beside the field, so judges can see why it should advance or what is missing.",
     section: "queue",
     target: "#rankedList"
   },
@@ -108,7 +109,7 @@ const TOUR_STEPS = [
   {
     label: "Step 5 of 5",
     title: "Upgrade to live review",
-    body: "Live run holds Bright Data setup and the final readiness checklist. The public sample path stays safe for visitors.",
+    body: "Live setup holds Bright Data setup and the final readiness checklist. The public sample path stays safe for visitors.",
     section: "setup",
     target: "#modeSelect"
   }
@@ -216,7 +217,8 @@ function loadReviewParamsFromUrl() {
     elements.quickDemoUrl.value = params.demoUrl;
     elements.reviewerDemoUrl.value = params.demoUrl;
   }
-  setQuickHint(params.autorun ? "Review link loaded. Building a browser-safe sample review." : "Review link loaded. Click Run review to test it.", "ready");
+  setQuickHint(params.autorun ? "Review link loaded. Building a browser-safe sample review." : "Review link loaded. Click Run sample review to test it.", "ready");
+  setCopyReviewLinkState();
   return params.autorun;
 }
 
@@ -233,6 +235,73 @@ function updateShareableReviewUrl(payload) {
     window.history.replaceState(null, "", url);
   } catch {
     // Keeping the browser review functional is more important than URL state.
+  }
+}
+
+function isVerifiedSamplePayload(payload = {}) {
+  return String(payload.repoUrl || "").toLowerCase() === SAMPLE_REVIEW_LINKS.repoUrl.toLowerCase();
+}
+
+function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
+  updateShareableReviewUrl(payload);
+  state.selectedId = "proofrank";
+  const selectionDrawer = document.querySelector(".selection-drawer");
+  if (selectionDrawer) selectionDrawer.open = true;
+  elements.reviewerHint.textContent =
+    "Verified sample selected. It includes an executed Bright Data source, search, and discovery run.";
+  setQuickHint(
+    "Verified sample loaded: Bright Data source, search, and discovery traces are signed. Paste another project for a draft review.",
+    "ready"
+  );
+  setStatus("Verified sample selected. Open Evidence to inspect the Bright Data run.", "ready");
+  render();
+  setActiveSection("overview", { scroll: true });
+}
+
+function shareableReviewUrlFromQuick() {
+  const repoUrl = elements.quickRepoUrl.value.trim();
+  const demoUrl = elements.quickDemoUrl.value.trim();
+  const githubRepo = parsePublicGithubRepoUrl(repoUrl);
+  const url = new URL(window.location.href);
+  url.searchParams.set("reviewRepo", githubRepo.canonicalUrl);
+  if (isHttpUrl(demoUrl)) url.searchParams.set("reviewDemo", demoUrl);
+  else url.searchParams.delete("reviewDemo");
+  url.searchParams.delete("repo");
+  url.searchParams.delete("demo");
+  url.searchParams.set("autorun", "1");
+  return url.toString();
+}
+
+function setCopyReviewLinkState() {
+  if (!elements.copyReviewLink) return;
+  try {
+    shareableReviewUrlFromQuick();
+    elements.copyReviewLink.disabled = false;
+    elements.copyReviewLink.title = "Copy a link that preloads this repo and demo.";
+  } catch {
+    elements.copyReviewLink.disabled = true;
+    elements.copyReviewLink.title = "Paste a public GitHub repository URL first.";
+  }
+}
+
+async function copyReviewLink() {
+  let reviewUrl;
+  try {
+    reviewUrl = shareableReviewUrlFromQuick();
+  } catch (error) {
+    setQuickHint("Paste a GitHub repository URL like https://github.com/org/project before copying.", "error");
+    setStatus(error.message, "error");
+    setCopyReviewLinkState();
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(reviewUrl);
+    setQuickHint("Review link copied. It preloads these links and runs the sample review.", "ready");
+    setStatus("Shareable review link copied.", "ready");
+  } catch {
+    window.prompt("Copy this review link:", reviewUrl);
+    setQuickHint("Copy the review link from the browser prompt.", "ready");
   }
 }
 
@@ -611,12 +680,12 @@ function renderProofTopology(project) {
       status: routeStatus(sponsorBundle, executedBright || ["planned", "claimed", "pending", "direct"].includes(traceState))
     },
     {
-      label: "Claim ledger",
+      label: "Checked statements",
       detail: `${evidenceItemCount} evidence item${evidenceItemCount === 1 ? "" : "s"}`,
       status: routeStatus(hasItems)
     },
     {
-      label: "Judge packet",
+      label: "Review packet",
       detail: hasPacket ? "Receipt and exports ready" : "Receipt export missing",
       status: routeStatus(hasPacket)
     }
@@ -625,7 +694,7 @@ function renderProofTopology(project) {
   elements.proofTopology.innerHTML = `
     <div class="module-head proof-head">
       <div>
-        <h2>Evidence route</h2>
+        <h2>Data path</h2>
         <p class="hint">The Bright Data gate is the load-bearing sponsor evidence.</p>
       </div>
       <span class="route-verdict ${sponsorBundle ? "passed" : "pending"}">${escapeHtml(
@@ -767,7 +836,7 @@ function renderWinnerBenchmark(project) {
   return `
     <section class="winner-benchmark">
       <div class="module-head compact">
-        <h2>Winner benchmark</h2>
+        <h2>Prize fit</h2>
         <span class="hint">${escapeHtml(benchmark.tier)} / ${benchmark.score}</span>
       </div>
       <div class="benchmark-meter meter" style="--bar-width: ${benchmark.score}%"><i></i></div>
@@ -917,7 +986,7 @@ function renderScorecard(project) {
     </details>
 
     <details class="analysis-drawer">
-      <summary><span>Winner benchmark</span><strong>${project.scores.brightDataPrize}</strong></summary>
+      <summary><span>Prize fit</span><strong>${project.scores.brightDataPrize}</strong></summary>
       ${renderWinnerBenchmark(project)}
     </details>
 
@@ -979,7 +1048,7 @@ function renderReceipt(project) {
 
   elements.receipt.innerHTML = `
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
-      <span>Live run record</span>
+      <span>Run ID</span>
       <strong>${escapeHtml(runReceipt?.runId || "Not issued")}</strong>
       <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "verified" : "verification pending"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server receipt.")}</small>
     </div>
@@ -1197,8 +1266,8 @@ function loadSampleReviewLinks() {
   elements.quickRepoUrl.value = SAMPLE_REVIEW_LINKS.repoUrl;
   elements.quickDemoUrl.value = SAMPLE_REVIEW_LINKS.demoUrl;
   syncFullReviewFormFromQuick();
-  setQuickHint("Sample links loaded. Click Run review to add them to the queue.", "ready");
-  setStatus("Sample project links loaded.", "ready");
+  setCopyReviewLinkState();
+  selectVerifiedSampleReview(SAMPLE_REVIEW_LINKS);
 }
 
 function reviewerInputPayload() {
@@ -1334,6 +1403,11 @@ async function addReviewerProject() {
   const payload = reviewerInputPayload();
   if (!payload) return;
 
+  if (state.mode !== "live" && isVerifiedSamplePayload(payload)) {
+    selectVerifiedSampleReview(payload);
+    return;
+  }
+
   let project;
   elements.addReviewerProject.disabled = true;
   elements.quickAddReviewerProject.disabled = true;
@@ -1367,11 +1441,11 @@ async function addReviewerProject() {
   elements.reviewerHint.textContent =
     state.mode === "live"
       ? "Project collected with the live backend. Inspect the evidence report and replay traces."
-      : "Project added. Live Bright Data review is available from Live run when a tokenized session is loaded.";
+      : "Project added. Live Bright Data review is available from Live setup when a tokenized session is loaded.";
   setQuickHint(
     state.mode === "live"
       ? "Live evidence collected. Open Evidence to inspect the report."
-      : "Project added. The URL now carries this review, so another visitor can open the same links.",
+      : "Project added. Copy review link lets another visitor open and replay the same links.",
     "ready"
   );
   setStatus(`${project.title} added to the review queue.`, "ready");
@@ -1466,6 +1540,7 @@ elements.htmlUpload.addEventListener("change", (event) => handleUpload(event.tar
 elements.addReviewerProject.addEventListener("click", addReviewerProject);
 elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProject);
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
+elements.copyReviewLink?.addEventListener("click", copyReviewLink);
 elements.startTour?.addEventListener("click", startTour);
 elements.startTourTop?.addEventListener("click", startTour);
 elements.startTourHero?.addEventListener("click", startTour);
@@ -1483,6 +1558,8 @@ elements.quickDemoUrl.addEventListener("keydown", (event) => {
     addQuickReviewerProject();
   }
 });
+elements.quickRepoUrl.addEventListener("input", setCopyReviewLinkState);
+elements.quickDemoUrl.addEventListener("input", setCopyReviewLinkState);
 
 elements.exportCsv.addEventListener("click", () => {
   downloadText("proofrank-judge-queue.csv", toCsv(state.projects), "text/csv");
@@ -1509,4 +1586,5 @@ const shouldAutorunReview = loadReviewParamsFromUrl();
 updateReviewerModeCopy();
 setActiveSection(state.activeSection);
 render();
+setCopyReviewLinkState();
 if (shouldAutorunReview) window.setTimeout(addQuickReviewerProject, 120);

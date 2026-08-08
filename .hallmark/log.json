@@ -3,6 +3,13 @@
     "date": "2026-08-08",
     "macrostructure": "Workbench",
     "theme": "modern-minimal",
+    "enrichment": "guided public review card",
+    "brief": "Simplified ProofRank first-use flow with persistent QTips, verified sample, and shareable review links"
+  },
+  {
+    "date": "2026-08-08",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
     "enrichment": "product proof strip",
     "brief": "Productized ProofRank first viewport with workflow strip, stronger mark, and buyer readout"
   },

@@ -96,11 +96,15 @@ try {
   await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
   await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
   await page.click("#quickAddReviewerProject");
-  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "").includes("ProofRank AI Factory"));
+  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
+  await page.waitForFunction(() => /Bright Data evidence passed/i.test(document.querySelector("#liveProofStrip")?.textContent || ""));
+  await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+  await page.fill("#quickDemoUrl", "https://brightdata.com/");
+  await page.click("#quickAddReviewerProject");
+  await page.waitForSelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]', { state: "attached", timeout: 5000 });
   await page.click('[data-section-tab="queue"]');
-  await page.waitForSelector('#rankedList [data-id="review-vishwa-docs-proofrank-ai-factory"]', { state: "attached", timeout: 5000 });
-  await page.click('#rankedList [data-id="review-vishwa-docs-proofrank-ai-factory"]');
-  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank AI Factory");
+  await page.click('#rankedList [data-id="proofrank"]');
+  await page.waitForFunction(() => (document.querySelector("#scorecard .focus-strip h2")?.textContent || "") === "ProofRank");
 
   await page.click('[data-section-tab="receipt"]');
   const selectedReceipt = await captureDownloadName(page, "#exportSelected");
@@ -130,6 +134,14 @@ try {
         selectedProject: document.querySelector("#scorecard .focus-strip h2")?.textContent?.trim() || "",
         rankedRows: document.querySelectorAll(".project-row").length,
         reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
+        shareableReviewReady: (() => {
+          const params = new URL(window.location.href).searchParams;
+          return (
+            !document.querySelector("#copyReviewLink")?.disabled &&
+            params.get("reviewRepo") === "https://github.com/brightdata/brightdata-mcp" &&
+            params.get("reviewDemo") === "https://brightdata.com/"
+          );
+        })(),
         statusLine: document.querySelector("#statusLine")?.textContent?.trim() || "",
         brightProof: document.querySelector("#liveProofStrip")?.textContent?.replace(/\s+/g, " ").trim() || "",
         scorecardText: document.querySelector("#scorecard")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
@@ -151,11 +163,12 @@ try {
   proof.consoleMessages = messages;
   proof.ok =
     proof.appTitle === "ProofRank" &&
-    proof.selectedProject === "ProofRank AI Factory" &&
+    proof.selectedProject === "ProofRank" &&
     proof.rankedRows >= 8 &&
     proof.reviewerRowPresent === true &&
-    /Sample review only|Live replay prepared|Bright Data (proof|evidence) passed|executed/i.test(proof.brightProof) &&
-    /Reviewer supplied GitHub repository/i.test(proof.receiptText) &&
+    proof.shareableReviewReady === true &&
+    /Bright Data evidence passed/i.test(proof.brightProof) &&
+    /Run ID|bright-data-mcp/i.test(proof.receiptText) &&
     proof.exportedFiles.length === 2 &&
     messages.length === 0;
 

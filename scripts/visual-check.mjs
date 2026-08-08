@@ -72,10 +72,38 @@ for (const spec of [
     if (!fakeRepoRejected) {
       throw new Error("Fake GitHub host was accepted by the hero review form.");
     }
-    await page.fill("#quickRepoUrl", "https://github.com/Vishwa-docs/proofrank-ai-factory");
-    await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
+    const repoDescribed = await page.getAttribute("#quickRepoUrl", "aria-describedby");
+    const demoDescribed = await page.getAttribute("#quickDemoUrl", "aria-describedby");
+    if (repoDescribed !== "quickRepoHelp" || demoDescribed !== "quickDemoHelp") {
+      throw new Error("Hero review inputs are missing persistent QTip descriptions.");
+    }
+    await page.click("#loadSampleProject");
+    await page.waitForTimeout(200);
+    const verifiedSampleSelected = await page.evaluate(() => {
+      const title = document.querySelector("#scorecard .focus-strip h2")?.textContent || "";
+      const strip = document.querySelector("#liveProofStrip")?.textContent || "";
+      return title === "ProofRank" && /Bright Data evidence passed/i.test(strip);
+    });
+    if (!verifiedSampleSelected) {
+      throw new Error("Verified sample did not select the signed Bright Data project.");
+    }
+    await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+    await page.fill("#quickDemoUrl", "https://brightdata.com/");
     await page.click("#quickAddReviewerProject");
     await page.waitForTimeout(200);
+    const shareableReviewReady = await page.evaluate(() => {
+      const button = document.querySelector("#copyReviewLink");
+      const params = new URL(window.location.href).searchParams;
+      return Boolean(
+        button &&
+          !button.disabled &&
+          params.get("reviewRepo") === "https://github.com/brightdata/brightdata-mcp" &&
+          params.get("reviewDemo") === "https://brightdata.com/"
+      );
+    });
+    if (!shareableReviewReady) {
+      throw new Error("Valid hero review did not enable a shareable review link.");
+    }
     await page.click('[data-section-tab="queue"]');
     await page.click('#rankedList [data-id="proofrank"]');
     await page.evaluate(() => window.scrollTo(0, 0));

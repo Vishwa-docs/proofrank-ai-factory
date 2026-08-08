@@ -110,7 +110,7 @@ Hackathon judges, sponsor partner teams, accelerator reviewers, grant reviewers,
 
 ## Solution
 
-ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence receipts with source-backed evidence, review risks, claim verdicts, and recommended diligence actions.
+ProofRank audits public AI product pages, demos, repositories, presentations, and technology claims. It ranks projects and emits evidence reports with source-backed evidence, review risks, claim verdicts, and recommended diligence actions.
 
 ## Bright Data Usage
 
@@ -120,26 +120,26 @@ Bright Data is the evidence acquisition layer. The fallback app implements serve
 
 The competition app should be created and published through native.builder using the prepared prompt. Native.builder generates the UI routes, stateful audit workflow, export surfaces, and public deployment.
 
-## Current Self-Audit
+## Current Product Review
 
 - Primary submission status: ${primarySubmissionStatus}
 - Overall score: ${receipt.scores.overall}
 - Bright Data fit: ${receipt.scores.brightDataFit}
 - Bright Data prize score: ${receipt.scores.brightDataPrize}
 - Bright Data evidence state: ${receipt.traceState}
-- Evidence receipt: ${receipt.runReceipt?.runId || "Not issued"}
+- Evidence report: ${receipt.runReceipt?.runId || "Not issued"}
 - Replay command: ${receipt.runReceipt?.replayCommand || "Run live collection first"}
 - Evidence package readiness: ${readinessSummary(receipt.readiness)}
 - Verdict: ${receipt.verdict.label}
 - Action: ${receipt.verdict.action}
 - Risks: ${receipt.verdict.risks.length ? receipt.verdict.risks.join("; ") : "No major risks"}
 
-## Submission Gates
+## Readiness Checklist
 
 ${receipt.readiness.gates
   .map(
     (gate) =>
-      `- ${gate.status === "passed" ? "PASS" : gate.required ? "ACTION" : "IMPROVE"}: ${gate.label} - ${gate.detail} Proof: ${gate.proof}`
+      `- ${gate.status === "passed" ? "PASS" : gate.required ? "ACTION" : "IMPROVE"}: ${gate.label} - ${gate.detail} Evidence: ${gate.proof}`
   )
   .join("\n")}
 
@@ -172,7 +172,7 @@ ${receipt.readiness.gates
 
 ## Demo Workflow
 
-Paste a public GitHub repo and demo app URL, add the project, inspect Verdict and Shortlist, open Claim Check, review the evidence receipt, and export the sponsor-ready diligence packet.
+Paste a public GitHub repo and demo app URL, add the project, inspect Review and Projects, open Checked Statements, review the evidence report, and export the sponsor-ready diligence packet.
 
 ## External Tools
 

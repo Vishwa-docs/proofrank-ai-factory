@@ -123,16 +123,16 @@ assert.ok(receipt.tribunal.disputes.some((dispute) => dispute.topic === "Sponsor
 const packet = buildSubmissionPacket(project, [project, adjacentProject]);
 assert.match(packet, /Review Panel/);
 assert.match(packet, /Similarity Check/);
-assert.match(packet, /Submission Gates/);
+assert.match(packet, /Readiness Checklist/);
 assert.match(packet, /Bright Data evidence state: executed/);
 assert.match(packet, /Bright Data prize score: 98/);
-assert.match(packet, /Evidence receipt: pr-20260807t120000000z-1a2b3c4d/);
+assert.match(packet, /Evidence report: pr-20260807t120000000z-1a2b3c4d/);
 assert.match(packet, /Replay command: PROOFRANK_FETCH_MODE=mcp npm run live:smoke/);
 assert.match(packet, /Evidence package readiness: Evidence package ready/);
 assert.doesNotMatch(packet, /Submission readiness:/);
 assert.doesNotMatch(packet, /submission-safe/i);
 assert.match(packet, /Primary submission status: NATIVE\.BUILDER PRIMARY/);
-assert.match(packet, /Proof: https:\/\/proofrank\.nativelyai\.app\//);
+assert.match(packet, /Evidence: https:\/\/proofrank\.nativelyai\.app\//);
 assert.match(packet, /Push for sponsor shortlist/);
 
 const csv = toCsv([project]);

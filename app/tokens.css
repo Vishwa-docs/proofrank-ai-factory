@@ -48,5 +48,6 @@
   --dur-micro: 120ms;
   --dur-short: 220ms;
   --dur-long: 420ms;
+  --shadow-low: 0 0.75rem 1.5rem color-mix(in oklch, var(--color-ink) 14%, transparent);
   --z-sticky: 200;
 }
