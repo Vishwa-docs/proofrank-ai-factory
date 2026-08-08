@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T20:44:45.183Z",
+  "generatedAt": "2026-08-08T04:48:02.559Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 10,
@@ -21,7 +21,7 @@
       "label": "Under-three-minute demo video",
       "required": true,
       "status": "passed",
-      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 140s",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 36s",
       "action": "Upload a demo video shorter than three minutes and verify the public release asset."
     },
     {
