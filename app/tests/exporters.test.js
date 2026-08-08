@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { buildReceipt, buildSubmissionPacket, toCsv } from "../src/exporters.js";
+import { buildProgramReport, buildReceipt, buildSubmissionPacket, toCsv } from "../src/exporters.js";
 
 const project = {
   id: "proofrank",
@@ -138,5 +138,25 @@ assert.match(packet, /Push for sponsor shortlist/);
 const csv = toCsv([project]);
 assert.match(csv.split("\n")[0], /brightDataPrize/);
 assert.match(csv, /,98,/);
+
+const draftProject = {
+  ...adjacentProject,
+  id: "review-adjacent",
+  evidence: {
+    ...adjacentProject.evidence,
+    brightDataTrace: false,
+    brightDataTraceStatus: "pending",
+    brightDataTools: []
+  },
+  brightDataTraces: []
+};
+const reviewRoomReport = buildProgramReport([project, draftProject], { selectedProject: project });
+assert.match(reviewRoomReport, /ProofRank Review Room Report/);
+assert.match(reviewRoomReport, /Projects reviewed: 2/);
+assert.match(reviewRoomReport, /Visitor-added draft reviews: 1/);
+assert.match(reviewRoomReport, /Projects with executed Bright Data evidence: 1/);
+assert.match(reviewRoomReport, /Selected Project/);
+assert.match(reviewRoomReport, /ProofRank/);
+assert.match(reviewRoomReport, /Bright Data state: executed/);
 
 console.log("exporter tests passed");

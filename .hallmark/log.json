@@ -3,6 +3,13 @@
     "date": "2026-08-08",
     "macrostructure": "Workbench",
     "theme": "modern-minimal",
+    "enrichment": "review room report",
+    "brief": "Added ProofRank program-level Review Room stats, room memo export, safer draft review states, and buyer-facing onboarding copy"
+  },
+  {
+    "date": "2026-08-08",
+    "macrostructure": "Workbench",
+    "theme": "modern-minimal",
     "enrichment": "guided public review card",
     "brief": "Simplified ProofRank first-use flow with persistent QTips, verified sample, and shareable review links"
   },

@@ -60,6 +60,50 @@ for (const spec of [
     if (!tourVisible) {
       throw new Error("Guided review did not open beside the repo field with a visible highlight.");
     }
+    await page.click("#tourNext");
+    await page.waitForTimeout(300);
+    const tourStepTwo = await page.evaluate(() => {
+      return (
+        document.querySelector('[data-section-panel="overview"]')?.classList.contains("is-active") &&
+        document.querySelector("#scorecard")?.classList.contains("is-tour-target")
+      );
+    });
+    if (!tourStepTwo) {
+      throw new Error("Guided review step 2 did not highlight the scorecard.");
+    }
+    await page.click("#tourNext");
+    await page.waitForTimeout(300);
+    const tourStepThree = await page.evaluate(() => {
+      return (
+        document.querySelector('[data-section-panel="queue"]')?.classList.contains("is-active") &&
+        document.querySelector("#rankedList")?.classList.contains("is-tour-target")
+      );
+    });
+    if (!tourStepThree) {
+      throw new Error("Guided review step 3 did not switch to Projects and highlight the ranked list.");
+    }
+    await page.click("#tourNext");
+    await page.waitForTimeout(300);
+    const tourStepFour = await page.evaluate(() => {
+      return (
+        document.querySelector('[data-section-panel="receipt"]')?.classList.contains("is-active") &&
+        document.querySelector("#receipt")?.classList.contains("is-tour-target")
+      );
+    });
+    if (!tourStepFour) {
+      throw new Error("Guided review step 4 did not switch to Evidence and highlight the receipt.");
+    }
+    await page.click("#tourNext");
+    await page.waitForTimeout(300);
+    const tourStepFive = await page.evaluate(() => {
+      return (
+        document.querySelector('[data-section-panel="setup"]')?.classList.contains("is-active") &&
+        document.querySelector("#modeSelect")?.classList.contains("is-tour-target")
+      );
+    });
+    if (!tourStepFive) {
+      throw new Error("Guided review step 5 did not switch to Live setup and highlight review mode.");
+    }
     await page.click("#tourClose");
     await page.fill("#quickRepoUrl", "https://example.com/github.com/fake/project");
     await page.fill("#quickDemoUrl", "https://vishwa-docs.github.io/proofrank-ai-factory/");
@@ -71,6 +115,17 @@ for (const spec of [
     });
     if (!fakeRepoRejected) {
       throw new Error("Fake GitHub host was accepted by the hero review form.");
+    }
+    await page.fill("#quickRepoUrl", "https://github.com/brightdata/brightdata-mcp");
+    await page.fill("#quickDemoUrl", "not-a-url");
+    await page.click("#quickAddReviewerProject");
+    await page.waitForTimeout(200);
+    const invalidDemoRejected = await page.evaluate(() => {
+      const status = document.querySelector("#statusLine")?.textContent || "";
+      return /Demo app URL must start/i.test(status) && !document.querySelector('#rankedList [data-id="review-brightdata-brightdata-mcp"]');
+    });
+    if (!invalidDemoRejected) {
+      throw new Error("Invalid non-empty demo URL was accepted without a warning.");
     }
     const repoDescribed = await page.getAttribute("#quickRepoUrl", "aria-describedby");
     const demoDescribed = await page.getAttribute("#quickDemoUrl", "aria-describedby");
@@ -104,6 +159,43 @@ for (const spec of [
     if (!shareableReviewReady) {
       throw new Error("Valid hero review did not enable a shareable review link.");
     }
+    const draftRoutePending = await page.evaluate(() => {
+      const nodes = [...document.querySelectorAll("#proofTopology .route-node")];
+      const packetNode = nodes.find((node) => /Review memo/i.test(node.textContent || ""));
+      return Boolean(packetNode?.classList.contains("pending") && /Draft memo ready/i.test(packetNode.textContent || ""));
+    });
+    if (!draftRoutePending) {
+      throw new Error("Browser-created draft review looked like a fully passed live review packet.");
+    }
+    await page.evaluate(() => {
+      const select = document.querySelector("#modeSelect");
+      select.value = "live";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.click("#quickAddReviewerProject");
+    await page.waitForTimeout(250);
+    const quickLiveSwitchWarned = await page.evaluate(() => {
+      const status = document.querySelector("#statusLine")?.textContent || "";
+      const mode = document.querySelector("#modeSelect")?.value || "";
+      return mode === "demo" && /switched to sample review/i.test(status);
+    });
+    if (!quickLiveSwitchWarned) {
+      throw new Error("Hero quick review did not clearly warn when switching live mode back to sample review.");
+    }
+    const reviewRoomReady = await page.evaluate(() => {
+      const room = document.querySelector("#reviewRoomStats");
+      const text = document.querySelector(".review-room-strip")?.textContent || "";
+      return Boolean(
+        room &&
+          room.querySelectorAll("article").length === 4 &&
+          /Visitor drafts\s*1/i.test(text) &&
+          document.querySelector("#exportRoomMemo") &&
+          document.querySelector("#exportProgramReport")
+      );
+    });
+    if (!reviewRoomReady) {
+      throw new Error("Review Room summary or room memo export is not visible after adding a visitor project.");
+    }
     await page.click('[data-section-tab="queue"]');
     await page.click('#rankedList [data-id="proofrank"]');
     await page.evaluate(() => window.scrollTo(0, 0));
@@ -125,6 +217,7 @@ for (const spec of [
       selectedTitle: document.querySelector("#scorecard .focus-strip h2")?.textContent || "",
       routeNodes: document.querySelectorAll("#proofTopology .route-node").length,
       winnerBenchmarkCount: document.querySelectorAll(".winner-benchmark").length,
+      reviewRoomStats: document.querySelectorAll("#reviewRoomStats article").length,
       readinessCount: document.querySelectorAll("#readinessList li").length,
       reviewerRowPresent: Boolean(document.querySelector('#rankedList [data-id^="review-"]')),
       scrollWidth: html.scrollWidth,
@@ -149,6 +242,7 @@ const failures = results.flatMap((result) => {
   if (result.metrics.rows < 1) problems.push(`${result.spec.name}: no ranked rows rendered`);
   if (result.metrics.routeNodes !== 6) problems.push(`${result.spec.name}: proof route did not render`);
   if (result.metrics.winnerBenchmarkCount !== 1) problems.push(`${result.spec.name}: winner benchmark did not render`);
+  if (result.metrics.reviewRoomStats !== 4) problems.push(`${result.spec.name}: review room stats did not render`);
   if (result.metrics.horizontalOverflow) problems.push(`${result.spec.name}: horizontal overflow`);
   if (result.metrics.offscreenPanels) problems.push(`${result.spec.name}: offscreen panels`);
   if (result.spec.name === "desktop" && !result.metrics.reviewerRowPresent) {

@@ -110,6 +110,7 @@ try {
   const selectedReceipt = await captureDownloadName(page, "#exportSelected");
   await page.locator(".export-menu summary").click();
   const packet = await captureDownloadName(page, "#exportPacket");
+  const roomReport = await captureDownloadName(page, "#exportProgramReport");
   await page.click('[data-section-tab="overview"]');
   await page.evaluate(() => {
     const exportMenu = document.querySelector(".export-menu");
@@ -120,7 +121,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   const proof = await page.evaluate(
-    ({ selectedReceipt, packet, screenshotPath, durationMs }) => {
+    ({ selectedReceipt, packet, roomReport, screenshotPath, durationMs }) => {
       const readinessItems = [...document.querySelectorAll("#readinessList li")].map((item) => ({
         status: item.querySelector("span")?.textContent?.trim() || "",
         label: item.querySelector("strong")?.textContent?.trim() || "",
@@ -147,7 +148,7 @@ try {
         scorecardText: document.querySelector("#scorecard")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
         receiptText: document.querySelector("#receipt")?.textContent?.replace(/\s+/g, " ").slice(0, 600).trim() || "",
         readinessItems,
-        exportedFiles: [selectedReceipt, packet],
+        exportedFiles: [selectedReceipt, packet, roomReport],
         screenshotPath,
         consoleMessages: []
       };
@@ -155,6 +156,7 @@ try {
     {
       selectedReceipt,
       packet,
+      roomReport,
       screenshotPath,
       durationMs: Date.now() - startedAt
     }
@@ -169,7 +171,7 @@ try {
     proof.shareableReviewReady === true &&
     /Bright Data evidence passed/i.test(proof.brightProof) &&
     /Run ID|bright-data-mcp/i.test(proof.receiptText) &&
-    proof.exportedFiles.length === 2 &&
+    proof.exportedFiles.length === 3 &&
     messages.length === 0;
 
   await writeFile(proofPath, `${JSON.stringify(proof, null, 2)}\n`, "utf8");

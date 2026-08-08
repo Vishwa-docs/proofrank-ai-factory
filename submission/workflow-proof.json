@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-08-08T06:51:57.091Z",
-  "durationMs": 6786,
+  "generatedAt": "2026-08-08T07:06:37.876Z",
+  "durationMs": 6642,
   "appTitle": "ProofRank",
   "selectedProject": "ProofRank",
   "rankedRows": 9,
   "reviewerRowPresent": true,
   "shareableReviewReady": true,
   "statusLine": "ProofRank selected.",
-  "brightProof": "Evidence report Bright Data evidence passed source scrape + search + discovery / verified",
-  "scorecardText": "Evidence checks passed ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Evidence Passed Bright Data run verified DemoGitHub Next action Submit final entry from the lablab team account Evidence depth 2 public links, 4 evidence items, Bright Data executed. Current blocker Final submission not sent. Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open risks. Different",
-  "receiptText": "Run ID pr-20260807t200529345z-23568b05 bright-data-mcp / verified / 23568b05 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Verified Bright Data evidence receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. signed-r",
+  "brightProof": "Evidence report Bright Data evidence passed source, search, and discovery checked / verified",
+  "scorecardText": "Evidence checks passed ProofRank Agentic submission truth auditor that ranks hackathon projects with source-backed evidence receipts for accessibility, originality, sponsor usage, and review risk. native.builderBright Data Remote MCPBright Data SERP API+2 Evidence Passed Bright Data review verified DemoGitHubExport memo Next action Submit final entry from the lablab team account Evidence depth 2 public links, 4 evidence items, Bright Data executed. Current blocker Final submission not sent. Buyer Judges and sponsor teams Compress public review into a shortlist with reasons, links, and open ri",
+  "receiptText": "Review run pr-20260807t200529345z-23568b05 bright-data-mcp / verified / 23568b05 Competition-aware design The product is scoped to public submission verification, a judge and sponsor workflow with obvious Bright Data dependence. design 91% confidence Codex design agent Bright Data trace model Live mode maps event and project URLs into Remote MCP, SERP, Web Scraper API, and CLI collection steps. adapter 86% confidence Bright Data adapter Verified Bright Data evidence receipt Final receipt includes executed Bright Data source, search_engine, and discover traces with signature verification. sign",
   "readinessItems": [
     {
       "status": "Passed",
@@ -59,7 +59,8 @@
   ],
   "exportedFiles": [
     "proofrank-evidence-receipt.json",
-    "proofrank-submission-packet.md"
+    "proofrank-submission-packet.md",
+    "proofrank-review-room-report.md"
   ],
   "screenshotPath": "/Users/daver/Desktop/LabLabAI AI Factory NativeBuilder Hackathon/submission/demo-assets/workflow-proof.png",
   "consoleMessages": [],

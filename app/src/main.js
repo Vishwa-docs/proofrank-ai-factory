@@ -7,7 +7,7 @@ import { buildOriginalityRadar } from "./originality.js";
 import { buildReadiness, readinessSummary } from "./readiness.js";
 import { buildWinnerBenchmark } from "./winnerBenchmark.js";
 import { buildCliCommands, buildMcpQueries, setupChecklist } from "./brightDataAdapter.js";
-import { buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
+import { buildProgramReport, buildReceipt, buildSubmissionPacket, downloadJson, downloadText, toCsv } from "./exporters.js";
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
@@ -41,10 +41,11 @@ const elements = {
   quickAddReviewerProject: document.querySelector("#quickAddReviewerProject"),
   loadSampleProject: document.querySelector("#loadSampleProject"),
   copyReviewLink: document.querySelector("#copyReviewLink"),
+  copyAppLink: document.querySelector("#copyAppLink"),
   quickReviewHint: document.querySelector("#quickReviewHint"),
+  reviewRoomStats: document.querySelector("#reviewRoomStats"),
   startTour: document.querySelector("#startTour"),
   startTourTop: document.querySelector("#startTourTop"),
-  startTourHero: document.querySelector("#startTourHero"),
   guidedTour: document.querySelector("#guidedTour"),
   tourStepLabel: document.querySelector("#tourStepLabel"),
   tourTitle: document.querySelector("#tourTitle"),
@@ -56,6 +57,8 @@ const elements = {
   exportSelected: document.querySelector("#exportSelected"),
   heroExportPacket: document.querySelector("#heroExportPacket"),
   exportPacket: document.querySelector("#exportPacket"),
+  exportProgramReport: document.querySelector("#exportProgramReport"),
+  exportRoomMemo: document.querySelector("#exportRoomMemo"),
   navJumps: [...document.querySelectorAll("[data-nav-tab], [data-focus-target]")],
   sectionTabs: [...document.querySelectorAll(".section-tab[data-section-tab]")],
   sectionPanels: [...document.querySelectorAll("[data-section-panel]")]
@@ -250,10 +253,10 @@ function selectVerifiedSampleReview(payload = SAMPLE_REVIEW_LINKS) {
   elements.reviewerHint.textContent =
     "Verified sample selected. It includes an executed Bright Data source, search, and discovery run.";
   setQuickHint(
-    "Verified sample loaded: Bright Data source, search, and discovery traces are signed. Paste another project for a draft review.",
+    "Verified sample loaded: Bright Data source, search, and discovery checks are verified. Paste another project for a draft review.",
     "ready"
   );
-  setStatus("Verified sample selected. Open Evidence to inspect the Bright Data run.", "ready");
+  setStatus("Verified sample selected. Open Evidence to inspect the Bright Data review record.", "ready");
   render();
   setActiveSection("overview", { scroll: true });
 }
@@ -302,6 +305,20 @@ async function copyReviewLink() {
   } catch {
     window.prompt("Copy this review link:", reviewUrl);
     setQuickHint("Copy the review link from the browser prompt.", "ready");
+  }
+}
+
+async function copyAppLink() {
+  const appUrl = new URL(window.location.href);
+  appUrl.search = "";
+  appUrl.hash = "";
+
+  try {
+    await navigator.clipboard.writeText(appUrl.toString());
+    setStatus("App link copied. Visitors can paste their own GitHub and demo URLs.", "ready");
+  } catch {
+    window.prompt("Copy this app link:", appUrl.toString());
+    setStatus("Copy the app link from the browser prompt.", "ready");
   }
 }
 
@@ -425,7 +442,7 @@ function updateLiveProofStrip(project) {
     sponsorBundle
       ? "Bright Data evidence passed"
       : traceState === "executed"
-        ? "Partial Bright Data run"
+        ? "Partial live evidence"
       : traceState === "direct"
         ? "Direct evidence only"
         : traceState === "planned"
@@ -433,14 +450,14 @@ function updateLiveProofStrip(project) {
           : "Sample review only";
   const detail =
     sponsorBundle
-      ? `source scrape + search + discovery / ${receipt.signature ? "verified" : "verification pending"}`
+      ? `source, search, and discovery checked / ${receipt.signature ? "verified" : "review record pending"}`
       : traceState === "executed"
-        ? "Source plus search plus discover required"
+        ? "Source, search, and discovery checks required"
       : traceState === "direct"
         ? "Bright Data replay can strengthen this review"
         : traceState === "planned"
-          ? "Bright Data commands prepared"
-          : "Run live collection when a tokenized backend session is available";
+          ? "Bright Data checks prepared"
+          : "Run live collection when a private reviewer session is available";
 
   elements.liveProofStrip.className = `live-proof-strip ${className}`;
   elements.liveProofStrip.innerHTML = `
@@ -657,6 +674,7 @@ function renderProofTopology(project) {
   const sponsorBundle = hasBrightDataSponsorProofBundle(project);
   const evidenceItemCount = (project.evidenceItems || []).length;
   const hasItems = evidenceItemCount > 0;
+  const isDraftReview = String(project.id || "").startsWith("review-") && !sponsorBundle;
   const hasPacket = Boolean(project.evidence?.proofReceipt);
   const route = [
     {
@@ -675,8 +693,8 @@ function renderProofTopology(project) {
       status: routeStatus(isHttpUrl(project.demoUrl || ""), project.evidence?.hasPublicDemo === true)
     },
     {
-      label: "Bright Data run",
-      detail: sponsorBundle ? "Source, search, discover executed" : executedBright ? "Partial sponsor evidence" : `Current state: ${traceState}`,
+      label: "Bright Data check",
+      detail: sponsorBundle ? "Source, search, discovery checked" : executedBright ? "Partial sponsor evidence" : `Current state: ${traceState}`,
       status: routeStatus(sponsorBundle, executedBright || ["planned", "claimed", "pending", "direct"].includes(traceState))
     },
     {
@@ -685,9 +703,9 @@ function renderProofTopology(project) {
       status: routeStatus(hasItems)
     },
     {
-      label: "Review packet",
-      detail: hasPacket ? "Receipt and exports ready" : "Receipt export missing",
-      status: routeStatus(hasPacket)
+      label: "Review memo",
+      detail: isDraftReview ? "Draft memo ready; live record missing" : hasPacket ? "Memo and exports ready" : "Review memo missing",
+      status: routeStatus(hasPacket && !isDraftReview, isDraftReview || hasPacket)
     }
   ];
 
@@ -695,10 +713,10 @@ function renderProofTopology(project) {
     <div class="module-head proof-head">
       <div>
         <h2>Data path</h2>
-        <p class="hint">The Bright Data gate is the load-bearing sponsor evidence.</p>
+        <p class="hint">The live web check is the load-bearing sponsor evidence.</p>
       </div>
       <span class="route-verdict ${sponsorBundle ? "passed" : "pending"}">${escapeHtml(
-        sponsorBundle ? "Bright Data evidence passed" : "Bright Data run incomplete"
+        sponsorBundle ? "Bright Data evidence passed" : "Bright Data evidence incomplete"
       )}</span>
     </div>
     <ol class="route-map">
@@ -869,12 +887,13 @@ function renderSourceLinks(project) {
     ["GitHub", project.githubUrl],
     ["Deck", project.presentationUrl]
   ].filter(([, url]) => url && isHttpUrl(url));
+  const exportButton = `<button class="source-link" data-export-selected type="button">Export memo</button>`;
 
-  if (!links.length) return `<p class="hint">No public source links attached yet.</p>`;
+  if (!links.length) return `<p class="hint">No public source links attached yet.</p>${exportButton}`;
 
-  return links
+  return `${links
     .map(([label, url]) => `<a class="source-link" href="${escapeAttr(url)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`)
-    .join("");
+    .join("")}${exportButton}`;
 }
 
 function renderScorecard(project) {
@@ -896,11 +915,11 @@ function renderScorecard(project) {
   const scoreLabel = hasPendingFinalSubmission(project) ? "Evidence" : "Evidence score";
   const scoreValue = hasPendingFinalSubmission(project) ? "Passed" : project.scores.overall;
   const scoreDetail = hasPendingFinalSubmission(project)
-    ? `Bright Data run verified`
+    ? `Bright Data review verified`
     : `Bright ${project.scores.brightDataPrize}`;
   const runReceipt = project.runReceipt || {};
   const sponsorProofReady = hasBrightDataSponsorProofBundle(project);
-  const sponsorToolLabel = sponsorProofReady ? "Source scrape + search + discovery" : "Source, search, and discovery needed";
+  const sponsorToolLabel = sponsorProofReady ? "Source + search + discovery" : "Source, search, and discovery needed";
   const replayState = state.mode === "live" ? (hasReviewToken() ? "private session ready" : "private token needed") : "Private live backend";
 
   elements.scorecard.innerHTML = `
@@ -957,7 +976,7 @@ function renderScorecard(project) {
 
     <section class="proof-highlights" aria-label="Bright Data evidence highlights">
       <article>
-        <span>Bright Data gate</span>
+        <span>Bright Data evidence</span>
         <strong>${escapeHtml(sponsorToolLabel)}</strong>
         <p>${sponsorProofReady ? "Executed evidence counts; planned or claimed rows do not." : "Needs the complete source, search, and discover run."}</p>
       </article>
@@ -967,9 +986,9 @@ function renderScorecard(project) {
         <p>${escapeHtml(runReceipt.traceDigest ? `${runReceipt.signature ? "Verified" : "Verification pending"} live run record` : "Live collection has not produced a report yet.")}</p>
       </article>
       <article>
-        <span>Fresh replay</span>
+        <span>Live rerun</span>
         <strong>${escapeHtml(replayState)}</strong>
-        <p>Judge replay runs server-side so Bright Data secrets stay off the page.</p>
+        <p>Live review runs server-side so Bright Data secrets stay off the page.</p>
       </article>
     </section>
 
@@ -1048,9 +1067,9 @@ function renderReceipt(project) {
 
   elements.receipt.innerHTML = `
     <div class="run-receipt ${runReceipt ? "is-issued" : "is-empty"}">
-      <span>Run ID</span>
+      <span>Review run</span>
       <strong>${escapeHtml(runReceipt?.runId || "Not issued")}</strong>
-      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "verified" : "verification pending"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server receipt.")}</small>
+      <small>${escapeHtml(runReceipt?.traceDigest ? `${runReceipt.collectionMode} / ${runReceipt.signature ? "verified" : "review record pending"} / ${runReceipt.traceDigest}` : "Live project collection has not issued a server record.")}</small>
     </div>
 
     <div class="receipt-list">
@@ -1058,7 +1077,7 @@ function renderReceipt(project) {
     </div>
 
     <details class="receipt-drawer">
-      <summary>Bright Data trace table</summary>
+      <summary>Audit details</summary>
       <table class="trace-table" aria-label="Bright Data traces">
         <thead>
           <tr>
@@ -1113,6 +1132,35 @@ function renderFieldMap() {
   `;
 }
 
+function renderReviewRoom() {
+  if (!elements.reviewRoomStats) return;
+  const total = state.projects.length;
+  const visitorAdded = state.reviewerProjects.length;
+  const executedBright = state.projects.filter(hasBrightDataSponsorProofBundle).length;
+  const ready = state.projects.filter((project) => {
+    const readiness = buildReadiness(project, readinessContext());
+    return readiness.proofPackageReady || readiness.canSubmit || project.verdict?.label === "Finalist-ready";
+  }).length;
+
+  const stats = [
+    ["Projects", total],
+    ["Visitor drafts", visitorAdded],
+    ["Bright Data passed", executedBright],
+    ["Review-ready", ready]
+  ];
+
+  elements.reviewRoomStats.innerHTML = stats
+    .map(
+      ([label, value]) => `
+        <article>
+          <span>${escapeHtml(label)}</span>
+          <strong>${value}</strong>
+        </article>
+      `
+    )
+    .join("");
+}
+
 function renderReadiness(project = selectedProject()) {
   const readiness = buildReadiness(project, readinessContext());
 
@@ -1147,6 +1195,7 @@ function render() {
   renderScorecard(project);
   renderReceipt(project);
   renderFieldMap();
+  renderReviewRoom();
   renderReadiness(project);
 }
 
@@ -1283,9 +1332,16 @@ function reviewerInputPayload() {
     return null;
   }
 
+  if (demoUrl && !isHttpUrl(demoUrl)) {
+    const message = "Demo app URL must start with http:// or https://, or be left blank.";
+    setStatus(message, "error");
+    setQuickHint(message, "error");
+    return null;
+  }
+
   return {
     repoUrl: githubRepo.canonicalUrl,
-    demoUrl: isHttpUrl(demoUrl) ? demoUrl : "",
+    demoUrl,
     title: elements.reviewerTitle.value.trim(),
     team: elements.reviewerTeam.value.trim(),
     repoOwner: githubRepo.owner,
@@ -1341,7 +1397,7 @@ function reviewerProjectFromInputs() {
       urgency: false,
       differentiation: false,
       lowCrowdOverlap: false,
-      proofReceipt: true,
+      proofReceipt: false,
       specificWedge: false,
       nonGenericAgent: false,
       brightDataRole: "none",
@@ -1441,7 +1497,7 @@ async function addReviewerProject() {
   elements.reviewerHint.textContent =
     state.mode === "live"
       ? "Project collected with the live backend. Inspect the evidence report and replay traces."
-      : "Project added. Live Bright Data review is available from Live setup when a tokenized session is loaded.";
+      : "Project added. Live Bright Data review is available from Live setup when private reviewer access is loaded.";
   setQuickHint(
     state.mode === "live"
       ? "Live evidence collected. Open Evidence to inspect the report."
@@ -1455,6 +1511,7 @@ async function addReviewerProject() {
 
 async function addQuickReviewerProject() {
   syncFullReviewFormFromQuick();
+  const switchedFromLive = state.mode === "live";
   if (state.mode === "live") {
     state.mode = "demo";
     elements.modeSelect.value = "demo";
@@ -1462,14 +1519,18 @@ async function addQuickReviewerProject() {
     updateReviewerModeCopy();
   }
   await addReviewerProject();
+  if (switchedFromLive) {
+    setQuickHint("Quick review switched to sample review so visitors can test links without private live access.", "warn");
+    setStatus("Quick review switched to sample review. Use Live setup for private Bright Data collection.", "warn");
+  }
 }
 
 function updateReviewerModeCopy() {
   if (state.mode === "live") {
     elements.addReviewerProject.textContent = "Run live review";
     elements.reviewerHint.textContent = hasReviewToken()
-      ? "Review token loaded for this session; Bright Data tokens stay server-side."
-      : "Use a tokenized judge replay URL or private session token before collecting.";
+      ? "Private live access loaded for this session; Bright Data tokens stay server-side."
+      : "Use a private reviewer session before collecting live evidence.";
   } else {
     elements.addReviewerProject.textContent = "Add project";
     elements.reviewerHint.textContent = "Sample review works without credentials. Live review adds Bright Data evidence.";
@@ -1483,6 +1544,8 @@ function initializeLiveEndpoint() {
   if (localHosts.has(hostname)) {
     elements.liveApiUrl.value = "http://127.0.0.1:8787/api/review-project";
   } else if (hostname === "proofrank-ai-factory.vercel.app") {
+    elements.liveApiUrl.value = PUBLIC_REVIEW_API_URL;
+  } else if (hostname.endsWith("nativelyai.app")) {
     elements.liveApiUrl.value = PUBLIC_REVIEW_API_URL;
   }
 }
@@ -1524,8 +1587,8 @@ elements.modeSelect.addEventListener("change", () => {
   setStatus(
     state.mode === "live"
       ? hasReviewToken()
-        ? "Secure live mode selected. Review token loaded for this browser session."
-        : "Secure live mode selected. Use a tokenized judge replay URL before collecting."
+        ? "Secure live mode selected. Private reviewer access is loaded for this browser session."
+        : "Secure live mode selected. Use a private reviewer session before collecting."
       : "Demo review selected. Sample/local data is available without credentials.",
     state.mode === "live" ? "warn" : "ready"
   );
@@ -1541,9 +1604,12 @@ elements.addReviewerProject.addEventListener("click", addReviewerProject);
 elements.quickAddReviewerProject.addEventListener("click", addQuickReviewerProject);
 elements.loadSampleProject.addEventListener("click", loadSampleReviewLinks);
 elements.copyReviewLink?.addEventListener("click", copyReviewLink);
+elements.copyAppLink?.addEventListener("click", copyAppLink);
+elements.scorecard?.addEventListener("click", (event) => {
+  if (event.target.closest("[data-export-selected]")) exportSubmissionPacket();
+});
 elements.startTour?.addEventListener("click", startTour);
 elements.startTourTop?.addEventListener("click", startTour);
-elements.startTourHero?.addEventListener("click", startTour);
 elements.tourNext?.addEventListener("click", advanceTour);
 elements.tourClose?.addEventListener("click", closeTour);
 elements.quickRepoUrl.addEventListener("keydown", (event) => {
@@ -1577,8 +1643,14 @@ function exportSubmissionPacket() {
   downloadText(`${selectedProject().id}-submission-packet.md`, buildSubmissionPacket(selectedProject(), state.projects), "text/markdown");
 }
 
+function exportProgramReport() {
+  downloadText("proofrank-review-room-report.md", buildProgramReport(state.projects, { selectedProject: selectedProject() }), "text/markdown");
+}
+
 elements.heroExportPacket?.addEventListener("click", exportSubmissionPacket);
 elements.exportPacket.addEventListener("click", exportSubmissionPacket);
+elements.exportProgramReport?.addEventListener("click", exportProgramReport);
+elements.exportRoomMemo?.addEventListener("click", exportProgramReport);
 
 syncReviewTokenFromUrl();
 initializeLiveEndpoint();

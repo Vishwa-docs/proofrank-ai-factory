@@ -180,6 +180,78 @@ native.builder, Bright Data Remote MCP, Bright Data SERP API, Bright Data Web Sc
 `;
 }
 
+function countBy(projects, predicate) {
+  return projects.filter(predicate).length;
+}
+
+function projectReadinessLabel(project, projects) {
+  const readiness = buildReadiness(project, { projects });
+  if (readiness.proofPackageReady || readiness.canSubmit) return "review package ready";
+  return readiness.nextActions[0] || "more evidence needed";
+}
+
+export function buildProgramReport(projects = [], options = {}) {
+  const rankedProjects = projects.length
+    ? projects.map((project) => ({ ...project, scores: project.scores || calculateScores(project) }))
+    : [];
+  const selected = options.selectedProject || rankedProjects[0] || null;
+  const executedBright = countBy(rankedProjects, hasBrightDataSponsorProject);
+  const draftReviews = countBy(rankedProjects, (project) => String(project.id || "").startsWith("review-"));
+  const withDemo = countBy(rankedProjects, (project) => project.evidence?.hasPublicDemo || project.demoUrl);
+  const withGithub = countBy(rankedProjects, (project) => project.evidence?.hasGithub || project.githubUrl);
+  const ready = countBy(rankedProjects, (project) => {
+    const readiness = buildReadiness(project, { projects: rankedProjects });
+    return readiness.proofPackageReady || readiness.canSubmit || project.verdict?.label === "Finalist-ready";
+  });
+
+  const topRows = rankedProjects
+    .slice(0, 8)
+    .map((project, index) => {
+      const scores = project.scores || calculateScores(project);
+      const verdict = project.verdict || buildVerdict(project, scores);
+      return `${index + 1}. ${project.title} - ${verdict.label}; Bright Data ${brightDataTraceState(project)}; overall ${scores.overall}; next: ${projectReadinessLabel(project, rankedProjects)}`;
+    })
+    .join("\n");
+
+  return `# ProofRank Review Room Report
+
+Generated: ${new Date().toISOString()}
+
+## Room Summary
+
+- Projects reviewed: ${rankedProjects.length}
+- Visitor-added draft reviews: ${draftReviews}
+- Projects with public demos: ${withDemo}
+- Projects with public GitHub evidence: ${withGithub}
+- Projects with executed Bright Data evidence: ${executedBright}
+- Projects with review-ready packages: ${ready}
+
+## Selected Project
+
+- Project: ${selected?.title || "None selected"}
+- Team: ${selected?.team || "Not available"}
+- Recommendation: ${selected ? buildVerdict(selected, selected.scores || calculateScores(selected)).label : "Not available"}
+- Bright Data state: ${selected ? brightDataTraceState(selected) : "not available"}
+- Public demo: ${selected?.demoUrl || "not attached"}
+- GitHub: ${selected?.githubUrl || "not attached"}
+
+## Ranked Review Queue
+
+${topRows || "No projects available yet."}
+
+## Sponsor Review Notes
+
+ProofRank is designed for program-level review, not a one-off demo. Visitors can paste a public GitHub repository and optional demo URL, generate a browser-safe sample review, copy a replay link, and export the selected project memo. Live mode upgrades the same flow through the private Bright Data backend when reviewer access is present.
+
+Bright Data remains the evidence layer. The room-level view shows which projects have executed source, search, and discovery evidence, and which projects only have sample or pending evidence. This lets sponsor judges separate actual live-web diligence from claims.
+`;
+}
+
+function hasBrightDataSponsorProject(project) {
+  const traceState = brightDataTraceState(project);
+  return traceState === "executed" && Array.isArray(project.brightDataTraces) && project.brightDataTraces.length >= 3;
+}
+
 export function downloadText(filename, text, type = "text/plain") {
   const blob = new Blob([text], { type });
   const url = URL.createObjectURL(blob);
