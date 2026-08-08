@@ -8,7 +8,8 @@ const checkedFiles = [
   "app/index.html",
   "app/src/main.js",
   "app/src/visitorBrief.js",
-  "app/src/publicReviewCard.js"
+  "app/src/publicReviewCard.js",
+  "app/src/prizeBrief.js"
 ];
 
 const forbiddenVisiblePhrases = [

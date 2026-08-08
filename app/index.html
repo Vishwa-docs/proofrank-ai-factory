@@ -91,29 +91,35 @@
               <button id="quickAddReviewerProject" class="primary-button" type="button">Run public review</button>
               <button id="copyReviewLink" class="text-button" type="button" disabled>Copy draft link</button>
             </div>
-            <ol class="quick-path" aria-label="What happens next">
-              <li>
-                <span>1</span>
-                <strong>Paste links</strong>
-                <small>Repo and optional demo.</small>
-              </li>
-              <li>
-                <span>2</span>
-                <strong>Public check</strong>
-                <small>Fetch safe repo and demo signals.</small>
-              </li>
-              <li>
-                <span>3</span>
-                <strong>Bright Data</strong>
-                <small>Add private source/search/discovery evidence.</small>
-              </li>
-              <li>
-                <span>4</span>
-                <strong>Export memo</strong>
-                <small>Shareable review for judges.</small>
-              </li>
-            </ol>
-            <p class="review-path-line">Default path: public review first. Save draft only when you just need a shareable placeholder.</p>
+            <details class="path-drawer">
+              <summary>
+                <span>What happens after I click?</span>
+                <strong>4-step review path</strong>
+              </summary>
+              <ol class="quick-path" aria-label="What happens next">
+                <li>
+                  <span>1</span>
+                  <strong>Paste links</strong>
+                  <small>Repo and optional demo.</small>
+                </li>
+                <li>
+                  <span>2</span>
+                  <strong>Public check</strong>
+                  <small>Fetch safe repo and demo signals.</small>
+                </li>
+                <li>
+                  <span>3</span>
+                  <strong>Bright Data</strong>
+                  <small>Add private source/search/discovery evidence.</small>
+                </li>
+                <li>
+                  <span>4</span>
+                  <strong>Export memo</strong>
+                  <small>Shareable review for judges.</small>
+                </li>
+              </ol>
+              <p class="review-path-line">Default path: public review first. Save draft only when you just need a shareable placeholder.</p>
+            </details>
             <p id="quickReviewHint" class="hint">Public review fetches safe public GitHub and demo evidence without using Bright Data credits.</p>
             <details id="reviewOptions" class="review-options">
               <summary>

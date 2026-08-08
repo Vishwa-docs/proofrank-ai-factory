@@ -1,10 +1,10 @@
 # ProofRank
 
-ProofRank is an agentic submission truth auditor for hackathons, accelerators, grant programs, and sponsor reviews.
+ProofRank is a review workspace for hackathon judges, sponsor teams, accelerators, grant programs, and public AI project reviewers.
 
-Given a public event or project URL, it gathers evidence about submissions and produces a ranked judge queue with evidence records for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
+Given a public event or project URL, it gathers evidence about submissions and produces a ranked review queue with reviewer memos for accessibility, demo completeness, originality, sponsor/tool usage, source availability, business value, and eligibility risk.
 
-The dashboard now includes a Bright Data prize readiness panel that makes the sponsor-prize strategy explicit: decision-shaped output, executed live-web bundle, multi-tool Bright Data dependency, judge-visible evidence, defensible originality, public workflow, and native.builder primary deployment.
+The dashboard now leads with a Prize brief that turns the score into a judge/sponsor action: whether to shortlist, collect more evidence, open the Bright Data evidence view, or export the memo.
 
 ## Why This Exists
 
@@ -196,6 +196,7 @@ Built and verified:
 - Replayable UI workflow proof artifact at `submission/workflow-proof.json`
 - Machine-readable final readiness audit at `submission/final-readiness-audit.json`
 - Responsive visual check covering 1440, 768, 414, 390, 375, and 320 px viewports
+- Prize brief with Bright Data lane, competition lane, buyer lane, and plain next actions for public drafts, public evidence, and private Bright Data review.
 
 Refresh demo screenshots and video:
 

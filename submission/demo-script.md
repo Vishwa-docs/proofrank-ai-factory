@@ -18,13 +18,13 @@ Show the Draft Review Card and say:
 
 "The product is honest about evidence depth: drafts are link-only, public reviews fetch safe public evidence, and private Bright Data review adds sponsor evidence."
 
-## 0:30-0:48 - Review Panel And Similarity Check
+## 0:30-0:48 - Prize Brief And Similarity Check
 
 Open ProofRank or a strong Bright Data-native project in the Projects tab. Point to the recommendation, Review Panel, Bright Data prize readiness, Similarity Check, and Claim Check.
 
 Say:
 
-"Instead of asking one model to judge a project, ProofRank runs three lenses: Bright Data sponsor, skeptical hackathon judge, and business buyer. Bright Data prize readiness shows whether the project has the same shape as strong sponsor-prize projects: decision output, executed live-web evidence, multiple Bright Data tools, inspectable evidence, originality, and public end-to-end delivery. Then the Similarity Check compares against the field and prepares Bright Data prior-art queries."
+"ProofRank starts with a Prize brief, not a wall of metrics. It tells the judge whether to shortlist, collect more evidence, or export the memo, then breaks that into a Bright Data lane, competition lane, and buyer lane. The deeper panels still show Bright Data prize readiness, similarity, and claim checks when the reviewer wants the details."
 
 ## 0:48-0:58 - Evidence
 
@@ -38,6 +38,7 @@ Say:
 
 - Run public review.
 - Select a project.
+- Show the Prize brief.
 - Show Review Panel.
 - Show Bright Data prize readiness.
 - Show Similarity Check.

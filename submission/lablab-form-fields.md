@@ -19,7 +19,7 @@ ProofRank is a Bright Data-powered diligence workspace for AI hackathon judges, 
 
 The product separates browser-safe draft checks from public evidence collection and private sponsor review. Public visitors can create a link-only draft, run a public repo/demo check, and see what has or has not been fetched. A reviewer with credentials can then upgrade that review with Bright Data source fetch, search, and discovery evidence. The Evidence view shows whether Bright Data was used as the actual acquisition layer rather than a decorative integration.
 
-ProofRank was built and published through native.builder as a practical review-operations tool, not a static landing page. It includes a claim ledger, similarity check, winner benchmark, review brief, presentation check, exportable reviewer memos, and a workflow designed for human judges who need faster shortlisting without giving up judgment.
+ProofRank was built and published through native.builder as a practical review-operations tool, not a static landing page. It includes a Prize brief, claim ledger, similarity check, winner benchmark, review brief, presentation check, exportable reviewer memos, and a workflow designed for human judges who need faster shortlisting without giving up judgment.
 ```
 
 ## Categories
@@ -96,7 +96,7 @@ Primary build is published through native.builder. Fallback/live API: https://pr
 
 ProofRank uses Bright Data as the evidence layer for source fetch, web search, discovery, and sponsor-fit reviewer memos. Public visitors can create a browser-safe draft from links; private reviewer sessions upgrade that draft with server-side Bright Data evidence.
 
-The Review Brief and Draft Review Card let visitors copy a link-only summary that clearly says repo/demo contents were not fetched and Bright Data evidence is still pending. The Bright Data plan lists the intended evidence path: scrape_as_markdown, search_engine, and discover.
+The Prize brief and Draft Review Card let visitors copy a link-only summary that clearly says repo/demo contents were not fetched and Bright Data evidence is still pending. The Bright Data plan lists the intended evidence path: scrape_as_markdown, search_engine, and discover.
 
 The Presentation Check lets reviewers paste the demo script and flags pitch claims that still need evidence; it is pasted-text analysis, not video verification.
 ```

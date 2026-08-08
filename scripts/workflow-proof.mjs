@@ -196,6 +196,10 @@ try {
         sponsorMatrixCells: document.querySelectorAll("#sponsorMatrix .matrix-cell").length,
         actionBoardCount: document.querySelectorAll(".action-board").length,
         actionButtonCount: document.querySelectorAll(".action-board [data-score-action]").length,
+        prizeBriefCount: document.querySelectorAll(".prize-brief").length,
+        prizeBriefLaneCount: document.querySelectorAll(".prize-brief .prize-lane").length,
+        prizeBriefActionCount: document.querySelectorAll(".prize-brief [data-score-action]").length,
+        prizeBriefText: document.querySelector(".prize-brief")?.textContent?.replace(/\s+/g, " ").slice(0, 500).trim() || "",
         fieldComparisonCount: document.querySelectorAll(".field-comparison article").length,
         pitchReviewReady: Boolean(document.querySelector(".pitch-review-panel")),
         pitchReviewRows: document.querySelectorAll(".pitch-review-rows li").length,
@@ -257,6 +261,10 @@ try {
     proof.sponsorMatrixCells >= 6 &&
     proof.actionBoardCount === 1 &&
     proof.actionButtonCount >= 4 &&
+    proof.prizeBriefCount === 1 &&
+    proof.prizeBriefLaneCount === 3 &&
+    proof.prizeBriefActionCount >= 3 &&
+    /Bright Data prize case|Prize case gated|Link-only draft/i.test(proof.prizeBriefText) &&
     proof.fieldComparisonCount >= 5 &&
     proof.pitchReviewReady === true &&
     proof.pitchReviewRows === 7 &&

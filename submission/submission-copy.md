@@ -6,7 +6,7 @@ ProofRank
 
 ## Short Description
 
-Bright Data-powered diligence for AI hackathon judges. ProofRank checks demos, GitHub repos, project claims, and prior art, then exports source-backed reviewer memos with confidence scores, evidence gaps, and sponsor-prize readiness.
+Bright Data-powered review workspace for AI hackathon judges. ProofRank checks demos, GitHub repos, project claims, and prior art, then exports reviewer memos with confidence scores, evidence gaps, and sponsor-prize actions.
 
 ## Problem
 
@@ -27,6 +27,8 @@ Bright Data is the evidence acquisition layer. ProofRank uses Bright Data Remote
 ProofRank does not replace judges. It gives judges and sponsors a Bright Data-backed evidence queue so they can verify accessibility, originality, sponsor usage, and demo claims faster.
 
 Draft Review Cards make the public test path useful before credentials are involved. A visitor can paste a GitHub repo and optional demo URL, copy a link-only draft summary, and see exactly what still has not been fetched or checked. The same project can then be upgraded through private Bright Data source, search, and discovery review.
+
+The Prize Brief turns each project into a plain judge action instead of another dashboard score. It shows the Bright Data lane, competition lane, buyer lane, and the next click: run public review, add private Bright Data evidence, open evidence, copy replay link, or export the memo.
 
 The Presentation Check supports the final pitch by analyzing pasted demo transcript text for missing problem, user, workflow, Bright Data evidence, decision artifact, business value, and final ask claims. It stays honest: pasted text does not verify the video, the demo, the repository, or Bright Data traces.
 

@@ -12,6 +12,7 @@ import { buildProgramReport, buildReceipt, buildSubmissionPacket, downloadJson, 
 import { buildPitchReview } from "./pitchReview.js";
 import { buildPublicReviewCard } from "./publicReviewCard.js";
 import { buildVisitorBrief } from "./visitorBrief.js";
+import { buildPrizeBrief } from "./prizeBrief.js";
 
 const elements = {
   modeSelect: document.querySelector("#modeSelect"),
@@ -1644,6 +1645,52 @@ function renderVisitorBrief(project) {
   `;
 }
 
+function renderPrizeBrief(project) {
+  const brief = buildPrizeBrief(project, { totalProjects: state.projects.length });
+  const lanes = brief.lanes
+    .map(
+      (lane) => `
+        <article class="prize-lane">
+          <span>${escapeHtml(lane.label)}</span>
+          <strong>${escapeHtml(lane.status)}</strong>
+          <p>${escapeHtml(lane.detail)}</p>
+        </article>
+      `
+    )
+    .join("");
+  const fieldPressure = brief.fieldPressure
+    .map(
+      (item) => `
+        <li>
+          <span>${escapeHtml(item.label)}</span>
+          <p>${escapeHtml(item.detail)}</p>
+        </li>
+      `
+    )
+    .join("");
+  const actions = brief.actions
+    .map((item, index) => {
+      const className = index === 0 ? "primary-button small" : "secondary-button small";
+      return `<button class="${className}" data-score-action="${escapeAttr(item.action)}" type="button">${escapeHtml(item.label)}</button>`;
+    })
+    .join("");
+
+  return `
+    <section class="prize-brief" aria-label="Prize brief">
+      <div class="prize-brief-head">
+        <div>
+          <span>${escapeHtml(brief.badge)}</span>
+          <h3>${escapeHtml(brief.title)}</h3>
+          <p>${escapeHtml(brief.summary)}</p>
+        </div>
+        <div class="prize-actions">${actions}</div>
+      </div>
+      <div class="prize-lanes">${lanes}</div>
+      <ul class="prize-pressure">${fieldPressure}</ul>
+    </section>
+  `;
+}
+
 function renderScorecard(project) {
   const reviewFocus = project.reviewFocus || selectedReviewFocus();
   const readiness = buildReadiness(project, readinessContext());
@@ -1695,6 +1742,8 @@ function renderScorecard(project) {
     <section class="source-links" aria-label="Attached sources">
       ${renderSourceLinks(project)}
     </section>
+
+    ${renderPrizeBrief(project)}
 
     ${renderActionBoard(project, readiness)}
 

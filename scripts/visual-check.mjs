@@ -89,6 +89,7 @@ for (const spec of [
     const visiblePrimary = [...quick.querySelectorAll("button.primary-button")].filter(isVisible);
     const visibleSecondary = [...quick.querySelectorAll(".quick-actions .text-button, .quick-actions .secondary-button")].filter(isVisible);
     const hiddenGroups = [
+      ".path-drawer .quick-path",
       ".visitor-mode",
       ".bright-actions",
       ".review-focus",
@@ -103,6 +104,7 @@ for (const spec of [
       visiblePrimary: visiblePrimary.length,
       visibleSecondary: visibleSecondary.length,
       hiddenGroups,
+      pathClosed: document.querySelector(".path-drawer")?.open === false,
       optionsClosed: document.querySelector("#reviewOptions")?.open === false
     };
   });
@@ -111,6 +113,7 @@ for (const spec of [
     initialQuickReviewCalm.visiblePrimary !== 1 ||
     initialQuickReviewCalm.visibleSecondary > 1 ||
     !initialQuickReviewCalm.hiddenGroups ||
+    !initialQuickReviewCalm.pathClosed ||
     !initialQuickReviewCalm.optionsClosed
   ) {
     throw new Error(`Initial quick review is still too crowded: ${JSON.stringify(initialQuickReviewCalm)}`);
@@ -551,6 +554,12 @@ for (const spec of [
       brightPathReady: document.querySelectorAll(".bright-path").length >= 2,
       actionBoardCount: document.querySelectorAll(".action-board").length,
       actionButtonCount: document.querySelectorAll(".action-board [data-score-action]").length,
+      prizeBriefCount: document.querySelectorAll(".prize-brief").length,
+      prizeBriefLaneCount: document.querySelectorAll(".prize-brief .prize-lane").length,
+      prizeBriefActionCount: document.querySelectorAll(".prize-brief [data-score-action]").length,
+      prizeBriefCopyReady: /Bright Data prize case|Prize case gated|Link-only draft/i.test(
+        document.querySelector(".prize-brief")?.textContent || ""
+      ),
       visitorBriefCount: document.querySelectorAll(".visitor-brief").length,
       visitorBriefActions: document.querySelectorAll(".visitor-brief [data-score-action]").length,
       draftReviewCardCount: document.querySelectorAll(".draft-review-card").length,
@@ -606,6 +615,10 @@ const failures = results.flatMap((result) => {
   if (!result.metrics.brightPathReady) problems.push(`${result.spec.name}: Bright Data evidence/private review actions did not render`);
   if (result.metrics.actionBoardCount !== 1) problems.push(`${result.spec.name}: action board did not render`);
   if (result.metrics.actionButtonCount < 4) problems.push(`${result.spec.name}: action board controls did not render`);
+  if (result.metrics.prizeBriefCount !== 1) problems.push(`${result.spec.name}: prize brief did not render`);
+  if (result.metrics.prizeBriefLaneCount !== 3) problems.push(`${result.spec.name}: prize brief lanes did not render`);
+  if (result.metrics.prizeBriefActionCount < 3) problems.push(`${result.spec.name}: prize brief actions did not render`);
+  if (!result.metrics.prizeBriefCopyReady) problems.push(`${result.spec.name}: prize brief copy is missing`);
   if (result.metrics.visitorBriefCount !== 1) problems.push(`${result.spec.name}: visitor review brief did not render`);
   if (result.metrics.visitorBriefActions < 3) problems.push(`${result.spec.name}: visitor review brief actions did not render`);
   if (result.spec.name === "mobile-320" && result.metrics.draftReviewCardCount !== 1) {

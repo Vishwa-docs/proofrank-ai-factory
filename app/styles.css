@@ -427,6 +427,41 @@ h1 {
   line-height: 1.2;
 }
 
+.path-drawer {
+  margin-top: var(--space-sm);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-muted);
+}
+
+.path-drawer summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 2.35rem;
+  padding-inline: var(--space-sm);
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  list-style-position: inside;
+  cursor: pointer;
+}
+
+.path-drawer summary span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.path-drawer summary strong {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
 .mode-ladder {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -465,11 +500,18 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   border: 1px solid var(--color-rule);
+  border-inline: 0;
   border-radius: var(--radius-control);
   background: var(--color-rule);
   list-style: none;
+}
+
+.path-drawer .quick-path {
+  border-radius: 0;
 }
 
 .quick-path li {
@@ -1510,6 +1552,127 @@ input::placeholder {
   transition:
     background-color var(--dur-short) var(--ease-out),
     transform var(--dur-micro) var(--ease-out);
+}
+
+.prize-brief {
+  display: grid;
+  gap: var(--space-sm);
+  padding-block: var(--space-md);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.prize-brief-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.prize-brief-head > div:first-child {
+  min-width: 0;
+}
+
+.prize-brief-head span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.6rem;
+  width: fit-content;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  padding-inline: var(--space-xs);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.prize-brief h3 {
+  margin-top: var(--space-xs);
+  color: var(--color-ink);
+  font-size: var(--text-lg);
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.prize-brief-head p {
+  max-width: 68ch;
+  margin-top: var(--space-xs);
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.prize-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  max-width: 18rem;
+}
+
+.prize-lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-control);
+  background: var(--color-rule);
+}
+
+.prize-lane {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  min-height: 6.75rem;
+  padding: var(--space-sm);
+  background: var(--color-paper);
+}
+
+.prize-lane span,
+.prize-pressure span {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.prize-lane strong {
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.prize-lane p,
+.prize-pressure p {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.prize-pressure {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prize-pressure li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--color-rule);
 }
 
 .action-board {
@@ -4213,10 +4376,16 @@ input::placeholder {
 
   .pitch-review-head,
   .pitch-review-rows,
+  .prize-brief-head,
   .draft-card-head,
   .draft-review-card ul,
   .visitor-brief ul {
     grid-template-columns: 1fr;
+  }
+
+  .prize-actions {
+    justify-content: flex-start;
+    max-width: none;
   }
 
   .quick-path {
@@ -4342,6 +4511,8 @@ input::placeholder {
   .visitor-mode,
   .bright-actions,
   .action-board ul,
+  .prize-lanes,
+  .prize-pressure,
   .fix-score-strip,
   .fix-card-grid,
   .field-comparison-grid,
