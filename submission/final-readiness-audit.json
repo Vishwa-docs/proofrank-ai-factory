@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-08T06:27:33.933Z",
-  "gitHead": "0572e0b588e09937869495a080e07898cc969b13",
+  "generatedAt": "2026-08-08T06:41:30.107Z",
+  "gitHead": "e733099077252c197f4f088e25aeb3d5e75003cc",
   "canSubmit": false,
   "requiredPassed": 10,
   "requiredTotal": 11,
@@ -21,7 +21,7 @@
       "label": "Under-three-minute demo video",
       "required": true,
       "status": "passed",
-      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 36s",
+      "proof": "https://github.com/Vishwa-docs/proofrank-ai-factory/releases/download/proofrank-submission-v1/proofrank-demo.mp4 / 37s",
       "action": "Upload a demo video shorter than three minutes and verify the public release asset."
     },
     {
