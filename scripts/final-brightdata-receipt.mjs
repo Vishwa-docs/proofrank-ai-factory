@@ -9,7 +9,7 @@ import {
   buildFinalReceiptGate,
   resolveFinalReceiptOutputPath
 } from "../app/src/finalReceipt.js";
-import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
+import { createDirectFetchText, createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
 import { scoreProject } from "../app/src/scoring.js";
 import { fixtureProjects } from "../app/src/fixtures.js";
@@ -55,6 +55,7 @@ const collected = await collectReviewerProject(
   },
   {
     fetchText: liveCollectors.fetchText,
+    metadataFetchText: createDirectFetchText(),
     searchText: liveCollectors.searchText,
     discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,

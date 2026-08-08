@@ -1,5 +1,5 @@
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
-import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
+import { createDirectFetchText, createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { loadLocalEnv } from "./env-loader.mjs";
 
 loadLocalEnv();
@@ -16,6 +16,7 @@ const project = await collectReviewerProject(
   },
   {
     fetchText: liveCollectors.fetchText,
+    metadataFetchText: createDirectFetchText(),
     searchText: liveCollectors.searchText,
     discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,

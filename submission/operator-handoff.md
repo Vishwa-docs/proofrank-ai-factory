@@ -105,4 +105,4 @@ npm run live:smoke -- https://github.com/Vishwa-docs/proofrank-ai-factory https:
 
 ## Current Honest Status
 
-ProofRank has a public Native.builder app, public fallback app, collateral package, Bright Data sponsor receipt with executed MCP traces, and secured public Vercel live API shell. The latest local UI still needs Native.builder republish and public verification. Remaining gate: final lablab.ai submission from the authenticated team-owner account.
+ProofRank has a public fallback app, collateral package, Bright Data sponsor receipt with executed MCP traces, and secured public Vercel live API shell. The latest local UI still needs Native.builder republish and public verification. Remaining gates: Native.builder render check and final lablab.ai submission from the authenticated team-owner account.

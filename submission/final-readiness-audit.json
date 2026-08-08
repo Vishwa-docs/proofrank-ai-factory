@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-08T08:23:25.435Z",
+  "generatedAt": "2026-08-08T08:28:56.103Z",
   "gitHead": "",
   "canSubmit": false,
   "requiredPassed": 9,
@@ -85,7 +85,7 @@
       "label": "Signed executed Bright Data receipt",
       "required": true,
       "status": "passed",
-      "proof": "pr-20260807t200529345z-23568b05 / bright-data / executed / source trace / search_engine / discover / signature verified",
+      "proof": "pr-20260808t082734693z-a91a849a / bright-data / executed / source trace / search_engine / discover / signature verified",
       "action": "Run the actual project through MCP mode and export a signature-verified receipt with executed Bright Data source, search, and discover traces."
     },
     {

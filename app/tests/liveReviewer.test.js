@@ -263,6 +263,41 @@ assert.ok(mcpCollected.evidence.brightDataTools.includes("SERP API"));
 assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-search"));
 assert.ok(mcpCollected.evidenceItems.some((item) => item.sourceType === "prior-art-discover"));
 
+const sponsorFetchUrls = [];
+const metadataFetchUrls = [];
+const splitCollected = await collectReviewerProject(
+  {
+    repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory",
+    demoUrl: "https://vishwa-docs.github.io/proofrank-ai-factory/"
+  },
+  {
+    fetchText: async (url) => {
+      sponsorFetchUrls.push(url);
+      return fakeFetchText(url);
+    },
+    metadataFetchText: async (url) => {
+      metadataFetchUrls.push(url);
+      return fakeFetchText(url);
+    },
+    searchText: async (query) => `Search result for ${query}: ProofRank remains source-backed.`,
+    discoverText: async (query) => `Discover result for ${query}: ProofRank remains source-backed.`,
+    collectionMode: "bright-data-mcp",
+    signingSecret: "test-signing-secret",
+    now: () => new Date("2026-08-07T12:00:00.000Z")
+  }
+);
+
+assert.equal(splitCollected.evidence.repoTreeCollected, true);
+assert.ok(metadataFetchUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory"));
+assert.ok(metadataFetchUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/git/trees/main?recursive=1"));
+assert.ok(metadataFetchUrls.some((url) => url.startsWith("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/commits?")));
+assert.ok(!sponsorFetchUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/git/trees/main?recursive=1"));
+assert.ok(sponsorFetchUrls.includes("https://api.github.com/repos/Vishwa-docs/proofrank-ai-factory/readme"));
+assert.ok(splitCollected.brightDataTraces.some((trace) => trace.tool === "github_api" && trace.provider === "direct" && trace.countsForSponsorFit === false));
+assert.ok(splitCollected.brightDataTraces.some((trace) => trace.tool === "scrape_as_markdown" && trace.provider === "bright-data"));
+assert.ok(!splitCollected.runReceipt.tools.includes("github_api"));
+assert.ok(splitCollected.runReceipt.supportingTools.includes("github_api"));
+
 const brightFailed = await collectReviewerProject(
   {
     repoUrl: "https://github.com/Vishwa-docs/proofrank-ai-factory"

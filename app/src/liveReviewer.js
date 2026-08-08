@@ -337,11 +337,20 @@ function signRunReceipt(receipt, signingSecret = "") {
   };
 }
 
-export function buildCollectionTrace({ collectionMode, tool, queryOrUrl, collectedAt, text = "", error = null, countsForSponsorFit = true }) {
+export function buildCollectionTrace({
+  collectionMode,
+  tool,
+  queryOrUrl,
+  collectedAt,
+  text = "",
+  error = null,
+  countsForSponsorFit = true,
+  provider
+}) {
   const ok = !error;
   return {
     mode: collectionMode,
-    provider: providerForCollectionMode(collectionMode),
+    provider: provider || providerForCollectionMode(collectionMode),
     traceStatus: ok ? "executed" : "failed",
     tool,
     queryOrUrl,
@@ -385,6 +394,7 @@ export function parseGitHubRepoUrl(value = "") {
 export async function collectReviewerProject(input, options = {}) {
   const { owner, repo, canonicalUrl, readmeApiUrl } = parseGitHubRepoUrl(input.repoUrl);
   const fetchText = options.fetchText || defaultFetchText;
+  const metadataFetchText = options.metadataFetchText || fetchText;
   const searchText = options.searchText;
   const discoverText = options.discoverText;
   const now = options.now || (() => new Date());
@@ -442,16 +452,47 @@ export async function collectReviewerProject(input, options = {}) {
     }
   }
 
+  async function fetchMetadataEvidence(url, requestOptions = {}, meta = {}) {
+    try {
+      const text = await metadataFetchText(url, requestOptions);
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: meta.tool || "github_api",
+          queryOrUrl: url,
+          collectedAt,
+          text,
+          countsForSponsorFit: false,
+          provider: "direct"
+        })
+      );
+      return text;
+    } catch (error) {
+      collectionTraces.push(
+        buildCollectionTrace({
+          collectionMode,
+          tool: meta.tool || "github_api",
+          queryOrUrl: url,
+          collectedAt,
+          error,
+          countsForSponsorFit: false,
+          provider: "direct"
+        })
+      );
+      throw error;
+    }
+  }
+
   try {
     repoMetadata = parseJson(
-      await fetchEvidence(
+        await fetchMetadataEvidence(
         repoApiUrl,
         {
           headers: {
             Accept: "application/vnd.github+json"
           }
         },
-        { tool: "github_api", countsForSponsorFit: false }
+        { tool: "github_api" }
       ),
       {}
     );
@@ -484,14 +525,14 @@ export async function collectReviewerProject(input, options = {}) {
   }
 
   try {
-    treeText = await fetchEvidence(
+    treeText = await fetchMetadataEvidence(
       treeApiUrl,
       {
         headers: {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api", countsForSponsorFit: false }
+      { tool: "github_api" }
     );
   } catch (error) {
     treeText = JSON.stringify({
@@ -521,14 +562,14 @@ export async function collectReviewerProject(input, options = {}) {
   }
 
   try {
-    commitsText = await fetchEvidence(
+    commitsText = await fetchMetadataEvidence(
       commitsApiUrl,
       {
         headers: {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api", countsForSponsorFit: false }
+      { tool: "github_api" }
     );
   } catch (error) {
     commitsText = JSON.stringify({
@@ -537,14 +578,14 @@ export async function collectReviewerProject(input, options = {}) {
   }
 
   try {
-    releasesText = await fetchEvidence(
+    releasesText = await fetchMetadataEvidence(
       releasesApiUrl,
       {
         headers: {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api", countsForSponsorFit: false }
+      { tool: "github_api" }
     );
   } catch (error) {
     releasesText = JSON.stringify({
@@ -553,14 +594,14 @@ export async function collectReviewerProject(input, options = {}) {
   }
 
   try {
-    issuesText = await fetchEvidence(
+    issuesText = await fetchMetadataEvidence(
       issuesApiUrl,
       {
         headers: {
           Accept: "application/vnd.github+json"
         }
       },
-      { tool: "github_api", countsForSponsorFit: false }
+      { tool: "github_api" }
     );
   } catch (error) {
     issuesText = JSON.stringify({

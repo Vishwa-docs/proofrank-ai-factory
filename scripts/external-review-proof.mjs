@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildReceipt } from "../app/src/exporters.js";
 import { fixtureProjects } from "../app/src/fixtures.js";
-import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
+import { createDirectFetchText, createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 import { collectReviewerProject } from "../app/src/liveReviewer.js";
 import { scoreProject } from "../app/src/scoring.js";
 import { loadLocalEnv } from "./env-loader.mjs";
@@ -30,6 +30,7 @@ const collected = await collectReviewerProject(
   },
   {
     fetchText: liveCollectors.fetchText,
+    metadataFetchText: createDirectFetchText(),
     searchText: liveCollectors.searchText,
     discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,

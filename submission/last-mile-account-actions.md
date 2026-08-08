@@ -27,7 +27,7 @@ Current Native.builder state:
 - Public Native.builder app is published.
 - Latest UI correction is implemented in the local/fallback app; republish Native.builder with `submission/native-builder-prompt.md`, then browser-render verify it on desktop and 320px mobile.
 - Current local/fallback first viewport shows public project links, `Review a public project`, `Evidence report`, and `Bright Data receipt present`. Re-run the Native.builder render check after republishing the refreshed prompt if the hosted native app still has older wording.
-- If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the saved render check used a cache-busting URL and passed.
+- If Safari shows the old pre-publish bundle, hard refresh the tab or open the URL with a fresh query string; the render check uses a cache-busting URL and must be rerun after republish.
 - Use the Native.builder URL above as the primary submission URL.
 
 If you explicitly want full native-builder-hosted Bright Data Live mode, connect Supabase for Edge Function secrets after confirming that integration. Do not paste the Bright Data key into client UI, prompt text, query params, or visible forms.

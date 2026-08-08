@@ -1,5 +1,5 @@
 import { handleLiveReviewRequest } from "../app/src/liveReviewApi.js";
-import { createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
+import { createDirectFetchText, createLiveCollectorsFromEnv } from "../app/src/liveFetchers.js";
 
 const BODY_LIMIT_BYTES = 1_000_000;
 
@@ -33,6 +33,7 @@ function createOptionsFromEnv(env = runtimeEnv(), options = {}) {
   const liveCollectors = options.liveCollectors || createLiveCollectorsFromEnv(env, options);
   const collectorOptions = {
     fetchText: liveCollectors.fetchText,
+    metadataFetchText: createDirectFetchText(),
     searchText: liveCollectors.searchText,
     discoverText: liveCollectors.discoverText,
     collectionMode: liveCollectors.collectionMode,
